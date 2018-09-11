@@ -69,39 +69,14 @@ struct UART1 {
     uint32_t BAUD;   //_68;
 };
 
-static constexpr uint32_t gpioBase = 0x20200000;
-
-enum class Register {
-	GPFSEL0 = 0x00,
-	GPFSEL1 = 0x04,
-	GPFSEL2 = 0x08,
-	GPFSEL3 = 0x0c,
-	GPFSEL4 = 0x10,
-	GPSET0 = 0x1c, 
-	GPSET1 = 0x20, 
-	GPCLR0 = 0x28,
-	GPCLR1 = 0x2c,
-	GPPUD = 0x94,
-	GPPUDCLK0 = 0x98,
-	UART1 = 0x00015000,
-};
+static constexpr uint32_t uart1Base = 0x20215000;
 
 inline volatile UART1& uart()
 {
-	return *(reinterpret_cast<volatile UART1*>(gpioBase + static_cast<uint32_t>(Register::UART1)));
+	return *(reinterpret_cast<volatile UART1*>(uart1Base));
 }
 
-inline volatile uint32_t& reg(Register r)
-{
-	return *(reinterpret_cast<volatile uint32_t*>(gpioBase + static_cast<uint32_t>(r)));
-}
-
-// extern "C" void handleIRQ()
-// {
-//
-// }
-//
-Serial::Serial()
+void Serial::init()
 {
     uint32_t r0;
 
@@ -118,12 +93,12 @@ Serial::Serial()
 	GPIO::setFunction(14, GPIO::Function::Alt5);
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
-    reg(Register::GPPUD) = 0;
+    GPIO::reg(GPIO::Register::GPPUD) = 0;
     SPIN(150);                  // wait for (at least) 150 clock cycles
     r0 = (1 << 14) | (1 << 15);
-    reg(Register::GPPUDCLK0) = r0;
+    GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
     SPIN(150);                  // wait for (at least) 150 clock cycles
-    reg(Register::GPPUDCLK0) = 0;
+    GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
 }

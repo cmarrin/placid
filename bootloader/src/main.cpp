@@ -48,18 +48,23 @@ public:
 	virtual void handleTimerEvent()
 	{
 		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
+		Serial::puts(".");
 	}
 };
 
 void main()
 {
+	Serial::init();
+	
+	// Delay for the serial port to connect after power up
+	for (int i = 0; i < 2000000; ++i) NOP();
+	
 	GPIO::setFunction(ActivityLED, GPIO::Function::Output);
 	
 	LEDBlinker blinker;
 	Timer::start(&blinker, blinkRate, true);
 	
-	Serial serial;
-	serial.puts("Hello World!!!\r\n");
+	Serial::puts("Hello World!!!\r\n");
 	
 	while (1) {
 		WFE();

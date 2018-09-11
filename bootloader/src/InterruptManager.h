@@ -41,10 +41,7 @@ namespace placid {
 	
 	// InterruptManager - Raw interrupt manager for Raspberry Pi
 	//
-	// This is a singleton class. Only one instance can ever be created.
-	// It maintains an interrupt handler chain. Each one is called
-	// On every interrupt. It is the responsibility of the handler to 
-	// clear the interrupt.
+	// This is a static class. Its only purpose is to hold the raw IRQ handler
 	//
 	// This code was inspired bu the work here:
 	//

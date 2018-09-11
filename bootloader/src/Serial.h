@@ -52,27 +52,35 @@ namespace placid {
 	//
 	//		https://github.com/dwelch67/raspberrypi
 	//
+	// This is a static class and cannot be instantiated
+	//
 
 	class Serial {
 	public:
 		enum class Error { OK, NoData, NotReady, Fail };
 		
-		Serial();
+		static void init();
 		
 		// Blocking API
-		Error read(uint8_t&);
-		Error write(uint8_t);
+		static Error read(uint8_t&);
+		static Error write(uint8_t);
 		
-		Error puts(const char*);
+		static Error puts(const char*);
 		
 		// Low level, non-blocking API
-		bool rxReady();
-		Error rx(uint8_t&);
+		static bool rxReady();
+		static Error rx(uint8_t&);
 		
-		bool txReady();
-		Error tx(uint8_t);
+		static bool txReady();
+		static Error tx(uint8_t);
 		
 		static void handleInterrupt() { }
+
+	private:
+		Serial() { }
+		Serial(Serial&) { }
+		Serial& operator=(Serial& other) { return other; }
+		
 	};
 	
 }

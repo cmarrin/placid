@@ -45,10 +45,24 @@ namespace placid {
 	//
 	//		https://github.com/dwelch67/raspberrypi
 	//
+	// This is a static class and cannot be instantiated
+	//
 
 	class GPIO {
 	public:
 		enum class Register {
+			GPFSEL0 = 0x00,
+			GPFSEL1 = 0x04,
+			GPFSEL2 = 0x08,
+			GPFSEL3 = 0x0c,
+			GPFSEL4 = 0x10,
+			GPFSEL5 = 0x14,
+			GPSET0 = 0x1c, 
+			GPSET1 = 0x20, 
+			GPCLR0 = 0x28,
+			GPCLR1 = 0x2c,
+			GPLEV0 = 0x34, 
+			GPLEV1 = 0x38, 
 			GPPUD = 0x94,
 			GPPUDCLK0 = 0x98,
 		};

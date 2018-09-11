@@ -41,13 +41,14 @@ namespace placid {
 	
 	// Timer - Raw Peripheral (as opposed to System) Timer driver for Raspberry Pi
 	//
-	// This is a singleton class. Only one instance can ever be created. Starting
-	// an already started timer will reset it to the new 
-	//
 	// This code was inspired bu the work here:
 	//
 	//		https://github.com/dwelch67/raspberrypi
 	//
+	// This is a static class and cannot be instantiated. Starting a new
+	// timer will cancel the current one
+	//
+	
 	class TimerCallback {
 	public:
 		virtual void handleTimerEvent() = 0;
@@ -55,6 +56,7 @@ namespace placid {
 
 	class Timer {
 	public:
+		// FIXME: repeat is currently not implemented 
 		static void start(TimerCallback*, float seconds, bool repeat);
 		
 		static void handleInterrupt();
