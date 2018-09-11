@@ -46,30 +46,47 @@ CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mt
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 LDFLAGS = 
 
-OBJS =	start.o \
-		main.o \
-		GPIO.o \
-		InterruptManager.o \
-		Serial.o \
-		Timer.o \
+SRCDIR = src
+BUILDDIR = build
 
-all: bootloader.bin
+# OBJS =	start.o \
+# 		main.o \
+# 		GPIO.o \
+# 		InterruptManager.o \
+# 		Serial.o \
+# 		Timer.o \
+		
+SRC =	start.S \
+		main.cpp \
+		GPIO.cpp \
+		InterruptManager.cpp \
+		Serial.cpp \
+		Timer.cpp \
+
+OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
+
+all: checkdirs $(BUILDDIR)/bootloader.bin
 	
 clean:
-	rm -f $(OBJS) bootloader.elf bootloader.bin
+	rm -f $(OBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin
 	
-bootloader.bin: loadmap.ld $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) -T loadmap.ld -o bootloader.elf
-	$(OBJDUMP) -D bootloader.elf > bootloader.list
-	$(OBJCOPY) bootloader.elf -O ihex bootloader.hex
-	$(OBJCOPY) --only-keep-debug bootloader.elf bootloader.sym
-	$(OBJCOPY) bootloader.elf -O binary bootloader.bin
+checkdirs: $(BUILDDIR)
 
-%.o: %.c Makefile
+$(BUILDDIR):
+	@mkdir -p $@
+	
+$(BUILDDIR)/bootloader.bin: loadmap.ld $(OBJS)
+	$(LD) $(LDFLAGS) $(OBJS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
+	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
+	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
+	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
+	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary $(BUILDDIR)/bootloader.bin
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: %.cpp Makefile
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-%.o: %.S Makefile
+$(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
 	$(AS) $(ASFLAGS) -c $< -o $@
