@@ -44,5 +44,8 @@ extern void NOP();
 extern void BRANCH_TO(uint32_t addr);
 extern void SPIN(uint32_t count);
 extern void WFE();
+extern void WFI();
 extern void enableIRQ();
 }
+
+static inline bool isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }

@@ -71,6 +71,10 @@ struct UART1 {
 
 static constexpr uint32_t uart1Base = 0x20215000;
 
+volatile unsigned int Serial::rxhead = 0;
+volatile unsigned int Serial::rxtail = 0;
+volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
+
 inline volatile UART1& uart()
 {
 	return *(reinterpret_cast<volatile UART1*>(uart1Base));
@@ -85,7 +89,7 @@ void Serial::init()
     uart().CNTL = 0;
     uart().LCR = 3;
     uart().MCR = 0;
-    uart().IER = 0;
+    uart().IER = 0x05;
     uart().IIR = 0xc6;
     /* ((250,000,000 / 115200) / 8) - 1 = 270 */
     uart().BAUD = 270;
@@ -105,9 +109,12 @@ void Serial::init()
 
 Serial::Error Serial::read(uint8_t& c)
 {
-    while (!rxReady()) {
-    }
-    return rx(c);
+	if (rxtail == rxhead) {
+		return Error::NoData;
+	}
+	c = rxbuffer[rxtail];
+	rxtail = (rxtail + 1) & RXBUFMASK;
+	return Error::OK;
 }
 
 Serial::Error Serial::write(uint8_t c)
@@ -117,10 +124,15 @@ Serial::Error Serial::write(uint8_t c)
     return tx(c);
 }
 
-Serial::Error Serial::puts(const char* s)
+Serial::Error Serial::puts(const char* s, uint32_t size)
 {
-    while (*s != '\0') {
+	if (size == 0) {
+		for (const char* p = s; *p != '\0'; ++p, ++size) ;
+	}
+	
+    while (*s != '\0' && size > 0) {
         Error error = write(*s++);
+		size--;
 		if (error != Error::OK) {
 			return error;
 		}
@@ -131,13 +143,7 @@ Serial::Error Serial::puts(const char* s)
 
 bool Serial::rxReady()
 {
-    return (uart().LSR & 0x01) != 0;
-}
-
-Serial::Error Serial::rx(uint8_t& c)
-{
-    c = uart().IO & 0xff;
-	return Error::OK;
+    return rxtail != rxhead;
 }
 
 bool Serial::txReady()
@@ -149,4 +155,24 @@ Serial::Error Serial::tx(uint8_t c)
 {
     uart().IO = static_cast<uint32_t>(c);
     return Error::OK;
+}
+
+void Serial::handleInterrupt()
+{
+    while (1)
+    {
+		uint32_t iir = uart().IIR;
+        if ((iir & 1) == 1) {
+			//no more interrupts
+			break;
+		}
+		
+        if ((iir & 6) == 4) {
+            //receiver holds a valid byte
+            uint32_t b = uart().IO;
+            rxbuffer[rxhead] = b & 0xFF;
+            rxhead = (rxhead + 1) & RXBUFMASK;
+        }
+    }
+
 }

@@ -64,23 +64,24 @@ namespace placid {
 		// Blocking API
 		static Error read(uint8_t&);
 		static Error write(uint8_t);
-		
-		static Error puts(const char*);
-		
-		// Low level, non-blocking API
 		static bool rxReady();
-		static Error rx(uint8_t&);
+		
+		static Error puts(const char*, uint32_t size = 0);
 		
 		static bool txReady();
 		static Error tx(uint8_t);
 		
-		static void handleInterrupt() { }
+		static void handleInterrupt();
 
 	private:
 		Serial() { }
 		Serial(Serial&) { }
 		Serial& operator=(Serial& other) { return other; }
 		
+		static constexpr uint32_t RXBUFMASK = 0xFFF;
+		static volatile unsigned int rxhead;
+		static volatile unsigned int rxtail;
+		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
 	};
 	
 }

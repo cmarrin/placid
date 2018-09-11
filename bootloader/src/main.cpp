@@ -33,6 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "BootShell.h"
 #include "GPIO.h"
 #include "Serial.h"
 #include "Timer.h"
@@ -40,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 using namespace placid;
 
 static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 0.5;
+static constexpr float blinkRate = 0.25;
 
 class LEDBlinker : public TimerCallback
 {
@@ -48,7 +49,6 @@ public:
 	virtual void handleTimerEvent()
 	{
 		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
-		Serial::puts(".");
 	}
 };
 
@@ -64,9 +64,19 @@ void main()
 	LEDBlinker blinker;
 	Timer::start(&blinker, blinkRate, true);
 	
-	Serial::puts("Hello World!!!\r\n");
+	BootShell shell;
+	shell.connected();
 	
 	while (1) {
+		if (Serial::rxReady()) {
+			uint8_t c;
+			if (Serial::read(c) != Serial::Error::OK) {
+				Serial::puts("*** Serial Read Error\n");
+			} else {
+				Serial::write(c);
+				shell.received(c);
+			}
+		}
 		WFE();
 	}
 }
