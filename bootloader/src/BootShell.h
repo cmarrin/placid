@@ -45,7 +45,6 @@ namespace placid {
 
 	class BootShell : public Shell {
 	public:
-		//BootShell() : Shell() { }
 		virtual const char* welcomeString() const;
 		virtual const char* helpString() const;
 	    virtual void shellSend(const char* data, uint32_t size = 0);
