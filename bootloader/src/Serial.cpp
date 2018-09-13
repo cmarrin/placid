@@ -36,8 +36,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 
 #include "GPIO.h"
+#include "InterruptManager.h"
 
 using namespace placid;
+
+OutputStream cout;
 
 struct UART1 {
     uint32_t _00;
@@ -84,6 +87,8 @@ void Serial::init()
 {
     uint32_t r0;
 
+	InterruptManager::enableIRQ(29, false);
+
     uart().AUXENB = 1;
     uart().IER = 0;
     uart().CNTL = 0;
@@ -105,6 +110,8 @@ void Serial::init()
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
+	
+	InterruptManager::enableIRQ(29, true);
 }
 
 Serial::Error Serial::read(uint8_t& c)

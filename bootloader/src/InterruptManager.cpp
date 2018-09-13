@@ -39,9 +39,48 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace placid;
 
+struct IRPT {
+    uint32_t BasicPending;
+    uint32_t IRQ1Pending; //_04;
+    uint32_t IRQ2Pending;
+    uint32_t FIQControl;
+    uint32_t IRQ1Enable;
+    uint32_t IRQ2Enable;
+    uint32_t BasicEnable;
+    uint32_t IRQ1Disable;
+    uint32_t IRQ2Disable;
+    uint32_t BasicDisable;
+};
+
+static constexpr uint32_t irptBase = 0x2000B200;
+
+inline volatile IRPT& irpt()
+{
+	return *(reinterpret_cast<volatile IRPT*>(irptBase));
+}
+
 extern "C" void handleIRQ()
 {
 	Serial::handleInterrupt();
 	Timer::handleInterrupt();
 }
 
+void InterruptManager::enableIRQ(uint32_t n, bool enable)
+{
+	uint32_t r = n / 32;
+	uint32_t off = n % 32;
+	
+	if (enable) {
+		if (r == 0) {
+			irpt().IRQ1Enable = 1 << off;
+		} else {
+			irpt().IRQ2Enable = 1 << off;
+		}
+	} else {
+		if (r == 0) {
+			irpt().IRQ1Disable = 1 << off;
+		} else {
+			irpt().IRQ2Disable = 1 << off;
+		}
+	}
+}

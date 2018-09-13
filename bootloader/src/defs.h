@@ -35,9 +35,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <cstdint>
+#include <stddef.h>
+#include <stdint.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 extern void PUT32(uint32_t addr, uint32_t data);
 extern uint32_t GET32(uint32_t addr);
 extern void NOP();
@@ -46,6 +49,18 @@ extern void SPIN(uint32_t count);
 extern void WFE();
 extern void WFI();
 extern void enableIRQ();
-}
 
-static inline bool isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset);
+int munmap(void *addr, size_t length);
+
+#define PROT_READ       1
+#define PROT_WRITE      2
+
+#define MAP_PRIVATE     2
+#define MAP_ANONYMOUS   0x20
+
+#ifdef __cplusplus
+}
+#endif
+
+static inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }

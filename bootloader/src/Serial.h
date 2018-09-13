@@ -84,4 +84,21 @@ namespace placid {
 		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
 	};
 	
+	class OutputStream
+	{
+	public:
+		OutputStream& operator << (const char* s) { Serial::puts(s); return *this; }
+		// OutputStream& operator << (int32_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (uint32_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (int16_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (uint16_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (int8_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (uint8_t v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (float v) { Serial.print(v); return *this; }
+		// OutputStream& operator << (double v) { Serial.print(v); return *this; }
+	};
+
+	extern OutputStream cout;
+	
+	
 }

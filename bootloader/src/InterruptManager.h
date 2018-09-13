@@ -48,6 +48,9 @@ namespace placid {
 	//		https://github.com/dwelch67/raspberrypi
 	//
 	class InterruptManager {
+	public:
+		static void enableIRQ(uint32_t n, bool enable);
+
 	private:
 		InterruptManager() { }
 		InterruptManager(InterruptManager&) { }

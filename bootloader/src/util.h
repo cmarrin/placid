@@ -33,54 +33,21 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "BootShell.h"
-#include "GPIO.h"
-#include "Serial.h"
-#include "Timer.h"
+#pragma once
 
-using namespace placid;
+#include "defs.h"
 
-static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 3;
+namespace placid {
 
-class LEDBlinker : public TimerCallback
-{
-public:
-	virtual void handleTimerEvent()
-	{
-		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
-	}
-};
+											//        sign    digits  dp      'e'     dp      exp     '\0'
+	static constexpr uint32_t MaxToStringBufferSize =	1 +     16 +   1 +     1 +     1 +     3 +      1;
 
-void main()
-{
-	Serial::init();
+	bool toString(char* buf, size_t size, double v);
+	bool toString(char* buf, size_t size, int32_t v);
+	bool toString(char* buf, size_t size, uint32_t v);
+	bool toString(char* buf, size_t size, float v) { return toString(buf, size, static_cast<double>(v)); }
+	bool toString(char* buf, size_t size, int8_t v) { return toString(buf, size, static_cast<int32_t>(v)); }
+	bool toString(char* buf, size_t size, uint8_t v) { return toString(buf, size, static_cast<uint32_t>(v)); }
+	bool toString(char* buf, size_t size, int16_t v) { return toString(buf, size, static_cast<int32_t>(v)); }
+	bool toString(char* buf, size_t size, uint16_t v) { return toString(buf, size, static_cast<uint32_t>(v)); }
 	
-	// Delay for the serial port to connect after power up
-	for (int i = 0; i < 2000000; ++i) NOP();
-
-	cout << "hello";
-		
-	GPIO::setFunction(ActivityLED, GPIO::Function::Output);
-	
-	LEDBlinker blinker;
-	Timer::start(&blinker, blinkRate, true);
-	
-	BootShell shell;
-	shell.connected();
-	
-	//Serial::puts(s.c_str());
-	
-	while (1) {
-		if (Serial::rxReady()) {
-			uint8_t c;
-			if (Serial::read(c) != Serial::Error::OK) {
-				Serial::puts("*** Serial Read Error\n");
-			} else {
-				Serial::write(c);
-				shell.received(c);
-			}
-		}
-		WFE();
-	}
-}

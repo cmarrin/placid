@@ -42,47 +42,55 @@ OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
-CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -lc
+CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
-LDFLAGS = 
+LDFLAGS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
+LIB1FUNCSFLAGS = 	-O2 -g -Os -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp -w -DIN_GCC -DCROSS_DIRECTORY_STRUCTURE \
+					-W -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wold-style-definition \
+					-fno-inline -g  -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED -Dinhibit_libc  -DHAVE_CC_TLS -xassembler-with-cpp 
 
 SRCDIR = src
 BUILDDIR = build
 
-# OBJS =	start.o \
-# 		main.o \
-# 		GPIO.o \
-# 		InterruptManager.o \
-# 		Serial.o \
-# 		Timer.o \
-		
 SRC =	start.S \
+		dlmalloc.c \
 		main.cpp \
+		memory.cpp \
+		util.cpp \
 		BootShell.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
 		Serial.cpp \
 		Shell.cpp \
 		Timer.cpp \
+		
+DIVOBJS :=	_udivsi3.o \
+			_divsi3.o \
+			_umodsi3.o \
+			_modsi3.o \
+			_div0.o \
+			_div.o
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
+DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
 
 all: checkdirs $(BUILDDIR)/bootloader.bin
 	
 clean:
-	rm -f $(OBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin
+	rm -f $(OBJS) $(DIVOBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin
 	
 checkdirs: $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $@
 	
-$(BUILDDIR)/bootloader.bin: loadmap.ld $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
+$(BUILDDIR)/bootloader.bin: loadmap.ld $(OBJS) $(DIVOBJS)
+	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
 	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary $(BUILDDIR)/bootloader.bin
+	wc -c $(BUILDDIR)/bootloader.bin
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -92,3 +100,6 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
 	$(AS) $(ASFLAGS) -c $< -o $@
+
+$(DIVOBJS): $(SRCDIR)/lib1funcs.asm
+	$(CC) $(LIB1FUNCSFLAGS)-o $@ -DL$(basename $(notdir $@)) -c $(SRCDIR)/lib1funcs.asm

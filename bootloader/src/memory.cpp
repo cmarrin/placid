@@ -33,54 +33,93 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "BootShell.h"
-#include "GPIO.h"
-#include "Serial.h"
-#include "Timer.h"
+#include <cstddef>
+#include <unistd.h>
+#include <malloc.h>
 
-using namespace placid;
-
-static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 3;
-
-class LEDBlinker : public TimerCallback
+extern "C" {
+	
+// Needed by dlmalloc to get page size
+long sysconf(int name)
 {
-public:
-	virtual void handleTimerEvent()
-	{
-		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
-	}
-};
+	return (name == _SC_PAGE_SIZE) ? 1024 : 0;
+}
 
-void main()
+// Needed by dlmalloc (need to implement this properly eventually)
+void abort()
 {
-	Serial::init();
-	
-	// Delay for the serial port to connect after power up
-	for (int i = 0; i < 2000000; ++i) NOP();
+	while (1) ;
+}
 
-	cout << "hello";
-		
-	GPIO::setFunction(ActivityLED, GPIO::Function::Output);
-	
-	LEDBlinker blinker;
-	Timer::start(&blinker, blinkRate, true);
-	
-	BootShell shell;
-	shell.connected();
-	
-	//Serial::puts(s.c_str());
-	
-	while (1) {
-		if (Serial::rxReady()) {
-			uint8_t c;
-			if (Serial::read(c) != Serial::Error::OK) {
-				Serial::puts("*** Serial Read Error\n");
-			} else {
-				Serial::write(c);
-				shell.received(c);
-			}
-		}
-		WFE();
+void __aeabi_idiv0()
+{
+	abort();
+}
+
+int __errno = 0;
+
+void* memset(void* p, int value, size_t n)
+{
+	if (n == 0) {
+		return p;
 	}
+	while (n--) {
+		*reinterpret_cast<uint8_t*>(p) = static_cast<uint8_t>(value);
+	}
+	return p;
+}
+
+void* memcpy(void* dst, const void* src, size_t n)
+{
+	if (n == 0) {
+		return dst;
+	}
+	uint8_t* d = reinterpret_cast<uint8_t*>(dst);
+	const uint8_t* s = reinterpret_cast<const uint8_t*>(src);
+	while (n--) {
+		*d++ = *s++;
+	}
+	return dst;
+}
+
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset)
+{
+	return nullptr;
+}
+
+int munmap(void *addr, size_t length)
+{
+	return 0;
+}
+
+}
+
+void *operator new(size_t size)
+{
+	return malloc(size);
+}
+
+void *operator new[] (size_t size)
+{
+	return malloc(size);
+}
+
+void operator delete(void *p) noexcept
+{
+	free(p);
+}
+
+void operator delete [ ](void *p) noexcept
+{
+	free(p);
+}
+
+void operator delete(void *p, size_t size) noexcept
+{
+	free(p);
+}
+
+void operator delete [ ](void *p, size_t size) noexcept
+{
+	free(p);
 }

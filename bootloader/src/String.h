@@ -33,54 +33,70 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "BootShell.h"
-#include "GPIO.h"
-#include "Serial.h"
-#include "Timer.h"
+#pragma once
 
-using namespace placid;
+#include "defs.h"
 
-static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 3;
+#include <cstring>
+#include <algorithm>
+#include <vector>
 
-class LEDBlinker : public TimerCallback
-{
-public:
-	virtual void handleTimerEvent()
+namespace placid {
+	
+	// String - std::string functions
+	//
+
+	class String
 	{
-		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
-	}
-};
-
-void main()
-{
-	Serial::init();
-	
-	// Delay for the serial port to connect after power up
-	for (int i = 0; i < 2000000; ++i) NOP();
-
-	cout << "hello";
+	public:
 		
-	GPIO::setFunction(ActivityLED, GPIO::Function::Output);
-	
-	LEDBlinker blinker;
-	Timer::start(&blinker, blinkRate, true);
-	
-	BootShell shell;
-	shell.connected();
-	
-	//Serial::puts(s.c_str());
-	
-	while (1) {
-		if (Serial::rxReady()) {
-			uint8_t c;
-			if (Serial::read(c) != Serial::Error::OK) {
-				Serial::puts("*** Serial Read Error\n");
-			} else {
-				Serial::write(c);
-				shell.received(c);
-			}
-		}
-		WFE();
-	}
+		static inline std::string& trim(std::string& s)
+	    {
+			// Trim from the start
+		    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+		        return !std::isspace(ch);
+		    }));
+
+			// Trim from the end
+		    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+		        return !std::isspace(ch);
+		    }).base(), s.end());
+		
+			return s;
+	    }
+    
+	    // If skipEmpty is true, substrings of zero length are not added to the array
+	    static inline std::vector<std::string> split(const std::string& s, const std::string& separator, bool skipEmpty = false)
+	    {
+	        std::vector<std::string> array;
+	        const char* p = s.c_str();
+	        while (1) {
+	            const char* n = strstr(p, separator.c_str());
+	            if (!n || n - p != 0 || !skipEmpty) {
+	                array.push_back(std::string(p, static_cast<int32_t>(n ? (n - p) : -1)));
+	            }
+	            if (!n) {
+	                break;
+	            }
+	            p = n ? (n + separator.size()) : nullptr;
+	        }
+	        return array;
+	    }
+
+	    static inline std::string join(const std::vector<std::string>& array, const std::string& separator)
+	    {
+	        std::string s;
+	        bool first = true;
+	        for (auto it : array) {
+	            if (first) {
+	                first = false;
+	            } else {
+	                s += separator;
+	            }
+	            s += it;
+	        }
+	        return s;
+	    }
+	};
+
 }
