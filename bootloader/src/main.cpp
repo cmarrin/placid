@@ -55,18 +55,13 @@ public:
 
 int main()
 {
-	Serial::init();
-	
-	// Delay for the serial port to connect after power up
-    Timer::delay(1.5);
-
-	cout << "hello";
-		
-	GPIO::setFunction(ActivityLED, GPIO::Function::Output);
-	
-	LEDBlinker blinker;
-	Timer::start(&blinker, blinkRate, true);
-	
+    Serial::init();
+    
+    GPIO::setFunction(ActivityLED, GPIO::Function::Output);
+    
+    LEDBlinker blinker;
+    Timer::start(&blinker, blinkRate, true);
+    
 	BootShell shell;
 	shell.connected();
 

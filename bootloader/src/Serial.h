@@ -68,7 +68,7 @@ namespace placid {
         static Error puts(double);
         static Error puts(int32_t);
         static Error puts(uint32_t);
-		
+
 		static void handleInterrupt();
 
 	private:

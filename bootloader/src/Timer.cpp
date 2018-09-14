@@ -133,8 +133,6 @@ void Timer::delay(float seconds)
         seconds = 4000;
     }
     uint32_t ticks = static_cast<uint32_t>(seconds / SystemTimerTick + 0.5);
-    placid::cout << "seconds=" << seconds << "\n";
-    placid::cout << "ticks=" << ticks << "\n";
     if (ticks == 0) {
         return;
     }

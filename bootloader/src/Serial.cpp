@@ -119,8 +119,13 @@ void Serial::init()
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
-	
+    
 	InterruptManager::enableIRQ(29, true);
+	enableIRQ();
+
+    // A spurious character can come in on startup. Wait a bit and then clear it out
+    SPIN(1000);
+    rxhead = rxtail = 0;
 #endif
 }
 
@@ -159,17 +164,30 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
         for (const char* p = s; *p != '\0'; ++p, ++size) ;
     }
     
-#ifdef __APPLE__
-    std::cout.write(s, size);
-#else    
     while (*s != '\0' && size > 0) {
-        Error error = write(*s++);
-		size--;
+        char c;
+        c = *s++;
+        size--;
+        
+        if (c != '\n' && c != '\r') {
+            if (static_cast<uint8_t>(c) < ' ' || static_cast<uint8_t>(c) > 0x7e) {
+                write('\\');
+                write(((c >> 6) & 0x03) + '0');
+                write(((c >> 3) & 0x07) + '0');
+                write((c & 0x07) + '0');
+                continue;
+            }
+        }
+
+#ifdef __APPLE__
+        std::cout.write(&c, 1);
+#else
+        Error error = write(c);
 		if (error != Error::OK) {
 			return error;
 		}
-    }
 #endif
+    }
 	return Error::OK;
 }
 
