@@ -58,7 +58,7 @@ int main()
 	Serial::init();
 	
 	// Delay for the serial port to connect after power up
-	delay(2000000);
+	Timer::delay(1.5);
 
 	cout << "hello";
 		
@@ -69,20 +69,15 @@ int main()
 	
 	BootShell shell;
 	shell.connected();
-	
-	//Serial::puts(s.c_str());
-	
+
 	while (1) {
-		if (Serial::rxReady()) {
-			uint8_t c;
-			if (Serial::read(c) != Serial::Error::OK) {
-				Serial::puts("*** Serial Read Error\n");
-			} else {
-				Serial::write(c);
-				shell.received(c);
-			}
-		}
-		WFE();
+        int8_t c;
+        if (Serial::read(c) != Serial::Error::OK) {
+            Serial::puts("*** Serial Read Error\n");
+        } else {
+            Serial::write(c);
+            shell.received(c);
+        }
 	}
  
     return 0;

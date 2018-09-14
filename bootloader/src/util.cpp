@@ -35,13 +35,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 
+#include "Timer.h"
+
 using namespace placid;
 
 #ifdef __APPLE__
 
 void WFE()
 {
-    delay(10);
+    Timer::delay(0.1);
 }
 
 void enableIRQ() { }
@@ -119,7 +121,7 @@ static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 	return str;
 }
 
-bool toString(char* buf, double v)
+bool placid::toString(char* buf, double v)
 {
 	char* p = buf;
 
@@ -162,7 +164,7 @@ bool toString(char* buf, double v)
     return true;
 }
 
-bool toString(char* buf, int32_t v)
+bool placid::toString(char* buf, int32_t v)
 {
     if (v < 0) {
         *buf++ = '-';
@@ -173,7 +175,7 @@ bool toString(char* buf, int32_t v)
 	return false;
 }
 
-bool toString(char* buf, uint32_t v)
+bool placid::toString(char* buf, uint32_t v)
 {
     buf = intToString(static_cast<uint32_t>(v), buf, 9);
 	return false;

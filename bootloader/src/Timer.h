@@ -58,6 +58,8 @@ namespace placid {
 	public:
 		// FIXME: repeat is currently not implemented 
 		static void start(TimerCallback*, float seconds, bool repeat);
+  
+        static void delay(float seconds);
 		
 		static void handleInterrupt();
 

@@ -38,10 +38,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "GPIO.h"
 #include "InterruptManager.h"
+#include "Timer.h"
+
+#ifdef __APPLE__
+#include <iostream>
+#endif
 
 using namespace placid;
 
-OutputStream cout;
+OutputStream placid::cout;
 
 struct UART1 {
     uint32_t _00;
@@ -73,7 +78,7 @@ struct UART1 {
     uint32_t BAUD;   //_68;
 };
 
-static constexpr uint32_t uart1Base = 0x20215000;
+static constexpr uint32_t UART1Base = 0x20215000;
 
 volatile unsigned int Serial::rxhead = 0;
 volatile unsigned int Serial::rxtail = 0;
@@ -81,11 +86,14 @@ volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
 
 inline volatile UART1& uart()
 {
-	return *(reinterpret_cast<volatile UART1*>(uart1Base));
+	return *(reinterpret_cast<volatile UART1*>(UART1Base));
 }
 
 void Serial::init()
 {
+#ifdef __APPLE__
+    //system("stty raw");
+#else
     uint32_t r0;
 
 	InterruptManager::enableIRQ(29, false);
@@ -104,40 +112,59 @@ void Serial::init()
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
     GPIO::reg(GPIO::Register::GPPUD) = 0;
-    delay(150);                  // wait for (at least) 150 clock cycles
+    Timer::delay(1e3);
     r0 = (1 << 14) | (1 << 15);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
-    delay(150);                  // wait for (at least) 150 clock cycles
+    Timer::delay(1e3);                  // wait for (at least) 150 clock cycles
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
 	
 	InterruptManager::enableIRQ(29, true);
+#endif
 }
 
-Serial::Error Serial::read(uint8_t& c)
+Serial::Error Serial::read(int8_t& c)
 {
-	if (rxtail == rxhead) {
-		return Error::NoData;
-	}
-	c = rxbuffer[rxtail];
-	rxtail = (rxtail + 1) & RXBUFMASK;
+#ifdef __APPLE__
+    c = getchar();
+    if (c == '\r') {
+        c = '\n';
+    }
+#else
+    while (1) {
+        if (rxtail != rxhead) {
+            c = rxbuffer[rxtail];
+            rxtail = (rxtail + 1) & RXBUFMASK;
+            break;
+        }
+        WFE();
+    }
+#endif
 	return Error::OK;
 }
 
-Serial::Error Serial::write(uint8_t c)
+Serial::Error Serial::write(int8_t c)
 {
-    while (!txReady()) {
-    }
-    return tx(c);
+#ifdef __APPLE__
+    std::cout << c;
+    return Error::OK;
+#else
+    while ((uart().LSR & 0x20) == 0) ;
+    uart().IO = static_cast<uint32_t>(c);
+    return Error::OK;
+#endif
 }
 
 Serial::Error Serial::puts(const char* s, uint32_t size)
 {
-	if (size == 0) {
-		for (const char* p = s; *p != '\0'; ++p, ++size) ;
-	}
-	
+    if (size == 0) {
+        for (const char* p = s; *p != '\0'; ++p, ++size) ;
+    }
+    
+#ifdef __APPLE__
+    std::cout.write(s, size);
+#else    
     while (*s != '\0' && size > 0) {
         Error error = write(*s++);
 		size--;
@@ -145,24 +172,8 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
 			return error;
 		}
     }
-	
+#endif
 	return Error::OK;
-}
-
-bool Serial::rxReady()
-{
-    return rxtail != rxhead;
-}
-
-bool Serial::txReady()
-{
-    return (uart().LSR & 0x20) != 0;
-}
-
-Serial::Error Serial::tx(uint8_t c)
-{
-    uart().IO = static_cast<uint32_t>(c);
-    return Error::OK;
 }
 
 void Serial::handleInterrupt()

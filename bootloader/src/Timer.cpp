@@ -37,6 +37,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "InterruptManager.h"
 
+#ifdef __APPLE__
+#include <unistd.h>
+#endif
+
 using namespace placid;
 
 struct ARMTimer
@@ -52,13 +56,31 @@ struct ARMTimer
 	uint32_t freeRunningCounter;
 };
 
+struct SystemTimer
+{
+    uint32_t control;
+    uint32_t counter0;
+    uint32_t counter1;
+    uint32_t compare0;
+    uint32_t compare1;
+    uint32_t compare2;
+    uint32_t compare3;
+};
+
 TimerCallback* Timer::_cb = nullptr;
 
-static constexpr uint32_t timerBase = 0x2000B400;
-	
+static constexpr uint32_t ARMTimerBase = 0x2000B400;
+static constexpr uint32_t SystemTimerBase = 0x20003000;
+static constexpr float SystemTimerTick = 1e-6;
+
 inline volatile ARMTimer& armTimer()
 {
-	return *(reinterpret_cast<volatile ARMTimer*>(timerBase));
+    return *(reinterpret_cast<volatile ARMTimer*>(ARMTimerBase));
+}
+
+inline volatile SystemTimer& systemTimer()
+{
+    return *(reinterpret_cast<volatile SystemTimer*>(SystemTimerBase));
 }
 
 volatile unsigned int icount;
@@ -75,6 +97,10 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 {
 	_cb = cb;
 	
+#ifdef __APPLE__
+    // FIXME: implement
+    return;
+#else
 	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
 
     InterruptManager::enableBasicIRQ(1, false);
@@ -94,4 +120,29 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 	// 32 bit counter, timer enabled, timer interrupt enabled
 	armTimer().control = 0x003E00A2;
 	armTimer().clearIRQ = 0;
+#endif
+}
+
+void Timer::delay(float seconds)
+{
+    if (seconds == 0) {
+        return;
+    }
+    
+    // Keep the number of ticks in a uint32_t, which gives us a limit 
+    // of about 4000 seconds or 67 minutes. This way we can expand the counter into
+    // a uint64_t to deal with overflow
+    uint32_t ticks = static_cast<uint32_t>(seconds * SystemTimerTick + 0.5);
+    
+#ifdef __APPLE__
+    usleep(ticks);
+#else
+    uint64_t end = static_cast<uint64_t>(systemTimer().counter0) + ticks;
+    while (1) {
+        uint64_t current = static_cast<uint64_t>(systemTimer().counter0);
+        if (current >= end) {
+            return;
+        }
+    }
+#endif
 }

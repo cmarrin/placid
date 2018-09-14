@@ -52,11 +52,16 @@ struct IRPT {
     uint32_t BasicDisable;
 };
 
-static constexpr uint32_t irptBase = 0x2000B200;
+static constexpr uint32_t IRPTBase = 0x2000B200;
 
 inline volatile IRPT& irpt()
 {
-	return *(reinterpret_cast<volatile IRPT*>(irptBase));
+#ifdef __APPLE__
+    static IRPT _dummy = { IRPTBase };
+    return _dummy;
+#else
+    return *(reinterpret_cast<volatile IRPT*>(IRPTBase));
+#endif
 }
 
 extern "C" void handleIRQ()

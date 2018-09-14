@@ -45,7 +45,12 @@ static constexpr uint32_t GPLEVOffset = 0x34;
 
 inline volatile uint32_t& rawReg(uint32_t r)
 {
-	return *(reinterpret_cast<volatile uint32_t*>(GPIOBase + r));
+#ifdef __APPLE__
+    static uint32_t _dummy = GPIOBase;
+    return _dummy;
+#else
+    return *(reinterpret_cast<volatile uint32_t*>(GPIOBase + r));
+#endif
 }
 
 void GPIO::setFunction(uint32_t pin, Function f)

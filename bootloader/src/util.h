@@ -42,21 +42,12 @@ namespace placid {
 											//        sign    digits  dp      'e'     dp      exp     '\0'
 	static constexpr uint32_t MaxToStringBufferSize =	1 +     16 +   1 +     1 +     1 +     3 +      1;
 
-	bool toString(char* buf, size_t size, double v);
-	bool toString(char* buf, size_t size, int32_t v);
-	bool toString(char* buf, size_t size, uint32_t v);
-	bool toString(char* buf, size_t size, float v) { return toString(buf, size, static_cast<double>(v)); }
-	bool toString(char* buf, size_t size, int8_t v) { return toString(buf, size, static_cast<int32_t>(v)); }
-	bool toString(char* buf, size_t size, uint8_t v) { return toString(buf, size, static_cast<uint32_t>(v)); }
-	bool toString(char* buf, size_t size, int16_t v) { return toString(buf, size, static_cast<int32_t>(v)); }
-	bool toString(char* buf, size_t size, uint16_t v) { return toString(buf, size, static_cast<uint32_t>(v)); }
-	
-    inline void delay(uint32_t count)
-    {
-        if (count == 0) {
-            return;
-        }
-        volatile uint32_t i = count;
-        while (--i) ;
-    }
+	bool toString(char* buf, double v);
+	bool toString(char* buf, int32_t v);
+	bool toString(char* buf, uint32_t v);
+	inline bool toString(char* buf, float v) { return toString(buf, static_cast<double>(v)); }
+	inline bool toString(char* buf, int8_t v) { return toString(buf, static_cast<int32_t>(v)); }
+	inline bool toString(char* buf, uint8_t v) { return toString(buf, static_cast<uint32_t>(v)); }
+	inline bool toString(char* buf, int16_t v) { return toString(buf, static_cast<int32_t>(v)); }
+	inline bool toString(char* buf, uint16_t v) { return toString(buf, static_cast<uint32_t>(v)); }
 }
