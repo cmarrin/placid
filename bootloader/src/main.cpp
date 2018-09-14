@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 using namespace placid;
 
 static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 3;
+static constexpr float blinkRate = 0.5;
 
 class LEDBlinker : public TimerCallback
 {

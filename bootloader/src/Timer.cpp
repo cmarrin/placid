@@ -104,7 +104,7 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 #else
 	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
 
-    InterruptManager::enableBasicIRQ(1, false);
+    InterruptManager::enableBasicIRQ(0, false);
 
 	// Reset Free running prescaler
 	armTimer().control = 0x003E0000;
@@ -112,7 +112,7 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 	armTimer().load = us - 1;
 	armTimer().reload = us - 1;
 	
-    InterruptManager::enableBasicIRQ(1, true);
+    InterruptManager::enableBasicIRQ(0, true);
 	armTimer().clearIRQ = 0;
 	
     icount=0;
