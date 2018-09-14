@@ -65,6 +65,9 @@ namespace placid {
 		static Error read(int8_t&);
 		static Error write(int8_t);
 		static Error puts(const char*, uint32_t size = 0);
+        static Error puts(double);
+        static Error puts(int32_t);
+        static Error puts(uint32_t);
 		
 		static void handleInterrupt();
 
@@ -83,14 +86,14 @@ namespace placid {
 	{
 	public:
 		OutputStream& operator << (const char* s) { Serial::puts(s); return *this; }
-		// OutputStream& operator << (int32_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (uint32_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (int16_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (uint16_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (int8_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (uint8_t v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (float v) { Serial.print(v); return *this; }
-		// OutputStream& operator << (double v) { Serial.print(v); return *this; }
+		OutputStream& operator << (int32_t v) { Serial::puts(v); return *this; }
+		OutputStream& operator << (uint32_t v) { Serial::puts(v); return *this; }
+		OutputStream& operator << (int16_t v) { Serial::puts(static_cast<int32_t>(v)); return *this; }
+		OutputStream& operator << (uint16_t v) { Serial::puts(static_cast<uint32_t>(v)); return *this; }
+		OutputStream& operator << (int8_t v) { Serial::puts(static_cast<int32_t>(v)); return *this; }
+		OutputStream& operator << (uint8_t v) { Serial::puts(static_cast<uint32_t>(v)); return *this; }
+		OutputStream& operator << (float v) { Serial::puts(static_cast<double>(v)); return *this; }
+		OutputStream& operator << (double v) { Serial::puts(v); return *this; }
 	};
 
 	extern OutputStream cout;

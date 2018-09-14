@@ -98,9 +98,11 @@ halt:
 	wfe
 	b	halt
 
-.global NOP
-NOP:
-    bx lr
+.global SPIN
+SPIN: // void SPIN(uint32_t count);
+    subs    r0, #1
+    bge    SPIN
+    bx    lr
 
 .global enableIRQ
 enableIRQ:

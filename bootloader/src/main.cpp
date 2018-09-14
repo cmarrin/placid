@@ -58,7 +58,7 @@ int main()
 	Serial::init();
 	
 	// Delay for the serial port to connect after power up
-	Timer::delay(1.5);
+    Timer::delay(1.5);
 
 	cout << "hello";
 		

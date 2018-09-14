@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 
 #include "InterruptManager.h"
+#include "Serial.h"
 
 #ifdef __APPLE__
 #include <unistd.h>
@@ -125,21 +126,28 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 
 void Timer::delay(float seconds)
 {
-    if (seconds == 0) {
-        return;
-    }
-    
     // Keep the number of ticks in a uint32_t, which gives us a limit 
     // of about 4000 seconds or 67 minutes. This way we can expand the counter into
     // a uint64_t to deal with overflow
-    uint32_t ticks = static_cast<uint32_t>(seconds * SystemTimerTick + 0.5);
+    if (seconds > 4000) {
+        seconds = 4000;
+    }
+    uint32_t ticks = static_cast<uint32_t>(seconds / SystemTimerTick + 0.5);
+    placid::cout << "seconds=" << seconds << "\n";
+    placid::cout << "ticks=" << ticks << "\n";
+    if (ticks == 0) {
+        return;
+    }
     
 #ifdef __APPLE__
     usleep(ticks);
 #else
-    uint64_t end = static_cast<uint64_t>(systemTimer().counter0) + ticks;
+    uint32_t start = systemTimer().counter0;
+    uint32_t end = start + ticks;
+    
+    // FIXME: Handle the wrapping case
     while (1) {
-        uint64_t current = static_cast<uint64_t>(systemTimer().counter0);
+        uint64_t current = systemTimer().counter0;
         if (current >= end) {
             return;
         }

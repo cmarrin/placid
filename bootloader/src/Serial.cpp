@@ -112,10 +112,10 @@ void Serial::init()
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
     GPIO::reg(GPIO::Register::GPPUD) = 0;
-    Timer::delay(1e3);
+    SPIN(150);
     r0 = (1 << 14) | (1 << 15);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
-    Timer::delay(1e3);                  // wait for (at least) 150 clock cycles
+    SPIN(150);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
@@ -174,6 +174,33 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
     }
 #endif
 	return Error::OK;
+}
+
+Serial::Error Serial::puts(double v)
+{
+    char buf[MaxToStringBufferSize];
+    if(toString(buf, v)) {
+        puts(buf);
+    }
+    return Error::OK;
+}
+
+Serial::Error Serial::puts(int32_t v)
+{
+    char buf[MaxToStringBufferSize];
+    if(toString(buf, v)) {
+        puts(buf);
+    }
+    return Error::OK;
+}
+
+Serial::Error Serial::puts(uint32_t v)
+{
+    char buf[MaxToStringBufferSize];
+    if(toString(buf, v)) {
+        puts(buf);
+    }
+    return Error::OK;
 }
 
 void Serial::handleInterrupt()

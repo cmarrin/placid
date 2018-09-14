@@ -72,7 +72,7 @@ static void decompose(double v, int32_t& mantissa, int32_t& exponent)
 		exponent--;
 	}
 	while (v > 1) {
-		v /= 2;
+		v /= 10;
 		exponent++;
 	}
 	mantissa = static_cast<int32_t>(v * 1e9 + 0.5);
@@ -102,18 +102,19 @@ static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 		}
 	}
 	
-	while (mantissa) {
+	while (mantissa || dp > 0) {
 		int32_t digit = mantissa / 100000000;
 		mantissa -= digit * 100000000;
+        mantissa *= 10;
   
         // If this is the leading digit and '0', skip it
-        if (leadingDigit && digit != 0) {
+        if (!leadingDigit || digit != 0) {
 		    *str++ = static_cast<char>(digit) + '0';
             leadingDigit = false;
         }
 	
 		if (dp > 0) {
-			if (--dp == 0) {
+			if (--dp == 0 && mantissa != 0) {
 				*str++ = '.';
 			}
 		}
@@ -148,13 +149,14 @@ bool placid::toString(char* buf, double v)
     }
 	
 	// Show 1.xxxeyy
-	buf = intToString(static_cast<uint32_t>(mantissa), buf, 0);
+	buf = intToString(static_cast<uint32_t>(mantissa), buf, 1);
 	*buf++ = 'e';
  
     // Assume exp is no more than 3 digits. To move
     // it to the upper 3 digits of an int32_t we
     // multiply by 1000000 and indicate that there
     // are 3 digits
+    exponent--;
     if (exponent < 0) {
         *buf++ = '-';
         exponent = -exponent;
@@ -172,11 +174,13 @@ bool placid::toString(char* buf, int32_t v)
     }
  
     buf = intToString(static_cast<uint32_t>(v), buf, 9);
-	return false;
+    *buf = '\0';
+	return true;
 }
 
 bool placid::toString(char* buf, uint32_t v)
 {
     buf = intToString(static_cast<uint32_t>(v), buf, 9);
-	return false;
+    *buf = '\0';
+	return true;
 }
