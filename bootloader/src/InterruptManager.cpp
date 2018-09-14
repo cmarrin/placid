@@ -84,3 +84,17 @@ void InterruptManager::enableIRQ(uint32_t n, bool enable)
 		}
 	}
 }
+
+void InterruptManager::enableBasicIRQ(uint32_t n, bool enable)
+{
+    if (n >= 32) {
+        return;
+    }
+    
+    if (enable) {
+        irpt().BasicEnable = 1 << n;
+    } else {
+        irpt().BasicDisable = 1 << n;
+    }
+}
+

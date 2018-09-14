@@ -35,14 +35,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Timer.h"
 
+#include "InterruptManager.h"
+
 using namespace placid;
-
-#define GPFSEL4 0x20200010
-#define GPSET1  0x20200020
-#define GPCLR1  0x2020002C
-
-#define IRQ_ENABLE_BASIC 0x2000B218
-#define IRQ_DISABLE_BASIC 0x2000B224
 
 struct ARMTimer
 {
@@ -81,16 +76,8 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 	_cb = cb;
 	
 	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
-    unsigned int ra;
 
-    PUT32(IRQ_DISABLE_BASIC,1);
-
-    ra=GET32(GPFSEL4);
-    ra&=~(7<<21);
-    ra|=1<<21;
-    PUT32(GPFSEL4,ra);
-
-    // PUT32(GPSET1,1<<(47-32));
+    InterruptManager::enableBasicIRQ(1, false);
 
 	// Reset Free running prescaler
 	armTimer().control = 0x003E0000;
@@ -98,7 +85,7 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 	armTimer().load = us - 1;
 	armTimer().reload = us - 1;
 	
-    PUT32(IRQ_ENABLE_BASIC,1);
+    InterruptManager::enableBasicIRQ(1, true);
 	armTimer().clearIRQ = 0;
 	
     icount=0;

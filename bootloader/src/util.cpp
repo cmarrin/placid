@@ -37,6 +37,17 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace placid;
 
+#ifdef __APPLE__
+
+void WFE()
+{
+    delay(10);
+}
+
+void enableIRQ() { }
+
+#endif
+
 // Decompose a double into an exponent and an integet mantissa.
 // The mantissa is between 1 and 10 and multiplied by 100,000,000
 // to fit in an int32_t. So the maximum number of digits that can
@@ -75,14 +86,12 @@ static void decompose(double v, int32_t& mantissa, int32_t& exponent)
 // and positive numbers have that many digits to the
 // left of the dp (e.g., 2 is xx.xxxx)
 
-static char* intToString(int32_t mantissa, char* str, int16_t dp)
+static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 {
-	if (mantissa < 0) {
-		*p++ = '-';
-		mantissa = -mantissa;
-	}
+    bool leadingDigit = true;
 	
 	if (dp <= 0) {
+        leadingDigit = false;
 		*str++ = '0';
 		*str++ = '.';
 		while (dp < 0) {
@@ -94,7 +103,12 @@ static char* intToString(int32_t mantissa, char* str, int16_t dp)
 	while (mantissa) {
 		int32_t digit = mantissa / 100000000;
 		mantissa -= digit * 100000000;
-		*str++ = static_cast<char>(mantissa) + '0';
+  
+        // If this is the leading digit and '0', skip it
+        if (leadingDigit && digit != 0) {
+		    *str++ = static_cast<char>(digit) + '0';
+            leadingDigit = false;
+        }
 	
 		if (dp > 0) {
 			if (--dp == 0) {
@@ -119,53 +133,48 @@ bool toString(char* buf, double v)
 	int32_t exponent;
 	decompose(v, mantissa, exponent);
 	
-    if (exponent >= -3 && exponent <= 5)) {
+    if (mantissa < 0) {
+        *p++ = '-';
+        mantissa = -mantissa;
+    }
+ 
+    if (exponent >= -3 && exponent <= 5) {
 		// no exponent
-        buf = intToString(mantissa, buf, exponent);
+        buf = intToString(static_cast<uint32_t>(mantissa), buf, exponent);
 		*buf = '\0';
         return true;
     }
 	
 	// Show 1.xxxeyy
-	buf = intToString(mantissa, buf, 0);
+	buf = intToString(static_cast<uint32_t>(mantissa), buf, 0);
 	*buf++ = 'e';
-	buf = intToString(exp, buf, 0);
+ 
+    // Assume exp is no more than 3 digits. To move
+    // it to the upper 3 digits of an int32_t we
+    // multiply by 1000000 and indicate that there
+    // are 3 digits
+    if (exponent < 0) {
+        *buf++ = '-';
+        exponent = -exponent;
+    }
+	buf = intToString(static_cast<uint32_t>(exponent * 1000000), buf, 3);
+    *buf = '\0';
+    return true;
+}
 
-    // See how many digits we have
-    Float::decompose_type v = value;
-    int digits = 0;
-    for ( ; v > 0; ++digits, v /= 10) ;
-    v = value;
-    int32_t dp;
-    if (exp + digits > Float::MaxDigits || -exp > Float::MaxDigits) {
-        // Scientific notation
-        dp = digits - 1;
-        exp += dp;
-    } else {
-        dp = -exp;
-        exp = 0;
+bool toString(char* buf, int32_t v)
+{
+    if (v < 0) {
+        *buf++ = '-';
+        v = -v;
     }
-    
-    int32_t i = intToString(value, buf, dp);
-    if (exp) {
-        buf[i++] = 'e';
-        if (exp < 0) {
-            buf[i++] = '-';
-            exp = -exp;
-        }
-        intToString(exp, buf + i, 0);
-    }
-	
-	
+ 
+    buf = intToString(static_cast<uint32_t>(v), buf, 9);
 	return false;
 }
 
-bool toString(char* buf, size_t size, int32_t v)
+bool toString(char* buf, uint32_t v)
 {
-	return false;
-}
-
-bool toString(char* buf, size_t size, uint32_t v)
-{
+    buf = intToString(static_cast<uint32_t>(v), buf, 9);
 	return false;
 }

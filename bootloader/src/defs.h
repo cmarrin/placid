@@ -41,11 +41,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void PUT32(uint32_t addr, uint32_t data);
-extern uint32_t GET32(uint32_t addr);
 extern void NOP();
 extern void BRANCH_TO(uint32_t addr);
-extern void SPIN(uint32_t count);
 extern void WFE();
 extern void WFI();
 extern void enableIRQ();

@@ -51,3 +51,12 @@ namespace placid {
 	bool toString(char* buf, size_t size, int16_t v) { return toString(buf, size, static_cast<int32_t>(v)); }
 	bool toString(char* buf, size_t size, uint16_t v) { return toString(buf, size, static_cast<uint32_t>(v)); }
 	
+    inline void delay(uint32_t count)
+    {
+        if (count == 0) {
+            return;
+        }
+        volatile uint32_t i = count;
+        while (--i) ;
+    }
+}

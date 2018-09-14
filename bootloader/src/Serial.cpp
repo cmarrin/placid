@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Serial.h"
 
+#include "util.h"
 #include "GPIO.h"
 #include "InterruptManager.h"
 
@@ -103,10 +104,10 @@ void Serial::init()
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
     GPIO::reg(GPIO::Register::GPPUD) = 0;
-    SPIN(150);                  // wait for (at least) 150 clock cycles
+    delay(150);                  // wait for (at least) 150 clock cycles
     r0 = (1 << 14) | (1 << 15);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
-    SPIN(150);                  // wait for (at least) 150 clock cycles
+    delay(150);                  // wait for (at least) 150 clock cycles
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;

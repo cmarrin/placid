@@ -49,7 +49,8 @@ namespace placid {
 	//
 	class InterruptManager {
 	public:
-		static void enableIRQ(uint32_t n, bool enable);
+        static void enableIRQ(uint32_t n, bool enable);
+        static void enableBasicIRQ(uint32_t n, bool enable);
 
 	private:
 		InterruptManager() { }

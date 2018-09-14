@@ -33,6 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "util.h"
 #include "BootShell.h"
 #include "GPIO.h"
 #include "Serial.h"
@@ -52,12 +53,12 @@ public:
 	}
 };
 
-void main()
+int main()
 {
 	Serial::init();
 	
 	// Delay for the serial port to connect after power up
-	for (int i = 0; i < 2000000; ++i) NOP();
+	delay(2000000);
 
 	cout << "hello";
 		
@@ -83,4 +84,6 @@ void main()
 		}
 		WFE();
 	}
+ 
+    return 0;
 }

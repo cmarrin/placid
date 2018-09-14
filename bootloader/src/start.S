@@ -98,25 +98,9 @@ halt:
 	wfe
 	b	halt
 
-.global PUT32
-PUT32: // void PUT32(uint32_t addr, uint32_t data);
-    str r1,[r0]
-    bx lr
-
-.global GET32
-GET32: // uint32_t GET32(uint32_t addr);
-    ldr r0,[r0]
-    bx lr
-
 .global NOP
 NOP:
     bx lr
-
-.global SPIN
-SPIN: // void SPIN(u32 count);
-	subs	r0, #1
-	bge	SPIN
-	bx	lr
 
 .global enableIRQ
 enableIRQ:
