@@ -128,9 +128,6 @@ Serial::Error Serial::read(int8_t& c)
 {
 #ifdef __APPLE__
     c = getchar();
-    if (c == '\r') {
-        c = '\n';
-    }
 #else
     while (1) {
         if (rxtail != rxhead) {

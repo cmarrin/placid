@@ -75,7 +75,7 @@ int main()
         if (Serial::read(c) != Serial::Error::OK) {
             Serial::puts("*** Serial Read Error\n");
         } else {
-            Serial::write(c);
+            // Terminals send '\r' for carriage return. The shell expects '\n'
             shell.received(c);
         }
 	}
