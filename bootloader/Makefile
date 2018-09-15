@@ -53,10 +53,12 @@ SRCDIR = src
 BUILDDIR = build
 
 SRC =	start.S \
+		crc16.c \
 		dlmalloc.c \
 		main.cpp \
 		memory.cpp \
 		util.cpp \
+		xmodem.c \
 		BootShell.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \

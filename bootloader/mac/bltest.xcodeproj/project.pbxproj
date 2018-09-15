@@ -15,6 +15,8 @@
 		49A2AC57214B76D4006F2AEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4B214B76D3006F2AEE /* util.cpp */; };
 		49A2AC58214B76D4006F2AEE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4C214B76D3006F2AEE /* InterruptManager.cpp */; };
 		49A2AC59214B76D4006F2AEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4D214B76D3006F2AEE /* BootShell.cpp */; };
+		49A2AC5F214C806D006F2AEE /* xmodem.c in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC5C214C806D006F2AEE /* xmodem.c */; };
+		49A2AC60214C806D006F2AEE /* crc16.c in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC5D214C806D006F2AEE /* crc16.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +56,10 @@
 		49A2AC4D214B76D3006F2AEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../../src/BootShell.cpp; sourceTree = "<group>"; };
 		49A2AC4E214B76D4006F2AEE /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = memory.cpp; path = ../../src/memory.cpp; sourceTree = "<group>"; };
 		49A2AC4F214B76D4006F2AEE /* start.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = start.S; path = ../../src/start.S; sourceTree = "<group>"; };
+		49A2AC5C214C806D006F2AEE /* xmodem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xmodem.c; path = ../../src/xmodem.c; sourceTree = "<group>"; };
+		49A2AC5D214C806D006F2AEE /* crc16.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crc16.c; path = ../../src/crc16.c; sourceTree = "<group>"; };
+		49A2AC5E214C806D006F2AEE /* crc16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crc16.h; path = ../../src/crc16.h; sourceTree = "<group>"; };
+		49A2AC61214D6B13006F2AEE /* xmodem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xmodem.h; path = ../../src/xmodem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +102,10 @@
 		49A2AC3A214B7697006F2AEE /* src */ = {
 			isa = PBXGroup;
 			children = (
+				49A2AC61214D6B13006F2AEE /* xmodem.h */,
+				49A2AC5D214C806D006F2AEE /* crc16.c */,
+				49A2AC5E214C806D006F2AEE /* crc16.h */,
+				49A2AC5C214C806D006F2AEE /* xmodem.c */,
 				49A2AC4D214B76D3006F2AEE /* BootShell.cpp */,
 				49A2AC40214B76D2006F2AEE /* BootShell.h */,
 				49A2AC42214B76D2006F2AEE /* defs.h */,
@@ -177,8 +187,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49A2AC5F214C806D006F2AEE /* xmodem.c in Sources */,
 				49A2AC51214B76D4006F2AEE /* Serial.cpp in Sources */,
 				49A2AC57214B76D4006F2AEE /* util.cpp in Sources */,
+				49A2AC60214C806D006F2AEE /* crc16.c in Sources */,
 				49A2AC56214B76D4006F2AEE /* Shell.cpp in Sources */,
 				49A2AC52214B76D4006F2AEE /* main.cpp in Sources */,
 				49A2AC53214B76D4006F2AEE /* Timer.cpp in Sources */,
