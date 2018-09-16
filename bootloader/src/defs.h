@@ -41,13 +41,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifdef __cplusplus
 extern "C" {
 #endif
+extern void PUT8(uint32_t, uint32_t);
 extern void SPIN(uint32_t);
 extern void BRANCH_TO(uint32_t addr);
-extern void WFE();
-extern void WFI();
-extern void enableIRQ();
+extern void WFE(void);
+extern void WFI(void);
+extern void disableIRQ(void);
+extern void enableIRQ(void);
 
-void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset);
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, int64_t offset);
 int munmap(void *addr, size_t length);
 
 #define PROT_READ       1

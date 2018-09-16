@@ -60,6 +60,8 @@ namespace placid {
 		static void start(TimerCallback*, float seconds, bool repeat);
   
         static void delay(float seconds);
+        
+        static uint64_t systemTime();
 		
 		static void handleInterrupt();
 

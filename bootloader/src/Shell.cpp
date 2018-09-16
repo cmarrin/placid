@@ -149,9 +149,9 @@ bool Shell::executeCommand(const char* s)
     }
     if (s[0] == '?') {
         _state = State::ShowHelp;
-    } else {
-    	showMessage(MessageType::Error, "unrecognized command: ", s);
-	}
+    } else if (!executeShellCommand(s)) {
+        showMessage(MessageType::Error, "unrecognized command: ", s);
+    }
     return true;
 }
 

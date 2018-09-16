@@ -96,7 +96,10 @@ void Serial::init()
 #else
     uint32_t r0;
 
+    disableIRQ();
 	InterruptManager::enableIRQ(29, false);
+
+    rxhead = rxtail = 0;
 
     uart().AUXENB = 1;
     uart().IER = 0;
@@ -122,25 +125,30 @@ void Serial::init()
     
 	InterruptManager::enableIRQ(29, true);
 	enableIRQ();
-
-    // A spurious character can come in on startup. Wait a bit and then clear it out
-    SPIN(1000);
-    rxhead = rxtail = 0;
 #endif
 }
 
-Serial::Error Serial::read(int8_t& c)
+Serial::Error Serial::read(int8_t& c, uint32_t timeout)
 {
 #ifdef __APPLE__
     c = getchar();
 #else
+    uint64_t startTime = Timer::systemTime();
+    uint64_t to = static_cast<uint64_t>(timeout) * 1000;
+    
     while (1) {
         if (rxtail != rxhead) {
             c = rxbuffer[rxtail];
             rxtail = (rxtail + 1) & RXBUFMASK;
             break;
         }
-        WFE();
+        if (timeout) {
+            if (Timer::systemTime() - startTime > to) {
+                return Error::Timeout;
+            }
+        } else {
+            WFE();
+        }
     }
 #endif
 	return Error::OK;
@@ -188,6 +196,13 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
 		}
 #endif
     }
+    
+    static bool firstTime = true;
+    if (firstTime) {
+        clearInput();
+        firstTime = false;
+    }
+
 	return Error::OK;
 }
 
@@ -216,6 +231,27 @@ Serial::Error Serial::puts(uint32_t v)
         puts(buf);
     }
     return Error::OK;
+}
+
+Serial::Error Serial::puts(int64_t v)
+{
+    if (v < 0) {
+        Error error = puts("-");
+        if (error != Error::OK) {
+            return error;
+        }
+        v = -v;
+    }
+    return puts(static_cast<uint64_t>(v));
+}
+
+Serial::Error Serial::puts(uint64_t v)
+{
+    Error error = puts(static_cast<uint32_t>(v >> 32));
+    if (error != Error::OK) {
+        return error;
+    }
+    return puts(static_cast<uint32_t>(v));
 }
 
 void Serial::handleInterrupt()

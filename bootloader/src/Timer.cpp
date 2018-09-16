@@ -104,6 +104,7 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 #else
 	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
 
+    disableIRQ();
     InterruptManager::enableBasicIRQ(0, false);
 
 	// Reset Free running prescaler
@@ -152,3 +153,9 @@ void Timer::delay(float seconds)
     }
 #endif
 }
+
+uint64_t Timer::systemTime()
+{
+    return (static_cast<uint64_t>(systemTimer().counter1) << 32) | static_cast<uint64_t>(systemTimer().counter0);
+}
+

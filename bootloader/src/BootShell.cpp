@@ -36,8 +36,66 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "BootShell.h"
 
 #include "Serial.h"
+#include "xmodem.h"
 
 using namespace placid;
+
+extern "C" int _inbyte(unsigned short timeout)
+{
+    // Timeout is in ms
+    int8_t c;
+    if (Serial::read(c, timeout) == Serial::Error::OK) {
+        return c;
+    } else {
+        return -1;
+    }
+}
+
+extern "C" void _outbyte(int c)
+{
+    Serial::write(static_cast<int8_t>(c));
+}
+
+static char _testdata[ ] =
+    "\x01\x01\xfe"  // SOH, block number, inverse block number
+    "0123456789"    // Data
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "01234567"
+    "\xC1\xc2"      // Checksum
+    "\04";          // EOT
+
+static uint32_t _testindex;
+
+extern "C" int _testinbyte(unsigned short timeout)
+{
+    return (_testindex >= 134) ? -1 : static_cast<uint8_t>(_testdata[_testindex++]);
+}
+
+extern "C" void _testoutbyte(int c)
+{
+    placid::cout << "test xmodem received '" << static_cast<char>(c) << "'\n";
+}
+
+extern "C" void _xmodemmemcpy(unsigned char *dst, unsigned char *src, int count)
+{
+#ifdef __APPLE__
+    placid::cout << "*** placing " << count << " bytes at " << static_cast<uint32_t>(reinterpret_cast<uint64_t>(dst)) << "\n";
+#else
+    for (int i = 0; i < count; i++) {
+        PUT8(reinterpret_cast<uint32_t>(dst++), *src++);
+    }
+#endif
+}
 
 const char* BootShell::welcomeString() const
 {
@@ -46,10 +104,44 @@ const char* BootShell::welcomeString() const
 
 const char* BootShell::helpString() const
 {
-	return "Commands:\n    '?' : this help message\n";
+	return "Commands:\n    '?' : this help message\n    'l' : load executable using XModem";
 } 
 
 void BootShell::shellSend(const char* data, uint32_t size)
 {
 	Serial::puts(data, size);
 }
+
+void showXModemError(int error) {
+    if (error > 0) {
+        placid::cout << "XModem transfer successful, " << static_cast<uint32_t>(error) << " bytes transferred\n";
+        return;
+    }
+    const char* errorString;
+    switch (error) {
+    case -1: errorString = "canceled by remote"; break;
+    case -2: errorString = "sync error"; break;
+    case -3: errorString = "canceled by remote"; break;
+    default: errorString = "too many retry"; break;
+    }
+    
+    placid::cout << "XModem transfer FAILED: " << errorString << "\n";
+}
+
+bool BootShell::executeShellCommand(const char* s)
+{
+    if (s[0] == 'l') {
+        placid::cout << "Waiting for XModem transfer to start...\n";
+        int error = xmodemReceive(reinterpret_cast<uint8_t*>(0x8000), 1024 * 1024, _inbyte, _outbyte, _xmodemmemcpy);
+        showXModemError(error);
+        return true;
+    } else if (s[0] == 't') {
+        // Test XModem. Send a dummy file as though it's coming from the serial line
+        _testindex = 0;
+        int error = xmodemReceive(reinterpret_cast<uint8_t*>(0x8000), 1024 * 1024, _testinbyte, _testoutbyte, _xmodemmemcpy);
+        showXModemError(error);
+        return true;
+    }
+    return false;
+}
+

@@ -57,17 +57,21 @@ namespace placid {
 
 	class Serial {
 	public:
-		enum class Error { OK, NoData, NotReady, Fail };
+		enum class Error { OK, Timeout, NoData, NotReady, Fail };
 		
 		static void init();
 		
 		// Blocking API
-		static Error read(int8_t&);
+		static Error read(int8_t&, uint32_t timeout = 0); // in ms
 		static Error write(int8_t);
 		static Error puts(const char*, uint32_t size = 0);
         static Error puts(double);
         static Error puts(int32_t);
         static Error puts(uint32_t);
+        static Error puts(int64_t);
+        static Error puts(uint64_t);
+        
+        static void clearInput() { rxhead = rxtail = 0; }
 
 		static void handleInterrupt();
 
@@ -85,8 +89,11 @@ namespace placid {
 	class OutputStream
 	{
 	public:
-		OutputStream& operator << (const char* s) { Serial::puts(s); return *this; }
-		OutputStream& operator << (int32_t v) { Serial::puts(v); return *this; }
+        OutputStream& operator << (const char* s) { Serial::puts(s); return *this; }
+        OutputStream& operator << (const char c) { Serial::puts(&c, 1); return *this; }
+        OutputStream& operator << (int64_t v) { Serial::puts(v); return *this; }
+        OutputStream& operator << (uint64_t v) { Serial::puts(v); return *this; }
+        OutputStream& operator << (int32_t v) { Serial::puts(v); return *this; }
 		OutputStream& operator << (uint32_t v) { Serial::puts(v); return *this; }
 		OutputStream& operator << (int16_t v) { Serial::puts(static_cast<int32_t>(v)); return *this; }
 		OutputStream& operator << (uint16_t v) { Serial::puts(static_cast<uint32_t>(v)); return *this; }
