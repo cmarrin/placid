@@ -79,7 +79,7 @@ DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
 all: checkdirs $(BUILDDIR)/bootloader.bin
 	
 clean:
-	rm -f $(OBJS) $(DIVOBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin
+	rm -f $(OBJS) $(DIVOBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin $(BUILDDIR)/bootloader.hex $(BUILDDIR)/bootloader.list $(BUILDDIR)/bootloader.sym
 	
 checkdirs: $(BUILDDIR)
 
