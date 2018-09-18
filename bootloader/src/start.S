@@ -104,6 +104,24 @@ SPIN: // void SPIN(uint32_t count);
     bge    SPIN
     bx    lr
 
+.global PUT32
+PUT32:
+    str r1,[r0]
+    bx lr
+
+.global GET32
+GET32:
+    ldr r0,[r0]
+    bx lr
+
+.global dummy
+dummy:
+    bx lr
+
+.global BRANCHTO
+BRANCHTO:
+    bx r0
+
 .global disableIRQ
 disableIRQ:
     mrs r0,cpsr

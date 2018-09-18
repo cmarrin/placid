@@ -1,159 +1,200 @@
-/*	
- * Copyright 2001-2010 Georges Menie (www.menie.org)
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the University of California, Berkeley nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+/*-------------------------------------------------------------------------
+This source file is a part of Placid
 
-/* this code needs standard functions memcpy() and memset()
-   and input/output functions _inbyte() and _outbyte().
+For the latest info, see http://www.marrin.org/
 
-   the prototypes of the input/output functions are:
-     int _inbyte(unsigned short timeout); // msec timeout
-     void _outbyte(int c);
+Copyright (c) 2018, Chris Marrin
+All rights reserved.
 
- */
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:
 
-#include "crc16.h"
-#include "xmodem.h"
+    - Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+    
+    - Redistributions in binary form must reproduce the above copyright 
+    notice, this list of conditions and the following disclaimer in the 
+    documentation and/or other materials provided with the distribution.
+    
+    - Neither the name of the <ORGANIZATION> nor the names of its 
+    contributors may be used to endorse or promote products derived from 
+    this software without specific prior written permission.
+    
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+POSSIBILITY OF SUCH DAMAGE.
+-------------------------------------------------------------------------*/
 
-#define SOH  0x01
-#define STX  0x02
-#define EOT  0x04
-#define ACK  0x06
-#define NAK  0x15
-#define CAN  0x18
-#define CTRLZ 0x1A
+// This code is adapted from David Welch (dwelch@dwelch.com)
+// See copyright at bottom of file
 
-#define DLY_1S 1000
-#define MAXRETRANS 25
+#define ARMBASE 0x8000
 
-static int check(int crc, const unsigned char *buf, int sz)
+extern void PUT32 ( unsigned int, unsigned int );
+extern void PUT16 ( unsigned int, unsigned int );
+extern void PUT8 ( unsigned int, unsigned int );
+extern unsigned int GET32 ( unsigned int );
+extern unsigned int GETPC ( void );
+extern void BRANCHTO ( unsigned int );
+extern void dummy ( unsigned int );
+
+extern void uart_init ( void );
+extern unsigned int uart_lcr ( void );
+extern void uart_send ( unsigned int );
+extern unsigned int uart_recv ( void );
+extern void timer_init ( void );
+extern unsigned int timer_tick ( void );
+
+//------------------------------------------------------------------------
+unsigned char xstring[256];
+//------------------------------------------------------------------------
+
+int xmodemReceive()
 {
-	if (crc) {
-		unsigned short crc = crc16_ccitt(buf, sz);
-		unsigned short tcrc = (buf[sz]<<8)+buf[sz+1];
-		if (crc == tcrc)
-			return 1;
-	}
-	else {
-		int i;
-		unsigned char cks = 0;
-		for (i = 0; i < sz; ++i) {
-			cks += buf[i];
-		}
-		if (cks == buf[sz])
-		return 1;
-	}
+    unsigned int ra;
+    unsigned int rx;
+    unsigned int addr;
+    unsigned int block;
+    unsigned int state;
 
-	return 0;
+    unsigned int crc;
+
+    uart_init();
+    timer_init();
+
+//SOH 0x01
+//ACK 0x06
+//NAK 0x15
+//EOT 0x04
+
+//block numbers start with 1
+
+//132 byte packet
+//starts with SOH
+//block number byte
+//255-block number
+//128 bytes of data
+//checksum byte (whole packet)
+//a single EOT instead of SOH when done, send an ACK on it too
+
+    block=1;
+    addr=ARMBASE;
+    state=0;
+    crc=0;
+    rx=timer_tick();
+    while(1)
+    {
+        ra=timer_tick();
+        if((ra-rx)>=4000000)
+        {
+            uart_send(0x15);
+            rx+=4000000;
+        }
+        if((uart_lcr()&0x01)==0) continue;
+        xstring[state]=uart_recv();
+        rx=timer_tick();
+        if(state==0)
+        {
+            if(xstring[state]==0x04)
+            {
+                uart_send(0x06);
+                BRANCHTO(ARMBASE);
+                break;
+            }
+        }
+        switch(state)
+        {
+            case 0:
+            {
+                if(xstring[state]==0x01)
+                {
+                    crc=xstring[state];
+                    state++;
+                }
+                else
+                {
+                    //state=0;
+                    uart_send(0x15);
+                }
+                break;
+            }
+            case 1:
+            {
+                if(xstring[state]==block)
+                {
+                    crc+=xstring[state];
+                    state++;
+                }
+                else
+                {
+                    state=0;
+                    uart_send(0x15);
+                }
+                break;
+            }
+            case 2:
+            {
+                if(xstring[state]==(0xFF-xstring[state-1]))
+                {
+                    crc+=xstring[state];
+                    state++;
+                }
+                else
+                {
+                    uart_send(0x15);
+                    state=0;
+                }
+                break;
+            }
+            case 131:
+            {
+                crc&=0xFF;
+                if(xstring[state]==crc)
+                {
+                    for(ra=0;ra<128;ra++)
+                    {
+                        PUT8(addr++,xstring[ra+3]);
+                    }
+                    uart_send(0x06);
+                    block=(block+1)&0xFF;
+                }
+                else
+                {
+                    uart_send(0x15);
+                }
+                state=0;
+                break;
+            }
+            default:
+            {
+                crc+=xstring[state];
+                state++;
+                break;
+            }
+        }
+    }
+    return 0;
 }
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-static void flushinput(InByteFunc inbyte)
-{
-	while (inbyte(((DLY_1S)*3)>>1) >= 0)
-		;
-}
 
-int xmodemReceive(unsigned char *dest, int destsz, InByteFunc inbyte, OutByteFunc outbyte, MemCpyFunc xmodemmemcpy)
-{
-	unsigned char xbuff[1030]; /* 1024 for XModem 1k + 3 head chars + 2 crc + nul */
-	unsigned char *p;
-	int bufsz, crc = 0;
-	unsigned char trychar = 'C';
-	unsigned char packetno = 1;
-	int i, c, len = 0;
-	int retry, retrans = MAXRETRANS;
-
-	for(;;) {
-		for( retry = 0; retry < 16; ++retry) {
-			if (trychar) outbyte(trychar);
-			if ((c = inbyte((DLY_1S)<<1)) >= 0) {
-				switch (c) {
-				case SOH:
-					bufsz = 128;
-					goto start_recv;
-				case STX:
-					bufsz = 1024;
-					goto start_recv;
-				case EOT:
-					flushinput(inbyte);
-					outbyte(ACK);
-					return len; /* normal end */
-				case CAN:
-					if ((c = inbyte(DLY_1S)) == CAN) {
-						flushinput(inbyte);
-						outbyte(ACK);
-						return -1; /* canceled by remote */
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		if (trychar == 'C') { trychar = NAK; continue; }
-		flushinput(inbyte);
-		outbyte(CAN);
-		outbyte(CAN);
-		outbyte(CAN);
-		return -2; /* sync error */
-
-	start_recv:
-		if (trychar == 'C') crc = 1;
-		trychar = 0;
-		p = xbuff;
-		*p++ = c;
-		for (i = 0;  i < (bufsz+(crc?1:0)+3); ++i) {
-			if ((c = inbyte(DLY_1S)) < 0) goto reject;
-			*p++ = c;
-		}
-
-		if (xbuff[1] == (unsigned char)(~xbuff[2]) && 
-			(xbuff[1] == packetno || xbuff[1] == (unsigned char)packetno-1) &&
-			check(crc, &xbuff[3], bufsz)) {
-			if (xbuff[1] == packetno)	{
-				register int count = destsz - len;
-				if (count > bufsz) count = bufsz;
-				if (count > 0) {
-					xmodemmemcpy (&dest[len], &xbuff[3], count);
-					len += count;
-				}
-				++packetno;
-				retrans = MAXRETRANS+1;
-			}
-			if (--retrans <= 0) {
-				flushinput(inbyte);
-				outbyte(CAN);
-				outbyte(CAN);
-				outbyte(CAN);
-				return -3; /* too many retry error */
-			}
-			outbyte(ACK);
-			continue;
-		}
-	reject:
-		flushinput(inbyte);
-		outbyte(NAK);
-	}
-}
+//-------------------------------------------------------------------------
+//
+// Copyright (c) 2012 David Welch dwelch@dwelch.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//-------------------------------------------------------------------------

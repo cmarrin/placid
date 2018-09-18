@@ -54,8 +54,9 @@ BUILDDIR = build
 
 SRC =	start.S \
 		crc16.c \
-		dlmalloc.c \
-		main.cpp \
+        dlmalloc.c \
+        periph.c \
+        main.cpp \
 		memory.cpp \
 		util.cpp \
 		xmodem.c \

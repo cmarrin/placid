@@ -15,8 +15,6 @@
 		49A2AC57214B76D4006F2AEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4B214B76D3006F2AEE /* util.cpp */; };
 		49A2AC58214B76D4006F2AEE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4C214B76D3006F2AEE /* InterruptManager.cpp */; };
 		49A2AC59214B76D4006F2AEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC4D214B76D3006F2AEE /* BootShell.cpp */; };
-		49A2AC5F214C806D006F2AEE /* xmodem.c in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC5C214C806D006F2AEE /* xmodem.c */; };
-		49A2AC60214C806D006F2AEE /* crc16.c in Sources */ = {isa = PBXBuildFile; fileRef = 49A2AC5D214C806D006F2AEE /* crc16.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +32,8 @@
 /* Begin PBXFileReference section */
 		49166D01214D72080077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../../loadmap.ld; sourceTree = "<group>"; };
 		49166D02214D72080077ACEE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../../Makefile; sourceTree = "<group>"; };
+		49166D032151405F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../../src/periph.c; sourceTree = "<group>"; };
+		49166D05215143410077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../../bin/config.txt; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A2AC3B214B76D0006F2AEE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterruptManager.h; path = ../../src/InterruptManager.h; sourceTree = "<group>"; };
 		49A2AC3C214B76D1006F2AEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../src/lib1funcs.asm; sourceTree = "<group>"; };
@@ -92,6 +92,7 @@
 		492C741E214B2A2F009A4DA4 /* bltest */ = {
 			isa = PBXGroup;
 			children = (
+				49166D05215143410077ACEE /* config.txt */,
 				49166D01214D72080077ACEE /* loadmap.ld */,
 				49166D02214D72080077ACEE /* Makefile */,
 				49A2AC3A214B7697006F2AEE /* src */,
@@ -102,6 +103,7 @@
 		49A2AC3A214B7697006F2AEE /* src */ = {
 			isa = PBXGroup;
 			children = (
+				49166D032151405F0077ACEE /* periph.c */,
 				49A2AC61214D6B13006F2AEE /* xmodem.h */,
 				49A2AC5D214C806D006F2AEE /* crc16.c */,
 				49A2AC5E214C806D006F2AEE /* crc16.h */,
@@ -187,10 +189,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49A2AC5F214C806D006F2AEE /* xmodem.c in Sources */,
 				49A2AC51214B76D4006F2AEE /* Serial.cpp in Sources */,
 				49A2AC57214B76D4006F2AEE /* util.cpp in Sources */,
-				49A2AC60214C806D006F2AEE /* crc16.c in Sources */,
 				49A2AC56214B76D4006F2AEE /* Shell.cpp in Sources */,
 				49A2AC52214B76D4006F2AEE /* main.cpp in Sources */,
 				49A2AC53214B76D4006F2AEE /* Timer.cpp in Sources */,

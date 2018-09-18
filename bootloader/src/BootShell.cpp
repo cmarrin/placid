@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "BootShell.h"
 
 #include "Serial.h"
+#include "Timer.h"
 #include "xmodem.h"
 
 using namespace placid;
@@ -70,7 +71,7 @@ static char _testdata[ ] =
     "0123456789"
     "0123456789"
     "0123456789"
-    "01234567"
+    "0123456789"
     "\xC1\xc2"      // Checksum
     "\04";          // EOT
 
@@ -78,7 +79,7 @@ static uint32_t _testindex;
 
 extern "C" int _testinbyte(unsigned short timeout)
 {
-    return (_testindex >= 134) ? -1 : static_cast<uint8_t>(_testdata[_testindex++]);
+    return (_testindex >= 136) ? -1 : static_cast<uint8_t>(_testdata[_testindex++]);
 }
 
 extern "C" void _testoutbyte(int c)
@@ -131,15 +132,13 @@ void showXModemError(int error) {
 bool BootShell::executeShellCommand(const char* s)
 {
     if (s[0] == 'l') {
+#ifdef __APPLE__
+#else
         placid::cout << "Waiting for XModem transfer to start...\n";
-        int error = xmodemReceive(reinterpret_cast<uint8_t*>(0x8000), 1024 * 1024, _inbyte, _outbyte, _xmodemmemcpy);
+        Timer::delay(0.5);
+        int error = xmodemReceive(0x8000, 1024 * 1024);
         showXModemError(error);
-        return true;
-    } else if (s[0] == 't') {
-        // Test XModem. Send a dummy file as though it's coming from the serial line
-        _testindex = 0;
-        int error = xmodemReceive(reinterpret_cast<uint8_t*>(0x8000), 1024 * 1024, _testinbyte, _testoutbyte, _xmodemmemcpy);
-        showXModemError(error);
+#endif
         return true;
     }
     return false;
