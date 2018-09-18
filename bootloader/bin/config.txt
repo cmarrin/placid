@@ -1,1 +1,1 @@
-kernel_address=0x06000000
+kernel_address=0x0800

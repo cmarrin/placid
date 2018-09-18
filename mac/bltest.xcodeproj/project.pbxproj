@@ -16,6 +16,9 @@
 		49166D4E21514C060077ACEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3D21514C050077ACEE /* util.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D5021514C060077ACEE /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D4221514C060077ACEE /* GPIO.cpp */; };
+		49166D5C2151AC5F0077ACEE /* bootloader04.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* bootloader04.c */; };
+		49166D5D2151AC5F0077ACEE /* vectors.s in Sources */ = {isa = PBXBuildFile; fileRef = 49166D592151AC5F0077ACEE /* vectors.s */; };
+		49166D5E2151AC5F0077ACEE /* periph.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D5B2151AC5F0077ACEE /* periph.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,10 +57,12 @@
 		49166D4121514C060077ACEE /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = String.h; path = ../../kernel/src/String.h; sourceTree = "<group>"; };
 		49166D4221514C060077ACEE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../../kernel/src/GPIO.cpp; sourceTree = "<group>"; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
-		49166D5221514C460077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/src/periph.c; sourceTree = "<group>"; };
-		49166D5321514C460077ACEE /* xmodem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xmodem.c; path = ../bootloader/src/xmodem.c; sourceTree = "<group>"; };
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
 		49166D57215194260077ACEE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../bootloader/Makefile; sourceTree = "<group>"; };
+		49166D582151AC5F0077ACEE /* bootloader04.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bootloader04.c; path = ../bootloader/bootloader04.c; sourceTree = "<group>"; };
+		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
+		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
+		49166D5B2151AC5F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/periph.c; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -85,9 +90,11 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
+				49166D582151AC5F0077ACEE /* bootloader04.c */,
+				49166D5A2151AC5F0077ACEE /* loader */,
+				49166D5B2151AC5F0077ACEE /* periph.c */,
+				49166D592151AC5F0077ACEE /* vectors.s */,
 				49166D57215194260077ACEE /* Makefile */,
-				49166D5221514C460077ACEE /* periph.c */,
-				49166D5321514C460077ACEE /* xmodem.c */,
 				49166D5121514C2C0077ACEE /* config.txt */,
 			);
 			name = bootloader;
@@ -195,13 +202,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				49166D4421514C060077ACEE /* memory.cpp in Sources */,
+				49166D5E2151AC5F0077ACEE /* periph.c in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49166D5021514C060077ACEE /* GPIO.cpp in Sources */,
+				49166D5D2151AC5F0077ACEE /* vectors.s in Sources */,
 				49166D4A21514C060077ACEE /* Serial.cpp in Sources */,
 				49166D4521514C060077ACEE /* InterruptManager.cpp in Sources */,
 				49166D4821514C060077ACEE /* Timer.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
+				49166D5C2151AC5F0077ACEE /* bootloader04.c in Sources */,
 				49166D4E21514C060077ACEE /* util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
