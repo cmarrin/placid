@@ -57,6 +57,7 @@
 		49166D5221514C460077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/src/periph.c; sourceTree = "<group>"; };
 		49166D5321514C460077ACEE /* xmodem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xmodem.c; path = ../bootloader/src/xmodem.c; sourceTree = "<group>"; };
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
+		49166D57215194260077ACEE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../bootloader/Makefile; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -84,6 +85,7 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
+				49166D57215194260077ACEE /* Makefile */,
 				49166D5221514C460077ACEE /* periph.c */,
 				49166D5321514C460077ACEE /* xmodem.c */,
 				49166D5121514C2C0077ACEE /* config.txt */,

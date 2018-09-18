@@ -32,5 +32,4 @@ bin/kernel.img : loader $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/b
 	$(ARMGNU)-objdump -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
 	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
 	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O binary bin/kernel.img
-
-
+	wc -c bin/kernel.img
