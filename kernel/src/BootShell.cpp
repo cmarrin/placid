@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Serial.h"
 #include "Timer.h"
-#include "xmodem.h"
 
 using namespace placid;
 
@@ -113,32 +112,9 @@ void BootShell::shellSend(const char* data, uint32_t size)
 	Serial::puts(data, size);
 }
 
-void showXModemError(int error) {
-    if (error > 0) {
-        placid::cout << "XModem transfer successful, " << static_cast<uint32_t>(error) << " bytes transferred\n";
-        return;
-    }
-    const char* errorString;
-    switch (error) {
-    case -1: errorString = "canceled by remote"; break;
-    case -2: errorString = "sync error"; break;
-    case -3: errorString = "canceled by remote"; break;
-    default: errorString = "too many retry"; break;
-    }
-    
-    placid::cout << "XModem transfer FAILED: " << errorString << "\n";
-}
-
 bool BootShell::executeShellCommand(const char* s)
 {
     if (s[0] == 'l') {
-#ifdef __APPLE__
-#else
-        placid::cout << "Waiting for XModem transfer to start...\n";
-        Timer::delay(0.5);
-        int error = xmodemReceive(0x8000, 1024 * 1024);
-        showXModemError(error);
-#endif
         return true;
     }
     return false;

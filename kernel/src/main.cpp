@@ -55,6 +55,7 @@ public:
 
 int main()
 {
+    Timer::delay(0.5);
     Serial::init();
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);

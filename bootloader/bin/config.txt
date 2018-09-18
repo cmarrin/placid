@@ -1,1 +1,1 @@
-kernel=bootloader.bin
+kernel_address=0x06000000

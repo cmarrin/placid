@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <cstddef>
 #include <unistd.h>
-#include <malloc.h>
+#include <cstdlib>
 
 extern "C" {
 	
