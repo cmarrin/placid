@@ -3,10 +3,7 @@
 //-------------------------------------------------------------------------
 
 extern void PUT32 ( unsigned int, unsigned int );
-extern void PUT16 ( unsigned int, unsigned int );
-extern void PUT8 ( unsigned int, unsigned int );
 extern unsigned int GET32 ( unsigned int );
-extern void BRANCHTO ( unsigned int );
 extern void dummy ( unsigned int );
 
 #define ARM_TIMER_CTL 0x2000B408
@@ -55,31 +52,6 @@ void uart_send ( unsigned int c )
         if(GET32(AUX_MU_LSR_REG)&0x20) break;
     }
     PUT32(AUX_MU_IO_REG,c);
-}
-//------------------------------------------------------------------------
-void hexstrings ( unsigned int d )
-{
-    //unsigned int ra;
-    unsigned int rb;
-    unsigned int rc;
-
-    rb=32;
-    while(1)
-    {
-        rb-=4;
-        rc=(d>>rb)&0xF;
-        if(rc>9) rc+=0x37; else rc+=0x30;
-        uart_send(rc);
-        if(rb==0) break;
-    }
-    uart_send(0x20);
-}
-//------------------------------------------------------------------------
-void hexstring ( unsigned int d )
-{
-    hexstrings(d);
-    uart_send(0x0D);
-    uart_send(0x0A);
 }
 //------------------------------------------------------------------------
 void uart_init ( void )
