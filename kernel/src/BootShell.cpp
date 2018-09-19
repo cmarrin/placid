@@ -99,7 +99,7 @@ extern "C" void _xmodemmemcpy(unsigned char *dst, unsigned char *src, int count)
 
 const char* BootShell::welcomeString() const
 {
-	return "\n\nWelcome to The Placid Boot Shell v0.1";
+	return "\n\nPlacid Kernel Shell v0.1";
 }
 
 const char* BootShell::helpString() const
