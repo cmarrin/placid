@@ -7,11 +7,11 @@ BUILDDIR = build
 
 all : checkdirs gcc
 
-gcc : bin/kernel.img
+gcc : bin/bootloader.bin
 
 clean :
 	rm -rf $(BUILDDIR)
-	rm -f bin/*.img
+	rm -f bin/bootloader.bin
 
 checkdirs: $(BUILDDIR)
 
@@ -27,9 +27,9 @@ $(BUILDDIR)/bootloader04.o : bootloader04.c
 $(BUILDDIR)/periph.o : periph.c
 	$(ARMGNU)-gcc $(COPS) -c periph.c -o $(BUILDDIR)/periph.o
 
-bin/kernel.img : loader $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/bootloader04.o 
+bin/bootloader.bin : loader $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/bootloader04.o 
 	$(ARMGNU)-ld $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/bootloader04.o -T loader -o $(BUILDDIR)/bootloader04.elf
 	$(ARMGNU)-objdump -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
 	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
-	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O binary bin/kernel.img
-	wc -c bin/kernel.img
+	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O binary bin/bootloader.bin
+	wc -c bin/bootloader.bin

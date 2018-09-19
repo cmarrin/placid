@@ -1,6 +1,6 @@
 # Untracked files:
 bootloader/build
-bootloader/bin/kernel.img
+bootloader/bin/bootloader.bin
 kernel/build
 mac/DerivedData
 mac/bltest.xcodeproj/project.xcworkspace
