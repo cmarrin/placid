@@ -10,29 +10,34 @@
 
 #define ARMBASE 0x8000
 
-extern void PUT32 ( unsigned int, unsigned int );
-extern void PUT16 ( unsigned int, unsigned int );
 extern void PUT8 ( unsigned int, unsigned int );
-extern unsigned int GET32 ( unsigned int );
-extern unsigned int GETPC ( void );
 extern void BRANCHTO ( unsigned int );
-extern void dummy ( unsigned int );
 
 extern void uart_init ( void );
 extern unsigned int uart_lcr ( void );
 extern void uart_send ( unsigned int );
 extern unsigned int uart_recv ( void );
-extern void hexstring ( unsigned int );
-extern void hexstrings ( unsigned int );
-extern void timer_init ( void );
-extern unsigned int timer_tick ( void );
-
 extern void timer_init ( void );
 extern unsigned int timer_tick ( void );
 
 //------------------------------------------------------------------------
 unsigned char xstring[256];
 //------------------------------------------------------------------------
+
+static void puts(const char* s)
+{
+    while (*s) {
+        uart_send(*s++);
+    }
+}
+
+static void autoload()
+{
+    // FIXME: implement
+    puts("\n\nautoload...\n\n");
+    while(1) { }
+}
+
 int notmain ( void )
 {
     unsigned int ra;
@@ -45,9 +50,38 @@ int notmain ( void )
     unsigned int crc;
 
     uart_init();
-    hexstring(0x12345678);
-    hexstring(GETPC());
+    puts("\n\nPlacid Bootloader v0.1\n\n");
+    puts("Autoloading in 5 seconds\n");
+    puts("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
+
     timer_init();
+    
+    rx = timer_tick();
+    ra = 1000000;
+    uart_send('.');
+
+    while (1) {
+        if (timer_tick() - rx > ra) {
+            uart_send('.');
+            ra += 1000000;
+            if (ra++ >= 5000000) {
+                autoload();
+            }
+        }
+            
+        if ((uart_lcr() & 0x01) == 0) {
+            continue;
+        }
+        int c = uart_recv();
+        if (c == ' ') {
+            // autoload
+            autoload();
+        } else if (c == '\n') {
+            break;
+        }
+    }
+    
+    puts("Start XMODEM upload when ready...\n\n");
 
 //SOH 0x01
 //ACK 0x06
