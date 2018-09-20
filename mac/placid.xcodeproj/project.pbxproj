@@ -16,9 +16,6 @@
 		49166D4E21514C060077ACEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3D21514C050077ACEE /* util.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D5021514C060077ACEE /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D4221514C060077ACEE /* GPIO.cpp */; };
-		49166D5C2151AC5F0077ACEE /* bootloader04.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* bootloader04.c */; };
-		49166D5D2151AC5F0077ACEE /* vectors.s in Sources */ = {isa = PBXBuildFile; fileRef = 49166D592151AC5F0077ACEE /* vectors.s */; };
-		49166D5E2151AC5F0077ACEE /* periph.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D5B2151AC5F0077ACEE /* periph.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -63,6 +60,11 @@
 		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
 		49166D5B2151AC5F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/periph.c; sourceTree = "<group>"; };
+		49166D5F2153CA240077ACEE /* emmc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = emmc.c; path = ../bootloader/emmc.c; sourceTree = "<group>"; };
+		49166D602153CA250077ACEE /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../bootloader/platform.h; sourceTree = "<group>"; };
+		49166D612153CA250077ACEE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../bootloader/README; sourceTree = "<group>"; };
+		49166D622153CA250077ACEE /* emmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = emmc.h; path = ../bootloader/emmc.h; sourceTree = "<group>"; };
+		49166D632153CA250077ACEE /* platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = platform.c; path = ../bootloader/platform.c; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,11 +93,16 @@
 			isa = PBXGroup;
 			children = (
 				49166D582151AC5F0077ACEE /* bootloader04.c */,
-				49166D5A2151AC5F0077ACEE /* loader */,
+				49166D5F2153CA240077ACEE /* emmc.c */,
+				49166D622153CA250077ACEE /* emmc.h */,
 				49166D5B2151AC5F0077ACEE /* periph.c */,
+				49166D632153CA250077ACEE /* platform.c */,
+				49166D602153CA250077ACEE /* platform.h */,
 				49166D592151AC5F0077ACEE /* vectors.s */,
+				49166D5A2151AC5F0077ACEE /* loader */,
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5121514C2C0077ACEE /* config.txt */,
+				49166D612153CA250077ACEE /* README */,
 			);
 			name = bootloader;
 			sourceTree = "<group>";
@@ -179,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "bltest" */;
+			buildConfigurationList = 492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "placid" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -202,16 +209,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				49166D4421514C060077ACEE /* memory.cpp in Sources */,
-				49166D5E2151AC5F0077ACEE /* periph.c in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49166D5021514C060077ACEE /* GPIO.cpp in Sources */,
-				49166D5D2151AC5F0077ACEE /* vectors.s in Sources */,
 				49166D4A21514C060077ACEE /* Serial.cpp in Sources */,
 				49166D4521514C060077ACEE /* InterruptManager.cpp in Sources */,
 				49166D4821514C060077ACEE /* Timer.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
-				49166D5C2151AC5F0077ACEE /* bootloader04.c in Sources */,
 				49166D4E21514C060077ACEE /* util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,7 +351,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "bltest" */ = {
+		492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "placid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				492C7421214B2A2F009A4DA4 /* Debug */,

@@ -3,6 +3,6 @@ bootloader/build
 bootloader/bin/bootloader.bin
 kernel/build
 mac/DerivedData
-mac/bltest.xcodeproj/project.xcworkspace
-mac/bltest.xcodeproj/xcuserdata
+mac/placid.xcodeproj/project.xcworkspace
+mac/placid.xcodeproj/xcuserdata
 
