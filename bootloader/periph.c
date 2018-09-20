@@ -53,6 +53,14 @@ void uart_send ( unsigned int c )
     }
     PUT32(AUX_MU_IO_REG,c);
 }
+
+void puts(const char* s)
+{
+    while (*s) {
+        uart_send(*s++);
+    }
+}
+
 //------------------------------------------------------------------------
 void uart_init ( void )
 {

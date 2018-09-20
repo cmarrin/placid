@@ -8,6 +8,8 @@
 // for the SD card work with this bootloader.  Change the ARMBASE
 // below to use a different location.
 
+#include "emmc.h"
+
 #define ARMBASE 0x8000
 
 extern void PUT8 ( unsigned int, unsigned int );
@@ -17,24 +19,41 @@ extern void uart_init ( void );
 extern unsigned int uart_lcr ( void );
 extern void uart_send ( unsigned int );
 extern unsigned int uart_recv ( void );
+extern void puts(const char* s);
 extern void timer_init ( void );
 extern unsigned int timer_tick ( void );
+
+extern void mmc_init(void);
+
+unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
+        unsigned long long answer = 0;
+
+		unsigned int i;
+        for (i = 0; i < 32; i++) {
+                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
+                        if (value >= divisor << (31 - i)) {
+                                value -= divisor << (31 - i);
+                                answer |= (unsigned long long)(1 << (31 - i));
+                                if (value == 0) break;
+                        } 
+                }
+        }
+
+        answer |= (unsigned long long)value << 32;
+        return answer;
+};
 
 //------------------------------------------------------------------------
 unsigned char xstring[256];
 //------------------------------------------------------------------------
 
-static void puts(const char* s)
-{
-    while (*s) {
-        uart_send(*s++);
-    }
-}
-
 static void autoload()
 {
     // FIXME: implement
     puts("\n\nautoload...\n\n");
+	struct emmc_block_dev dev;
+	sd_card_init(&dev);
+    puts("inited mmc\n");
     while(1) { }
 }
 

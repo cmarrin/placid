@@ -1,13 +1,25 @@
 
-ARMGNU ?= arm-none-eabi
+TOOLCHAIN ?= arm-none-eabi
+AS = $(TOOLCHAIN)-as
+CC = $(TOOLCHAIN)-gcc
+CXX = $(TOOLCHAIN)-g++
+LD = $(TOOLCHAIN)-ld
+OBJDUMP = $(TOOLCHAIN)-objdump
+OBJCOPY = $(TOOLCHAIN)-objcopy
 
-COPS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding 
+CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding 
 
 BUILDDIR = build
 
-all : checkdirs gcc
+SRC =	vectors.S \
+		bootloader04.c \
+		periph.c \
+		emmc.c \
+		platform.c \
+		
+OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 
-gcc : bin/bootloader.bin
+all : checkdirs bin/bootloader.bin
 
 clean :
 	rm -rf $(BUILDDIR)
@@ -17,19 +29,20 @@ checkdirs: $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $@
-	
-$(BUILDDIR)/vectors.o : vectors.s
-	$(ARMGNU)-as vectors.s -o $(BUILDDIR)/vectors.o
 
-$(BUILDDIR)/bootloader04.o : bootloader04.c
-	$(ARMGNU)-gcc $(COPS) -c bootloader04.c -o $(BUILDDIR)/bootloader04.o
-
-$(BUILDDIR)/periph.o : periph.c
-	$(ARMGNU)-gcc $(COPS) -c periph.c -o $(BUILDDIR)/periph.o
-
-bin/bootloader.bin : loader $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/bootloader04.o 
-	$(ARMGNU)-ld $(BUILDDIR)/vectors.o $(BUILDDIR)/periph.o $(BUILDDIR)/bootloader04.o -T loader -o $(BUILDDIR)/bootloader04.elf
-	$(ARMGNU)-objdump -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
-	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
-	$(ARMGNU)-objcopy $(BUILDDIR)/bootloader04.elf -O binary bin/bootloader.bin
+bin/bootloader.bin : loader $(OBJS)
+	$(LD) $(OBJS) -T loader -o $(BUILDDIR)/bootloader04.elf
+	$(OBJDUMP) -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
+	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
+	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O binary bin/bootloader.bin
 	wc -c bin/bootloader.bin
+
+$(BUILDDIR)/%.o: %.c Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: %.cpp Makefile
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: %.S Makefile
+	$(AS) -c $< -o $@
+
