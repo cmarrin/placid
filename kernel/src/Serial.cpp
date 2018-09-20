@@ -235,23 +235,20 @@ Serial::Error Serial::puts(uint32_t v)
 
 Serial::Error Serial::puts(int64_t v)
 {
-    if (v < 0) {
-        Error error = puts("-");
-        if (error != Error::OK) {
-            return error;
-        }
-        v = -v;
+    char buf[MaxToStringBufferSize];
+    if(toString(buf, v)) {
+        puts(buf);
     }
-    return puts(static_cast<uint64_t>(v));
+    return Error::OK;
 }
 
 Serial::Error Serial::puts(uint64_t v)
 {
-    Error error = puts(static_cast<uint32_t>(v >> 32));
-    if (error != Error::OK) {
-        return error;
+    char buf[MaxToStringBufferSize];
+    if(toString(buf, v)) {
+        puts(buf);
     }
-    return puts(static_cast<uint32_t>(v));
+    return Error::OK;
 }
 
 void Serial::handleInterrupt()

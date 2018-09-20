@@ -55,7 +55,7 @@ void enableIRQ() { }
 // to fit in an int32_t. So the maximum number of digits that can
 // be displayed is 9.
 
-static void decompose(double v, int32_t& mantissa, int32_t& exponent)
+static void decompose(double v, int64_t& mantissa, int32_t& exponent, uint16_t maxDecimalPlaces)
 {
 	// Get number to between 0.5 and 1
 	// This is obviously slow if the number is very small or very large.
@@ -75,10 +75,17 @@ static void decompose(double v, int32_t& mantissa, int32_t& exponent)
 		v /= 10;
 		exponent++;
 	}
-	mantissa = static_cast<int32_t>(v * 1e9 + 0.5);
-	if (sign) {
-		mantissa = -mantissa;
-	}
+	mantissa = static_cast<int64_t>(v * 1e19 + 0.5);
+ 
+    // Round mantissa according to the number of digits to display
+    uint16_t digits = maxDecimalPlaces + ((exponent > 0) ? exponent : 0);
+    if (digits <= 19) {
+        mantissa += 50 * (19 - digits);
+    }
+    
+    if (sign) {
+        mantissa = -mantissa;
+    }
 }
 
 // dp defines where the decimal point goes. If it's 0
@@ -88,9 +95,10 @@ static void decompose(double v, int32_t& mantissa, int32_t& exponent)
 // and positive numbers have that many digits to the
 // left of the dp (e.g., 2 is xx.xxxx)
 
-static char* intToString(uint32_t mantissa, char* str, int16_t dp)
+static char* intToString(uint64_t mantissa, char* str, int16_t dp, uint16_t maxDecimalPlaces)
 {
     bool leadingDigit = true;
+    bool decimalDigits = false;
 	
 	if (dp <= 0) {
         leadingDigit = false;
@@ -100,12 +108,34 @@ static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 			*str++ = '0';
 			++dp;
 		}
+        decimalDigits = true;
 	}
+ 
+    if (!mantissa) {
+        *str++ = '0';
+        return str;
+    }
 	
 	while (mantissa || dp > 0) {
-		int32_t digit = mantissa / 100000000;
-		mantissa -= digit * 100000000;
+		int64_t digit = mantissa / 1000000000000000000;
+		mantissa -= digit * 1000000000000000000;
         mantissa *= 10;
+        
+        if (digit > 9) {
+            // The only way this should be able it to happen is
+            // when we have a uint64_t that is larger than 19 digits
+            // In this case we need to show an extra digit. For now
+            // we assume this extra digit is '1' and we subtract
+            // 10 from the digit
+            *str++ = '1';
+            digit -= 10;
+        }
+        
+        if (decimalDigits) {
+            if (maxDecimalPlaces-- == 0) {
+                return str;
+            }
+        }
   
         // If this is the leading digit and '0', skip it
         if (!leadingDigit || digit != 0) {
@@ -116,6 +146,7 @@ static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 		if (dp > 0) {
 			if (--dp == 0 && mantissa != 0) {
 				*str++ = '.';
+                decimalDigits = true;
 			}
 		}
 	}
@@ -124,6 +155,7 @@ static char* intToString(uint32_t mantissa, char* str, int16_t dp)
 
 bool placid::toString(char* buf, double v)
 {
+    static constexpr uint16_t MaxDecimalDigits = 6;
 	char* p = buf;
 
     if (v == 0) {
@@ -132,24 +164,25 @@ bool placid::toString(char* buf, double v)
 		return true;
     }
     
-	int32_t mantissa;
+	int64_t mantissa;
 	int32_t exponent;
-	decompose(v, mantissa, exponent);
+	decompose(v, mantissa, exponent, MaxDecimalDigits);
 	
     if (mantissa < 0) {
         *p++ = '-';
         mantissa = -mantissa;
     }
+    
  
     if (exponent >= -3 && exponent <= 5) {
 		// no exponent
-        buf = intToString(static_cast<uint32_t>(mantissa), buf, exponent);
+        buf = intToString(static_cast<uint64_t>(mantissa), p, exponent, MaxDecimalDigits);
 		*buf = '\0';
         return true;
     }
 	
 	// Show 1.xxxeyy
-	buf = intToString(static_cast<uint32_t>(mantissa), buf, 1);
+	buf = intToString(static_cast<uint32_t>(mantissa), p, 1, MaxDecimalDigits);
 	*buf++ = 'e';
  
     // Assume exp is no more than 3 digits. To move
@@ -161,7 +194,7 @@ bool placid::toString(char* buf, double v)
         *buf++ = '-';
         exponent = -exponent;
     }
-	buf = intToString(static_cast<uint32_t>(exponent * 1000000), buf, 3);
+	buf = intToString(static_cast<uint32_t>(exponent * 1000000), p, 3, 6);
     *buf = '\0';
     return true;
 }
@@ -173,14 +206,30 @@ bool placid::toString(char* buf, int32_t v)
         v = -v;
     }
  
-    buf = intToString(static_cast<uint32_t>(v), buf, 9);
-    *buf = '\0';
-	return true;
+    return toString(buf, static_cast<uint32_t>(v));
 }
 
 bool placid::toString(char* buf, uint32_t v)
 {
-    buf = intToString(static_cast<uint32_t>(v), buf, 9);
+    buf = intToString(static_cast<uint32_t>(v), buf, 19, 6);
     *buf = '\0';
 	return true;
 }
+
+bool placid::toString(char* buf, int64_t v)
+{
+    if (v < 0) {
+        *buf++ = '-';
+        v = -v;
+    }
+    
+    return toString(buf, static_cast<uint64_t>(v));
+}
+
+bool placid::toString(char* buf, uint64_t v)
+{
+    buf = intToString(v, buf, 19, 6);
+    *buf = '\0';
+    return true;
+}
+

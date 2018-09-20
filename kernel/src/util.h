@@ -40,11 +40,13 @@ POSSIBILITY OF SUCH DAMAGE.
 namespace placid {
 
 											//        sign    digits  dp      'e'     dp      exp     '\0'
-	static constexpr uint32_t MaxToStringBufferSize =	1 +     16 +   1 +     1 +     1 +     3 +      1;
+	static constexpr uint32_t MaxToStringBufferSize =	1 +     20 +   1 +     1 +     1 +     3 +      1;
 
 	bool toString(char* buf, double v);
-	bool toString(char* buf, int32_t v);
-	bool toString(char* buf, uint32_t v);
+    bool toString(char* buf, int32_t v);
+    bool toString(char* buf, uint32_t v);
+    bool toString(char* buf, int64_t v);
+    bool toString(char* buf, uint64_t v);
 	inline bool toString(char* buf, float v) { return toString(buf, static_cast<double>(v)); }
 	inline bool toString(char* buf, int8_t v) { return toString(buf, static_cast<int32_t>(v)); }
 	inline bool toString(char* buf, uint8_t v) { return toString(buf, static_cast<uint32_t>(v)); }
