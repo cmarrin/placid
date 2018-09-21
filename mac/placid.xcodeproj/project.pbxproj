@@ -16,9 +16,25 @@
 		49166D4E21514C060077ACEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3D21514C050077ACEE /* util.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D5021514C060077ACEE /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D4221514C060077ACEE /* GPIO.cpp */; };
+		49166D702153F0FE0077ACEE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.c */; };
+		498F154A2153F198004D4F07 /* bootloader04.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* bootloader04.c */; };
+		498F154D2153F1A4004D4F07 /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D632153CA250077ACEE /* platform.c */; };
+		498F1559215531B4004D4F07 /* mailbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F154F21553169004D4F07 /* mailbox.c */; };
+		498F155A215531BA004D4F07 /* mylib.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F15512155316A004D4F07 /* mylib.c */; };
+		498F155B215531BF004D4F07 /* sdcard.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F15522155316A004D4F07 /* sdcard.c */; };
+		498F155F215535B7004D4F07 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D662153E0600077ACEE /* util.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		49166D6B2153F0FE0077ACEE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		492C741A214B2A2F009A4DA4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,10 +81,30 @@
 		49166D612153CA250077ACEE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../bootloader/README; sourceTree = "<group>"; };
 		49166D622153CA250077ACEE /* emmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = emmc.h; path = ../bootloader/emmc.h; sourceTree = "<group>"; };
 		49166D632153CA250077ACEE /* platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = platform.c; path = ../bootloader/platform.c; sourceTree = "<group>"; };
-		492C741C214B2A2F009A4DA4 /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49166D662153E0600077ACEE /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = ../bootloader/util.c; sourceTree = "<group>"; };
+		49166D682153E5D90077ACEE /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../bootloader/util.h; sourceTree = "<group>"; };
+		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49166D6F2153F0FE0077ACEE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
+		498F154F21553169004D4F07 /* mailbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mailbox.c; path = ../bootloader/mailbox.c; sourceTree = "<group>"; };
+		498F15502155316A004D4F07 /* mmio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mmio.h; path = ../bootloader/mmio.h; sourceTree = "<group>"; };
+		498F15512155316A004D4F07 /* mylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mylib.c; path = ../bootloader/mylib.c; sourceTree = "<group>"; };
+		498F15522155316A004D4F07 /* sdcard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdcard.c; path = ../bootloader/sdcard.c; sourceTree = "<group>"; };
+		498F15532155316A004D4F07 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mylib.h; path = ../bootloader/mylib.h; sourceTree = "<group>"; };
+		498F15542155316A004D4F07 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../bootloader/mailbox.h; sourceTree = "<group>"; };
+		498F15552155316A004D4F07 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../bootloader/sdcard.h; sourceTree = "<group>"; };
+		498F155C21553218004D4F07 /* uart.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uart.c; path = ../bootloader/uart.c; sourceTree = "<group>"; };
+		498F155D21553218004D4F07 /* uart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uart.h; path = ../bootloader/uart.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		49166D6A2153F0FE0077ACEE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		492C7419214B2A2F009A4DA4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -92,6 +128,9 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
+				498F154E2155313F004D4F07 /* haribote */,
+				49166D682153E5D90077ACEE /* util.h */,
+				49166D662153E0600077ACEE /* util.c */,
 				49166D582151AC5F0077ACEE /* bootloader04.c */,
 				49166D5F2153CA240077ACEE /* emmc.c */,
 				49166D622153CA250077ACEE /* emmc.h */,
@@ -135,11 +174,20 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		49166D6E2153F0FE0077ACEE /* bltest */ = {
+			isa = PBXGroup;
+			children = (
+				49166D6F2153F0FE0077ACEE /* main.c */,
+			);
+			path = bltest;
+			sourceTree = "<group>";
+		};
 		492C7413214B2A2F009A4DA4 = {
 			isa = PBXGroup;
 			children = (
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
+				49166D6E2153F0FE0077ACEE /* bltest */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -147,17 +195,51 @@
 		492C741D214B2A2F009A4DA4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				492C741C214B2A2F009A4DA4 /* bltest */,
+				492C741C214B2A2F009A4DA4 /* kerneltest */,
+				49166D6D2153F0FE0077ACEE /* bltest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		498F154E2155313F004D4F07 /* haribote */ = {
+			isa = PBXGroup;
+			children = (
+				498F155C21553218004D4F07 /* uart.c */,
+				498F155D21553218004D4F07 /* uart.h */,
+				498F154F21553169004D4F07 /* mailbox.c */,
+				498F15542155316A004D4F07 /* mailbox.h */,
+				498F15502155316A004D4F07 /* mmio.h */,
+				498F15512155316A004D4F07 /* mylib.c */,
+				498F15532155316A004D4F07 /* mylib.h */,
+				498F15522155316A004D4F07 /* sdcard.c */,
+				498F15552155316A004D4F07 /* sdcard.h */,
+			);
+			name = haribote;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		492C741B214B2A2F009A4DA4 /* bltest */ = {
+		49166D6C2153F0FE0077ACEE /* bltest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 492C7423214B2A2F009A4DA4 /* Build configuration list for PBXNativeTarget "bltest" */;
+			buildConfigurationList = 49166D712153F0FE0077ACEE /* Build configuration list for PBXNativeTarget "bltest" */;
+			buildPhases = (
+				49166D692153F0FE0077ACEE /* Sources */,
+				49166D6A2153F0FE0077ACEE /* Frameworks */,
+				49166D6B2153F0FE0077ACEE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bltest;
+			productName = bltest;
+			productReference = 49166D6D2153F0FE0077ACEE /* bltest */;
+			productType = "com.apple.product-type.tool";
+		};
+		492C741B214B2A2F009A4DA4 /* kerneltest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 492C7423214B2A2F009A4DA4 /* Build configuration list for PBXNativeTarget "kerneltest" */;
 			buildPhases = (
 				492C7418214B2A2F009A4DA4 /* Sources */,
 				492C7419214B2A2F009A4DA4 /* Frameworks */,
@@ -167,9 +249,9 @@
 			);
 			dependencies = (
 			);
-			name = bltest;
+			name = kerneltest;
 			productName = bltest;
-			productReference = 492C741C214B2A2F009A4DA4 /* bltest */;
+			productReference = 492C741C214B2A2F009A4DA4 /* kerneltest */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -181,6 +263,9 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = MarrinTech;
 				TargetAttributes = {
+					49166D6C2153F0FE0077ACEE = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
 					492C741B214B2A2F009A4DA4 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
@@ -198,12 +283,27 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				492C741B214B2A2F009A4DA4 /* bltest */,
+				492C741B214B2A2F009A4DA4 /* kerneltest */,
+				49166D6C2153F0FE0077ACEE /* bltest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		49166D692153F0FE0077ACEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				498F154A2153F198004D4F07 /* bootloader04.c in Sources */,
+				498F154D2153F1A4004D4F07 /* platform.c in Sources */,
+				49166D702153F0FE0077ACEE /* main.c in Sources */,
+				498F155A215531BA004D4F07 /* mylib.c in Sources */,
+				498F155F215535B7004D4F07 /* util.c in Sources */,
+				498F1559215531B4004D4F07 /* mailbox.c in Sources */,
+				498F155B215531BF004D4F07 /* sdcard.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		492C7418214B2A2F009A4DA4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -223,6 +323,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		49166D722153F0FE0077ACEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		49166D732153F0FE0077ACEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		492C7421214B2A2F009A4DA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -351,6 +467,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		49166D712153F0FE0077ACEE /* Build configuration list for PBXNativeTarget "bltest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49166D722153F0FE0077ACEE /* Debug */,
+				49166D732153F0FE0077ACEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "placid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -360,7 +485,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		492C7423214B2A2F009A4DA4 /* Build configuration list for PBXNativeTarget "bltest" */ = {
+		492C7423214B2A2F009A4DA4 /* Build configuration list for PBXNativeTarget "kerneltest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				492C7424214B2A2F009A4DA4 /* Debug */,

@@ -23,34 +23,27 @@ volatile struct   _pwm * PWM  = (struct   _pwm *) (PERIPHERAL_BASE + PWM_BASE);
 volatile struct  _gpio * GPIO = (struct  _gpio *) (PERIPHERAL_BASE + GPIO_BASE);
 volatile struct   _irq * IRQ  = (struct   _irq *) (PERIPHERAL_BASE + IRQ_BASE);
 
-/* Unhandled exceptions - hang the machine */
-__attribute__ ((naked)) void bad_exception() {
-    while(1)
-        ;
-}
-
-__attribute__ ((interrupt ("SWI"))) void interrupt_swi() {
-
-}
-
-__attribute__ ((interrupt ("ABORT"))) void interrupt_prefetch_abort() {
-
-}
-
-__attribute__ ((interrupt ("ABORT"))) void interrupt_data_abort() {
-
-}
-
 void mmio_write(uint32_t reg, uint32_t data) {
     dmb();
+#ifdef __APPLE__
+#else
     *(volatile uint32_t *) (reg) = data;
+#endif
     dmb();
 }
 
-uint32_t mmio_read(uint32_t reg) {
+uint32_t mmio_read(uint32_t reg)
+{
+    uint32_t r;
+    
     dmb();
-    return *(volatile uint32_t *) (reg);
+#ifdef __APPLE__
+    r = 8;
+#else
+    r = *(volatile uint32_t *) (reg);
+#endif
     dmb();
+    return r;
 }
 
 void mbox_write(uint8_t channel, uint32_t data) {

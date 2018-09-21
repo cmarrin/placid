@@ -8,7 +8,9 @@
 // for the SD card work with this bootloader.  Change the ARMBASE
 // below to use a different location.
 
-#include "emmc.h"
+#include "sdcard.h"
+#include "mylib.h"
+#include "util.h"
 
 #define ARMBASE 0x8000
 
@@ -19,7 +21,6 @@ extern void uart_init ( void );
 extern unsigned int uart_lcr ( void );
 extern void uart_send ( unsigned int );
 extern unsigned int uart_recv ( void );
-extern void puts(const char* s);
 extern void timer_init ( void );
 extern unsigned int timer_tick ( void );
 
@@ -43,6 +44,10 @@ unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
         return answer;
 };
 
+unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
+        return (unsigned int)__aeabi_uidivmod(value, divisor);
+};
+
 //------------------------------------------------------------------------
 unsigned char xstring[256];
 //------------------------------------------------------------------------
@@ -50,10 +55,32 @@ unsigned char xstring[256];
 static void autoload()
 {
     // FIXME: implement
-    puts("\n\nautoload...\n\n");
-	struct emmc_block_dev dev;
-	sd_card_init(&dev);
-    puts("inited mmc\n");
+    putstr("\n\nautoload...\n\n");
+    putstr("calling sdInit\n");
+    sdInit();
+    putstr("after sdInit\n");
+    waitMicro(100);
+    putstr("calling sdInitCard\n");
+    int r = sdInitCard();
+    putstr("after sdInitCard\n");
+    waitMicro(10000);
+
+//    struct emmc_block_dev dev;
+//    int r = sd_card_init(&dev);
+    putstr("inited mmc, return=");
+    puti(r);
+    putstr("\n");
+    
+    // read a sector
+    printf("Reading first sector\n");
+    uint8_t buf[512];
+    
+    // Init the signature to something
+    buf[510] = '\x01';
+    buf[511] = '\x02';
+    r = sdTransferBlocks(0, 1, buf, 0);
+    printf("Read returned %d, signature:%x %x\n", r, buf[510], buf[511]);
+    
     while(1) { }
 }
 
@@ -69,9 +96,13 @@ int notmain ( void )
     unsigned int crc;
 
     uart_init();
-    puts("\n\nPlacid Bootloader v0.1\n\n");
-    puts("Autoloading in 5 seconds\n");
-    puts("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
+    putstr("\n\nPlacid Bootloader v0.1\n\n");
+    putstr("Autoloading in 5 seconds\n");
+    putstr("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
+    
+    putstr("***** n = ");
+    putu(1234);
+    putstr("\n");
 
     timer_init();
     
@@ -100,7 +131,7 @@ int notmain ( void )
         }
     }
     
-    puts("Start XMODEM upload when ready...\n\n");
+    putstr("Start XMODEM upload when ready...\n\n");
 
 //SOH 0x01
 //ACK 0x06
