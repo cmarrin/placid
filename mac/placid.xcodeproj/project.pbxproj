@@ -17,8 +17,6 @@
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D5021514C060077ACEE /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D4221514C060077ACEE /* GPIO.cpp */; };
 		49166D702153F0FE0077ACEE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.c */; };
-		498F154A2153F198004D4F07 /* bootloader04.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* bootloader04.c */; };
-		498F154D2153F1A4004D4F07 /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 49166D632153CA250077ACEE /* platform.c */; };
 		498F1559215531B4004D4F07 /* mailbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F154F21553169004D4F07 /* mailbox.c */; };
 		498F155A215531BA004D4F07 /* mylib.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F15512155316A004D4F07 /* mylib.c */; };
 		498F155B215531BF004D4F07 /* sdcard.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F15522155316A004D4F07 /* sdcard.c */; };
@@ -76,11 +74,7 @@
 		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
 		49166D5B2151AC5F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/periph.c; sourceTree = "<group>"; };
-		49166D5F2153CA240077ACEE /* emmc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = emmc.c; path = ../bootloader/emmc.c; sourceTree = "<group>"; };
-		49166D602153CA250077ACEE /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../bootloader/platform.h; sourceTree = "<group>"; };
 		49166D612153CA250077ACEE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../bootloader/README; sourceTree = "<group>"; };
-		49166D622153CA250077ACEE /* emmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = emmc.h; path = ../bootloader/emmc.h; sourceTree = "<group>"; };
-		49166D632153CA250077ACEE /* platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = platform.c; path = ../bootloader/platform.c; sourceTree = "<group>"; };
 		49166D662153E0600077ACEE /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = ../bootloader/util.c; sourceTree = "<group>"; };
 		49166D682153E5D90077ACEE /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../bootloader/util.h; sourceTree = "<group>"; };
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,8 +87,6 @@
 		498F15532155316A004D4F07 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mylib.h; path = ../bootloader/mylib.h; sourceTree = "<group>"; };
 		498F15542155316A004D4F07 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../bootloader/mailbox.h; sourceTree = "<group>"; };
 		498F15552155316A004D4F07 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../bootloader/sdcard.h; sourceTree = "<group>"; };
-		498F155C21553218004D4F07 /* uart.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uart.c; path = ../bootloader/uart.c; sourceTree = "<group>"; };
-		498F155D21553218004D4F07 /* uart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uart.h; path = ../bootloader/uart.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,16 +124,13 @@
 				49166D682153E5D90077ACEE /* util.h */,
 				49166D662153E0600077ACEE /* util.c */,
 				49166D582151AC5F0077ACEE /* bootloader04.c */,
-				49166D5F2153CA240077ACEE /* emmc.c */,
-				49166D622153CA250077ACEE /* emmc.h */,
 				49166D5B2151AC5F0077ACEE /* periph.c */,
-				49166D632153CA250077ACEE /* platform.c */,
-				49166D602153CA250077ACEE /* platform.h */,
 				49166D592151AC5F0077ACEE /* vectors.s */,
 				49166D5A2151AC5F0077ACEE /* loader */,
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5121514C2C0077ACEE /* config.txt */,
 				49166D612153CA250077ACEE /* README */,
+				49166D6F2153F0FE0077ACEE /* main.c */,
 			);
 			name = bootloader;
 			sourceTree = "<group>";
@@ -177,7 +166,6 @@
 		49166D6E2153F0FE0077ACEE /* bltest */ = {
 			isa = PBXGroup;
 			children = (
-				49166D6F2153F0FE0077ACEE /* main.c */,
 			);
 			path = bltest;
 			sourceTree = "<group>";
@@ -204,8 +192,6 @@
 		498F154E2155313F004D4F07 /* haribote */ = {
 			isa = PBXGroup;
 			children = (
-				498F155C21553218004D4F07 /* uart.c */,
-				498F155D21553218004D4F07 /* uart.h */,
 				498F154F21553169004D4F07 /* mailbox.c */,
 				498F15542155316A004D4F07 /* mailbox.h */,
 				498F15502155316A004D4F07 /* mmio.h */,
@@ -294,8 +280,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				498F154A2153F198004D4F07 /* bootloader04.c in Sources */,
-				498F154D2153F1A4004D4F07 /* platform.c in Sources */,
 				49166D702153F0FE0077ACEE /* main.c in Sources */,
 				498F155A215531BA004D4F07 /* mylib.c in Sources */,
 				498F155F215535B7004D4F07 /* util.c in Sources */,

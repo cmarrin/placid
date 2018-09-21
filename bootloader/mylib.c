@@ -1,5 +1,4 @@
 #include "mylib.h"
-#include "uart.h"
 #include "mmio.h"
 #include "util.h"
 

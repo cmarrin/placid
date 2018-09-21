@@ -15,10 +15,8 @@ SRC =	vectors.S \
 		bootloader04.c \
 		periph.c \
 		sdcard.c \
-        uart.c \
         mailbox.c \
         mylib.c \
-		platform.c \
         util.c
 		
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))

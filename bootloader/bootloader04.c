@@ -76,10 +76,15 @@ static void autoload()
     uint8_t buf[512];
     
     // Init the signature to something
-    buf[510] = '\x01';
-    buf[511] = '\x02';
+    buf[0x1fe] = '\x01';
+    buf[0x1ff] = '\x02';
     r = sdTransferBlocks(0, 1, buf, 0);
-    printf("Read returned %d, signature:%x %x\n", r, buf[510], buf[511]);
+    printf("Read returned %d, signature:%02x %02x\n", r, buf[0x1fe], buf[0x1ff]);
+    printf("1st partition: ");
+    for (int i = 0; i < 16; ++i) {
+        printf("%02x, ", buf[0x1be + i]);
+    }
+    printf("\n");
     
     while(1) { }
 }
