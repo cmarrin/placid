@@ -19,13 +19,17 @@
 #define SD_READ_BLOCKS       0
 #define SD_WRITE_BLOCKS      1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 int sdInit(void);
 int sdInitCard(void);
 //int sdReadSingleBlock( long long address, unsigned char* buffer );
 //int sdWriteSingleBlock( long long address, unsigned char* buffer );
 int sdTransferBlocks( long long address, int num, unsigned char* buffer, int write );
 int sdClearBlocks( long long address, int num );
-
-extern void waitCycle(int32_t count);
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SDCARD_H

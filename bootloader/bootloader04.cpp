@@ -9,22 +9,23 @@
 // below to use a different location.
 
 #include "sdcard.h"
-#include "mylib.h"
-#include "util.h"
+#include "SDFS.h"
+#include "bootutil.h"
+
+using namespace placid;
 
 #define ARMBASE 0x8000
 
-extern void PUT8 ( unsigned int, unsigned int );
-extern void BRANCHTO ( unsigned int );
+extern "C" {
+
+void PUT8 ( unsigned int, unsigned int );
+void BRANCHTO ( unsigned int );
 
 extern void uart_init ( void );
 extern unsigned int uart_lcr ( void );
 extern void uart_send ( unsigned int );
 extern unsigned int uart_recv ( void );
 extern void timer_init ( void );
-extern unsigned int timer_tick ( void );
-
-extern void mmc_init(void);
 
 unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
         unsigned long long answer = 0;
@@ -48,6 +49,8 @@ unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
         return (unsigned int)__aeabi_uidivmod(value, divisor);
 };
 
+}
+
 //------------------------------------------------------------------------
 unsigned char xstring[256];
 //------------------------------------------------------------------------
@@ -55,41 +58,34 @@ unsigned char xstring[256];
 static void autoload()
 {
     // FIXME: implement
-    putstr("\n\nautoload...\n\n");
-    putstr("calling sdInit\n");
-    sdInit();
-    putstr("after sdInit\n");
-    waitMicro(100);
-    putstr("calling sdInitCard\n");
-    int r = sdInitCard();
-    putstr("after sdInitCard\n");
-    waitMicro(10000);
-
-//    struct emmc_block_dev dev;
-//    int r = sd_card_init(&dev);
-    putstr("inited mmc, return=");
-    puti(r);
-    putstr("\n");
+    printf("\n\nautoload...\n\n");
+    printf("mounting FS\n");
+    SDFS fs;
+    SDFS::mount(fs, 0, 0);
     
-    // read a sector
-    printf("Reading first sector\n");
-    uint8_t buf[512];
-    
-    // Init the signature to something
-    buf[0x1fe] = '\x01';
-    buf[0x1ff] = '\x02';
-    r = sdTransferBlocks(0, 1, buf, 0);
-    printf("Read returned %d, signature:%02x %02x\n", r, buf[0x1fe], buf[0x1ff]);
-    printf("1st partition: ");
-    for (int i = 0; i < 16; ++i) {
-        printf("%02x, ", buf[0x1be + i]);
+    printf("opening hello.txt\n");
+    File fp;
+    bool r = SDFS::open(fs, fp, "/hello.txt", "r");
+    printf("file open returned %s\n", r ? "true" : "false");
+    if (!r) {
+        printf("*** File open error:%d\n", File::error(fp));
+    } else {
+        // Read sector
+        char buf[512];
+        int32_t size = File::read(fp, buf, 16);
+        printf("file read returned %d\n", size);
+        if (size != 16) {
+            printf("*** File read error:%d\n", File::error(fp));
+        } else {
+            buf[15] = '\0';
+            printf("Read returned '%s'\n", buf);
+        }
     }
-    printf("\n");
     
     while(1) { }
 }
 
-int notmain ( void )
+extern "C" int notmain ( void )
 {
     unsigned int ra;
     //unsigned int rb;
@@ -111,12 +107,12 @@ int notmain ( void )
 
     timer_init();
     
-    rx = timer_tick();
+    rx = timerTick();
     ra = 1000000;
     uart_send('.');
 
     while (1) {
-        if (timer_tick() - rx > ra) {
+        if (timerTick() - rx > ra) {
             uart_send('.');
             ra += 1000000;
             if (ra++ >= 5000000) {
@@ -157,10 +153,10 @@ int notmain ( void )
     addr=ARMBASE;
     state=0;
     crc=0;
-    rx=timer_tick();
+    rx=timerTick();
     while(1)
     {
-        ra=timer_tick();
+        ra=timerTick();
         if((ra-rx)>=4000000)
         {
             uart_send(0x15);
@@ -168,7 +164,7 @@ int notmain ( void )
         }
         if((uart_lcr()&0x01)==0) continue;
         xstring[state]=uart_recv();
-        rx=timer_tick();
+        rx=timerTick();
         if(state==0)
         {
             if(xstring[state]==0x04)

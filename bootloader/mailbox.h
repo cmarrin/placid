@@ -2,7 +2,6 @@
 #define MAILBOX_H
 
 #include <stdint.h>
-//#include <stdio.h>
 
 #define MB_READ   0x2000B880
 #define MB_STATUS 0x2000B898

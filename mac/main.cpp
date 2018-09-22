@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-extern int notmain(void);
+extern "C" int notmain(void);
 
 int main(int argc, const char * argv[]) {
     notmain();

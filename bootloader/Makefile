@@ -8,16 +8,17 @@ OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
 CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding 
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
 SRC =	vectors.S \
 		bootloader04.c \
-		periph.c \
+        periph.c \
 		sdcard.c \
         mailbox.c \
-        mylib.c \
-        util.c
+        SDFS \
+        bootutil.c
 		
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 

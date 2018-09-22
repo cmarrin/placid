@@ -33,23 +33,51 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "SDFS.h"
 
-#include <stdint.h>
+#include "sdcard.h"
+#include "bootutil.h"
 
-                   //        sign    digits  dp      'e'     dp      exp     '\0'
-#define MaxToStringBufferSize (1 +     20 +   1 +     1 +     1 +     3 +      1)
+using namespace placid;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern void itos(char* buf, int32_t v);
-extern void utos(char* buf, uint32_t v);
-extern void putstr(const char* s);
-extern int putchar(int c);
-extern void puti(int32_t v);
-extern void putu(uint32_t v);
-extern int getchar(void);
-#ifdef __cplusplus
+int32_t File::read(const File& file, char* buf, uint32_t size)
+{
+    // FIXME: For now we will always ask for 1 block from the start of the file and assume buf can hold 512 bytes
+    int r = sdTransferBlocks(file._baseAddress, 1, reinterpret_cast<uint8_t*>(buf), 0);
+    if (r != 0) {
+        printf("*** Disk Read Error: return code=%d\n", r);
+        return -1;
+    }
+    return static_cast<int32_t>(size);
 }
-#endif
+
+int32_t File::write(File& file, const char* buf, uint32_t size)
+{
+    // FIXME: Implement
+    return -1;
+}
+
+bool SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
+{
+    // FIXME: For now assume device=0 and partition=0
+    if (fs._mounted) {
+        return true;
+    }
+    sdInit();
+    delay(100);
+    int r = sdInitCard();
+    delay(10000);
+    if (r != SD_OK && r != SD_CARD_CHANGED) {
+        printf("*** Disk Initialize Error: return code=%d\n", r);
+        return false;
+    }
+    
+    fs._mounted = true;
+    return true;
+}
+
+bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
+{
+    // FIXME: Implement
+    return false;
+}

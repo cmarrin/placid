@@ -4,7 +4,7 @@
 */
 
 #include "mailbox.h"
-#include "mylib.h"
+#include "bootutil.h"
 
 #define flushcache() asm volatile \
 		("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) )
@@ -104,6 +104,8 @@ int mailbox_getClockRate(int id)
 	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
 	//	}
+#ifdef __APPLE__
+#else
 	if (*((volatile unsigned int *) (mail+4)) == 0x80000000) {
 		//		printf("Get clock rate (ID=%d) successful\n", *((volatile unsigned int *) (mail+5*4)));
 		//		printf("Clock rate: %d\n", *((volatile unsigned int *) (mail+6*4)));
@@ -112,6 +114,7 @@ int mailbox_getClockRate(int id)
 		printf("Error: ID=%d\n", *((volatile unsigned int *) (mail+5*4)));
 		printf("response: 0x%08x\n", *((volatile unsigned int *) (mail+6*4)));
 	}
+#endif
 	return -1;
 }
 
@@ -151,6 +154,9 @@ int mailbox_getMemorySize()
 	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
 	//	}
+#ifdef __APPLE__
+    return -1;
+#else
 	if (*((uint32_t *) (mail+20)) != 0) {
 		printf("Error: ARM memory base address is not zero. %08x\n", *((uint32_t *) (mail+20)));
 		//		_hangup();
@@ -160,6 +166,7 @@ int mailbox_getMemorySize()
 	} else {
 		return -1;
 	}
+#endif
 }
 
 
@@ -200,9 +207,13 @@ int mailbox_emmc_clock(int id)
 	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
 	//	}
+#ifdef __APPLE__
+    return -1;
+#else
 	if (*((uint32_t *) (mail+4)) == 0x80000000) {
 		return 0;
 	} else {
 		return -1;
 	}
+#endif
 }
