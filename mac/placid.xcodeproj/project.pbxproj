@@ -81,18 +81,11 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4962954921556D660064B9C9 /* ff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ff.c; path = ../bootloader/ff.c; sourceTree = "<group>"; };
-		4962954A21556D660064B9C9 /* ff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ff.h; path = ../bootloader/ff.h; sourceTree = "<group>"; };
-		4962954B21556D670064B9C9 /* ffconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ffconf.h; path = ../bootloader/ffconf.h; sourceTree = "<group>"; };
-		4962954D21556FA50064B9C9 /* diskio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = diskio.h; path = ../bootloader/diskio.h; sourceTree = "<group>"; };
-		4962954F215574DF0064B9C9 /* diskio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = diskio.c; path = ../bootloader/diskio.c; sourceTree = "<group>"; };
 		49629551215673D30064B9C9 /* SDFS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../bootloader/SDFS.cpp; sourceTree = "<group>"; };
 		49629552215673D30064B9C9 /* SDFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../bootloader/SDFS.h; sourceTree = "<group>"; };
 		498F154F21553169004D4F07 /* mailbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mailbox.c; path = ../bootloader/mailbox.c; sourceTree = "<group>"; };
 		498F15502155316A004D4F07 /* mmio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mmio.h; path = ../bootloader/mmio.h; sourceTree = "<group>"; };
-		498F15512155316A004D4F07 /* mylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mylib.c; path = ../bootloader/mylib.c; sourceTree = "<group>"; };
 		498F15522155316A004D4F07 /* sdcard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdcard.c; path = ../bootloader/sdcard.c; sourceTree = "<group>"; };
-		498F15532155316A004D4F07 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mylib.h; path = ../bootloader/mylib.h; sourceTree = "<group>"; };
 		498F15542155316A004D4F07 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../bootloader/mailbox.h; sourceTree = "<group>"; };
 		498F15552155316A004D4F07 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../bootloader/sdcard.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,11 +121,6 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
-				4962954F215574DF0064B9C9 /* diskio.c */,
-				4962954D21556FA50064B9C9 /* diskio.h */,
-				4962954921556D660064B9C9 /* ff.c */,
-				4962954A21556D660064B9C9 /* ff.h */,
-				4962954B21556D670064B9C9 /* ffconf.h */,
 				498F154E2155313F004D4F07 /* haribote */,
 				49166D682153E5D90077ACEE /* bootutil.h */,
 				49166D662153E0600077ACEE /* bootutil.cpp */,
@@ -210,8 +198,6 @@
 				498F154F21553169004D4F07 /* mailbox.c */,
 				498F15542155316A004D4F07 /* mailbox.h */,
 				498F15502155316A004D4F07 /* mmio.h */,
-				498F15512155316A004D4F07 /* mylib.c */,
-				498F15532155316A004D4F07 /* mylib.h */,
 				498F15522155316A004D4F07 /* sdcard.c */,
 				498F15552155316A004D4F07 /* sdcard.h */,
 			);

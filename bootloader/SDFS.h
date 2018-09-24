@@ -41,75 +41,95 @@ namespace placid {
 
 const uint32_t FilenameLength = 32;
 
-class DirectoryEntry {    
+class SDFS;
+
+class DirectoryEntry {
+    friend class SDFS;
 public:
     DirectoryEntry() { }
 
     static const char* name(const DirectoryEntry& dir) { return dir._name; }
     static uint32_t size(const DirectoryEntry& dir) { return dir._size; }
+    static uint32_t firstFileCluster(const DirectoryEntry& dir) { return dir._firstFileCluster; }
     static bool valid(const DirectoryEntry& dir) { return dir._valid; }
     
-    static bool next();
-    
+    static bool find(const SDFS&, DirectoryEntry&, const char* name);
+
 private:
     bool _valid = false;
     char _name[FilenameLength];
     uint32_t _size = 0;
+    uint32_t _firstFileCluster;
+    uint32_t _startDataSector = 0;
+    uint8_t _sectorsPerCluster = 0;
+    uint32_t _dirCluster = 0;
+    uint32_t _nextIndex = 0;
 };
 
 class File {
-public:
-    enum class SeekWhence { Set, Cur, End };
-      
-    static int32_t read(const File&, char* buf, uint32_t size);
-    static int32_t write(File&, const char* buf, uint32_t size);
+    friend class SDFS;
     
-    static int32_t read(const File& file)
-    {
-        char buf;
-        return (file.read(file, &buf, 1) <= 0) ? -1 : static_cast<int>(buf);
-    }
-    
-    static int32_t write(File& file, uint8_t c)
-    {
-        return (file.write(file, reinterpret_cast<const char*>(&c), 1) <= 0) ? -1 : c;
-    }
+public:      
+    static int32_t read(const File&, char* buf, uint64_t blockAddr, uint32_t blocks);    
 
-    static bool seek(File&, int32_t offset, SeekWhence whence);
-    static int32_t tell(const File&);
-    static bool eof(const File&);
-    
     static bool valid(const File& file) { return file._error == 0; }
     static uint32_t error(const File& file) { return file._error; }
 
 protected:
     uint32_t _error = 0;
-    uint64_t _baseAddress = 0;
-    uint64_t _cur = 0;
+    uint64_t _baseSector = 0;
+    uint64_t _size = 0;
 };
 
 class SDFS {
 public:
+    enum class Error {
+        OK,
+        UnsupportedType, 
+        UnsupportedDevice, 
+        UnsupportedPartition, 
+        UnsupportedSectorSize,
+        UnsupportedFATCount,
+        BadMBRSignature,
+        BadBPBSignature,
+        SDCardInitFailed,
+        MBRReadError,
+        BPBReadError,
+        RootDirReadError,
+        OnlyFAT32LBASupported,
+        InvalidFAT32Volume,
+        Incomplete
+    };
+    
     SDFS() { }
     
-    static bool mount(SDFS&, uint8_t device, uint8_t partition);
+    static Error mount(SDFS&, uint8_t device, uint8_t partition);
     static bool mounted(const SDFS& fs) { return fs._mounted; }
     static void unmount(SDFS& fs);
     static bool format(SDFS& fs);
     
-    static bool directory(DirectoryEntry&);
+    static bool directory(const SDFS&, DirectoryEntry&);
 
     static bool open(const SDFS&, File&, const char* name, const char* mode);
     static bool remove(SDFS&, const char* name);
     static bool rename(SDFS&, const char* src, const char* dst);
     
-    static uint32_t sizeInBlocks(const SDFS& fs) { return fs._sizeInBlocks; }
-    static uint32_t usedInBlocks(const SDFS& fs) { return fs._usedInBlocks; }
+    static uint32_t sizeInSectors(const SDFS& fs) { return fs._sizeInSectors; }
     
-    private:
+    static uint32_t clusterToSector(const SDFS& fs, uint32_t cluster)
+    {
+        return fs._startDataSector + (cluster - 2) * fs._sectorsPerCluster;
+    }
+    
+    private:    
     bool _mounted = false;
-    uint32_t _sizeInBlocks = 0;
-    uint32_t _usedInBlocks = 0;
+    uint32_t _firstSector = 0;                  // first sector of this partition
+    uint32_t _sizeInSectors = 0;                // size in sectors of this partition
+    uint8_t _sectorsPerCluster = 0;             // cluster size in sectors
+    uint32_t _sectorsPerFAT = 0;                // size of a fat in sectors
+    uint32_t _rootDirectoryStartCluster = 0;
+    uint32_t _startFATSector = 0;
+    uint32_t _startDataSector = 0;
 };
 
 }

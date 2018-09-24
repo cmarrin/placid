@@ -1149,8 +1149,11 @@ int sdTransferBlocks( long long address, int numBlocks, unsigned char* buffer, i
 
   //	LOG_DEBUG("sdWaitForData() .init\n"); // TEST
   // Ensure that any data operation has completed before doing the transfer.
-  if( sdWaitForData() ) return SD_TIMEOUT;
-
+  if( sdWaitForData() ) {
+    LOG_DEBUG("sdWaitForData timed out\n");
+    return SD_TIMEOUT;
+  }
+  
   // Work out the status, interrupt and command values for the transfer.
   int readyInt = write ? INT_WRITE_RDY : INT_READ_RDY;
   //int readyData = write ? SR_WRITE_AVAILABLE : SR_READ_AVAILABLE;
@@ -1364,7 +1367,6 @@ int sdGetBaseClock()
  */
 int sdInitCard()
   {
-  LOG_DEBUG("xxxx sdCardInit\n");
   // Ensure we've initialized GPIO.
   if( !sdCard.init ) sdInitGPIO();
 

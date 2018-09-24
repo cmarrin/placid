@@ -100,11 +100,11 @@ void BRANCHTO(unsigned int addr)
 
 }
 
-uint32_t timerTick()
+uint64_t timerTick()
 {
     struct timeval time;
     gettimeofday(&time, NULL);
-    return (((unsigned int) time.tv_sec) * 1000000) + ((unsigned int) time.tv_usec);
+    return (((uint64_t) time.tv_sec) * 1000000) + ((uint64_t) time.tv_usec);
 }
 
 #else
@@ -116,11 +116,9 @@ extern unsigned int uart_recv ( void );
 
 void delay(uint32_t t)
 {
-    uint32_t t0;
-    t0 = timerTick();
+    uint64_t t0 = timerTick();
     
-    while(timerTick() < t0 + t);
-
+    while(timerTick() < t0 + t) ;
 }
 
 static char* intToString(uint32_t mantissa, char* str)
@@ -171,12 +169,6 @@ void putstr(const char* s)
     }
 }
 
-int putchar(int c)
-{
-    uart_send(c);
-    return c;
-}
-
 void puti(int32_t v)
 {
     char buf[MaxToStringBufferSize];
@@ -196,15 +188,16 @@ int getchar(void)
     return uart_recv();
 }
 
-void* memset(void* p, int value, size_t n)
+void* memset(void* dst, int value, size_t n)
 {
     if (n == 0) {
-        return p;
+        return dst;
     }
+    uint8_t* p = reinterpret_cast<uint8_t*>(dst);
     while (n--) {
-        *reinterpret_cast<uint8_t*>(p) = static_cast<uint8_t>(value);
+        *p++ = static_cast<uint8_t>(value);
     }
-    return p;
+    return dst;
 }
 
 void* memcpy(void* dst, const void* src, size_t n)

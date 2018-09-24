@@ -45,12 +45,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifdef __cplusplus
 extern "C" {
 #endif
-uint32_t timerTick(void);
+uint64_t timerTick(void);
 void delay(uint32_t t);
 extern void itos(char* buf, int32_t v);
 extern void utos(char* buf, uint32_t v);
 extern void putstr(const char* s);
-extern int putchar(int c);
 extern void puti(int32_t v);
 extern void putu(uint32_t v);
 extern int getchar(void);

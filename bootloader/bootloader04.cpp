@@ -57,28 +57,62 @@ unsigned char xstring[256];
 
 static void autoload()
 {
+//    putstr("\n\nautoload...\n\n");
+//    putstr("calling sdInit\n");
+//    sdInit();
+//    putstr("after sdInit\n");
+//    delay(100);
+//    putstr("calling sdInitCard\n");
+//    int r = sdInitCard();
+//    putstr("after sdInitCard\n");
+//    delay(10000);
+//    putstr("inited mmc, return=");
+//    puti(r);
+//    putstr("\n");
+//    // read a sector
+//    printf("Reading first sector\n");
+//    uint8_t buf[512];
+//    
+//    // Init the signature to something
+//    buf[0x1fe] = '\x01';
+//    buf[0x1ff] = '\x02';
+//    r = sdTransferBlocks(0, 1, buf, 0);
+//    printf("Read returned %d, signature:%02x %02x\n", r, buf[0x1fe], buf[0x1ff]);
+//    printf("1st partition: ");
+//    for (int i = 0; i < 16; ++i) {
+//        printf("%02x, ", buf[0x1be + i]);
+//    }
+//    printf("\n");
+
+
+
+
+
     // FIXME: implement
     printf("\n\nautoload...\n\n");
     printf("mounting FS\n");
     SDFS fs;
-    SDFS::mount(fs, 0, 0);
-    
-    printf("opening hello.txt\n");
-    File fp;
-    bool r = SDFS::open(fs, fp, "/hello.txt", "r");
-    printf("file open returned %s\n", r ? "true" : "false");
-    if (!r) {
-        printf("*** File open error:%d\n", File::error(fp));
+    SDFS::Error e = SDFS::mount(fs, 0, 0);
+    if (e != SDFS::Error::OK) {
+        printf("*** error mounting:%d\n", static_cast<int>(e));
     } else {
-        // Read sector
-        char buf[512];
-        int32_t size = File::read(fp, buf, 16);
-        printf("file read returned %d\n", size);
-        if (size != 16) {
-            printf("*** File read error:%d\n", File::error(fp));
+        printf("opening hello.txt\n");
+        File fp;
+        bool r = SDFS::open(fs, fp, "hello.txt", "r");
+        printf("file open returned %s\n", r ? "true" : "false");
+        if (!r) {
+            printf("*** File open error:%d\n", File::error(fp));
         } else {
-            buf[15] = '\0';
-            printf("Read returned '%s'\n", buf);
+            // Read sector
+            char buf[512];
+            int32_t size = File::read(fp, buf, 0, 1);
+            printf("file read returned %d\n", size);
+            if (size != 1) {
+                printf("*** File read error:%d\n", File::error(fp));
+            } else {
+                buf[15] = '\0';
+                printf("Read returned '%s'\n", buf);
+            }
         }
     }
     
@@ -87,9 +121,8 @@ static void autoload()
 
 extern "C" int notmain ( void )
 {
-    unsigned int ra;
-    //unsigned int rb;
-    unsigned int rx;
+    uint64_t ra;
+    uint64_t rx;
     unsigned int addr;
     unsigned int block;
     unsigned int state;
@@ -97,14 +130,11 @@ extern "C" int notmain ( void )
     unsigned int crc;
 
     uart_init();
+
     putstr("\n\nPlacid Bootloader v0.1\n\n");
     putstr("Autoloading in 5 seconds\n");
     putstr("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
     
-    putstr("***** n = ");
-    putu(1234);
-    putstr("\n");
-
     timer_init();
     
     rx = timerTick();
