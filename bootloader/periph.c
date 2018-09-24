@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include "bootutil.h"
 
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
@@ -78,9 +78,9 @@ void uart_init ( void )
     ra|=2<<15;    //alt5
     PUT32(GPFSEL1,ra);
     PUT32(GPPUD,0);
-    for(ra=0;ra<150;ra++) dummy(ra);
+    delay(150);
     PUT32(GPPUDCLK0,(1<<14)|(1<<15));
-    for(ra=0;ra<150;ra++) dummy(ra);
+    delay(150);
     PUT32(GPPUDCLK0,0);
     PUT32(AUX_MU_CNTL_REG,3);
 }

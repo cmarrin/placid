@@ -27,10 +27,6 @@ GET32:
 BRANCHTO:
     bx r0
 
-.globl dummy
-dummy:
-    bx lr
-	
 .globl dmb
 dmb:
 	mov	r0, #0

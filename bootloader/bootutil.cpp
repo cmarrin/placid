@@ -82,13 +82,6 @@ unsigned int GET32(unsigned int addr)
     return 0;
 }
 
-void dummy(unsigned int unused)
-{
-    volatile uint32_t a = 0;
-    (void) a;
-    (void) unused;
-}
-
 void dmb(void)
 {
 }
