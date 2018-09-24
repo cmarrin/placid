@@ -124,19 +124,19 @@
 			isa = PBXGroup;
 			children = (
 				498F154E2155313F004D4F07 /* haribote */,
+				49166D5B2151AC5F0077ACEE /* periph.c */,
 				496295542159286E0064B9C9 /* autoload.cpp */,
 				49166D682153E5D90077ACEE /* bootutil.h */,
 				49166D662153E0600077ACEE /* bootutil.cpp */,
-				49166D582151AC5F0077ACEE /* xmodem.cpp */,
-				49166D5B2151AC5F0077ACEE /* periph.c */,
-				49166D592151AC5F0077ACEE /* vectors.s */,
-				49166D5A2151AC5F0077ACEE /* loader */,
-				49166D57215194260077ACEE /* Makefile */,
-				49166D5121514C2C0077ACEE /* config.txt */,
-				49166D612153CA250077ACEE /* README.md */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
-				49629551215673D30064B9C9 /* SDFS.cpp */,
 				49629552215673D30064B9C9 /* SDFS.h */,
+				49629551215673D30064B9C9 /* SDFS.cpp */,
+				49166D582151AC5F0077ACEE /* xmodem.cpp */,
+				49166D592151AC5F0077ACEE /* vectors.s */,
+				49166D612153CA250077ACEE /* README.md */,
+				49166D57215194260077ACEE /* Makefile */,
+				49166D5A2151AC5F0077ACEE /* loader */,
+				49166D5121514C2C0077ACEE /* config.txt */,
 			);
 			name = bootloader;
 			sourceTree = "<group>";
