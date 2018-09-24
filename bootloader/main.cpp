@@ -35,25 +35,26 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bootutil.h"
 
+static constexpr uint32_t AutoloadTimeout = 3;
+
 int main(int argc, const char * argv[])
 {
     uart_init();
 
     printf("\n\nPlacid Bootloader v0.1\n\n");
-    printf("Autoloading in 5 seconds\n");
-    printf("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
+    printf("Autoloading in %d seconds\n", AutoloadTimeout);
+    printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     
     timer_init();
     
-    uint64_t rx = timerTick();
-    uint64_t ra = 1000000;
-    uart_send('.');
+    uint64_t startTime = timerTick();
+    uint64_t tickTime = 1000000;
 
     while (1) {
-        if (timerTick() - rx > ra) {
+        if (timerTick() - startTime > tickTime) {
             uart_send('.');
-            ra += 1000000;
-            if (ra++ >= 5000000) {
+            tickTime += 1000000;
+            if (tickTime++ > (AutoloadTimeout + 1) * 1000000) {
                 autoload();
             }
         }
@@ -63,15 +64,13 @@ int main(int argc, const char * argv[])
         }
         int c = uart_recv();
         if (c == ' ') {
-            // autoload
+            printf("\n\nStart XMODEM upload when ready...\n\n");
+            xmodemReceive();
+        } else if (c < 0x7f) {
+            printf("\n\nAutoloading...\n\n");
             autoload();
-        } else if (c == '\n') {
-            break;
         }
     }
     
-    printf("Start XMODEM upload when ready...\n\n");
-
-    xmodemReceive();
     return 0;
 }
