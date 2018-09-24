@@ -173,17 +173,18 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
     }
     
     MBR* mbr = reinterpret_cast<MBR*>(buf);
-    
+
+    // Do validation checks
     if (mbr->signature[0] != 0x55 || mbr->signature[1] != 0xaa) {
         return Error::BadMBRSignature;
     }
         
-    // Make sure this is a type we support
     uint8_t partitionType = mbr->partitions[partition].type;
     if (partitionType != 0x0c) {
         return Error::OnlyFAT32LBASupported;
     }
     
+    // Exrtract the needed values
     fs._firstSector = bufToUInt32(mbr->partitions[partition].lbaStart);
     fs._sizeInSectors = bufToUInt32(mbr->partitions[partition].lbaCount);
     
@@ -192,6 +193,7 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
         return Error::BPBReadError;
     }
     
+    // Do validation checks
     BootSector* bootSector = reinterpret_cast<BootSector*>(buf);
     if (bootSector->signature[0] != 0x55 || bootSector->signature[1] != 0xaa) {
         return Error::BadBPBSignature;
@@ -213,6 +215,7 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
         return Error::InvalidFAT32Volume;
     }
     
+    // Exrtract the needed values
     uint16_t reservedSectors = bufToUInt16(bootSector->reservedSectors);
     
     fs._sectorsPerFAT = bufToUInt32(bootSector->sectorsPerFAT32);
@@ -225,56 +228,6 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
     return Error::OK;
 }
 
-static inline char toupper(char c)
-{
-    return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;
-}
-
-static void convertTo8dot3(char* name8dot3, const char* name)
-{
-    // Find the dot
-    int dot = 0;
-    const char* p = name;
-    while (*p) {
-        if (*p == '.') {
-            dot = static_cast<int>(p - name);
-            break;
-        }
-        p++;
-        dot++;
-    }
-    
-    if (dot <= 8) {
-        // We have the simple case
-        int index = 0;
-        for (int i = 0; i < 8; ++i) {
-            name8dot3[i] = (index < dot) ? toupper(name[index++]) : ' ';
-        }
-    } else {
-        // We need to add '~1'
-        for (int i = 0; i < 8; ++i) {
-            if (i < 6) {
-                name8dot3[i] = toupper(name[i]);
-            } else if (i == 6) {
-                name8dot3[i] = '~';
-            } else {
-                name8dot3[i] = '1';
-            }
-        }
-    }
-
-    // Now add the extension
-    if (name[dot] == '.') {
-        dot++;
-    }
-    
-    for (int i = 8; i < 11; ++i) {
-        name8dot3[i] = name[dot] ? toupper(name[dot++]) : ' ';
-    }
-    
-    name8dot3[11] = '\0';
-}
-
 bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
 {
     // Find file
@@ -284,6 +237,7 @@ bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
         return false;
     }
     
+    // File was found, initialize the file object
     file._error = 0;
     file._size = DirectoryEntry::size(dir);
     file._baseSector = SDFS::clusterToSector(fs, DirectoryEntry::firstFileCluster(dir));
@@ -292,11 +246,8 @@ bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
 
 bool SDFS::directory(const SDFS& fs, DirectoryEntry& dir)
 {
-    // Get the address of the root dir
-    dir._startDataSector = fs._startDataSector;
-    dir._sectorsPerCluster = fs._sectorsPerCluster;
+    // Set the address of the root dir
     dir._dirCluster = fs._rootDirectoryStartCluster;
-    dir._nextIndex = 0;
     dir._valid = false;
     return true;
 }
@@ -312,15 +263,18 @@ bool DirectoryEntry::find(const SDFS& fs, DirectoryEntry&dir, const char* name)
     char buf[512];
     static constexpr uint32_t EntriesPerSector = 512 / 32;
     
-    for (int dirSectorIndex = 0; dirSectorIndex < dir._sectorsPerCluster; ++dirSectorIndex) {
+    // Read one sector at a time
+    for (uint32_t dirSectorIndex = 0; dirSectorIndex < SDFS::sectorsPerCluster(fs); ++dirSectorIndex) {
         if (readRaw(buf, dirSector + dirSectorIndex, 1) != 1) {
             return false;
         }
         
         FATDirEntry* ent = reinterpret_cast<FATDirEntry*>(buf);
         
+        // Go through each entry in this sector and look for a match
         for (uint32_t entryIndex = 0; entryIndex < EntriesPerSector; ++entryIndex) {
             if (memcmp(nameToFind, ent[entryIndex].name, 11) == 0) {
+                // A match was found, init the directory object
                 for (int i = 0; i < 11; ++i) {
                     dir._name[i] = ent[entryIndex].name[i];
                 }
@@ -336,7 +290,7 @@ bool DirectoryEntry::find(const SDFS& fs, DirectoryEntry&dir, const char* name)
         }
     }
     
+    // No match
     dir._valid = false;
     return false;
 }
-

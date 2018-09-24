@@ -60,6 +60,7 @@ int printf(const char *format, ...);
 int vsnprintf(char *str, size_t n, const char *format, va_list);
 int snprintf(char *str, size_t n, const char *format, ...);
 int puts(const char*); // ARM compiler seems to convert printf("...") to puts("...")
+void convertTo8dot3(char* name8dot3, const char* name);
 #ifdef __cplusplus
 }
 #endif

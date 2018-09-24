@@ -43,6 +43,21 @@ const uint32_t FilenameLength = 32;
 
 class SDFS;
 
+class File {
+    friend class SDFS;
+    
+public:      
+    static int32_t read(const File&, char* buf, uint64_t blockAddr, uint32_t blocks);    
+
+    static bool valid(const File& file) { return file._error == 0; }
+    static uint32_t error(const File& file) { return file._error; }
+
+protected:
+    uint32_t _error = 0;
+    uint64_t _baseSector = 0;
+    uint64_t _size = 0;
+};
+
 class DirectoryEntry {
     friend class SDFS;
 public:
@@ -60,25 +75,7 @@ private:
     char _name[FilenameLength];
     uint32_t _size = 0;
     uint32_t _firstFileCluster;
-    uint32_t _startDataSector = 0;
-    uint8_t _sectorsPerCluster = 0;
     uint32_t _dirCluster = 0;
-    uint32_t _nextIndex = 0;
-};
-
-class File {
-    friend class SDFS;
-    
-public:      
-    static int32_t read(const File&, char* buf, uint64_t blockAddr, uint32_t blocks);    
-
-    static bool valid(const File& file) { return file._error == 0; }
-    static uint32_t error(const File& file) { return file._error; }
-
-protected:
-    uint32_t _error = 0;
-    uint64_t _baseSector = 0;
-    uint64_t _size = 0;
 };
 
 class SDFS {
@@ -105,16 +102,11 @@ public:
     
     static Error mount(SDFS&, uint8_t device, uint8_t partition);
     static bool mounted(const SDFS& fs) { return fs._mounted; }
-    static void unmount(SDFS& fs);
-    static bool format(SDFS& fs);
-    
     static bool directory(const SDFS&, DirectoryEntry&);
-
     static bool open(const SDFS&, File&, const char* name, const char* mode);
-    static bool remove(SDFS&, const char* name);
-    static bool rename(SDFS&, const char* src, const char* dst);
-    
+
     static uint32_t sizeInSectors(const SDFS& fs) { return fs._sizeInSectors; }
+    static uint32_t sectorsPerCluster(const SDFS& fs) { return fs._sectorsPerCluster; }
     
     static uint32_t clusterToSector(const SDFS& fs, uint32_t cluster)
     {
