@@ -12,4 +12,6 @@ So I decided to see what I could do if I went right down to the bare metal. The 
 
 So I’m starting by writing a bootloader. It will talk to the serial port. The way RPi hardware works, you simply put 3 files on a FAT partition of the SD card: start.elf, boot code.bin and kernel.img. The first two are stock files that have something to do with initializing the GPU and rest of the system before loading and executing kernel.img. The last file is simply a binary that loads at location 0x8000 and starts to run. I’ve run some canned experiments to blink the status LED and talk to the serial port on pins 14 and 15 of the GPIO connector.
 
+Actually, the name of the file loaded and the location where it is placed can be changed, which will be important for my bootloader. Read https://github.com/cmarrin/placid/blob/master/bootloader/README.md for more info
+
 My next step is to write a bootloader/debugger which will allow me to load my own binary images to run and control the system from the serial console.
