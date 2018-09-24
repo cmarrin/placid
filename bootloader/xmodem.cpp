@@ -44,8 +44,6 @@ static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
 static constexpr uint32_t EOT = 0x04;
 
-static constexpr uint32_t ARMBASE = 0x8000;
-
 void xmodemReceive()
 {
     // block numbers start with 1
@@ -120,8 +118,8 @@ void xmodemReceive()
         case 131:
             crc &= 0xFF;
             if (xstring[state] == crc) {
-                for (curTime = 0; curTime < 128; curTime++) {
-                    PUT8(addr++, xstring[curTime + 3]);
+                for (uint32_t i = 0; i < 128; i++) {
+                    PUT8(addr++, xstring[i + 3]);
                 }
                 uart_send(ACK);
                 block = (block + 1) & 0xFF;

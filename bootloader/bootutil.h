@@ -39,8 +39,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stddef.h>
 #include <stdarg.h>
 
-                   //        sign    digits  dp      'e'     dp      exp     '\0'
-#define MaxToStringBufferSize (1 +     20 +   1 +     1 +     1 +     3 +      1)
+#ifdef __cplusplus
+//                                                sign    digits  dp      'e'     dp      exp     '\0'
+static constexpr uint32_t MaxToStringBufferSize = (1 +     20 +   1 +     1 +     1 +     3 +      1);
+static constexpr uint32_t ARMBASE = 0x8000;
+#endif
 
 void autoload(void);
 void xmodemReceive(void);
