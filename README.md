@@ -14,4 +14,4 @@ So I’m starting by writing a bootloader. It will talk to the serial port. The 
 
 Actually, the name of the file loaded and the location where it is placed can be changed, which will be important for my bootloader. Read https://github.com/cmarrin/placid/blob/master/bootloader/README.md for more info
 
-My next step is to write a bootloader/debugger which will allow me to load my own binary images to run and control the system from the serial console.
+Once the bootloader is done I can start on a lightweight kernel that I can load with the bootloader without having to deal with swapping SD cards. See https://github.com/cmarrin/placid/blob/master/kernel/README.md for more info
