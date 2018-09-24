@@ -7,13 +7,13 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding 
+CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
 SRC =	vectors.S \
-        bootutil.c \
+        bootutil.cpp \
         mailbox.c \
         periph.c \
         sdcard.c \
@@ -21,10 +21,13 @@ SRC =	vectors.S \
         xmodem.cpp \
         SDFS.cpp \
         main.cpp
-		
+
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
+DEP = $(OBJS:%.o=%.d)
 
 all : checkdirs bin/bootloader.bin
+
+-include $(DEP)
 
 clean :
 	rm -rf $(BUILDDIR)
