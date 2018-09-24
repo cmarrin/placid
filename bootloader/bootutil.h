@@ -47,12 +47,19 @@ extern "C" {
 #endif
 uint64_t timerTick(void);
 void delay(uint32_t t);
-extern void itos(char* buf, int32_t v);
-extern void utos(char* buf, uint32_t v);
-extern void putstr(const char* s);
-extern void puti(int32_t v);
-extern void putu(uint32_t v);
-extern int getchar(void);
+void PUT8 ( unsigned int, unsigned int );
+void BRANCHTO ( unsigned int );
+void uart_init ( void );
+unsigned int uart_lcr ( void );
+void uart_send ( unsigned int );
+unsigned int uart_recv ( void );
+void timer_init ( void );
+void itos(char* buf, int32_t v);
+void utos(char* buf, uint32_t v);
+void putstr(const char* s);
+void puti(int32_t v);
+void putu(uint32_t v);
+int getchar(void);
 void* memset(void* p, int value, size_t n);
 void* memcpy(void* dst, const void* src, size_t n);
 int memcmp(const void* left, const void* right, size_t n);

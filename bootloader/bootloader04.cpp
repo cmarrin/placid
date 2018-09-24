@@ -14,81 +14,8 @@
 
 using namespace placid;
 
-#define ARMBASE 0x8000
-
-extern "C" {
-
-void PUT8 ( unsigned int, unsigned int );
-void BRANCHTO ( unsigned int );
-
-extern void uart_init ( void );
-extern unsigned int uart_lcr ( void );
-extern void uart_send ( unsigned int );
-extern unsigned int uart_recv ( void );
-extern void timer_init ( void );
-
-unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
-        unsigned long long answer = 0;
-
-		unsigned int i;
-        for (i = 0; i < 32; i++) {
-                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
-                        if (value >= divisor << (31 - i)) {
-                                value -= divisor << (31 - i);
-                                answer |= (unsigned long long)(1 << (31 - i));
-                                if (value == 0) break;
-                        } 
-                }
-        }
-
-        answer |= (unsigned long long)value << 32;
-        return answer;
-};
-
-unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
-        return (unsigned int)__aeabi_uidivmod(value, divisor);
-};
-
-}
-
-//------------------------------------------------------------------------
-unsigned char xstring[256];
-//------------------------------------------------------------------------
-
 static void autoload()
 {
-//    putstr("\n\nautoload...\n\n");
-//    putstr("calling sdInit\n");
-//    sdInit();
-//    putstr("after sdInit\n");
-//    delay(100);
-//    putstr("calling sdInitCard\n");
-//    int r = sdInitCard();
-//    putstr("after sdInitCard\n");
-//    delay(10000);
-//    putstr("inited mmc, return=");
-//    puti(r);
-//    putstr("\n");
-//    // read a sector
-//    printf("Reading first sector\n");
-//    uint8_t buf[512];
-//    
-//    // Init the signature to something
-//    buf[0x1fe] = '\x01';
-//    buf[0x1ff] = '\x02';
-//    r = sdTransferBlocks(0, 1, buf, 0);
-//    printf("Read returned %d, signature:%02x %02x\n", r, buf[0x1fe], buf[0x1ff]);
-//    printf("1st partition: ");
-//    for (int i = 0; i < 16; ++i) {
-//        printf("%02x, ", buf[0x1be + i]);
-//    }
-//    printf("\n");
-
-
-
-
-
-    // FIXME: implement
     printf("\n\nautoload...\n\n");
     printf("mounting FS\n");
     SDFS fs;
@@ -117,8 +44,17 @@ static void autoload()
     while(1) { }
 }
 
+static constexpr unsigned int SOH = 0x01;
+static constexpr unsigned int ACK = 0x06;
+static constexpr unsigned int NAK = 0x15;
+static constexpr unsigned int EOT = 0x04;
+
+static constexpr unsigned int ARMBASE = 0x8000;
+
 extern "C" int notmain ( void )
 {
+    unsigned char xstring[256];
+
     uint64_t ra;
     uint64_t rx;
     unsigned int addr;
@@ -148,7 +84,7 @@ extern "C" int notmain ( void )
             }
         }
             
-        if ((uart_lcr() & 0x01) == 0) {
+        if ((uart_lcr() & SOH) == 0) {
             continue;
         }
         int c = uart_recv();
@@ -161,11 +97,6 @@ extern "C" int notmain ( void )
     }
     
     putstr("Start XMODEM upload when ready...\n\n");
-
-//SOH 0x01
-//ACK 0x06
-//NAK 0x15
-//EOT 0x04
 
 //block numbers start with 1
 
@@ -187,17 +118,17 @@ extern "C" int notmain ( void )
         ra=timerTick();
         if((ra-rx)>=4000000)
         {
-            uart_send(0x15);
+            uart_send(NAK);
             rx+=4000000;
         }
-        if((uart_lcr()&0x01)==0) continue;
+        if((uart_lcr() & 0x01) == 0) continue;
         xstring[state]=uart_recv();
         rx=timerTick();
         if(state==0)
         {
-            if(xstring[state]==0x04)
+            if(xstring[state] == EOT)
             {
-                uart_send(0x06);
+                uart_send(ACK);
                 BRANCHTO(ARMBASE);
                 break;
             }
@@ -206,7 +137,7 @@ extern "C" int notmain ( void )
         {
             case 0:
             {
-                if(xstring[state]==0x01)
+                if(xstring[state] == 0x01)
                 {
                     crc=xstring[state];
                     state++;
@@ -214,7 +145,7 @@ extern "C" int notmain ( void )
                 else
                 {
                     //state=0;
-                    uart_send(0x15);
+                    uart_send(NAK);
                 }
                 break;
             }
@@ -228,7 +159,7 @@ extern "C" int notmain ( void )
                 else
                 {
                     state=0;
-                    uart_send(0x15);
+                    uart_send(NAK);
                 }
                 break;
             }
@@ -241,7 +172,7 @@ extern "C" int notmain ( void )
                 }
                 else
                 {
-                    uart_send(0x15);
+                    uart_send(NAK);
                     state=0;
                 }
                 break;
@@ -255,12 +186,12 @@ extern "C" int notmain ( void )
                     {
                         PUT8(addr++,xstring[ra+3]);
                     }
-                    uart_send(0x06);
+                    uart_send(ACK);
                     block=(block+1)&0xFF;
                 }
                 else
                 {
-                    uart_send(0x15);
+                    uart_send(NAK);
                 }
                 state=0;
                 break;
