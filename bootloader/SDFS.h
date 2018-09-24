@@ -50,12 +50,13 @@ public:
     static int32_t read(const File&, char* buf, uint64_t blockAddr, uint32_t blocks);    
 
     static bool valid(const File& file) { return file._error == 0; }
+    static uint32_t size(const File& file) { return file._size; }
     static uint32_t error(const File& file) { return file._error; }
 
 protected:
     uint32_t _error = 0;
     uint64_t _baseSector = 0;
-    uint64_t _size = 0;
+    uint32_t _size = 0;
 };
 
 class DirectoryEntry {
