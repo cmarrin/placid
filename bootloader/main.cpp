@@ -33,44 +33,45 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bootutil.h"
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdarg.h>
+int main(int argc, const char * argv[])
+{
+    uart_init();
 
-                   //        sign    digits  dp      'e'     dp      exp     '\0'
-#define MaxToStringBufferSize (1 +     20 +   1 +     1 +     1 +     3 +      1)
+    printf("\n\nPlacid Bootloader v0.1\n\n");
+    printf("Autoloading in 5 seconds\n");
+    printf("    (press [space] to autoload immediately or [return] for XMODEM upload)\n");
+    
+    timer_init();
+    
+    uint64_t rx = timerTick();
+    uint64_t ra = 1000000;
+    uart_send('.');
 
-void autoload(void);
-void xmodemReceive(void);
+    while (1) {
+        if (timerTick() - rx > ra) {
+            uart_send('.');
+            ra += 1000000;
+            if (ra++ >= 5000000) {
+                autoload();
+            }
+        }
+            
+        if ((uart_lcr() & 0x01) == 0) {
+            continue;
+        }
+        int c = uart_recv();
+        if (c == ' ') {
+            // autoload
+            autoload();
+        } else if (c == '\n') {
+            break;
+        }
+    }
+    
+    printf("Start XMODEM upload when ready...\n\n");
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-uint64_t timerTick(void);
-void delay(uint32_t t);
-void PUT8 ( unsigned int, unsigned int );
-void BRANCHTO ( unsigned int );
-void uart_init ( void );
-unsigned int uart_lcr ( void );
-void uart_send ( unsigned int );
-unsigned int uart_recv ( void );
-void timer_init ( void );
-void itos(char* buf, int32_t v);
-void utos(char* buf, uint32_t v);
-void putstr(const char* s);
-void puti(int32_t v);
-void putu(uint32_t v);
-int getchar(void);
-void* memset(void* p, int value, size_t n);
-void* memcpy(void* dst, const void* src, size_t n);
-int memcmp(const void* left, const void* right, size_t n);
-int printf(const char *format, ...);
-int vsnprintf(char *str, size_t n, const char *format, va_list);
-int snprintf(char *str, size_t n, const char *format, ...);
-int puts(const char*); // ARM compiler seems to convert printf("...") to puts("...")
-void convertTo8dot3(char* name8dot3, const char* name);
-#ifdef __cplusplus
+    xmodemReceive();
+    return 0;
 }
-#endif

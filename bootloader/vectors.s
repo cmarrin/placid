@@ -5,7 +5,7 @@
 .globl _start
 _start:
     mov sp,#0x08000000
-    bl notmain
+    bl main
 hang: b hang
 
 .globl PUT32

@@ -13,12 +13,14 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 BUILDDIR = build
 
 SRC =	vectors.S \
-		bootloader04.c \
-        periph.c \
-		sdcard.c \
+        bootutil.c \
         mailbox.c \
-        SDFS \
-        bootutil.c
+        periph.c \
+        sdcard.c \
+        autoload.cpp \
+        xmodem.cpp \
+        SDFS.cpp \
+        main.cpp
 		
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 
