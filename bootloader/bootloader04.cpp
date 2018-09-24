@@ -99,14 +99,12 @@ static void autoload()
         printf("opening hello.txt\n");
         File fp;
         bool r = SDFS::open(fs, fp, "hello.txt", "r");
-        printf("file open returned %s\n", r ? "true" : "false");
         if (!r) {
             printf("*** File open error:%d\n", File::error(fp));
         } else {
             // Read sector
             char buf[512];
             int32_t size = File::read(fp, buf, 0, 1);
-            printf("file read returned %d\n", size);
             if (size != 1) {
                 printf("*** File read error:%d\n", File::error(fp));
             } else {

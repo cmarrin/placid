@@ -117,7 +117,6 @@ static_assert(sizeof(FATDirEntry) == 32, "Wrong FATDirEntry size");
 
 static int32_t readRaw(char* buf, uint64_t blockAddr, uint32_t blocks)
 {
-    printf("*** readRaw(%d, %d)\n", static_cast<uint32_t>(blockAddr), blocks);
     int r = sdTransferBlocks(blockAddr * 512, blocks, reinterpret_cast<uint8_t*>(buf), 0);
     if (r != 0) {
         printf("*** Disk Read Error: return code=%d\n", r);
@@ -331,9 +330,6 @@ bool DirectoryEntry::find(const SDFS& fs, DirectoryEntry&dir, const char* name)
         
                 // first cluster is in this crazy hi/lo split format
                 dir._firstFileCluster = (static_cast<uint32_t>(bufToUInt16(ent[entryIndex].firstClusterHi)) << 16) + static_cast<uint32_t>(bufToUInt16(ent[entryIndex].firstClusterLo));
-
-                printf("***** found dirent: name='%s', size=%d, first=%d, attr=0x%02x\n", dir._name, dir._size, dir._firstFileCluster, ent[entryIndex].attr);
-
                 dir._valid = true;
                 return true;
             }
