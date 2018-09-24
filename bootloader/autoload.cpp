@@ -41,16 +41,13 @@ using namespace placid;
 
 void autoload()
 {
-    printf("\n\nautoload...\n\n");
-    printf("mounting FS\n");
     SDFS fs;
     SDFS::Error e = SDFS::mount(fs, 0, 0);
     if (e != SDFS::Error::OK) {
         printf("*** error mounting:%d\n", static_cast<int>(e));
     } else {
-        printf("opening hello.txt\n");
         File fp;
-        bool r = SDFS::open(fs, fp, "hello.txt", "r");
+        bool r = SDFS::open(fs, fp, "kernel.bin", "r");
         if (!r) {
             printf("*** File open error:%d\n", File::error(fp));
         } else {
@@ -60,8 +57,14 @@ void autoload()
             if (size != 1) {
                 printf("*** File read error:%d\n", File::error(fp));
             } else {
-                buf[15] = '\0';
-                printf("Read returned '%s'\n", buf);
+                // FIXME: Implement multiple sector files
+                uint32_t addr = ARMBASE;
+                uint32_t size = File::size(fp);
+                for (uint32_t i = 0; i < size; i++) {
+                    PUT8(addr++, buf[i]);
+                }
+                printf("Autoload complete, executing...\n");
+                BRANCHTO(ARMBASE);
             }
         }
     }
