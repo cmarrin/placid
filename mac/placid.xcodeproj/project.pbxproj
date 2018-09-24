@@ -75,7 +75,7 @@
 		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
 		49166D5B2151AC5F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/periph.c; sourceTree = "<group>"; };
-		49166D612153CA250077ACEE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../bootloader/README; sourceTree = "<group>"; };
+		49166D612153CA250077ACEE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../bootloader/README.md; sourceTree = "<group>"; };
 		49166D662153E0600077ACEE /* bootutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bootutil.cpp; path = ../bootloader/bootutil.cpp; sourceTree = "<group>"; };
 		49166D682153E5D90077ACEE /* bootutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bootutil.h; path = ../bootloader/bootutil.h; sourceTree = "<group>"; };
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,7 +130,7 @@
 				49166D5A2151AC5F0077ACEE /* loader */,
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5121514C2C0077ACEE /* config.txt */,
-				49166D612153CA250077ACEE /* README */,
+				49166D612153CA250077ACEE /* README.md */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
 				49629551215673D30064B9C9 /* SDFS.cpp */,
 				49629552215673D30064B9C9 /* SDFS.h */,
