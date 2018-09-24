@@ -125,9 +125,9 @@ static int32_t readRaw(char* buf, uint64_t blockAddr, uint32_t blocks)
     return static_cast<int32_t>(blocks);
 }
 
-int32_t File::read(const File& file, char* buf, uint64_t blockAddr, uint32_t blocks)
+int32_t File::read(const File& file, char* buf, uint64_t sectorAddr, uint32_t sectors)
 {
-    return readRaw(buf, (file._baseSector + blockAddr), blocks);
+    return readRaw(buf, (file._baseSector + sectorAddr), sectors);
 }
 
 static inline uint32_t bufToUInt32(uint8_t* buf)

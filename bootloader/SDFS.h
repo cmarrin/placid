@@ -47,7 +47,7 @@ class File {
     friend class SDFS;
     
 public:      
-    static int32_t read(const File&, char* buf, uint64_t blockAddr, uint32_t blocks);    
+    static int32_t read(const File&, char* buf, uint64_t sectorAddr, uint32_t sectors);    
 
     static bool valid(const File& file) { return file._error == 0; }
     static uint32_t size(const File& file) { return file._size; }
@@ -108,6 +108,7 @@ public:
 
     static uint32_t sizeInSectors(const SDFS& fs) { return fs._sizeInSectors; }
     static uint32_t sectorsPerCluster(const SDFS& fs) { return fs._sectorsPerCluster; }
+    static uint32_t clusterSize(const SDFS& fs) { return fs._sectorsPerCluster * 512; }
     
     static uint32_t clusterToSector(const SDFS& fs, uint32_t cluster)
     {

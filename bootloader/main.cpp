@@ -72,5 +72,7 @@ int main(int argc, const char * argv[])
         }
     }
     
+    printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
+    while(1) { }
     return 0;
 }

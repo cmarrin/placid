@@ -45,29 +45,40 @@ void autoload()
     SDFS::Error e = SDFS::mount(fs, 0, 0);
     if (e != SDFS::Error::OK) {
         printf("*** error mounting:%d\n", static_cast<int>(e));
-    } else {
-        File fp;
-        bool r = SDFS::open(fs, fp, "kernel.bin", "r");
-        if (!r) {
-            printf("*** File open error:%d\n", File::error(fp));
-        } else {
-            // Read sector
-            char buf[512];
-            int32_t size = File::read(fp, buf, 0, 1);
-            if (size != 1) {
-                printf("*** File read error:%d\n", File::error(fp));
-            } else {
-                // FIXME: Implement multiple sector files
-                uint32_t addr = ARMBASE;
-                uint32_t size = File::size(fp);
-                for (uint32_t i = 0; i < size; i++) {
-                    PUT8(addr++, buf[i]);
-                }
-                printf("Autoload complete, executing...\n");
-                BRANCHTO(ARMBASE);
-            }
-        }
+        return;
     }
     
-    while(1) { }
+    File fp;
+    bool r = SDFS::open(fs, fp, "kernel.bin", "r");
+    if (!r) {
+        printf("*** File open error:%d\n", File::error(fp));
+        return;
+    }
+    
+    // FIXME: Currently only loads one cluster, limiting the file size to 32KB
+    uint32_t addr = ARMBASE;
+    uint32_t size = File::size(fp);
+    
+    if (size > SDFS::clusterSize(fs)) {
+        printf("*** File is too large. File size=%d, max=%d\n", size, SDFS::clusterSize(fs));
+        return;
+    }
+
+    for (uint32_t sector = 0; size != 0; ++sector) {
+        char buf[512];
+        int32_t sectorsRead = File::read(fp, buf, sector, 1);
+        if (sectorsRead != 1) {
+            printf("*** File read error:%d\n", File::error(fp));
+            return;
+        }
+        
+        uint32_t bytesToLoad = (size > 512) ? 512 : size;
+        for (uint32_t i = 0; i < bytesToLoad; i++) {
+            PUT8(addr++, buf[i]);
+        }
+        size -= bytesToLoad;
+    }
+    
+    printf("Autoload complete, executing...\n");
+    BRANCHTO(ARMBASE);
 }
