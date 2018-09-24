@@ -1,6 +1,7 @@
 # Placid Bootloader
 
 ## Overview
+
 This bootloader is based on bootloader02 from dwelch.
 
 The code is loaded at 0x0800 and is currently about 13k, which takes it to about 0x3b00.
@@ -16,8 +17,6 @@ binary and run it.
 Whether you autoload or manually load a binary, the file goes to 0x8000 just like most stock bare metal
 Raspberry Pi binaries. Note that this is a .bin file, as extracted with the objcopy -O binary command. 
 It's not a .elf or a .hex file.
-
-## Design
 
 ## Implementation
 
