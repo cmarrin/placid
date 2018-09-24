@@ -17,7 +17,7 @@
 #include "bootutil.h"
 #define P2V_DEV(X) (X)
 
-#define DEBUG_SD
+//#define DEBUG_SD
 #ifdef DEBUG_SD
 #define LOG_DEBUG(args...) printf(args)
 #else
@@ -486,7 +486,6 @@ typedef struct SDDescriptor
 static SDDescriptor sdCard;
 
 static int sdHostVer = 0;
-static int sdDebug = 0;
 static int sdBaseClock;
 
 // necessary function
@@ -706,7 +705,6 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
   if( sdWaitForCommand() != 0 )
     return SD_BUSY;
 
-  if( sdDebug ) LOG_DEBUG("EMMC: Sending command %s code %08x arg %08x\n",cmd->name,cmd->code,arg);
   sdCard.lastCmd = cmd;
   sdCard.lastArg = arg;
 
@@ -731,6 +729,10 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
 
   // Get response from RESP0.
   int resp0 = *EMMC_RESP0;
+  
+  // CFM: Need a wait here. When Debug logging is on it works, when not it
+  // times out. So there is some timing sensitivity here.
+  waitMicro(1000);
   LOG_DEBUG("EMMC: Sent command %08x:%s arg %d resp %08x\n",cmd->code,cmd->name,arg,resp0);
 
   // Handle response types.
@@ -1411,7 +1413,6 @@ int sdInitCard()
   sdHostVer = (*EMMC_SLOTISR_VER & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
 
   // Get base clock speed.
-  //  sdDebug = 0;
   int resp;
   if( (resp = sdGetBaseClock()) ) return resp;
 
