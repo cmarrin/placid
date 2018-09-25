@@ -41,10 +41,14 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
+LIBS = ../util/build/util.a ../sdfs/build/sdfs.a
+INCLUDES = -I../util -I../sdfs
+
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
-CFLAGS = -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp
+CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
-LDFLAGS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
+LDFLAGS = 
+LDLIBS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
 LIB1FUNCSFLAGS = 	-O2 -g -Os -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp -w -DIN_GCC -DCROSS_DIRECTORY_STRUCTURE \
 					-W -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wold-style-definition \
 					-fno-inline -g  -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED -Dinhibit_libc  -DHAVE_CC_TLS -xassembler-with-cpp 
@@ -56,7 +60,6 @@ SRC =	start.S \
         dlmalloc.c \
         main.cpp \
 		memory.cpp \
-		util.cpp \
 		BootShell.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
@@ -64,8 +67,7 @@ SRC =	start.S \
 		Shell.cpp \
 		Timer.cpp \
 		
-DIVOBJS :=	_udivsi3.o \
-			_divsi3.o \
+DIVOBJS :=	_divsi3.o \
 			_umodsi3.o \
 			_modsi3.o \
 			_div0.o \
@@ -73,6 +75,7 @@ DIVOBJS :=	_udivsi3.o \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
+DEP = $(OBJS:%.o=%.d)
 
 all: checkdirs $(BUILDDIR)/bootloader.bin
 	
@@ -81,11 +84,13 @@ clean:
 	
 checkdirs: $(BUILDDIR)
 
+-include $(DEP)
+
 $(BUILDDIR):
 	@mkdir -p $@
 	
 $(BUILDDIR)/bootloader.bin: loadmap.ld $(OBJS) $(DIVOBJS)
-	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
+	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
 	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym

@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "SDFS.h"
 
 #include "sdcard.h"
-#include "bootutil.h"
+#include "util.h"
 
 using namespace placid;
 

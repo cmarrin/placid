@@ -33,8 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bootutil.h"
-#include <stdarg.h>
+#include "util.h"
+
+using namespace placid;
 
 #ifdef __APPLE__
 #include <stdio.h>
@@ -42,7 +43,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #undef vsnprintf
 #undef snprintf
 
-extern "C" {
 void uart_send ( unsigned int c)
 {
     putchar(c);
@@ -65,6 +65,10 @@ unsigned int uart_recv()
 void timer_init()
 {
 }
+
+extern "C" {
+
+void enableIRQ() { }
 
 void PUT8(unsigned int addr, unsigned int value)
 {
@@ -101,10 +105,15 @@ uint64_t timerTick()
 }
 
 #else
-extern "C" {
-extern void uart_send ( unsigned int );
-extern unsigned int uart_recv ( void );
+#define STIMER_CLO 0x20003004
+#define STIMER_CHI 0x20003008
 
+uint64_t timerTick ()
+{
+    return (((uint64_t) GET32(STIMER_CHI)) << 32) | (uint64_t) GET32(STIMER_CLO);
+}
+
+extern "C" {
 unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
         unsigned long long answer = 0;
 
@@ -121,14 +130,215 @@ unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
 
         answer |= (unsigned long long)value << 32;
         return answer;
-};
+}
 
 unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
         return (unsigned int)__aeabi_uidivmod(value, divisor);
-};
+}
+
+unsigned long long __aeabi_uldivmod(unsigned long long value, unsigned long long divisor) {
+        unsigned long long answer = 0;
+
+        unsigned int i;
+        for (i = 0; i < 32; i++) {
+                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
+                        if (value >= divisor << (31 - i)) {
+                                value -= divisor << (31 - i);
+                                answer |= (unsigned long long)(1 << (31 - i));
+                                if (value == 0) break;
+                        } 
+                }
+        }
+
+        answer |= (unsigned long long)value << 32;
+        return answer;
+}
 
 }
 #endif
+
+// Decompose a double into an exponent and an integet mantissa.
+// The mantissa is between 1 and 10 and multiplied by 100,000,000
+// to fit in an int32_t. So the maximum number of digits that can
+// be displayed is 9.
+
+static void decompose(double v, int32_t& mantissa, int32_t& exponent, uint16_t maxDecimalPlaces)
+{
+	// Get number to between 0.5 and 1
+	// This is obviously slow if the number is very small or very large.
+	// It could be sped up by going by multiple orders of magnitude at
+	// a time when possible
+	bool sign = false;
+	if (v < 0) {
+		sign = true;
+		v = -v;
+	}
+	exponent = 0;
+	while (v < 0.1) {
+		v *= 10;
+		exponent--;
+	}
+	while (v > 1) {
+		v /= 10;
+		exponent++;
+	}
+	mantissa = static_cast<int32_t>(v * 1e19 + 0.5);
+ 
+    // Round mantissa according to the number of digits to display
+    uint16_t digits = maxDecimalPlaces + ((exponent > 0) ? exponent : 0);
+    if (digits <= 19) {
+        mantissa += 50 * (19 - digits);
+    }
+    
+    if (sign) {
+        mantissa = -mantissa;
+    }
+}
+
+// dp defines where the decimal point goes. If it's 0
+// the decimal point goes to the immediate left of the 
+// mantissa (0.xxx). Negative numbers have leading 0's
+// to the left of the mantissa (e.g., -3 is 0.000xxx)
+// and positive numbers have that many digits to the
+// left of the dp (e.g., 2 is xx.xxxx)
+
+static char* intToString(uint64_t mantissa, char* str, int16_t dp, uint16_t maxDecimalPlaces)
+{
+    bool leadingDigit = true;
+    bool decimalDigits = false;
+	
+	if (dp <= 0) {
+        leadingDigit = false;
+		*str++ = '0';
+		*str++ = '.';
+		while (dp < 0) {
+			*str++ = '0';
+			++dp;
+		}
+        decimalDigits = true;
+	}
+ 
+    if (!mantissa) {
+        *str++ = '0';
+        return str;
+    }
+	
+	while (mantissa || dp > 0) {
+		int64_t digit = mantissa / 1000000000000000000;
+		mantissa -= digit * 1000000000000000000;
+        mantissa *= 10;
+        
+        if (digit > 9) {
+            // The only way this should be able it to happen is
+            // when we have a uint64_t that is larger than 19 digits
+            // In this case we need to show an extra digit. For now
+            // we assume this extra digit is '1' and we subtract
+            // 10 from the digit
+            *str++ = '1';
+            digit -= 10;
+        }
+        
+        if (decimalDigits) {
+            if (maxDecimalPlaces-- == 0) {
+                return str;
+            }
+        }
+  
+        // If this is the leading digit and '0', skip it
+        if (!leadingDigit || digit != 0) {
+		    *str++ = static_cast<char>(digit) + '0';
+            leadingDigit = false;
+        }
+	
+		if (dp > 0) {
+			if (--dp == 0 && mantissa != 0) {
+				*str++ = '.';
+                decimalDigits = true;
+			}
+		}
+	}
+	return str;
+}
+
+bool placid::toString(char* buf, double v)
+{
+    static constexpr uint16_t MaxDecimalDigits = 6;
+	char* p = buf;
+
+    if (v == 0) {
+		*p++ = '0';
+		*p++ = '\0';
+		return true;
+    }
+    
+	int32_t mantissa;
+	int32_t exponent;
+	decompose(v, mantissa, exponent, MaxDecimalDigits);
+	
+    if (mantissa < 0) {
+        *p++ = '-';
+        mantissa = -mantissa;
+    }
+    
+ 
+    if (exponent >= -3 && exponent <= 5) {
+		// no exponent
+        buf = intToString(static_cast<uint64_t>(mantissa), p, exponent, MaxDecimalDigits);
+		*buf = '\0';
+        return true;
+    }
+	
+	// Show 1.xxxeyy
+	buf = intToString(static_cast<uint32_t>(mantissa), p, 1, MaxDecimalDigits);
+	*buf++ = 'e';
+ 
+    // Assume exp is no more than 3 digits. To move
+    // it to the upper 3 digits of an int32_t we
+    // multiply by 1000000 and indicate that there
+    // are 3 digits
+    exponent--;
+    if (exponent < 0) {
+        *buf++ = '-';
+        exponent = -exponent;
+    }
+	buf = intToString(static_cast<uint32_t>(exponent * 1000000), p, 3, 6);
+    *buf = '\0';
+    return true;
+}
+
+bool placid::toString(char* buf, int32_t v)
+{
+    if (v < 0) {
+        *buf++ = '-';
+        v = -v;
+    }
+ 
+    return toString(buf, static_cast<uint32_t>(v));
+}
+
+bool placid::toString(char* buf, uint32_t v)
+{
+    buf = intToString(static_cast<uint32_t>(v), buf, 19, 6);
+    *buf = '\0';
+	return true;
+}
+
+bool placid::toString(char* buf, int64_t v)
+{
+    if (v < 0) {
+        *buf++ = '-';
+        v = -v;
+    }
+    
+    return toString(buf, static_cast<uint64_t>(v));
+}
+
+bool placid::toString(char* buf, uint64_t v)
+{
+    buf = intToString(v, buf, 19, 6);
+    *buf = '\0';
+    return true;
+}
 
 void delay(uint32_t t)
 {
@@ -143,23 +353,23 @@ static char* intToString(uint32_t mantissa, char* str)
         *str++ = '0';
         return str;
     }
-	
+    
     int leadingDigit = 1;
     int16_t dp = 9;
 
-	while (mantissa || dp > 0) {
-		int32_t digit = mantissa / 100000000;
-		mantissa -= digit * 100000000;
+    while (mantissa || dp > 0) {
+        int32_t digit = mantissa / 100000000;
+        mantissa -= digit * 100000000;
         mantissa *= 10;
         
         // If this is the leading digit and '0', skip it
         if (!leadingDigit || digit != 0) {
-		    *str++ = ((char) digit) + '0';
+            *str++ = ((char) digit) + '0';
             leadingDigit = 0;
         }
         dp--;
     }
-	return str;
+    return str;
 }
 
 void utos(char* buf, uint32_t v)

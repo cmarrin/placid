@@ -1,17 +1,10 @@
-#include "bootutil.h"
+#include "util.h"
 
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
-
-extern void PUT32 ( unsigned int, unsigned int );
-extern unsigned int GET32 ( unsigned int );
-extern void dummy ( unsigned int );
 
 #define ARM_TIMER_CTL 0x2000B408
 #define ARM_TIMER_CNT 0x2000B420
-
-#define STIMER_CLO 0x20003004
-#define STIMER_CHI 0x20003008
 
 #define GPFSEL1 0x20200004
 #define GPSET0  0x2020001C
@@ -92,14 +85,6 @@ void  timer_init ( void )
     PUT32(ARM_TIMER_CTL,0x00F90000);
     PUT32(ARM_TIMER_CTL,0x00F90200);
 }
-//-------------------------------------------------------------------------
-uint64_t timerTick ( void )
-{
-    return (((uint64_t) GET32(STIMER_CHI)) << 32) | (uint64_t) GET32(STIMER_CLO);
-}
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
-
 
 //-------------------------------------------------------------------------
 //

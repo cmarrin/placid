@@ -114,10 +114,6 @@ GET32:
     ldr r0,[r0]
     bx lr
 
-.global dummy
-dummy:
-    bx lr
-
 .global BRANCHTO
 BRANCHTO:
     bx r0

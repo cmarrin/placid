@@ -33,7 +33,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bootutil.h"
+#include "util.h"
+
+void autoload(void);
+void xmodemReceive(void);
 
 static constexpr uint32_t AutoloadTimeout = 3;
 
@@ -56,6 +59,7 @@ int main(int argc, const char * argv[])
             tickTime += 1000000;
             if (tickTime++ > (AutoloadTimeout + 1) * 1000000) {
                 autoload();
+                break;
             }
         }
             
@@ -66,9 +70,11 @@ int main(int argc, const char * argv[])
         if (c == ' ') {
             printf("\n\nStart XMODEM upload when ready...\n\n");
             xmodemReceive();
+            break;
         } else if (c < 0x7f) {
             printf("\n\nAutoloading...\n\n");
             autoload();
+            break;
         }
     }
     

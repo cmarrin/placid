@@ -9,12 +9,10 @@
 // 0x80  Extension FIFO config - what's that?
 // This register allows fine tuning the dma_req generation for paced DMA transfers when reading from the card.
 
-//#include "bootpack.h"
-//#include "mylib.h"
 #include "mmio.h"
 #include "mailbox.h"
 #include "sdcard.h"
-#include "bootutil.h"
+#include "util.h"
 #define P2V_DEV(X) (X)
 
 //#define DEBUG_SD
@@ -755,7 +753,7 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
     // RESP0..3 contains 128 bit CID or CSD shifted down by 8 bits as no CRC
     // Note: highest bits are in RESP3.
     case RESP_R2I:
-    case RESP_R2S:
+    case RESP_R2S: {
       sdCard.status = 0;
       unsigned int* data = cmd->resp == RESP_R2I ? sdCard.cid : sdCard.csd;
       data[0] = *EMMC_RESP3;
@@ -763,7 +761,7 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
       data[2] = *EMMC_RESP1;
       data[3] = resp0;
       return SD_OK;
-
+    }
     // RESP0 contains OCR register
     // TODO: What is the correct time to wait for this?
     case RESP_R3:
@@ -1198,7 +1196,7 @@ int sdTransferBlocks( long long address, int numBlocks, unsigned char* buffer, i
     // Handle non-word-aligned buffers byte-by-byte.
     // Note: the entire block is sent without looking at status registers.
     int done = 0;
-    if( (int)buffer & 0x03 )
+    if( reinterpret_cast<intptr_t>(buffer) & 0x03 )
       {
       while( done < 512 )
         {

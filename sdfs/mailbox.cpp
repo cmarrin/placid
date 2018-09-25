@@ -4,7 +4,8 @@
 */
 
 #include "mailbox.h"
-#include "bootutil.h"
+
+#include "util.h"
 
 #define flushcache() asm volatile \
 		("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) )
@@ -91,7 +92,7 @@ int mailbox_getClockRate(int id)
 	pt[pt_index++] = 0; // stop tag
 	pt[0] = pt_index*4;
 
-	addr = ((unsigned int) pt) + 0x40000000;
+	addr = static_cast<uint32_t>((reinterpret_cast<uintptr_t>(pt)) + 0x40000000);
 	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
 	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
@@ -140,7 +141,7 @@ int mailbox_getMemorySize()
 	pt[pt_index++] = 0; // stop tag (unnecessary if initialized with zero. Just in case)
 	pt[0] = pt_index*4;
 
-	addr = ((unsigned int) pt) + 0x40000000;
+	addr = static_cast<uint32_t>((reinterpret_cast<uintptr_t>(pt)) + 0x40000000);
 	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
 	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
@@ -193,7 +194,7 @@ int mailbox_emmc_clock(int id)
 	pt[pt_index++] = 0; // stop tag (unnecessary if initialized with zero. Just in case)
 	pt[0] = pt_index*4;
 
-	addr = ((unsigned int) pt) + 0x40000000;
+	addr = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(pt) + 0x40000000);
 	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
 	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
 	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));

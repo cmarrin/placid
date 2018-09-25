@@ -13,17 +13,60 @@
 		49166D4821514C060077ACEE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3321514C050077ACEE /* Timer.cpp */; };
 		49166D4A21514C060077ACEE /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3921514C050077ACEE /* Serial.cpp */; };
 		49166D4B21514C060077ACEE /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
-		49166D4E21514C060077ACEE /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3D21514C050077ACEE /* util.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D5021514C060077ACEE /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D4221514C060077ACEE /* GPIO.cpp */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
 		4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* xmodem.cpp */; };
-		49629553215673D30064B9C9 /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629551215673D30064B9C9 /* SDFS.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
-		498F1559215531B4004D4F07 /* mailbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F154F21553169004D4F07 /* mailbox.c */; };
-		498F155B215531BF004D4F07 /* sdcard.c in Sources */ = {isa = PBXBuildFile; fileRef = 498F15522155316A004D4F07 /* sdcard.c */; };
-		498F155F215535B7004D4F07 /* bootutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D662153E0600077ACEE /* bootutil.cpp */; };
+		4962956A215A99CC0064B9C9 /* mailbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629560215A99A90064B9C9 /* mailbox.cpp */; };
+		4962956B215A99D10064B9C9 /* sdcard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629564215A99A90064B9C9 /* sdcard.cpp */; };
+		4962956C215A99D60064B9C9 /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629563215A99A90064B9C9 /* SDFS.cpp */; };
+		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
+		4962957C215AA53B0064B9C9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* util.h */; };
+		49629589215AAA760064B9C9 /* libsdfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4962955B215A997E0064B9C9 /* libsdfs.a */; };
+		4962958A215AAA760064B9C9 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libutil.a */; };
+		4962958B215AAA800064B9C9 /* libsdfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4962955B215A997E0064B9C9 /* libsdfs.a */; };
+		4962958C215AAA800064B9C9 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libutil.a */; };
+		49629595215ABAE50064B9C9 /* periph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629593215ABADD0064B9C9 /* periph.cpp */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4962957E215AA9D10064B9C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49629570215AA4DF0064B9C9;
+			remoteInfo = util;
+		};
+		49629580215AA9E90064B9C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4962955A215A997E0064B9C9;
+			remoteInfo = sdfs;
+		};
+		49629582215AA9E90064B9C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49629570215AA4DF0064B9C9;
+			remoteInfo = util;
+		};
+		49629584215AA9F20064B9C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4962955A215A997E0064B9C9;
+			remoteInfo = sdfs;
+		};
+		49629586215AA9F20064B9C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49629570215AA4DF0064B9C9;
+			remoteInfo = util;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		49166D6B2153F0FE0077ACEE /* CopyFiles */ = {
@@ -63,10 +106,8 @@
 		49166D3921514C050077ACEE /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../../kernel/src/Serial.cpp; sourceTree = "<group>"; };
 		49166D3A21514C050077ACEE /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../../kernel/src/Shell.cpp; sourceTree = "<group>"; };
 		49166D3B21514C050077ACEE /* dlmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dlmalloc.c; path = ../../kernel/src/dlmalloc.c; sourceTree = "<group>"; };
-		49166D3D21514C050077ACEE /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../../kernel/src/util.cpp; sourceTree = "<group>"; };
 		49166D3E21514C050077ACEE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../kernel/src/main.cpp; sourceTree = "<group>"; };
 		49166D3F21514C050077ACEE /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../../kernel/src/BootShell.h; sourceTree = "<group>"; };
-		49166D4021514C050077ACEE /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../../kernel/src/util.h; sourceTree = "<group>"; };
 		49166D4121514C060077ACEE /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = String.h; path = ../../kernel/src/String.h; sourceTree = "<group>"; };
 		49166D4221514C060077ACEE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../../kernel/src/GPIO.cpp; sourceTree = "<group>"; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
@@ -75,21 +116,25 @@
 		49166D582151AC5F0077ACEE /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../bootloader/xmodem.cpp; sourceTree = "<group>"; };
 		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
-		49166D5B2151AC5F0077ACEE /* periph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = periph.c; path = ../bootloader/periph.c; sourceTree = "<group>"; };
 		49166D612153CA250077ACEE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../bootloader/README.md; sourceTree = "<group>"; };
-		49166D662153E0600077ACEE /* bootutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bootutil.cpp; path = ../bootloader/bootutil.cpp; sourceTree = "<group>"; };
-		49166D682153E5D90077ACEE /* bootutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bootutil.h; path = ../bootloader/bootutil.h; sourceTree = "<group>"; };
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49629551215673D30064B9C9 /* SDFS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../bootloader/SDFS.cpp; sourceTree = "<group>"; };
-		49629552215673D30064B9C9 /* SDFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../bootloader/SDFS.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
-		498F154F21553169004D4F07 /* mailbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mailbox.c; path = ../bootloader/mailbox.c; sourceTree = "<group>"; };
-		498F15502155316A004D4F07 /* mmio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mmio.h; path = ../bootloader/mmio.h; sourceTree = "<group>"; };
-		498F15522155316A004D4F07 /* sdcard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdcard.c; path = ../bootloader/sdcard.c; sourceTree = "<group>"; };
-		498F15542155316A004D4F07 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../bootloader/mailbox.h; sourceTree = "<group>"; };
-		498F15552155316A004D4F07 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../bootloader/sdcard.h; sourceTree = "<group>"; };
+		4962955B215A997E0064B9C9 /* libsdfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsdfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		49629560215A99A90064B9C9 /* mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mailbox.cpp; path = ../sdfs/mailbox.cpp; sourceTree = "<group>"; };
+		49629561215A99A90064B9C9 /* SDFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../sdfs/SDFS.h; sourceTree = "<group>"; };
+		49629562215A99A90064B9C9 /* mmio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mmio.h; path = ../sdfs/mmio.h; sourceTree = "<group>"; };
+		49629563215A99A90064B9C9 /* SDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../sdfs/SDFS.cpp; sourceTree = "<group>"; };
+		49629564215A99A90064B9C9 /* sdcard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdcard.cpp; path = ../sdfs/sdcard.cpp; sourceTree = "<group>"; };
+		49629565215A99A90064B9C9 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../sdfs/mailbox.h; sourceTree = "<group>"; };
+		49629566215A99A90064B9C9 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../sdfs/sdcard.h; sourceTree = "<group>"; };
+		49629571215AA4DF0064B9C9 /* libutil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libutil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../util/util.cpp; sourceTree = "<group>"; };
+		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../util/util.h; sourceTree = "<group>"; };
+		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../util/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		49629591215AAF9A0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../sdfs/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		49629593215ABADD0064B9C9 /* periph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = periph.cpp; path = ../util/periph.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,10 +142,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49629589215AAA760064B9C9 /* libsdfs.a in Frameworks */,
+				4962958A215AAA760064B9C9 /* libutil.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		492C7419214B2A2F009A4DA4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4962958B215AAA800064B9C9 /* libsdfs.a in Frameworks */,
+				4962958C215AAA800064B9C9 /* libutil.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49629558215A997E0064B9C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4962956E215AA4DF0064B9C9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -123,14 +186,8 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
-				498F154E2155313F004D4F07 /* haribote */,
-				49166D5B2151AC5F0077ACEE /* periph.c */,
 				496295542159286E0064B9C9 /* autoload.cpp */,
-				49166D682153E5D90077ACEE /* bootutil.h */,
-				49166D662153E0600077ACEE /* bootutil.cpp */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
-				49629552215673D30064B9C9 /* SDFS.h */,
-				49629551215673D30064B9C9 /* SDFS.cpp */,
 				49166D582151AC5F0077ACEE /* xmodem.cpp */,
 				49166D592151AC5F0077ACEE /* vectors.s */,
 				49166D612153CA250077ACEE /* README.md */,
@@ -163,8 +220,6 @@
 				49166D4121514C060077ACEE /* String.h */,
 				49166D3321514C050077ACEE /* Timer.cpp */,
 				49166D3521514C050077ACEE /* Timer.h */,
-				49166D3D21514C050077ACEE /* util.cpp */,
-				49166D4021514C050077ACEE /* util.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -179,10 +234,13 @@
 		492C7413214B2A2F009A4DA4 = {
 			isa = PBXGroup;
 			children = (
+				49629575215AA4EB0064B9C9 /* util */,
+				4962955F215A998E0064B9C9 /* sdfs */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
 				49166D6E2153F0FE0077ACEE /* bltest */,
 				492C741D214B2A2F009A4DA4 /* Products */,
+				49629588215AAA760064B9C9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -191,23 +249,64 @@
 			children = (
 				492C741C214B2A2F009A4DA4 /* kerneltest */,
 				49166D6D2153F0FE0077ACEE /* bltest */,
+				4962955B215A997E0064B9C9 /* libsdfs.a */,
+				49629571215AA4DF0064B9C9 /* libutil.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		498F154E2155313F004D4F07 /* haribote */ = {
+		4962955F215A998E0064B9C9 /* sdfs */ = {
 			isa = PBXGroup;
 			children = (
-				498F154F21553169004D4F07 /* mailbox.c */,
-				498F15542155316A004D4F07 /* mailbox.h */,
-				498F15502155316A004D4F07 /* mmio.h */,
-				498F15522155316A004D4F07 /* sdcard.c */,
-				498F15552155316A004D4F07 /* sdcard.h */,
+				49629591215AAF9A0064B9C9 /* Makefile */,
+				49629560215A99A90064B9C9 /* mailbox.cpp */,
+				49629565215A99A90064B9C9 /* mailbox.h */,
+				49629562215A99A90064B9C9 /* mmio.h */,
+				49629564215A99A90064B9C9 /* sdcard.cpp */,
+				49629566215A99A90064B9C9 /* sdcard.h */,
+				49629563215A99A90064B9C9 /* SDFS.cpp */,
+				49629561215A99A90064B9C9 /* SDFS.h */,
 			);
-			name = haribote;
+			name = sdfs;
+			sourceTree = "<group>";
+		};
+		49629575215AA4EB0064B9C9 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				49629593215ABADD0064B9C9 /* periph.cpp */,
+				4962958F215AAF8F0064B9C9 /* Makefile */,
+				49629576215AA53B0064B9C9 /* util.cpp */,
+				49629578215AA53B0064B9C9 /* util.h */,
+			);
+			name = util;
+			sourceTree = "<group>";
+		};
+		49629588215AAA760064B9C9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		49629559215A997E0064B9C9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4962956F215AA4DF0064B9C9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4962957C215AA53B0064B9C9 /* util.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		49166D6C2153F0FE0077ACEE /* bltest */ = {
@@ -221,6 +320,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				49629581215AA9E90064B9C9 /* PBXTargetDependency */,
+				49629583215AA9E90064B9C9 /* PBXTargetDependency */,
 			);
 			name = bltest;
 			productName = bltest;
@@ -238,11 +339,48 @@
 			buildRules = (
 			);
 			dependencies = (
+				49629585215AA9F20064B9C9 /* PBXTargetDependency */,
+				49629587215AA9F20064B9C9 /* PBXTargetDependency */,
 			);
 			name = kerneltest;
 			productName = bltest;
 			productReference = 492C741C214B2A2F009A4DA4 /* kerneltest */;
 			productType = "com.apple.product-type.tool";
+		};
+		4962955A215A997E0064B9C9 /* sdfs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4962955C215A997E0064B9C9 /* Build configuration list for PBXNativeTarget "sdfs" */;
+			buildPhases = (
+				49629557215A997E0064B9C9 /* Sources */,
+				49629558215A997E0064B9C9 /* Frameworks */,
+				49629559215A997E0064B9C9 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4962957F215AA9D10064B9C9 /* PBXTargetDependency */,
+			);
+			name = sdfs;
+			productName = sdfs;
+			productReference = 4962955B215A997E0064B9C9 /* libsdfs.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		49629570215AA4DF0064B9C9 /* util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "util" */;
+			buildPhases = (
+				4962956D215AA4DF0064B9C9 /* Sources */,
+				4962956E215AA4DF0064B9C9 /* Frameworks */,
+				4962956F215AA4DF0064B9C9 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = util;
+			productName = util;
+			productReference = 49629571215AA4DF0064B9C9 /* libutil.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -257,6 +395,12 @@
 						CreatedOnToolsVersion = 9.4.1;
 					};
 					492C741B214B2A2F009A4DA4 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+					4962955A215A997E0064B9C9 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+					49629570215AA4DF0064B9C9 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
 				};
@@ -275,6 +419,8 @@
 			targets = (
 				492C741B214B2A2F009A4DA4 /* kerneltest */,
 				49166D6C2153F0FE0077ACEE /* bltest */,
+				4962955A215A997E0064B9C9 /* sdfs */,
+				49629570215AA4DF0064B9C9 /* util */,
 			);
 		};
 /* End PBXProject section */
@@ -285,11 +431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49629556215929410064B9C9 /* autoload.cpp in Sources */,
-				49629553215673D30064B9C9 /* SDFS.cpp in Sources */,
 				49166D702153F0FE0077ACEE /* main.cpp in Sources */,
-				498F155F215535B7004D4F07 /* bootutil.cpp in Sources */,
-				498F1559215531B4004D4F07 /* mailbox.c in Sources */,
-				498F155B215531BF004D4F07 /* sdcard.c in Sources */,
 				4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,11 +448,57 @@
 				49166D4821514C060077ACEE /* Timer.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
-				49166D4E21514C060077ACEE /* util.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49629557215A997E0064B9C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4962956C215A99D60064B9C9 /* SDFS.cpp in Sources */,
+				4962956B215A99D10064B9C9 /* sdcard.cpp in Sources */,
+				4962956A215A99CC0064B9C9 /* mailbox.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4962956D215AA4DF0064B9C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
+				49629595215ABAE50064B9C9 /* periph.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4962957F215AA9D10064B9C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49629570215AA4DF0064B9C9 /* util */;
+			targetProxy = 4962957E215AA9D10064B9C9 /* PBXContainerItemProxy */;
+		};
+		49629581215AA9E90064B9C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4962955A215A997E0064B9C9 /* sdfs */;
+			targetProxy = 49629580215AA9E90064B9C9 /* PBXContainerItemProxy */;
+		};
+		49629583215AA9E90064B9C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49629570215AA4DF0064B9C9 /* util */;
+			targetProxy = 49629582215AA9E90064B9C9 /* PBXContainerItemProxy */;
+		};
+		49629585215AA9F20064B9C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4962955A215A997E0064B9C9 /* sdfs */;
+			targetProxy = 49629584215AA9F20064B9C9 /* PBXContainerItemProxy */;
+		};
+		49629587215AA9F20064B9C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49629570215AA4DF0064B9C9 /* util */;
+			targetProxy = 49629586215AA9F20064B9C9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		49166D722153F0FE0077ACEE /* Debug */ = {
@@ -454,6 +642,46 @@
 			};
 			name = Release;
 		};
+		4962955D215A997E0064B9C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4962955E215A997E0064B9C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		49629573215AA4DF0064B9C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		49629574215AA4DF0064B9C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -480,6 +708,24 @@
 			buildConfigurations = (
 				492C7424214B2A2F009A4DA4 /* Debug */,
 				492C7425214B2A2F009A4DA4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4962955C215A997E0064B9C9 /* Build configuration list for PBXNativeTarget "sdfs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4962955D215A997E0064B9C9 /* Debug */,
+				4962955E215A997E0064B9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49629573215AA4DF0064B9C9 /* Debug */,
+				49629574215AA4DF0064B9C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -58,30 +58,6 @@ void __aeabi_idiv0()
 
 int __errno = 0;
 
-void* memset(void* p, int value, size_t n)
-{
-	if (n == 0) {
-		return p;
-	}
-	while (n--) {
-		*reinterpret_cast<uint8_t*>(p) = static_cast<uint8_t>(value);
-	}
-	return p;
-}
-
-void* memcpy(void* dst, const void* src, size_t n)
-{
-	if (n == 0) {
-		return dst;
-	}
-	uint8_t* d = reinterpret_cast<uint8_t*>(dst);
-	const uint8_t* s = reinterpret_cast<const uint8_t*>(src);
-	while (n--) {
-		*d++ = *s++;
-	}
-	return dst;
-}
-
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
 	return nullptr;

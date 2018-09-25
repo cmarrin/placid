@@ -35,12 +35,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "defs.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdarg.h>
 
 namespace placid {
 
 											//        sign    digits  dp      'e'     dp      exp     '\0'
 	static constexpr uint32_t MaxToStringBufferSize =	1 +     20 +   1 +     1 +     1 +     3 +      1;
+    static constexpr uint32_t ARMBASE = 0x8000;
 
 	bool toString(char* buf, double v);
     bool toString(char* buf, int32_t v);
@@ -53,3 +56,36 @@ namespace placid {
 	inline bool toString(char* buf, int16_t v) { return toString(buf, static_cast<int32_t>(v)); }
 	inline bool toString(char* buf, uint16_t v) { return toString(buf, static_cast<uint32_t>(v)); }
 }
+
+void uart_send ( unsigned int );
+unsigned int uart_recv ( void );
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+uint64_t timerTick(void);
+void delay(uint32_t t);
+void PUT8 ( unsigned int, unsigned int );
+void PUT32 ( unsigned int, unsigned int );
+unsigned int GET32 ( unsigned int );
+void BRANCHTO ( unsigned int );
+void uart_init ( void );
+unsigned int uart_lcr ( void );
+void timer_init ( void );
+void itos(char* buf, int32_t v);
+void utos(char* buf, uint32_t v);
+void putstr(const char* s);
+void puti(int32_t v);
+void putu(uint32_t v);
+int getchar(void);
+void* memset(void* p, int value, size_t n);
+void* memcpy(void* dst, const void* src, size_t n);
+int memcmp(const void* left, const void* right, size_t n);
+int printf(const char *format, ...);
+int vsnprintf(char *str, size_t n, const char *format, va_list);
+int snprintf(char *str, size_t n, const char *format, ...);
+int puts(const char*); // ARM compiler seems to convert printf("...") to puts("...")
+void convertTo8dot3(char* name8dot3, const char* name);
+#ifdef __cplusplus
+}
+#endif

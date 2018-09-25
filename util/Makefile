@@ -1,5 +1,6 @@
 
 TOOLCHAIN ?= arm-none-eabi
+AR = $(TOOLCHAIN)-ar
 AS = $(TOOLCHAIN)-as
 CC = $(TOOLCHAIN)-gcc
 CXX = $(TOOLCHAIN)-g++
@@ -7,42 +8,32 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-LIBS = ../util/build/util.a ../sdfs/build/sdfs.a
-INCLUDES = -I../util -I../sdfs
-
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
 CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	vectors.S \
-        autoload.cpp \
-        xmodem.cpp \
-        main.cpp
+SRC =	util.cpp \
+		periph.cpp
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)
 
-all : checkdirs bin/bootloader.bin
+all : checkdirs $(BUILDDIR)/util.a
 
 -include $(DEP)
 
 clean :
 	rm -rf $(BUILDDIR)
-	rm -f bin/bootloader.bin
 
 checkdirs: $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $@
 
-bin/bootloader.bin : loader $(OBJS)
-	$(LD) $(OBJS) $(LIBS) -T loader -o $(BUILDDIR)/bootloader04.elf
-	$(OBJDUMP) -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
-	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
-	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O binary bin/bootloader.bin
-	wc -c bin/bootloader.bin
+$(BUILDDIR)/util.a : $(OBJS)
+	$(AR) rcs -o $@ $(OBJS)
 
 $(BUILDDIR)/%.o: %.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@

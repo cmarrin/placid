@@ -86,17 +86,6 @@ extern "C" void _testoutbyte(int c)
     placid::cout << "test xmodem received '" << static_cast<char>(c) << "'\n";
 }
 
-extern "C" void _xmodemmemcpy(unsigned char *dst, unsigned char *src, int count)
-{
-#ifdef __APPLE__
-    placid::cout << "*** placing " << count << " bytes at " << static_cast<uint32_t>(reinterpret_cast<uint64_t>(dst)) << "\n";
-#else
-    for (int i = 0; i < count; i++) {
-        PUT8(reinterpret_cast<uint32_t>(dst++), *src++);
-    }
-#endif
-}
-
 const char* BootShell::welcomeString() const
 {
 	return "\n\nPlacid Kernel Shell v0.1";
