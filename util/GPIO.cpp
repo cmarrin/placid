@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "GPIO.h"
 
+#include "util.h"
+
 using namespace placid;
 
 static constexpr uint32_t GPIOBase = 0x20200000;
@@ -76,6 +78,27 @@ bool GPIO::getPin(uint32_t pin)
 	uint32_t r = pin / 32 * 4;
 	uint32_t off = pin % 32;
 	return (rawReg(r + GPLEVOffset) & (1 << off)) != 0;
+}
+
+void GPIO::setPull(uint32_t pin, Pull val)
+{
+    Register reg;
+    uint32_t enbit;
+    
+    if (pin < 32) {
+        enbit = 1 << pin;
+        reg = Register::GPPUDCLK0;
+    } else {
+        enbit = 1 << (pin - 32);
+        reg = Register::GPPUDCLK1;
+    }
+
+    GPIO::reg(Register::GPPUD) = static_cast<uint32_t>(val);
+    delay(150);
+    GPIO::reg(reg) = enbit;    
+    delay(150);
+    GPIO::reg(Register::GPPUD) = 0;
+    GPIO::reg(reg) = 0;    
 }
 
 volatile uint32_t& GPIO::reg(Register r)

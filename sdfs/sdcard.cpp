@@ -13,7 +13,10 @@
 #include "mailbox.h"
 #include "sdcard.h"
 #include "util.h"
+#include "GPIO.h"
 #define P2V_DEV(X) (X)
+
+using namespace placid;
 
 //#define DEBUG_SD
 #ifdef DEBUG_SD
@@ -1324,7 +1327,7 @@ static void sdInitGPIO()
 
   // Card detect GPIO
    gpioSetFunction(GPIO_CD,GPIO_FUNC_INPUT);
-   gpioSetPull(GPIO_CD,GPIO_PULL_UP);
+   GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
   //  gpioSetDetectHighEvent(GPIO_CD,1);
   reg = mmio_read(GPHEN1);
   reg = reg | 1<<(47-32);

@@ -7,7 +7,7 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-LIBS = ../util/build/util.a ../sdfs/build/sdfs.a
+LIBS = ../sdfs/build/sdfs.a ../util/build/util.a
 INCLUDES = -I../util -I../sdfs
 
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
@@ -36,8 +36,12 @@ checkdirs: $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $@
+	
+makelibs:
+	cd ../util; make -f Makefile
+	cd ../sdfs; make -f Makefile
 
-bin/bootloader.bin : loader $(OBJS)
+bin/bootloader.bin : loader $(OBJS) makelibs
 	$(LD) $(OBJS) $(LIBS) -T loader -o $(BUILDDIR)/bootloader04.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex

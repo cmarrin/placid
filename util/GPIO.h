@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "defs.h"
+#include <stdint.h>
 
 namespace placid {
 	
@@ -64,7 +64,8 @@ namespace placid {
 			GPLEV0 = 0x34, 
 			GPLEV1 = 0x38, 
 			GPPUD = 0x94,
-			GPPUDCLK0 = 0x98,
+            GPPUDCLK0 = 0x98,
+            GPPUDCLK1 = 0x9c,
 		};
 
 		enum class Function {
@@ -77,12 +78,15 @@ namespace placid {
 			Alt4 = 3,
 			Alt5 = 2,
 		};
+  
+        enum class Pull { None = 0b00, Down = 0b01, Up = 0b10 };
 		
 		// Set the alternate function select register
 		static void setFunction(uint32_t pin, Function);
 		
 		static void setPin(uint32_t pin, bool on);
 		static bool getPin(uint32_t pin);
+        static void setPull(uint32_t pin, Pull);
 
 		static volatile uint32_t& reg(Register);
 	};

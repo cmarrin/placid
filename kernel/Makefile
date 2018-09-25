@@ -41,7 +41,7 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-LIBS = ../util/build/util.a ../sdfs/build/sdfs.a
+LIBS = ../sdfs/build/sdfs.a ../util/build/util.a
 INCLUDES = -I../util -I../sdfs
 
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
@@ -61,7 +61,6 @@ SRC =	start.S \
         main.cpp \
 		memory.cpp \
 		BootShell.cpp \
-		GPIO.cpp \
 		InterruptManager.cpp \
 		Serial.cpp \
 		Shell.cpp \
@@ -77,10 +76,10 @@ OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
 DEP = $(OBJS:%.o=%.d)
 
-all: checkdirs $(BUILDDIR)/bootloader.bin
+all: checkdirs $(BUILDDIR)/kernel.bin
 	
 clean:
-	rm -f $(OBJS) $(DIVOBJS) $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.bin $(BUILDDIR)/bootloader.hex $(BUILDDIR)/bootloader.list $(BUILDDIR)/bootloader.sym
+	rm -rf $(BUILDDIR)
 	
 checkdirs: $(BUILDDIR)
 
@@ -89,13 +88,17 @@ checkdirs: $(BUILDDIR)
 $(BUILDDIR):
 	@mkdir -p $@
 	
-$(BUILDDIR)/bootloader.bin: loadmap.ld $(OBJS) $(DIVOBJS)
+makelibs:
+	cd ../util; make -f Makefile
+	cd ../sdfs; make -f Makefile
+
+$(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) $(DIVOBJS) makelibs
 	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
 	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
-	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary $(BUILDDIR)/bootloader.bin
-	wc -c $(BUILDDIR)/bootloader.bin
+	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary $(BUILDDIR)/kernel.bin
+	wc -c $(BUILDDIR)/kernel.bin
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
