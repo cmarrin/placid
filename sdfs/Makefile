@@ -16,8 +16,8 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	mailbox.cpp \
-        sdcard.cpp \
+SRC =	sdcard.cpp \
+		Mailbox.cpp \
         SDFS.cpp \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))

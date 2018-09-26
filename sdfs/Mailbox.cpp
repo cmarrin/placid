@@ -3,7 +3,7 @@
   https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
 */
 
-#include "mailbox.h"
+#include "Mailbox.h"
 
 #include "util.h"
 

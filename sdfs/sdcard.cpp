@@ -9,10 +9,12 @@
 // 0x80  Extension FIFO config - what's that?
 // This register allows fine tuning the dma_req generation for paced DMA transfers when reading from the card.
 
-#include "mailbox.h"
 #include "sdcard.h"
+
+#include "Mailbox.h"
 #include "util.h"
 #include "GPIO.h"
+
 #define P2V_DEV(X) (X)
 
 using namespace placid;

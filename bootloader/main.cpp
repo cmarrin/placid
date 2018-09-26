@@ -34,7 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "util.h"
-#include "mailbox.h"
+#include "Mailbox.h"
 
 void autoload(void);
 void xmodemReceive(void);
