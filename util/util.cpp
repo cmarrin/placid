@@ -86,10 +86,6 @@ unsigned int GET32(unsigned int addr)
     return 0;
 }
 
-void dmb(void)
-{
-}
-
 void BRANCHTO(unsigned int addr)
 {
     printf("BRANCHTO: => %d\n", addr);

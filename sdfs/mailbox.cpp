@@ -7,117 +7,12 @@
 
 #include "util.h"
 
-#define flushcache() asm volatile \
-		("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) )
-/*
-#define dmb() asm volatile \
-		("mcr p15, #0, %[zero], c7, c10, #5" : : [zero] "r" (0) )
+static volatile unsigned int *MAILBOX0READ = (unsigned int *) 0x2000b880;
+static volatile unsigned int *MAILBOX0STATUS = (unsigned int *) 0x2000b898;
+static volatile unsigned int *MAILBOX0WRITE = (unsigned int *) 0x2000b8a0;
 
-#define dsb() asm volatile \
-		("mcr p15, #0, %[zero], c7, c10, #4" : : [zero] "r" (0) )
-*/
-
-int mailbox_write(uint32_t value, uint32_t channel) {
-	volatile uint32_t sta;
-	volatile uint32_t cmd;
-
-	//	printf("Write start. Channel: %0d\n", channel);
-	//	printf("Write Value: 0x%08x\n", value);
-	if ((value & 0x0000000F) != 0) {
-		return -1;
-	}
-	if ((channel & 0xFFFFFFF0) != 0) {
-		return -1;
-	}
-	
-	cmd = 0;
-	do {
-		//		dmb();
-		sta = *( (volatile uint32_t *) MB_STATUS);
-	} while ((sta & 0x80000000) != 0);
-	//	printf("status: 0x%08x\n", sta);
-	//	dmb();
-	cmd = value | channel;
-	*((volatile uint32_t *) MB_WRITE) = cmd;
-	//	printf("Command: 0x%08x is written to mail box\n", cmd);
-	
-	return 0;
-}
-
- 
-int mailbox_read(uint32_t channel, uint32_t *value) {
-	uint32_t mail, sta;
-
-	//	printf("Read Start. Channel: %d\n", channel);
-	if ((channel & 0xFFFFFFF0) != 0) {
-		printf("Channel %d is wrong\n", (int) channel);
-		return -1;
-	}
-	do {
-		do {
-			//			dmb();
-			sta = *( (volatile uint32_t *) MB_STATUS);
-		} while (sta & 0x40000000);
-		//		printf("status: 0x%08x\n", sta); 
-		mail = *( (volatile uint32_t *) MB_READ);
-		//		printf("mail: 0x%08x\n", mail);
-	} while ((mail & 0x0000000F) != channel);
-
-	//	dmb();
-	*value =  mail & 0xFFFFFFF0;
-	return 0;
-}
-
-int mailbox_getClockRate(int id)
-{
-	// id: 1: emmc, 2: uart, 3: arm, 4: core, 5: v3d
-	//     6: h264, 7: ISP, 8: SDRAM, 9: PIXEL, a: PWM
-	int i;
-	uint32_t addr;
-	uint32_t mail;
-	uint32_t pt[8192] __attribute__((aligned(16)));
-	int pt_index;
-
-	for(i=0; i<8192; i++) {
-		pt[i]=0;
-	}
-	pt[         0] = 12; // placeholder for the total size
-	pt[         1] =  0; // Request code: process request
-	pt_index=2;
-	pt[pt_index++] = 0x00030002; // tag identifeir = 0x00030002: get clock rate)
-	pt[pt_index++] = 8; // value buffer size in bytes ((1 entry)*4)
-	pt[pt_index++] = 0; // 1bit request/response (0/1), 31bit value length in bytes
-	pt[pt_index++] = 1; // id = 2
-	pt[pt_index++] = 0; // return value 2
-	pt[pt_index++] = 0; // stop tag
-	pt[0] = pt_index*4;
-
-	addr = static_cast<uint32_t>((reinterpret_cast<uintptr_t>(pt)) + 0x40000000);
-	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
-	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
-	//	}
-	//	printf("request to channel 8\n");
-	mailbox_write(addr, 8);
-	//	printf("read from channel 8\n");
-	mailbox_read(8, &mail);
-	//	printf("mailbox return value: 0x%08x\n", (unsigned int) mail);
-	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
-	//	}
-#ifdef __APPLE__
-#else
-	if (*((volatile unsigned int *) (mail+4)) == 0x80000000) {
-		//		printf("Get clock rate (ID=%d) successful\n", *((volatile unsigned int *) (mail+5*4)));
-		//		printf("Clock rate: %d\n", *((volatile unsigned int *) (mail+6*4)));
-		return *((volatile unsigned int *) (mail+6*4));
-	} else {
-		printf("Error: ID=%d\n", *((volatile unsigned int *) (mail+5*4)));
-		printf("response: 0x%08x\n", *((volatile unsigned int *) (mail+6*4)));
-	}
-#endif
-	return -1;
-}
+#define MAILBOX_FULL 0x80000000
+#define MAILBOX_EMPTY 0x40000000
 
 int mailbox_getMemorySize()
 {
@@ -147,9 +42,9 @@ int mailbox_getMemorySize()
 	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
 	//	}
 	//	printf("request to channel 8\n");
-	mailbox_write(addr, 8);
+	writemailbox(8, addr);
 	//	printf("read from channel 8\n");
-	mailbox_read(8, &mail);
+	mail = readmailbox(8);
 	//	dmb();
 	//	printf("mailbox return value: 0x%08x\n", (unsigned int) mail);
 	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
@@ -170,51 +65,94 @@ int mailbox_getMemorySize()
 #endif
 }
 
+// This code is from corn-mainline by Raspberry Alpha Omega
 
-int mailbox_emmc_clock(int id)
+uint32_t readmailbox(uint32_t channel) {
+  uint32_t count = 0;
+  uint32_t data;
+
+    if ((channel & 0xFFFFFFF0) != 0) {
+        printf("Channel %d is wrong\n", (int) channel);
+        return -1;
+    }
+
+    /* Loop until something is received from channel
+     * If nothing recieved, it eventually give up and returns 0xffffffff
+     */
+    while(1) {
+        while (*MAILBOX0STATUS & MAILBOX_EMPTY) {
+            /* Need to check if this is the right thing to do */
+            flushcache();
+
+            /* This is an arbritarily large number */
+            if(count++ >(1<<25)) {
+                return 0xffffffff;
+            }
+        }
+
+        /* Read the data
+         * Data memory barriers as we've switched peripheral
+         */
+        dmb();
+        data = *MAILBOX0READ;
+        dmb();
+
+        if ((data & 15) == channel)
+            return data & 0xFFFFFFF0;
+    }
+
+    return 0;
+}
+
+void writemailbox(uint32_t channel, uint32_t data)
 {
-	int i;
-	uint32_t addr;
-	uint32_t mail;
-	uint32_t pt[8192] __attribute__((aligned(16)));
-	int pt_index;
+    if ((data & 0x0000000F) != 0) {
+        return;
+    }
+    if ((channel & 0xFFFFFFF0) != 0) {
+        return;
+    }
 
-	for(i=0; i<8192; i++) {
-		pt[i]=0;
-	}
-	pt[         0] = 12; // placeholder for the total size
-	pt[         1] =  0; // Request code: process request
-	pt_index=2;
-	pt[pt_index++] = 0x00038002; // tag identifeir = 0x00030002: get clock rate)
-	pt[pt_index++] = 12; // value buffer size in bytes ((1 entry)*4)
-	pt[pt_index++] = 0; // 1bit request/response (0/1), 31bit value length in bytes
-	pt[pt_index++] = id; // clock id (1=emmc)
-	pt[pt_index++] = 100000000; // clock =100 M MHz
-	pt[pt_index++] = 0; // skip setting turbo
-	pt[pt_index++] = 0; // stop tag (unnecessary if initialized with zero. Just in case)
-	pt[0] = pt_index*4;
+    // Wait for mailbox to be not full
+    while (*MAILBOX0STATUS & MAILBOX_FULL)     {
+        // Need to check if this is the right thing to do
+        flushcache();
+    }
 
-	addr = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(pt) + 0x40000000);
-	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
-	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
-	//	}
-	//	printf("request to channel 8\n");
-	mailbox_write(addr, 8);
-	//	printf("read from channel 8\n");
-	mailbox_read(8, &mail);
-	//	dmb();
-	//	printf("mailbox return value: 0x%08x\n", (unsigned int) mail);
-	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
-	//	}
+    dmb();
+    *MAILBOX0WRITE = (data | channel);
+}
+
+Mailbox::Error Mailbox::getParameter(Param param, uint32_t* result, uint32_t size)
+{
+    static constexpr uint32_t BufferPadding = 6;
+    static constexpr uint32_t MaxSize = 256 - BufferPadding;
+    if (size > MaxSize) {
+        return Error::SizeTooLarge;
+    }
+    
+    uint32_t buf[MaxSize + BufferPadding] __attribute__((aligned(16)));
+    memset(buf, 0, sizeof(buf));
+
+    buf[0] = (size + BufferPadding) * sizeof(uint32_t);
+    buf[1] = 0; // Request code: process request
+    buf[2] = static_cast<uint32_t>(param);
+    buf[3] = size * sizeof(uint32_t); // value buffer size in bytes ((1 entry)*4)
+    buf[4] = 0; // 1bit request/response (0/1), 31bit value length in bytes
+
+    uint32_t addr = static_cast<uint32_t>((reinterpret_cast<uintptr_t>(buf)) + 0x40000000);
+    writemailbox(8, addr);
+    uint32_t mail = readmailbox(8);
+    dmb();
+    
 #ifdef __APPLE__
-    return -1;
+(void) mail;
 #else
-	if (*((uint32_t *) (mail+4)) == 0x80000000) {
-		return 0;
-	} else {
-		return -1;
-	}
+    uint32_t* responseBuf = reinterpret_cast<uint32_t*>(mail);
+    for (uint32_t i = 0; i < size; ++i) {
+        result[i] = responseBuf[5 + i];
+    }
 #endif
+
+    return Error::OK;
 }

@@ -1,16 +1,30 @@
-#ifndef MAILBOX_H
-#define MAILBOX_H
+#pragma once
 
 #include <stdint.h>
 
-#define MB_READ   0x2000B880
-#define MB_STATUS 0x2000B898
-#define MB_WRITE  0x2000B8A0
+uint32_t readmailbox(uint32_t channel);
+void writemailbox(uint32_t channel, uint32_t data);
 
-int mailbox_write(uint32_t value, uint32_t channel);
-int mailbox_read(uint32_t channel, uint32_t *value);
 int mailbox_getMemorySize(void);
-int mailbox_getClockRate(int id);
-int mailbox_emmc_clock(int id);
 
-#endif
+class Mailbox
+{
+public:
+    enum class Error {
+        OK,
+        SizeTooLarge,
+    };
+    
+    enum class Param {
+        FirmwareRev = 0x00000001,   // uint32_t rev
+        BoardModel = 0x00010001,    // uint32_t model
+        BoardRev = 0x00010002,      // uint32_t boardRev
+        MACAddress = 0x00010003,    // uint8_t addr[6]
+        BoardSerialNo = 0x00010004, // uint32_t ser[2]
+        ARMMemory = 0x00010005,     // uint32_t base, uint32_t size
+        VCMemory = 0x00010006,      // uint32_t base, uint32_t size
+        DMAChannels = 0x00060001,   // uint32_t nchannels
+    };
+    
+    static Error getParameter(Param, uint32_t* result, uint32_t size);
+};

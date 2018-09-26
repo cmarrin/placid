@@ -69,6 +69,7 @@ void PUT8 ( unsigned int, unsigned int );
 void PUT32 ( unsigned int, unsigned int );
 unsigned int GET32 ( unsigned int );
 void BRANCHTO ( unsigned int );
+
 void uart_init ( void );
 unsigned int uart_lcr ( void );
 void timer_init ( void );
@@ -88,4 +89,14 @@ int puts(const char*); // ARM compiler seems to convert printf("...") to puts(".
 void convertTo8dot3(char* name8dot3, const char* name);
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef __APPLE__
+static inline void dmb() { }
+static inline void dsb() { }
+static inline void flushcache() { }
+#else
+static inline void dmb() { asm volatile ("mcr p15, #0, %[zero], c7, c10, #5" : : [zero] "r" (0) ); }
+static inline void dsb() { asm volatile ("mcr p15, #0, %[zero], c7, c10, #4" : : [zero] "r" (0) ); }
+static inline void flushcache() { asm volatile ("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) ); }
 #endif

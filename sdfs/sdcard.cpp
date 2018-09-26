@@ -486,7 +486,6 @@ typedef struct SDDescriptor
 static SDDescriptor sdCard;
 
 static int sdHostVer = 0;
-static int sdBaseClock;
 
 // necessary function
 #define MBX_PROP_CLOCK_EMMC 1
@@ -503,11 +502,6 @@ static inline void wait(int32_t count)
 void waitCycle(int32_t count)
 {
 	wait(count);
-}
-
-int mbxGetClockRate(int id)
-{
-	return mailbox_getClockRate(id);
 }
 
 //**************************************************************************
@@ -1267,20 +1261,6 @@ static void sdInitGPIO()
   LOG_DEBUG("EMMC: Init. Complete state of GPFSEL4,5: %08x %08x\n",*(unsigned int*)0x20200010,*(unsigned int*)0x20200014);
   }
 
-/* Get the base clock speed.
- */
-int sdGetBaseClock()
-  {
-  sdBaseClock = mbxGetClockRate(MBX_PROP_CLOCK_EMMC);
-  if( sdBaseClock == -1 )
-    {
-    LOG_ERROR("EMMC: Error, failed to get base clock from mailbox\n");
-    return SD_ERROR;
-    }
-
-  return SD_OK;
-  }
-
 /* Initialize SD card.
  * Returns zero if initialization was successful, non-zero otherwise.
  */
@@ -1329,9 +1309,7 @@ int sdInitCard()
   // TODO: check version >= 1 and <= 3?
   sdHostVer = (*EMMC_SLOTISR_VER & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
 
-  // Get base clock speed.
   int resp;
-  if( (resp = sdGetBaseClock()) ) return resp;
 
   // Reset the card.
   LOG_DEBUG("Reset the card\n"); // TEST

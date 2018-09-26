@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "util.h"
+#include "mailbox.h"
 
 void autoload(void);
 void xmodemReceive(void);
@@ -47,6 +48,29 @@ int main(int argc, const char * argv[])
     printf("\n\nPlacid Bootloader v0.1\n\n");
     printf("Autoloading in %d seconds\n", AutoloadTimeout);
     printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
+    
+    printf("Memory size = %d\n", mailbox_getMemorySize());
+    uint32_t responseBuf[2];
+    Mailbox::getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
+    printf("FirmwareRev: %d\n", responseBuf[0]);
+    
+    Mailbox::getParameter(Mailbox::Param::BoardModel, responseBuf, 1);
+    printf("BoardModel: %d\n", responseBuf[0]);
+    
+    Mailbox::getParameter(Mailbox::Param::BoardRev, responseBuf, 1);
+    printf("BoardRev: %d\n", responseBuf[0]);
+    
+    Mailbox::getParameter(Mailbox::Param::BoardSerialNo, responseBuf, 2);
+    printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
+    
+    Mailbox::getParameter(Mailbox::Param::ARMMemory, responseBuf, 2);
+    printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    
+    Mailbox::getParameter(Mailbox::Param::VCMemory, responseBuf, 2);
+    printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    
+    Mailbox::getParameter(Mailbox::Param::DMAChannels, responseBuf, 1);
+    printf("DMAChannels: %d\n", responseBuf[0]);
     
     timer_init();
     
