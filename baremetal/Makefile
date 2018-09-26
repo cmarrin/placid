@@ -14,9 +14,12 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	util.cpp \
-		periph.cpp \
-		GPIO.cpp
+SRC =	periph.cpp \
+		sdcard.cpp \
+		util.cpp \
+		GPIO.cpp \
+		Mailbox.cpp \
+		SDFS.cpp \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)

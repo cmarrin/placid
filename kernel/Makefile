@@ -41,8 +41,8 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-LIBS = ../sdfs/build/sdfs.a ../baremetal/build/baremetal.a
-INCLUDES = -I../baremetal -I../sdfs
+LIBS = ../baremetal/build/baremetal.a
+INCLUDES = -I../baremetal
 
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
 CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
@@ -81,7 +81,6 @@ all: checkdirs $(BUILDDIR)/kernel.bin
 clean:
 	rm -rf $(BUILDDIR)
 	cd ../baremetal; make -f Makefile clean
-	cd ../sdfs; make -f Makefile clean
 
 checkdirs: $(BUILDDIR)
 
@@ -92,7 +91,6 @@ $(BUILDDIR):
 
 makelibs:
 	cd ../baremetal; make -f Makefile
-	cd ../sdfs; make -f Makefile
 
 $(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) $(DIVOBJS) makelibs
 	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
