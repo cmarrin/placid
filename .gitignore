@@ -3,7 +3,7 @@ bootloader/build
 bootloader/bin/bootloader.bin
 kernel/build
 sdfs/build
-util/build
+baremetal/build
 mac/DerivedData
 mac/placid.xcodeproj/project.xcworkspace
 mac/placid.xcodeproj/xcuserdata

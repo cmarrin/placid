@@ -21,7 +21,7 @@ SRC =	util.cpp \
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)
 
-all : checkdirs $(BUILDDIR)/util.a
+all : checkdirs $(BUILDDIR)/baremetal.a
 
 -include $(DEP)
 
@@ -33,7 +33,7 @@ checkdirs: $(BUILDDIR)
 $(BUILDDIR):
 	@mkdir -p $@
 
-$(BUILDDIR)/util.a : $(OBJS)
+$(BUILDDIR)/baremetal.a : $(OBJS)
 	$(AR) rcs -o $@ $(OBJS)
 
 $(BUILDDIR)/%.o: %.c Makefile

@@ -49,7 +49,6 @@ int main(int argc, const char * argv[])
     printf("Autoloading in %d seconds\n", AutoloadTimeout);
     printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     
-    printf("Memory size = %d\n", mailbox_getMemorySize());
     uint32_t responseBuf[2];
     Mailbox::getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
     printf("FirmwareRev: %d\n", responseBuf[0]);

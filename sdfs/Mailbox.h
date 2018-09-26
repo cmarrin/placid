@@ -2,11 +2,6 @@
 
 #include <stdint.h>
 
-uint32_t readmailbox(uint32_t channel);
-void writemailbox(uint32_t channel, uint32_t data);
-
-int mailbox_getMemorySize(void);
-
 class Mailbox
 {
 public:

@@ -14,60 +14,9 @@ static volatile unsigned int *MAILBOX0WRITE = (unsigned int *) 0x2000b8a0;
 #define MAILBOX_FULL 0x80000000
 #define MAILBOX_EMPTY 0x40000000
 
-int mailbox_getMemorySize()
-{
-	int i;
-	uint32_t addr;
-	uint32_t mail;
-	uint32_t pt[8192] __attribute__((aligned(16)));
-	int pt_index;
-
-	for(i=0; i<8192; i++) {
-		pt[i]=0;
-	}
-	pt[         0] = 12; // placeholder for the total size
-	pt[         1] =  0; // Request code: process request
-	pt_index=2;
-	pt[pt_index++] = 0x00010005; // tag identifeir = 0x00030002: get clock rate)
-	pt[pt_index++] = 8; // value buffer size in bytes ((1 entry)*4)
-	pt[pt_index++] = 0; // 1bit request/response (0/1), 31bit value length in bytes
-	pt[pt_index++] = 0; // return data (base address in bytes)
-	pt[pt_index++] = 0; // return data (size in bytes)
-	pt[pt_index++] = 0; // stop tag (unnecessary if initialized with zero. Just in case)
-	pt[0] = pt_index*4;
-
-	addr = static_cast<uint32_t>((reinterpret_cast<uintptr_t>(pt)) + 0x40000000);
-	//	printf("mailbox addr: 0x%08x\n", (unsigned int) addr);
-	//	for(i=0; i<*((uint32_t *) pt)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (pt+i),  *((uint32_t *) (pt+i)));
-	//	}
-	//	printf("request to channel 8\n");
-	writemailbox(8, addr);
-	//	printf("read from channel 8\n");
-	mail = readmailbox(8);
-	//	dmb();
-	//	printf("mailbox return value: 0x%08x\n", (unsigned int) mail);
-	//	for(i=0; i<*((uint32_t *) mail)/4; i++) {
-	//		printf("%08x: %08x\n", (unsigned char *) (mail+4*i),  *((uint32_t *) (mail+4*i)));
-	//	}
-#ifdef __APPLE__
-    return -1;
-#else
-	if (*((uint32_t *) (mail+20)) != 0) {
-		printf("Error: ARM memory base address is not zero. %08x\n", *((uint32_t *) (mail+20)));
-		//		_hangup();
-	}
-	if (*((uint32_t *) (mail+4)) == 0x80000000) {
-		return *((uint32_t *) (mail+24));
-	} else {
-		return -1;
-	}
-#endif
-}
-
 // This code is from corn-mainline by Raspberry Alpha Omega
 
-uint32_t readmailbox(uint32_t channel) {
+static uint32_t readmailbox(uint32_t channel) {
   uint32_t count = 0;
   uint32_t data;
 
@@ -104,7 +53,7 @@ uint32_t readmailbox(uint32_t channel) {
     return 0;
 }
 
-void writemailbox(uint32_t channel, uint32_t data)
+static void writemailbox(uint32_t channel, uint32_t data)
 {
     if ((data & 0x0000000F) != 0) {
         return;

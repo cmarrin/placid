@@ -8,7 +8,7 @@ LD = $(TOOLCHAIN)-ld
 OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
-INCLUDES = -I../util
+INCLUDES = -I../baremetal
 
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
 CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD

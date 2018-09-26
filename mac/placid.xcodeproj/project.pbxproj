@@ -23,9 +23,9 @@
 		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
 		4962957C215AA53B0064B9C9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* util.h */; };
 		49629589215AAA760064B9C9 /* libsdfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4962955B215A997E0064B9C9 /* libsdfs.a */; };
-		4962958A215AAA760064B9C9 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libutil.a */; };
+		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958B215AAA800064B9C9 /* libsdfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4962955B215A997E0064B9C9 /* libsdfs.a */; };
-		4962958C215AAA800064B9C9 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libutil.a */; };
+		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49629595215ABAE50064B9C9 /* periph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629593215ABADD0064B9C9 /* periph.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 /* End PBXBuildFile section */
@@ -118,8 +118,8 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		492FF3EB215AF47A003582FE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../util/GPIO.cpp; sourceTree = "<group>"; };
-		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPIO.h; path = ../util/GPIO.h; sourceTree = "<group>"; };
+		492FF3EB215AF47A003582FE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../baremetal/GPIO.cpp; sourceTree = "<group>"; };
+		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPIO.h; path = ../baremetal/GPIO.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		4962955B215A997E0064B9C9 /* libsdfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsdfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629560215A99A90064B9C9 /* Mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mailbox.cpp; path = ../sdfs/Mailbox.cpp; sourceTree = "<group>"; };
@@ -128,12 +128,12 @@
 		49629564215A99A90064B9C9 /* sdcard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdcard.cpp; path = ../sdfs/sdcard.cpp; sourceTree = "<group>"; };
 		49629565215A99A90064B9C9 /* Mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mailbox.h; path = ../sdfs/Mailbox.h; sourceTree = "<group>"; };
 		49629566215A99A90064B9C9 /* sdcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdcard.h; path = ../sdfs/sdcard.h; sourceTree = "<group>"; };
-		49629571215AA4DF0064B9C9 /* libutil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libutil.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../util/util.cpp; sourceTree = "<group>"; };
-		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../util/util.h; sourceTree = "<group>"; };
-		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../util/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
+		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../baremetal/util.h; sourceTree = "<group>"; };
+		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49629591215AAF9A0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../sdfs/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		49629593215ABADD0064B9C9 /* periph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = periph.cpp; path = ../util/periph.cpp; sourceTree = "<group>"; };
+		49629593215ABADD0064B9C9 /* periph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = periph.cpp; path = ../baremetal/periph.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,7 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49629589215AAA760064B9C9 /* libsdfs.a in Frameworks */,
-				4962958A215AAA760064B9C9 /* libutil.a in Frameworks */,
+				4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4962958B215AAA800064B9C9 /* libsdfs.a in Frameworks */,
-				4962958C215AAA800064B9C9 /* libutil.a in Frameworks */,
+				4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,7 +231,7 @@
 		492C7413214B2A2F009A4DA4 = {
 			isa = PBXGroup;
 			children = (
-				49629575215AA4EB0064B9C9 /* util */,
+				49629575215AA4EB0064B9C9 /* baremetal */,
 				4962955F215A998E0064B9C9 /* sdfs */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
@@ -247,7 +247,7 @@
 				492C741C214B2A2F009A4DA4 /* kerneltest */,
 				49166D6D2153F0FE0077ACEE /* bltest */,
 				4962955B215A997E0064B9C9 /* libsdfs.a */,
-				49629571215AA4DF0064B9C9 /* libutil.a */,
+				49629571215AA4DF0064B9C9 /* libbaremetal.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 			name = sdfs;
 			sourceTree = "<group>";
 		};
-		49629575215AA4EB0064B9C9 /* util */ = {
+		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
 				492FF3EB215AF47A003582FE /* GPIO.cpp */,
@@ -276,7 +276,7 @@
 				49629576215AA53B0064B9C9 /* util.cpp */,
 				49629578215AA53B0064B9C9 /* util.h */,
 			);
-			name = util;
+			name = baremetal;
 			sourceTree = "<group>";
 		};
 		49629588215AAA760064B9C9 /* Frameworks */ = {
@@ -363,9 +363,9 @@
 			productReference = 4962955B215A997E0064B9C9 /* libsdfs.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		49629570215AA4DF0064B9C9 /* util */ = {
+		49629570215AA4DF0064B9C9 /* baremetal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "util" */;
+			buildConfigurationList = 49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "baremetal" */;
 			buildPhases = (
 				4962956D215AA4DF0064B9C9 /* Sources */,
 				4962956E215AA4DF0064B9C9 /* Frameworks */,
@@ -375,9 +375,9 @@
 			);
 			dependencies = (
 			);
-			name = util;
+			name = baremetal;
 			productName = util;
-			productReference = 49629571215AA4DF0064B9C9 /* libutil.a */;
+			productReference = 49629571215AA4DF0064B9C9 /* libbaremetal.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -418,7 +418,7 @@
 				492C741B214B2A2F009A4DA4 /* kerneltest */,
 				49166D6C2153F0FE0077ACEE /* bltest */,
 				4962955A215A997E0064B9C9 /* sdfs */,
-				49629570215AA4DF0064B9C9 /* util */,
+				49629570215AA4DF0064B9C9 /* baremetal */,
 			);
 		};
 /* End PBXProject section */
@@ -473,7 +473,7 @@
 /* Begin PBXTargetDependency section */
 		4962957F215AA9D10064B9C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 49629570215AA4DF0064B9C9 /* util */;
+			target = 49629570215AA4DF0064B9C9 /* baremetal */;
 			targetProxy = 4962957E215AA9D10064B9C9 /* PBXContainerItemProxy */;
 		};
 		49629581215AA9E90064B9C9 /* PBXTargetDependency */ = {
@@ -483,7 +483,7 @@
 		};
 		49629583215AA9E90064B9C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 49629570215AA4DF0064B9C9 /* util */;
+			target = 49629570215AA4DF0064B9C9 /* baremetal */;
 			targetProxy = 49629582215AA9E90064B9C9 /* PBXContainerItemProxy */;
 		};
 		49629585215AA9F20064B9C9 /* PBXTargetDependency */ = {
@@ -493,7 +493,7 @@
 		};
 		49629587215AA9F20064B9C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 49629570215AA4DF0064B9C9 /* util */;
+			target = 49629570215AA4DF0064B9C9 /* baremetal */;
 			targetProxy = 49629586215AA9F20064B9C9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -719,7 +719,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "util" */ = {
+		49629572215AA4DF0064B9C9 /* Build configuration list for PBXNativeTarget "baremetal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				49629573215AA4DF0064B9C9 /* Debug */,
