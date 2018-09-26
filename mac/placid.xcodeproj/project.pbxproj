@@ -124,7 +124,6 @@
 		4962955B215A997E0064B9C9 /* libsdfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsdfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629560215A99A90064B9C9 /* mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mailbox.cpp; path = ../sdfs/mailbox.cpp; sourceTree = "<group>"; };
 		49629561215A99A90064B9C9 /* SDFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../sdfs/SDFS.h; sourceTree = "<group>"; };
-		49629562215A99A90064B9C9 /* mmio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mmio.h; path = ../sdfs/mmio.h; sourceTree = "<group>"; };
 		49629563215A99A90064B9C9 /* SDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../sdfs/SDFS.cpp; sourceTree = "<group>"; };
 		49629564215A99A90064B9C9 /* sdcard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdcard.cpp; path = ../sdfs/sdcard.cpp; sourceTree = "<group>"; };
 		49629565215A99A90064B9C9 /* mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mailbox.h; path = ../sdfs/mailbox.h; sourceTree = "<group>"; };
@@ -259,7 +258,6 @@
 				49629591215AAF9A0064B9C9 /* Makefile */,
 				49629560215A99A90064B9C9 /* mailbox.cpp */,
 				49629565215A99A90064B9C9 /* mailbox.h */,
-				49629562215A99A90064B9C9 /* mmio.h */,
 				49629564215A99A90064B9C9 /* sdcard.cpp */,
 				49629566215A99A90064B9C9 /* sdcard.h */,
 				49629563215A99A90064B9C9 /* SDFS.cpp */,

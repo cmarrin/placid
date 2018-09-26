@@ -47,11 +47,11 @@ INCLUDES = -I../util -I../sdfs
 ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
 CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
-LDFLAGS = 
+LDFLAGS =
 LDLIBS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
 LIB1FUNCSFLAGS = 	-O2 -g -Os -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp -w -DIN_GCC -DCROSS_DIRECTORY_STRUCTURE \
 					-W -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wold-style-definition \
-					-fno-inline -g  -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED -Dinhibit_libc  -DHAVE_CC_TLS -xassembler-with-cpp 
+					-fno-inline -g  -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED -Dinhibit_libc  -DHAVE_CC_TLS -xassembler-with-cpp
 
 SRCDIR = src
 BUILDDIR = build
@@ -65,7 +65,7 @@ SRC =	start.S \
 		Serial.cpp \
 		Shell.cpp \
 		Timer.cpp \
-		
+
 DIVOBJS :=	_divsi3.o \
 			_umodsi3.o \
 			_modsi3.o \
@@ -77,17 +77,19 @@ DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
 DEP = $(OBJS:%.o=%.d)
 
 all: checkdirs $(BUILDDIR)/kernel.bin
-	
+
 clean:
 	rm -rf $(BUILDDIR)
-	
+	cd ../util; make -f Makefile clean
+	cd ../sdfs; make -f Makefile clean
+
 checkdirs: $(BUILDDIR)
 
 -include $(DEP)
 
 $(BUILDDIR):
 	@mkdir -p $@
-	
+
 makelibs:
 	cd ../util; make -f Makefile
 	cd ../sdfs; make -f Makefile
@@ -110,4 +112,4 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
 	$(AS) $(ASFLAGS) -c $< -o $@
 
 $(DIVOBJS): $(SRCDIR)/lib1funcs.asm
-	$(CC) $(LIB1FUNCSFLAGS)-o $@ -DL$(basename $(notdir $@)) -c $(SRCDIR)/lib1funcs.asm
+	$(CC) $(LIB1FUNCSFLAGS) -o $@ -DL$(basename $(notdir $@)) -c $(SRCDIR)/lib1funcs.asm

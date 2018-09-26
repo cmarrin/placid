@@ -9,7 +9,6 @@
 // 0x80  Extension FIFO config - what's that?
 // This register allows fine tuning the dma_req generation for paced DMA transfers when reading from the card.
 
-#include "mmio.h"
 #include "mailbox.h"
 #include "sdcard.h"
 #include "util.h"
@@ -511,90 +510,6 @@ int mbxGetClockRate(int id)
 	return mailbox_getClockRate(id);
 }
 
-uint64_t get_system_timer(void)
-{
-    uint32_t chi, clo;
-    
-    chi = mmio_read(STIMER_CHI);
-    clo = mmio_read(STIMER_CLO);
-
-    if(chi !=  mmio_read(STIMER_CHI)){
-        chi = mmio_read(STIMER_CHI);
-        clo = mmio_read(STIMER_CLO);
-    }
-
-    return (((unsigned long long) chi) << 32) | clo;
-
-}
-
-void waitMicro(uint32_t tt)
-{
-    uint64_t t0;
-    t0 = get_system_timer();
-    
-    while(get_system_timer() < t0 + tt);
-
-    return;
-    
-}
-
-void gpioSetFunction(int pin, uint32_t val)
-{
-    uint32_t adr, reg;
-    int base=0;
-    //    printf("Input  val: %03x\n", val);
-    if (0<=pin && pin<10) {
-        adr = GPFSEL0;
-        base = 0;
-    } else if (10<=pin && pin<20) {
-        adr = GPFSEL1;
-        base = 10;
-    } else if (20<=pin && pin<30) {
-        adr = GPFSEL2;
-        base = 20;
-    } else if (30<=pin && pin<40) {
-        adr = GPFSEL3;
-        base = 30;
-    } else if (40<=pin && pin<50) {
-        adr = GPFSEL4;
-        base = 40;
-    } else if (50<=pin && pin<=53) {
-        adr = GPFSEL5;
-        base = 50;
-    } else {
-        printf("Error gpioSetFunction, pin:%d\n", pin);
-        return;
-    }
-    reg = mmio_read(adr);
-    //    printf("read   reg: %08x\n", reg);
-    reg = reg & (~(7 << ((pin-base)*3)));
-    //    printf("mask value: %08x\n", ~(7 << ((pin-base)*3)));    
-    //    printf("masked reg: %08x\n", reg);
-    reg = reg | ((val & 7) << ((pin-base)*3));
-    //    printf("Final  reg: %08x\n", reg);
-    mmio_write(adr, reg);
-    //    printf("Write adr: %08x, val: %08x\n", adr, reg);
-    waitMicro(1);
-}
-
-void gpioSetPull(int pin, int val)
-{
-    uint32_t adr;    uint32_t enbit;
-    if (pin<32) {
-        enbit = 1 << pin;
-        adr = GPPUDCLK0;
-    } else {
-        enbit = 1 << (pin - 32);
-        adr = GPPUDCLK1;
-    }
-    mmio_write(GPPUD, val);
-    waitCycle(150);
-    mmio_write(adr, enbit);
-    waitCycle(150);
-    mmio_write(GPPUD, 0);
-    mmio_write(adr, 0);
-}
-
 //**************************************************************************
 // SD Card PUBLIC functions.
 //**************************************************************************
@@ -627,7 +542,7 @@ static int sdWaitForInterrupt( unsigned int mask )
 
   // Wait for the specified interrupt or any error.
   while( !(*EMMC_INTERRUPT & waitMask) && count-- )
-    waitMicro(1);
+    delay(1);
   ival = *EMMC_INTERRUPT;
 
   // Check for success.
@@ -666,7 +581,7 @@ static int sdWaitForCommand()
   // Check for status indicating a command in progress.
   int count = 1000000;
   while( (*EMMC_STATUS & SR_CMD_INHIBIT) && !(*EMMC_INTERRUPT & INT_ERROR_MASK) && count-- )
-    waitMicro(1);
+    delay(1);
   if( count <= 0 || (*EMMC_INTERRUPT & INT_ERROR_MASK) )
     {
     LOG_ERROR("EMMC: Wait for command aborted: %08x %08x %08x\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0);
@@ -687,7 +602,7 @@ static int sdWaitForData()
 	  //LOG_DEBUG("EMMC: Wait for data started: %08x %08x %08x; dat: %d\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0,datSet);
   int count = 0;
   while( (*EMMC_STATUS & SR_DAT_INHIBIT) && !(*EMMC_INTERRUPT & INT_ERROR_MASK) && ++count < 500000 )
-    waitMicro(1);
+    delay(1);
   if( count >= 500000 || (*EMMC_INTERRUPT & INT_ERROR_MASK) )
     {
     LOG_ERROR("EMMC: Wait for data aborted: %08x %08x %08x\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0);
@@ -723,17 +638,19 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
   LOG_DEBUG("ARG: %08x, CODE: %08x\n", arg, cmd->code);
   *EMMC_ARG1 = arg;
   *EMMC_CMDTM = cmd->code;
-  if( cmd->delay ) waitMicro(cmd->delay);
+  if (cmd->delay) {
+    delay(cmd->delay);
+  }
 
   // Wait until command complete interrupt.
   if( (result = sdWaitForInterrupt(INT_CMD_DONE)) ) return result;
 
   // Get response from RESP0.
   int resp0 = *EMMC_RESP0;
-  
+
   // CFM: Need a wait here. When Debug logging is on it works, when not it
   // times out. So there is some timing sensitivity here.
-  waitMicro(1000);
+  delay(1000);
   LOG_DEBUG("EMMC: Sent command %08x:%s arg %d resp %08x\n",cmd->code,cmd->name,arg,resp0);
 
   // Handle response types.
@@ -889,7 +806,7 @@ static int sdReadSCR()
       sdCard.scr[numRead++] = *EMMC_DATA;
     else
       {
-      waitMicro(1);
+      delay(1);
       if( --count == 0 ) break;
       }
     }
@@ -952,7 +869,7 @@ static uint32_t sdGetClockDivider ( uint32_t freq ) {
    if (shiftcount > 7) shiftcount = 7;               // It's only 8 bits maximum on HOST_SPEC_V2
    if (sdHostVer > HOST_SPEC_V2) divisor = closest;   // Version 3 take closest
       else divisor = (1 << shiftcount);            // Version 2 take power 2
-   
+
    if (divisor <= 2) {                           // Too dangerous to go for divisor 1 unless you test
       divisor = 2;                           // You can't take divisor below 2 on slow cards
       shiftcount = 0;                           // Match shift to above just for debug notification
@@ -1000,7 +917,7 @@ static uint32_t sdGetClockDivider ( uint32_t freq ) {
 //   int lo = (div & 0x0ff);
 //   int cdiv = (lo << 8) + hi;
 //   return cdiv;
-//   } 
+//   }
 
 /* Set the SD clock to the given frequency.
  */
@@ -1009,7 +926,7 @@ static int sdSetClock( int freq )
   // Wait for any pending inhibit bits
   int count = 100000;
   while( (*EMMC_STATUS & (SR_CMD_INHIBIT|SR_DAT_INHIBIT)) && --count )
-    waitMicro(1);
+    delay(1);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: Set clock: timeout waiting for inhibit flags. Status %08x.\n",*EMMC_STATUS);
@@ -1018,21 +935,21 @@ static int sdSetClock( int freq )
 
   // Switch clock off.
   *EMMC_CONTROL1 &= ~C1_CLK_EN;
-  waitMicro(10);
+  delay(10);
 
   // Request the new clock setting and enable the clock
   int cdiv = sdGetClockDivider(freq);
   *EMMC_CONTROL1 = (*EMMC_CONTROL1 & 0xffff003f) | cdiv;
-  waitMicro(10);
+  delay(10);
 
   // Enable the clock.
   *EMMC_CONTROL1 |= C1_CLK_EN;
-  waitMicro(10);
+  delay(10);
 
   // Wait for clock to be stable.
   count = 10000;
   while( !(*EMMC_CONTROL1 & C1_CLK_STABLE) && count-- )
-    waitMicro(10);
+    delay(10);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: ERROR: failed to get stable clock.\n");
@@ -1055,10 +972,10 @@ static int sdResetCard( int resetType )
   //  *EMMC_CONTROL2 = 0;
   *EMMC_CONTROL1 |= resetType;
   //*EMMC_CONTROL1 &= ~(C1_CLK_EN|C1_CLK_INTLEN);
-  waitMicro(10);
+  delay(10);
   count = 10000;
   while( (*EMMC_CONTROL1 & resetType) && count-- )
-    waitMicro(10);
+    delay(10);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: ERROR: failed to reset.\n");
@@ -1068,7 +985,7 @@ static int sdResetCard( int resetType )
   // Enable internal clock and set data timeout.
   // TODO: Correct value for timeout?
   *EMMC_CONTROL1 |= C1_CLK_INTLEN | C1_TOUNIT_MAX;
-  waitMicro(10);
+  delay(10);
 
   // Set clock to setup frequency.
   if( (resp = sdSetClock(FREQ_SETUP)) ) return resp;
@@ -1156,7 +1073,7 @@ int sdTransferBlocks( long long address, int numBlocks, unsigned char* buffer, i
     LOG_DEBUG("sdWaitForData timed out\n");
     return SD_TIMEOUT;
   }
-  
+
   // Work out the status, interrupt and command values for the transfer.
   int readyInt = write ? INT_WRITE_RDY : INT_READ_RDY;
   //int readyData = write ? SR_WRITE_AVAILABLE : SR_READ_AVAILABLE;
@@ -1301,7 +1218,7 @@ int sdClearBlocks( long long address, int numBlocks )
       return SD_TIMEOUT;
       }
 
-    waitMicro(10);
+    delay(10);
     }
 
   //  LOG_DEBUG("EMMC: completed erase command int %08x\n",*EMMC_INTERRUPT);
@@ -1326,26 +1243,25 @@ static void sdInitGPIO()
 	  //  LOG_DEBUG("EMMC: Init. Entry state of GPFSEL4,5: %08x %08x\n",*(unsigned int*)0x20200010,*(unsigned int*)0x20200014);
 
   // Card detect GPIO
-   gpioSetFunction(GPIO_CD,GPIO_FUNC_INPUT);
+  GPIO::setFunction(GPIO_CD, GPIO::Function::Input);
    GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
   //  gpioSetDetectHighEvent(GPIO_CD,1);
-  reg = mmio_read(GPHEN1);
+  reg = GPIO::reg(GPIO::Register::GPHEN1);
   reg = reg | 1<<(47-32);
-  mmio_write(GPHEN1, reg);
+  GPIO::reg(GPIO::Register::GPHEN1) = reg;
 
-
-  gpioSetFunction(GPIO_DAT3,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_DAT3,GPIO_PULL_UP);
-  gpioSetFunction(GPIO_DAT2,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_DAT2,GPIO_PULL_UP);
-  gpioSetFunction(GPIO_DAT1,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_DAT1,GPIO_PULL_UP);
-  gpioSetFunction(GPIO_DAT0,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_DAT0,GPIO_PULL_UP);
-  gpioSetFunction(GPIO_CMD,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_CMD,GPIO_PULL_UP);
-  gpioSetFunction(GPIO_CLK,GPIO_FUNC_ALT3);
-  gpioSetPull(GPIO_CLK,GPIO_PULL_UP);
+  GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_DAT3, GPIO::Pull::Up);
+  GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_DAT2, GPIO::Pull::Up);
+  GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_DAT1, GPIO::Pull::Up);
+  GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_DAT0, GPIO::Pull::Up);
+  GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_CMD, GPIO::Pull::Up);
+  GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3);
+  GPIO::setPull(GPIO_CLK, GPIO::Pull::Up);
 
 
   LOG_DEBUG("EMMC: Init. Complete state of GPFSEL4,5: %08x %08x\n",*(unsigned int*)0x20200010,*(unsigned int*)0x20200014);
@@ -1375,10 +1291,10 @@ int sdInitCard()
 
   // Check GPIO 47 status
   //  int cardAbsent = gpioGetPinLevel(GPIO_CD);
-  //  int cardAbsent = mmio_read(GPLEV1) & (1 << (47-32)); // TEST
+  //  int cardAbsent = GPIO::reg(GPIO::Register::GPLEV1) & (1 << (47-32)); // TEST
   int cardAbsent = 0;
   //  int cardEjected = gpioGetEventDetected(GPIO_CD);
-  int cardEjected = mmio_read(GPEDS1) & (1 << (47-32));
+  int cardEjected = GPIO::reg(GPIO::Register::GPEDS1) & (1 << (47-32));
   int oldCID[4];
   LOG_DEBUG("In SD init card, status %08x interrupt %08x card absent %d ejected %d\n",*EMMC_STATUS,*EMMC_INTERRUPT,cardAbsent,cardEjected);
 
@@ -1572,19 +1488,16 @@ static void sdParseCSD()
 		  int mult = 1 << (((sdCard.csd[2] & CSD2V1_C_SIZE_MULT) >> CSD2V1_C_SIZE_MULT_SHIFT) + 2);
 		  long long blockSize = 1 << ((sdCard.csd[1] & CSD1VN_READ_BL_LEN) >> CSD1VN_READ_BL_LEN_SHIFT);
 		  long long numBlocks = (csize+1LL)*mult;
-		  
+
 		  sdCard.capacity = numBlocks * blockSize;
 	  }
   else // if( csdVersion == CSD0_V2 )
 	  {
 		  long long csize = (sdCard.csd[2] & CSD2V2_C_SIZE) >> CSD2V2_C_SIZE_SHIFT;
-		  
+
 		  sdCard.capacity = (csize+1LL)*512LL*1024LL;
 	  }
-  
+
   // Get other attributes of the card.
   sdCard.fileFormat = sdCard.csd[3] & CSD3VN_FILE_FORMAT;
 }
-
-
-

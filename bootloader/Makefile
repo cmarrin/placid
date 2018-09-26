@@ -31,12 +31,14 @@ all : checkdirs bin/bootloader.bin
 clean :
 	rm -rf $(BUILDDIR)
 	rm -f bin/bootloader.bin
+	cd ../util; make -f Makefile clean
+	cd ../sdfs; make -f Makefile clean
 
 checkdirs: $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $@
-	
+
 makelibs:
 	cd ../util; make -f Makefile
 	cd ../sdfs; make -f Makefile
@@ -56,4 +58,3 @@ $(BUILDDIR)/%.o: %.cpp Makefile
 
 $(BUILDDIR)/%.o: %.S Makefile
 	$(AS) $(ASFLAGS) -c $< -o $@
-

@@ -115,10 +115,10 @@ void Serial::init()
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
     GPIO::reg(GPIO::Register::GPPUD) = 0;
-    SPIN(150);
+    delay(150);
     r0 = (1 << 14) | (1 << 15);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
-    SPIN(150);
+    delay(150);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;

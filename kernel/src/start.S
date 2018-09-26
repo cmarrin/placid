@@ -98,12 +98,6 @@ halt:
 	wfe
 	b	halt
 
-.global SPIN
-SPIN: // void SPIN(uint32_t count);
-    subs    r0, #1
-    bge    SPIN
-    bx    lr
-
 .global PUT32
 PUT32:
     str r1,[r0]
@@ -141,12 +135,6 @@ PUT8:
 WFE:
 	wfe
 	bx lr
-
-.global WFI
-WFI:
-	wfi
-	bx lr
-
 
 irq:
     push {r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}

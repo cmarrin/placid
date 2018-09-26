@@ -64,6 +64,7 @@ void GPIO::setFunction(uint32_t pin, Function f)
     ra &= ~(7 << off);
     ra |= static_cast<uint32_t>(f) << off;
     rawReg(r) = ra;
+    delay(1);
 }
 
 void GPIO::setPin(uint32_t pin, bool on)
@@ -95,10 +96,10 @@ void GPIO::setPull(uint32_t pin, Pull val)
 
     GPIO::reg(Register::GPPUD) = static_cast<uint32_t>(val);
     delay(150);
-    GPIO::reg(reg) = enbit;    
+    GPIO::reg(reg) = enbit;
     delay(150);
     GPIO::reg(Register::GPPUD) = 0;
-    GPIO::reg(reg) = 0;    
+    GPIO::reg(reg) = 0;
 }
 
 volatile uint32_t& GPIO::reg(Register r)
