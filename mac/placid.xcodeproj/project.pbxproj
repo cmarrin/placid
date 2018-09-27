@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49166D4421514C060077ACEE /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* memory.cpp */; };
+		49166D4421514C060077ACEE /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* Memory.cpp */; };
 		49166D4721514C060077ACEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
 		49166D4B21514C060077ACEE /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
@@ -71,11 +71,11 @@
 
 /* Begin PBXFileReference section */
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		49166D2D21514C050077ACEE /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = memory.cpp; path = ../../kernel/src/memory.cpp; sourceTree = "<group>"; };
+		49166D2D21514C050077ACEE /* Memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Memory.cpp; path = ../../kernel/src/Memory.cpp; sourceTree = "<group>"; };
 		49166D3021514C050077ACEE /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shell.h; path = ../../kernel/src/Shell.h; sourceTree = "<group>"; };
 		49166D3121514C050077ACEE /* start.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = start.S; path = ../../kernel/src/start.S; sourceTree = "<group>"; };
 		49166D3221514C050077ACEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../../kernel/src/BootShell.cpp; sourceTree = "<group>"; };
-		49166D3621514C050077ACEE /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defs.h; path = ../../kernel/src/defs.h; sourceTree = "<group>"; };
+		49166D3621514C050077ACEE /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Memory.h; path = ../../kernel/src/Memory.h; sourceTree = "<group>"; };
 		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../kernel/src/lib1funcs.asm; sourceTree = "<group>"; };
 		49166D3A21514C050077ACEE /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../../kernel/src/Shell.cpp; sourceTree = "<group>"; };
 		49166D3B21514C050077ACEE /* dlmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dlmalloc.c; path = ../../kernel/src/dlmalloc.c; sourceTree = "<group>"; };
@@ -171,11 +171,11 @@
 			children = (
 				49166D3221514C050077ACEE /* BootShell.cpp */,
 				49166D3F21514C050077ACEE /* BootShell.h */,
-				49166D3621514C050077ACEE /* defs.h */,
 				49166D3B21514C050077ACEE /* dlmalloc.c */,
 				49166D3721514C050077ACEE /* lib1funcs.asm */,
 				49166D3E21514C050077ACEE /* main.cpp */,
-				49166D2D21514C050077ACEE /* memory.cpp */,
+				49166D3621514C050077ACEE /* Memory.h */,
+				49166D2D21514C050077ACEE /* Memory.cpp */,
 				49166D3A21514C050077ACEE /* Shell.cpp */,
 				49166D3021514C050077ACEE /* Shell.h */,
 				49166D3121514C050077ACEE /* start.S */,
@@ -361,7 +361,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49166D4421514C060077ACEE /* memory.cpp in Sources */,
+				49166D4421514C060077ACEE /* Memory.cpp in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,

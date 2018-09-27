@@ -59,8 +59,8 @@ BUILDDIR = build
 SRC =	start.S \
         dlmalloc.c \
         main.cpp \
-		memory.cpp \
 		BootShell.cpp \
+		Memory.cpp \
 		Shell.cpp \
 
 DIVOBJS :=	_divsi3.o \

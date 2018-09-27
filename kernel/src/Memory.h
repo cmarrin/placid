@@ -54,5 +54,3 @@ int munmap(void *addr, size_t length);
 #ifdef __cplusplus
 }
 #endif
-
-static inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }

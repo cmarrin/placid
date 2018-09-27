@@ -527,7 +527,8 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define HAVE_MORECORE 0
 #define NO_MALLOC_STATS 1
 #define LACKS_TIME_H
-#include "defs.h"
+
+#include "Memory.h"
 
 /* Version identifier to allow people to support multiple versions */
 #ifndef DLMALLOC_VERSION

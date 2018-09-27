@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Shell.h"
 
+#include "util.h"
+
 using namespace placid;
 
 void Shell::connected()
@@ -79,11 +81,11 @@ void Shell::sendComplete()
 
 static inline void trim(char*& s, uint32_t& len)
 {
-	while (::isspace(*s) && len) {
+	while (isspace(*s) && len) {
 		++s;
 		--len;
 	}
-	while (len && ::isspace(s[len - 1])) {
+	while (len && isspace(s[len - 1])) {
 		len--;
 	}
 }
