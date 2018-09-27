@@ -16,7 +16,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	vectors.S \
+SRC =	bootloader.S \
         autoload.cpp \
         xmodem.cpp \
         main.cpp

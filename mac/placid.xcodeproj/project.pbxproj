@@ -72,7 +72,7 @@
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D2D21514C050077ACEE /* Memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Memory.cpp; path = ../../kernel/src/Memory.cpp; sourceTree = "<group>"; };
 		49166D3021514C050077ACEE /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shell.h; path = ../../kernel/src/Shell.h; sourceTree = "<group>"; };
-		49166D3121514C050077ACEE /* start.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = start.S; path = ../../kernel/src/start.S; sourceTree = "<group>"; };
+		49166D3121514C050077ACEE /* kernel.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = kernel.S; path = ../../kernel/src/kernel.S; sourceTree = "<group>"; };
 		49166D3221514C050077ACEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../../kernel/src/BootShell.cpp; sourceTree = "<group>"; };
 		49166D3621514C050077ACEE /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Memory.h; path = ../../kernel/src/Memory.h; sourceTree = "<group>"; };
 		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../kernel/src/lib1funcs.asm; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
 		49166D57215194260077ACEE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../bootloader/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D582151AC5F0077ACEE /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../bootloader/xmodem.cpp; sourceTree = "<group>"; };
-		49166D592151AC5F0077ACEE /* vectors.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.S; path = ../bootloader/vectors.S; sourceTree = "<group>"; };
+		49166D592151AC5F0077ACEE /* bootloader.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = bootloader.S; path = ../bootloader/bootloader.S; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
 		49166D612153CA250077ACEE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../bootloader/README.md; sourceTree = "<group>"; };
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,7 +155,7 @@
 				496295542159286E0064B9C9 /* autoload.cpp */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
 				49166D582151AC5F0077ACEE /* xmodem.cpp */,
-				49166D592151AC5F0077ACEE /* vectors.S */,
+				49166D592151AC5F0077ACEE /* bootloader.S */,
 				49166D612153CA250077ACEE /* README.md */,
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5A2151AC5F0077ACEE /* loader */,
@@ -176,7 +176,7 @@
 				49166D2D21514C050077ACEE /* Memory.cpp */,
 				49166D3A21514C050077ACEE /* Shell.cpp */,
 				49166D3021514C050077ACEE /* Shell.h */,
-				49166D3121514C050077ACEE /* start.S */,
+				49166D3121514C050077ACEE /* kernel.S */,
 				49166D4121514C060077ACEE /* String.h */,
 			);
 			path = src;

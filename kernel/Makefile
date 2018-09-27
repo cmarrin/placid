@@ -56,7 +56,7 @@ LIB1FUNCSFLAGS = 	-O2 -g -Os -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp -w -DIN_G
 SRCDIR = src
 BUILDDIR = build
 
-SRC =	start.S \
+SRC =	kernel.S \
         dlmalloc.c \
         main.cpp \
 		BootShell.cpp \
