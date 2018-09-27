@@ -14,8 +14,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	periph.cpp \
-		sdcard.cpp \
+SRC =	sdcard.cpp \
 		util.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \

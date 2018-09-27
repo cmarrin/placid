@@ -35,6 +35,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 
+#include "Serial.h"
+#include "Timer.h"
+
 using namespace placid;
 
 #ifdef __APPLE__
@@ -43,39 +46,11 @@ using namespace placid;
 #undef vsnprintf
 #undef snprintf
 
-void uart_send ( unsigned int c)
-{
-    putchar(c);
-}
-
-void uart_init()
-{
-}
-
-unsigned int uart_lcr()
-{
-    return 0;
-}
-
-unsigned int uart_recv()
-{
-    return 0;
-}
-
-void timer_init()
-{
-}
-
 extern "C" {
 
 void PUT8(unsigned int addr, unsigned int value)
 {
     printf("PUT8:[%d] <= %d\n", addr, value);
-}
-
-void PUT32(unsigned int addr, unsigned int value)
-{
-    printf("PUT32:[%d] <= %d\n", addr, value);
 }
 
 unsigned int GET32(unsigned int addr)
@@ -89,13 +64,11 @@ void BRANCHTO(unsigned int addr)
     printf("BRANCHTO: => %d\n", addr);
 }
 
+bool interruptsSupported()
+{
+    return false;
 }
 
-uint64_t timerTick()
-{
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    return (((uint64_t) time.tv_sec) * 1000000) + ((uint64_t) time.tv_usec);
 }
 
 #else
@@ -121,14 +94,6 @@ void WFE()
 {
     asm volatile ("wfe" );
     asm volatile ("bx lr" );
-}
-
-#define STIMER_CLO 0x20003004
-#define STIMER_CHI 0x20003008
-
-uint64_t timerTick ()
-{
-    return (((uint64_t) GET32(STIMER_CHI)) << 32) | (uint64_t) GET32(STIMER_CLO);
 }
 
 extern "C" {
@@ -358,13 +323,6 @@ bool placid::toString(char* buf, uint64_t v)
     return true;
 }
 
-void delay(uint32_t t)
-{
-    uint64_t t0 = timerTick();
-    
-    while(timerTick() < t0 + t) ;
-}
-
 static char* intToString(uint32_t mantissa, char* str)
 {
     if (!mantissa) {
@@ -409,7 +367,7 @@ void itos(char* buf, int32_t v)
 void putstr(const char* s)
 {
     while (*s) {
-        uart_send(*s++);
+        Serial::write(*s++);
     }
 }
 
@@ -425,11 +383,6 @@ void putu(uint32_t v)
     char buf[MaxToStringBufferSize];
     utos(buf, v);
     putstr(buf);
-}
-
-int getchar(void)
-{
-    return uart_recv();
 }
 
 void* memset(void* dst, int value, size_t n)

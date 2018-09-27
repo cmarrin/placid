@@ -34,8 +34,10 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "InterruptManager.h"
+
 #include "Serial.h"
 #include "Timer.h"
+#include "util.h"
 
 using namespace placid;
 
@@ -66,12 +68,18 @@ inline volatile IRPT& irpt()
 
 extern "C" void handleIRQ()
 {
-	Serial::handleInterrupt();
-	Timer::handleInterrupt();
+    if (interruptsSupported()) {
+        Serial::handleInterrupt();
+	    Timer::handleInterrupt();
+    }
 }
 
 void InterruptManager::enableIRQ(uint32_t n, bool enable)
 {
+    if (!interruptsSupported()) {
+        return;
+    }
+    
 	uint32_t r = n / 32;
 	uint32_t off = n % 32;
 	
@@ -92,6 +100,10 @@ void InterruptManager::enableIRQ(uint32_t n, bool enable)
 
 void InterruptManager::enableBasicIRQ(uint32_t n, bool enable)
 {
+    if (!interruptsSupported()) {
+        return;
+    }
+    
     if (n >= 32) {
         return;
     }

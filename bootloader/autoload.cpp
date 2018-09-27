@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "sdcard.h"
 #include "SDFS.h"
+#include "Timer.h"
 #include "util.h"
 
 using namespace placid;
@@ -80,5 +81,6 @@ void autoload()
     }
     
     printf("Autoload complete, executing...\n");
+    Timer::usleep(200000);
     BRANCHTO(ARMBASE);
 }

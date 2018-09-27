@@ -40,52 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace placid;
 
-extern "C" int _inbyte(unsigned short timeout)
-{
-    // Timeout is in ms
-    int8_t c;
-    if (Serial::read(c, timeout) == Serial::Error::OK) {
-        return c;
-    } else {
-        return -1;
-    }
-}
-
-extern "C" void _outbyte(int c)
-{
-    Serial::write(static_cast<int8_t>(c));
-}
-
-static char _testdata[ ] =
-    "\x01\x01\xfe"  // SOH, block number, inverse block number
-    "0123456789"    // Data
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "0123456789"
-    "\xC1\xc2"      // Checksum
-    "\04";          // EOT
-
-static uint32_t _testindex;
-
-extern "C" int _testinbyte(unsigned short timeout)
-{
-    return (_testindex >= 136) ? -1 : static_cast<uint8_t>(_testdata[_testindex++]);
-}
-
-extern "C" void _testoutbyte(int c)
-{
-    placid::cout << "test xmodem received '" << static_cast<char>(c) << "'\n";
-}
-
 const char* BootShell::welcomeString() const
 {
 	return "\n\nPlacid Kernel Shell v0.1";

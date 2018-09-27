@@ -41,6 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef __APPLE__
 #include <unistd.h>
+#include <sys/time.h>
 #endif
 
 using namespace placid;
@@ -73,7 +74,6 @@ TimerCallback* Timer::_cb = nullptr;
 
 static constexpr uint32_t ARMTimerBase = 0x2000B400;
 static constexpr uint32_t SystemTimerBase = 0x20003000;
-static constexpr float SystemTimerTick = 1e-6;
 
 inline volatile ARMTimer& armTimer()
 {
@@ -87,8 +87,20 @@ inline volatile SystemTimer& systemTimer()
 
 volatile unsigned int icount;
 
+void  Timer::init()
+{
+    // We want a 1MHz tick. System clock is 250MHz, so we divide by 250
+    // Set the prescaler (bits 16-23) to one less, or 0xf9
+    armTimer().control = 0x00F90000; // Set the prescaler, but keep the timer stopped
+    armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
+}
+
 void Timer::handleInterrupt()
 {
+    if (!interruptsSupported()) {
+        return;
+    }
+    
 	if (_cb) {
 		_cb->handleTimerEvent();
 	}
@@ -97,6 +109,10 @@ void Timer::handleInterrupt()
 
 void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 {
+    if (!interruptsSupported()) {
+        return;
+    }
+    
 	_cb = cb;
 	
 #ifdef __APPLE__
@@ -126,37 +142,20 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 #endif
 }
 
-void Timer::delay(float seconds)
+void Timer::usleep(uint32_t us)
 {
-    // Keep the number of ticks in a uint32_t, which gives us a limit 
-    // of about 4000 seconds or 67 minutes. This way we can expand the counter into
-    // a uint64_t to deal with overflow
-    if (seconds > 4000) {
-        seconds = 4000;
-    }
-    uint32_t ticks = static_cast<uint32_t>(seconds / SystemTimerTick + 0.5);
-    if (ticks == 0) {
-        return;
-    }
-    
-#ifdef __APPLE__
-    usleep(ticks);
-#else
-    uint32_t start = systemTimer().counter0;
-    uint32_t end = start + ticks;
-    
-    // FIXME: Handle the wrapping case
-    while (1) {
-        uint64_t current = systemTimer().counter0;
-        if (current >= end) {
-            return;
-        }
-    }
-#endif
+    uint64_t t0 = Timer::systemTime();
+    while(Timer::systemTime() < t0 + us) ;
 }
 
 uint64_t Timer::systemTime()
 {
+#ifdef __APPLE__
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    return ((static_cast<uint64_t>(time.tv_sec)) * 1000000) + (static_cast<uint64_t>(time.tv_usec));
+#else
     return (static_cast<uint64_t>(systemTimer().counter1) << 32) | static_cast<uint64_t>(systemTimer().counter0);
+#endif
 }
 

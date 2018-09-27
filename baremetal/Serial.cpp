@@ -94,19 +94,19 @@ void Serial::init()
 #ifdef __APPLE__
     //system("stty raw");
 #else
-    uint32_t r0;
+    if (interruptsSupported()) {
+        disableIRQ();
+	    InterruptManager::enableIRQ(29, false);
 
-    disableIRQ();
-	InterruptManager::enableIRQ(29, false);
-
-    rxhead = rxtail = 0;
+        rxhead = rxtail = 0;
+    }
 
     uart().AUXENB = 1;
     uart().IER = 0;
     uart().CNTL = 0;
     uart().LCR = 3;
     uart().MCR = 0;
-    uart().IER = 0x05;
+    uart().IER = interruptsSupported() ? 0x05 : 0;
     uart().IIR = 0xc6;
     /* ((250,000,000 / 115200) / 8) - 1 = 270 */
     uart().BAUD = 270;
@@ -115,57 +115,54 @@ void Serial::init()
 	GPIO::setFunction(15, GPIO::Function::Alt5);
 
     GPIO::reg(GPIO::Register::GPPUD) = 0;
-    delay(150);
-    r0 = (1 << 14) | (1 << 15);
-    GPIO::reg(GPIO::Register::GPPUDCLK0) = r0;
-    delay(150);
+    Timer::usleep(150);
+    GPIO::reg(GPIO::Register::GPPUDCLK0) = (1 << 14) | (1 << 15);
+    Timer::usleep(150);
     GPIO::reg(GPIO::Register::GPPUDCLK0) = 0;
 
     uart().CNTL = 3;
     
-	InterruptManager::enableIRQ(29, true);
-	enableIRQ();
+    if (interruptsSupported()) {
+	    InterruptManager::enableIRQ(29, true);
+	    enableIRQ();
+    }
 #endif
 }
 
-Serial::Error Serial::read(int8_t& c, uint32_t timeout)
+Serial::Error Serial::read(uint8_t& c)
 {
 #ifdef __APPLE__
     c = getchar();
 #else
-    uint64_t startTime = Timer::systemTime();
-    uint64_t to = static_cast<uint64_t>(timeout) * 1000;
-    
-    while (1) {
-        if (rxtail != rxhead) {
-            c = rxbuffer[rxtail];
-            rxtail = (rxtail + 1) & RXBUFMASK;
-            break;
-        }
-        if (timeout) {
-            if (Timer::systemTime() - startTime > to) {
-                return Error::Timeout;
+    if (interruptsSupported()) {
+        while (1) {
+            if (rxtail != rxhead) {
+                c = rxbuffer[rxtail];
+                rxtail = (rxtail + 1) & RXBUFMASK;
+                break;
             }
-        } else {
             WFE();
         }
+    } else {
+        while (!rxReady()) { }
+        c = static_cast<uint8_t>(uart().IO);
     }
 #endif
 	return Error::OK;
 }
 
-uint32_t Serial::txReady()
+bool Serial::rxReady()
 {
-    return uart().LSR;
+    return (uart().LSR & 0x01) != 0;
 }
 
-Serial::Error Serial::write(int8_t c)
+Serial::Error Serial::write(uint8_t c)
 {
 #ifdef __APPLE__
     std::cout << c;
     return Error::OK;
 #else
-    while ((uart().LSR & 0x20) == 0) ;
+    while ((uart().LSR & 0x20) == 0) { }
     uart().IO = static_cast<uint32_t>(c);
     return Error::OK;
 #endif
@@ -258,6 +255,10 @@ Serial::Error Serial::puts(uint64_t v)
 
 void Serial::handleInterrupt()
 {
+    if (!interruptsSupported()) {
+        return;
+    }
+    
     while (1)
     {
 		uint32_t iir = uart().IIR;

@@ -33,9 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "sdcard.h"
-#include "SDFS.h"
 #include "util.h"
+#include "Serial.h"
+#include "Timer.h"
 
 using namespace placid;
 
@@ -60,29 +60,31 @@ void xmodemReceive()
     uint32_t addr = ARMBASE;
     uint32_t state = 0;
     uint32_t crc = 0;
-    uint64_t startTime = timerTick();
+    uint64_t startTime = Timer::systemTime();
     
-    unsigned char xstring[256];
+    uint8_t xstring[256];
 
     while(1)
     {
-        uint64_t curTime = timerTick();
+        uint64_t curTime = Timer::systemTime();
         if ((curTime - startTime) >= 4000000)
         {
-            uart_send(NAK);
+            Serial::write(NAK);
             startTime += 4000000;
         }
         
-        if((uart_lcr() & 0x01) == 0) {
+        if (!Serial::rxReady()) {
             continue;
         }
         
-        xstring[state] = uart_recv();
-        startTime = timerTick();
+        Serial::read(xstring[state]);
+        startTime = Timer::systemTime();
         
         if (state == 0) {
             if (xstring[state] == EOT) {
-                uart_send(ACK);
+                Serial::write(ACK);
+                Timer::usleep(200000);
+                printf("XModem upload complete, executing...\n");
                 BRANCHTO(ARMBASE);
                 break;
             }
@@ -94,7 +96,7 @@ void xmodemReceive()
                 crc = xstring[state];
                 state++;
             } else {
-                uart_send(NAK);
+                Serial::write(NAK);
             }
             break;
         case 1:
@@ -103,7 +105,7 @@ void xmodemReceive()
                 state++;
             } else {
                 state = 0;
-                uart_send(NAK);
+                Serial::write(NAK);
             }
             break;
         case 2:
@@ -111,7 +113,7 @@ void xmodemReceive()
                 crc += xstring[state];
                 state++;
             } else {
-                uart_send(NAK);
+                Serial::write(NAK);
                 state = 0;
             }
             break;
@@ -121,10 +123,10 @@ void xmodemReceive()
                 for (uint32_t i = 0; i < 128; i++) {
                     PUT8(addr++, xstring[i + 3]);
                 }
-                uart_send(ACK);
+                Serial::write(ACK);
                 block = (block + 1) & 0xFF;
             } else {
-                uart_send(NAK);
+                Serial::write(NAK);
             }
             state = 0;
             break;

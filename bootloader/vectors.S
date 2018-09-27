@@ -8,11 +8,6 @@ _start:
     bl main
 hang: b hang
 
-.globl PUT32
-PUT32:
-    str r1,[r0]
-    bx lr
-
 .globl PUT8
 PUT8:
     strb r1,[r0]
@@ -26,6 +21,11 @@ GET32:
 .globl BRANCHTO
 BRANCHTO:
     bx r0
+
+.globl interruptsSupported
+interruptsSupported:
+    mov r0, #0
+    bx lr
 
 ;@-------------------------------------------------------------------------
 ;@-------------------------------------------------------------------------

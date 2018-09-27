@@ -98,11 +98,6 @@ halt:
 	wfe
 	b	halt
 
-.global PUT32
-PUT32:
-    str r1,[r0]
-    bx lr
-
 .global GET32
 GET32:
     ldr r0,[r0]
@@ -115,6 +110,11 @@ BRANCHTO:
 .global PUT8
 PUT8:
     strb r1,[r0]
+    bx lr
+
+.globl interruptsSupported
+interruptsSupported:
+    mov r0, #1
     bx lr
 
 irq:

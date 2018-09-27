@@ -14,6 +14,7 @@
 #include "Mailbox.h"
 #include "util.h"
 #include "GPIO.h"
+#include "Timer.h"
 
 #define P2V_DEV(X) (X)
 
@@ -538,7 +539,7 @@ static int sdWaitForInterrupt( unsigned int mask )
 
   // Wait for the specified interrupt or any error.
   while( !(*EMMC_INTERRUPT & waitMask) && count-- )
-    delay(1);
+    Timer::usleep(1);
   ival = *EMMC_INTERRUPT;
 
   // Check for success.
@@ -577,7 +578,7 @@ static int sdWaitForCommand()
   // Check for status indicating a command in progress.
   int count = 1000000;
   while( (*EMMC_STATUS & SR_CMD_INHIBIT) && !(*EMMC_INTERRUPT & INT_ERROR_MASK) && count-- )
-    delay(1);
+    Timer::usleep(1);
   if( count <= 0 || (*EMMC_INTERRUPT & INT_ERROR_MASK) )
     {
     LOG_ERROR("EMMC: Wait for command aborted: %08x %08x %08x\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0);
@@ -598,7 +599,7 @@ static int sdWaitForData()
 	  //LOG_DEBUG("EMMC: Wait for data started: %08x %08x %08x; dat: %d\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0,datSet);
   int count = 0;
   while( (*EMMC_STATUS & SR_DAT_INHIBIT) && !(*EMMC_INTERRUPT & INT_ERROR_MASK) && ++count < 500000 )
-    delay(1);
+    Timer::usleep(1);
   if( count >= 500000 || (*EMMC_INTERRUPT & INT_ERROR_MASK) )
     {
     LOG_ERROR("EMMC: Wait for data aborted: %08x %08x %08x\n",*EMMC_STATUS,*EMMC_INTERRUPT,*EMMC_RESP0);
@@ -635,7 +636,7 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
   *EMMC_ARG1 = arg;
   *EMMC_CMDTM = cmd->code;
   if (cmd->delay) {
-    delay(cmd->delay);
+    Timer::usleep(cmd->delay);
   }
 
   // Wait until command complete interrupt.
@@ -646,7 +647,7 @@ static int sdSendCommandP( EMMCCommand* cmd, int arg )
 
   // CFM: Need a wait here. When Debug logging is on it works, when not it
   // times out. So there is some timing sensitivity here.
-  delay(1000);
+  Timer::usleep(1000);
   LOG_DEBUG("EMMC: Sent command %08x:%s arg %d resp %08x\n",cmd->code,cmd->name,arg,resp0);
 
   // Handle response types.
@@ -802,7 +803,7 @@ static int sdReadSCR()
       sdCard.scr[numRead++] = *EMMC_DATA;
     else
       {
-      delay(1);
+      Timer::usleep(1);
       if( --count == 0 ) break;
       }
     }
@@ -922,7 +923,7 @@ static int sdSetClock( int freq )
   // Wait for any pending inhibit bits
   int count = 100000;
   while( (*EMMC_STATUS & (SR_CMD_INHIBIT|SR_DAT_INHIBIT)) && --count )
-    delay(1);
+    Timer::usleep(1);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: Set clock: timeout waiting for inhibit flags. Status %08x.\n",*EMMC_STATUS);
@@ -931,21 +932,21 @@ static int sdSetClock( int freq )
 
   // Switch clock off.
   *EMMC_CONTROL1 &= ~C1_CLK_EN;
-  delay(10);
+  Timer::usleep(10);
 
   // Request the new clock setting and enable the clock
   int cdiv = sdGetClockDivider(freq);
   *EMMC_CONTROL1 = (*EMMC_CONTROL1 & 0xffff003f) | cdiv;
-  delay(10);
+  Timer::usleep(10);
 
   // Enable the clock.
   *EMMC_CONTROL1 |= C1_CLK_EN;
-  delay(10);
+  Timer::usleep(10);
 
   // Wait for clock to be stable.
   count = 10000;
   while( !(*EMMC_CONTROL1 & C1_CLK_STABLE) && count-- )
-    delay(10);
+    Timer::usleep(10);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: ERROR: failed to get stable clock.\n");
@@ -968,10 +969,10 @@ static int sdResetCard( int resetType )
   //  *EMMC_CONTROL2 = 0;
   *EMMC_CONTROL1 |= resetType;
   //*EMMC_CONTROL1 &= ~(C1_CLK_EN|C1_CLK_INTLEN);
-  delay(10);
+  Timer::usleep(10);
   count = 10000;
   while( (*EMMC_CONTROL1 & resetType) && count-- )
-    delay(10);
+    Timer::usleep(10);
   if( count <= 0 )
     {
     LOG_ERROR("EMMC: ERROR: failed to reset.\n");
@@ -981,7 +982,7 @@ static int sdResetCard( int resetType )
   // Enable internal clock and set data timeout.
   // TODO: Correct value for timeout?
   *EMMC_CONTROL1 |= C1_CLK_INTLEN | C1_TOUNIT_MAX;
-  delay(10);
+  Timer::usleep(10);
 
   // Set clock to setup frequency.
   if( (resp = sdSetClock(FREQ_SETUP)) ) return resp;
@@ -1214,7 +1215,7 @@ int sdClearBlocks( long long address, int numBlocks )
       return SD_TIMEOUT;
       }
 
-    delay(10);
+    Timer::usleep(10);
     }
 
   //  LOG_DEBUG("EMMC: completed erase command int %08x\n",*EMMC_INTERRUPT);

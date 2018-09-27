@@ -35,6 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 #include "Mailbox.h"
+#include "Serial.h"
+#include "Timer.h"
+
+using namespace placid;
 
 void autoload(void);
 void xmodemReceive(void);
@@ -43,7 +47,7 @@ static constexpr uint32_t AutoloadTimeout = 3;
 
 int main(int argc, const char * argv[])
 {
-    uart_init();
+    Serial::init();
 
     printf("\n\nPlacid Bootloader v0.1\n\n");
     printf("Autoloading in %d seconds\n", AutoloadTimeout);
@@ -71,14 +75,14 @@ int main(int argc, const char * argv[])
     Mailbox::getParameter(Mailbox::Param::DMAChannels, responseBuf, 1);
     printf("DMAChannels: %d\n", responseBuf[0]);
     
-    timer_init();
+    Timer::init();
     
-    uint64_t startTime = timerTick();
+    uint64_t startTime = Timer::systemTime();
     uint64_t tickTime = 1000000;
 
     while (1) {
-        if (timerTick() - startTime > tickTime) {
-            uart_send('.');
+        if (Timer::systemTime() - startTime > tickTime) {
+            Serial::write('.');
             tickTime += 1000000;
             if (tickTime++ > (AutoloadTimeout + 1) * 1000000) {
                 autoload();
@@ -86,10 +90,12 @@ int main(int argc, const char * argv[])
             }
         }
             
-        if ((uart_lcr() & 0x01) == 0) {
+        if (!Serial::rxReady()) {
             continue;
         }
-        int c = uart_recv();
+        
+        uint8_t c;
+        Serial::read(c);
         if (c == ' ') {
             printf("\n\nStart XMODEM upload when ready...\n\n");
             xmodemReceive();

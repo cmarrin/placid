@@ -27,7 +27,6 @@
 		4962957C215AA53B0064B9C9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* util.h */; };
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
-		49629595215ABAE50064B9C9 /* periph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629593215ABADD0064B9C9 /* periph.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 /* End PBXBuildFile section */
 
@@ -86,7 +85,7 @@
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
 		49166D57215194260077ACEE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../bootloader/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D582151AC5F0077ACEE /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../bootloader/xmodem.cpp; sourceTree = "<group>"; };
-		49166D592151AC5F0077ACEE /* vectors.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.s; path = ../bootloader/vectors.s; sourceTree = "<group>"; };
+		49166D592151AC5F0077ACEE /* vectors.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = vectors.S; path = ../bootloader/vectors.S; sourceTree = "<group>"; };
 		49166D5A2151AC5F0077ACEE /* loader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loader; path = ../bootloader/loader; sourceTree = "<group>"; };
 		49166D612153CA250077ACEE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../bootloader/README.md; sourceTree = "<group>"; };
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,7 +110,6 @@
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../baremetal/util.h; sourceTree = "<group>"; };
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		49629593215ABADD0064B9C9 /* periph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = periph.cpp; path = ../baremetal/periph.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +155,7 @@
 				496295542159286E0064B9C9 /* autoload.cpp */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
 				49166D582151AC5F0077ACEE /* xmodem.cpp */,
-				49166D592151AC5F0077ACEE /* vectors.s */,
+				49166D592151AC5F0077ACEE /* vectors.S */,
 				49166D612153CA250077ACEE /* README.md */,
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5A2151AC5F0077ACEE /* loader */,
@@ -208,7 +206,6 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
-				49629593215ABADD0064B9C9 /* periph.cpp */,
 				492FF3F2215C4F72003582FE /* sdcard.cpp */,
 				492FF3EE215C4F72003582FE /* sdcard.h */,
 				49629576215AA53B0064B9C9 /* util.cpp */,
@@ -378,7 +375,6 @@
 				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				492FF3FC215C52A5003582FE /* SDFS.cpp in Sources */,
-				49629595215ABAE50064B9C9 /* periph.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
 				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,
 			);

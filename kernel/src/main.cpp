@@ -55,8 +55,8 @@ public:
 
 int main()
 {
-    delay(500000);
     Serial::init();
+    Timer::init();
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     
@@ -67,7 +67,7 @@ int main()
 	shell.connected();
 
 	while (1) {
-        int8_t c;
+        uint8_t c;
         if (Serial::read(c) != Serial::Error::OK) {
             Serial::puts("*** Serial Read Error\n");
         } else {

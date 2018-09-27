@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "sdcard.h"
 #include "util.h"
+#include "Timer.h"
 
 using namespace placid;
 
@@ -159,9 +160,9 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
     }
     
     sdInit();
-    delay(100);
+    Timer::usleep(100);
     int r = sdInitCard();
-    delay(10000);
+    Timer::usleep(10000);
     if (r != SD_OK && r != SD_CARD_CHANGED) {
         return Error::SDCardInitFailed;
     }

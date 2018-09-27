@@ -56,10 +56,12 @@ namespace placid {
 
 	class Timer {
 	public:
+        static void init();
+        
 		// FIXME: repeat is currently not implemented 
 		static void start(TimerCallback*, float seconds, bool repeat);
   
-        static void delay(float seconds);
+        static void usleep(uint32_t us);
         
         static uint64_t systemTime();
 		
