@@ -76,8 +76,7 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
 
 bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
 {
-    FAT32::FS::File _rawFile;
-    if (!fs._fatfs.find(fs._fatfs, _rawFile, name)) {
+    if (!fs._fatfs.find(fs._fatfs, file._file, name)) {
         return false;
     }
     
