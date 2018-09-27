@@ -112,29 +112,10 @@ GET32:
 BRANCHTO:
     bx r0
 
-.global disableIRQ
-disableIRQ:
-    mrs r0,cpsr
-    orr r0,r0,#0x80
-    msr cpsr_c,r0
-    bx lr
-
-.global enableIRQ
-enableIRQ:
-    mrs r0,cpsr
-    bic r0,r0,#0x80
-    msr cpsr_c,r0
-    bx lr
-
 .global PUT8
 PUT8:
     strb r1,[r0]
     bx lr
-
-.global WFE
-WFE:
-	wfe
-	bx lr
 
 irq:
     push {r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}

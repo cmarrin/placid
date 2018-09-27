@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "defs.h"
+#include <stdint.h>
 
 namespace placid {
 	

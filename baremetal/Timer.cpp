@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "InterruptManager.h"
 #include "Serial.h"
+#include "util.h"
 
 #ifdef __APPLE__
 #include <unistd.h>

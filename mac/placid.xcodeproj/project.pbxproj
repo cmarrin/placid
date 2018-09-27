@@ -8,16 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		49166D4421514C060077ACEE /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* memory.cpp */; };
-		49166D4521514C060077ACEE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2E21514C050077ACEE /* InterruptManager.cpp */; };
 		49166D4721514C060077ACEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
-		49166D4821514C060077ACEE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3321514C050077ACEE /* Timer.cpp */; };
-		49166D4A21514C060077ACEE /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3921514C050077ACEE /* Serial.cpp */; };
 		49166D4B21514C060077ACEE /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
-		492FF3F4215C4F72003582FE /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* SDFS.cpp */; };
-		492FF3F5215C4F72003582FE /* sdcard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F2215C4F72003582FE /* sdcard.cpp */; };
-		492FF3F6215C4F72003582FE /* Mailbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F3215C4F72003582FE /* Mailbox.cpp */; };
+		492FF3F9215C528C003582FE /* Serial.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3F7215C528C003582FE /* Serial.h */; };
+		492FF3FA215C528C003582FE /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F8215C528C003582FE /* Serial.cpp */; };
+		492FF3FB215C5295003582FE /* sdcard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F2215C4F72003582FE /* sdcard.cpp */; };
+		492FF3FC215C52A5003582FE /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* SDFS.cpp */; };
+		492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F3215C4F72003582FE /* Mailbox.cpp */; };
+		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
+		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
+		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
+		492FF405215C5359003582FE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF401215C5359003582FE /* InterruptManager.cpp */; };
 		4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* xmodem.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
@@ -69,17 +72,11 @@
 /* Begin PBXFileReference section */
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D2D21514C050077ACEE /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = memory.cpp; path = ../../kernel/src/memory.cpp; sourceTree = "<group>"; };
-		49166D2E21514C050077ACEE /* InterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../../kernel/src/InterruptManager.cpp; sourceTree = "<group>"; };
-		49166D2F21514C050077ACEE /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../../kernel/src/Serial.h; sourceTree = "<group>"; };
 		49166D3021514C050077ACEE /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shell.h; path = ../../kernel/src/Shell.h; sourceTree = "<group>"; };
 		49166D3121514C050077ACEE /* start.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = start.S; path = ../../kernel/src/start.S; sourceTree = "<group>"; };
 		49166D3221514C050077ACEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../../kernel/src/BootShell.cpp; sourceTree = "<group>"; };
-		49166D3321514C050077ACEE /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Timer.cpp; path = ../../kernel/src/Timer.cpp; sourceTree = "<group>"; };
-		49166D3421514C050077ACEE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterruptManager.h; path = ../../kernel/src/InterruptManager.h; sourceTree = "<group>"; };
-		49166D3521514C050077ACEE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = ../../kernel/src/Timer.h; sourceTree = "<group>"; };
 		49166D3621514C050077ACEE /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defs.h; path = ../../kernel/src/defs.h; sourceTree = "<group>"; };
 		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../kernel/src/lib1funcs.asm; sourceTree = "<group>"; };
-		49166D3921514C050077ACEE /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../../kernel/src/Serial.cpp; sourceTree = "<group>"; };
 		49166D3A21514C050077ACEE /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../../kernel/src/Shell.cpp; sourceTree = "<group>"; };
 		49166D3B21514C050077ACEE /* dlmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dlmalloc.c; path = ../../kernel/src/dlmalloc.c; sourceTree = "<group>"; };
 		49166D3E21514C050077ACEE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../kernel/src/main.cpp; sourceTree = "<group>"; };
@@ -103,6 +100,12 @@
 		492FF3F1215C4F72003582FE /* SDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../baremetal/SDFS.cpp; sourceTree = "<group>"; };
 		492FF3F2215C4F72003582FE /* sdcard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdcard.cpp; path = ../baremetal/sdcard.cpp; sourceTree = "<group>"; };
 		492FF3F3215C4F72003582FE /* Mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mailbox.cpp; path = ../baremetal/Mailbox.cpp; sourceTree = "<group>"; };
+		492FF3F7215C528C003582FE /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../baremetal/Serial.h; sourceTree = "<group>"; };
+		492FF3F8215C528C003582FE /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../baremetal/Serial.cpp; sourceTree = "<group>"; };
+		492FF3FE215C5359003582FE /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Timer.cpp; path = ../baremetal/Timer.cpp; sourceTree = "<group>"; };
+		492FF3FF215C5359003582FE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = ../baremetal/Timer.h; sourceTree = "<group>"; };
+		492FF400215C5359003582FE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterruptManager.h; path = ../baremetal/InterruptManager.h; sourceTree = "<group>"; };
+		492FF401215C5359003582FE /* InterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../baremetal/InterruptManager.cpp; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
@@ -170,28 +173,15 @@
 				49166D3F21514C050077ACEE /* BootShell.h */,
 				49166D3621514C050077ACEE /* defs.h */,
 				49166D3B21514C050077ACEE /* dlmalloc.c */,
-				49166D2E21514C050077ACEE /* InterruptManager.cpp */,
-				49166D3421514C050077ACEE /* InterruptManager.h */,
 				49166D3721514C050077ACEE /* lib1funcs.asm */,
 				49166D3E21514C050077ACEE /* main.cpp */,
 				49166D2D21514C050077ACEE /* memory.cpp */,
-				49166D3921514C050077ACEE /* Serial.cpp */,
-				49166D2F21514C050077ACEE /* Serial.h */,
 				49166D3A21514C050077ACEE /* Shell.cpp */,
 				49166D3021514C050077ACEE /* Shell.h */,
 				49166D3121514C050077ACEE /* start.S */,
 				49166D4121514C060077ACEE /* String.h */,
-				49166D3321514C050077ACEE /* Timer.cpp */,
-				49166D3521514C050077ACEE /* Timer.h */,
 			);
 			path = src;
-			sourceTree = "<group>";
-		};
-		49166D6E2153F0FE0077ACEE /* bltest */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = bltest;
 			sourceTree = "<group>";
 		};
 		492C7413214B2A2F009A4DA4 = {
@@ -200,7 +190,6 @@
 				49629575215AA4EB0064B9C9 /* baremetal */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
-				49166D6E2153F0FE0077ACEE /* bltest */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 				49629588215AAA760064B9C9 /* Frameworks */,
 			);
@@ -219,18 +208,24 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
-				492FF3F3215C4F72003582FE /* Mailbox.cpp */,
-				492FF3F0215C4F72003582FE /* Mailbox.h */,
+				49629593215ABADD0064B9C9 /* periph.cpp */,
 				492FF3F2215C4F72003582FE /* sdcard.cpp */,
 				492FF3EE215C4F72003582FE /* sdcard.h */,
-				492FF3F1215C4F72003582FE /* SDFS.cpp */,
-				492FF3EF215C4F72003582FE /* SDFS.h */,
-				492FF3EB215AF47A003582FE /* GPIO.cpp */,
-				492FF3EC215AF47B003582FE /* GPIO.h */,
-				49629593215ABADD0064B9C9 /* periph.cpp */,
-				4962958F215AAF8F0064B9C9 /* Makefile */,
 				49629576215AA53B0064B9C9 /* util.cpp */,
 				49629578215AA53B0064B9C9 /* util.h */,
+				492FF3EB215AF47A003582FE /* GPIO.cpp */,
+				492FF3EC215AF47B003582FE /* GPIO.h */,
+				492FF401215C5359003582FE /* InterruptManager.cpp */,
+				492FF400215C5359003582FE /* InterruptManager.h */,
+				492FF3F3215C4F72003582FE /* Mailbox.cpp */,
+				492FF3F0215C4F72003582FE /* Mailbox.h */,
+				492FF3F1215C4F72003582FE /* SDFS.cpp */,
+				492FF3EF215C4F72003582FE /* SDFS.h */,
+				492FF3F8215C528C003582FE /* Serial.cpp */,
+				492FF3F7215C528C003582FE /* Serial.h */,
+				492FF3FE215C5359003582FE /* Timer.cpp */,
+				492FF3FF215C5359003582FE /* Timer.h */,
+				4962958F215AAF8F0064B9C9 /* Makefile */,
 			);
 			name = baremetal;
 			sourceTree = "<group>";
@@ -249,6 +244,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492FF404215C5359003582FE /* InterruptManager.h in Headers */,
+				492FF403215C5359003582FE /* Timer.h in Headers */,
+				492FF3F9215C528C003582FE /* Serial.h in Headers */,
 				4962957C215AA53B0064B9C9 /* util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,15 +361,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				492FF3F5215C4F72003582FE /* sdcard.cpp in Sources */,
 				49166D4421514C060077ACEE /* memory.cpp in Sources */,
-				492FF3F4215C4F72003582FE /* SDFS.cpp in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
-				49166D4A21514C060077ACEE /* Serial.cpp in Sources */,
-				49166D4521514C060077ACEE /* InterruptManager.cpp in Sources */,
-				49166D4821514C060077ACEE /* Timer.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
-				492FF3F6215C4F72003582FE /* Mailbox.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -381,8 +373,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */,
+				492FF405215C5359003582FE /* InterruptManager.cpp in Sources */,
+				492FF3FB215C5295003582FE /* sdcard.cpp in Sources */,
 				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
+				492FF402215C5359003582FE /* Timer.cpp in Sources */,
+				492FF3FC215C52A5003582FE /* SDFS.cpp in Sources */,
 				49629595215ABAE50064B9C9 /* periph.cpp in Sources */,
+				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
+				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

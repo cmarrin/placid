@@ -60,6 +60,10 @@ namespace placid {
 void uart_send ( unsigned int );
 unsigned int uart_recv ( void );
 
+void disableIRQ(void);
+void enableIRQ(void);
+void WFE(void);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -41,9 +41,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void WFE(void);
-extern void disableIRQ(void);
-extern void enableIRQ(void);
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, int64_t offset);
 int munmap(void *addr, size_t length);

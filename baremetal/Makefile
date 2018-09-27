@@ -18,8 +18,11 @@ SRC =	periph.cpp \
 		sdcard.cpp \
 		util.cpp \
 		GPIO.cpp \
+		InterruptManager.cpp \
 		Mailbox.cpp \
 		SDFS.cpp \
+		Serial.cpp \
+		Timer.cpp \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)

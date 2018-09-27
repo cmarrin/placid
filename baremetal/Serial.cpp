@@ -154,6 +154,11 @@ Serial::Error Serial::read(int8_t& c, uint32_t timeout)
 	return Error::OK;
 }
 
+uint32_t Serial::txReady()
+{
+    return uart().LSR;
+}
+
 Serial::Error Serial::write(int8_t c)
 {
 #ifdef __APPLE__

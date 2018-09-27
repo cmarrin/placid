@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "defs.h"
+#include <stdint.h>
 
 namespace placid {
 	
@@ -63,6 +63,7 @@ namespace placid {
 		
 		// Blocking API
 		static Error read(int8_t&, uint32_t timeout = 0); // in ms
+        static uint32_t txReady();
 		static Error write(int8_t);
 		static Error puts(const char*, uint32_t size = 0);
         static Error puts(double);

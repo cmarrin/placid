@@ -68,8 +68,6 @@ void timer_init()
 
 extern "C" {
 
-void enableIRQ() { }
-
 void PUT8(unsigned int addr, unsigned int value)
 {
     printf("PUT8:[%d] <= %d\n", addr, value);
@@ -101,6 +99,30 @@ uint64_t timerTick()
 }
 
 #else
+
+
+void disableIRQ()
+{
+    asm volatile ("mrs r0,cpsr" : : : "r0" );
+    asm volatile ("orr r0,r0,#0x80" : : : "r0" );
+    asm volatile ("msr cpsr_c,r0" : : : "r0" );
+    asm volatile ("bx lr" );
+}
+
+void enableIRQ()
+{
+    asm volatile ("mrs r0,cpsr" : : : "r0" );
+    asm volatile ("bic r0,r0,#0x80" : : : "r0" );
+    asm volatile ("msr cpsr_c,r0" : : : "r0" );
+    asm volatile ("bx lr" );
+}
+
+void WFE()
+{
+    asm volatile ("wfe" );
+    asm volatile ("bx lr" );
+}
+
 #define STIMER_CLO 0x20003004
 #define STIMER_CHI 0x20003008
 

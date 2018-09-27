@@ -61,10 +61,7 @@ SRC =	start.S \
         main.cpp \
 		memory.cpp \
 		BootShell.cpp \
-		InterruptManager.cpp \
-		Serial.cpp \
 		Shell.cpp \
-		Timer.cpp \
 
 DIVOBJS :=	_divsi3.o \
 			_umodsi3.o \
