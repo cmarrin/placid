@@ -16,6 +16,7 @@ BUILDDIR = build
 
 SRC =	sdcard.cpp \
 		util.cpp \
+		FAT32.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
 		Mailbox.cpp \

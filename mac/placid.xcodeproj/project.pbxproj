@@ -21,6 +21,8 @@
 		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
 		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
 		492FF405215C5359003582FE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF401215C5359003582FE /* InterruptManager.cpp */; };
+		492FF408215D479A003582FE /* FAT32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF406215D4799003582FE /* FAT32.cpp */; };
+		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
 		4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* xmodem.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
@@ -105,6 +107,8 @@
 		492FF3FF215C5359003582FE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = ../baremetal/Timer.h; sourceTree = "<group>"; };
 		492FF400215C5359003582FE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterruptManager.h; path = ../baremetal/InterruptManager.h; sourceTree = "<group>"; };
 		492FF401215C5359003582FE /* InterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../baremetal/InterruptManager.cpp; sourceTree = "<group>"; };
+		492FF406215D4799003582FE /* FAT32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32.cpp; path = ../baremetal/FAT32.cpp; sourceTree = "<group>"; };
+		492FF407215D479A003582FE /* FAT32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FAT32.h; path = ../baremetal/FAT32.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
@@ -206,6 +210,8 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
+				492FF406215D4799003582FE /* FAT32.cpp */,
+				492FF407215D479A003582FE /* FAT32.h */,
 				492FF3F2215C4F72003582FE /* sdcard.cpp */,
 				492FF3EE215C4F72003582FE /* sdcard.h */,
 				49629576215AA53B0064B9C9 /* util.cpp */,
@@ -243,6 +249,7 @@
 			files = (
 				492FF404215C5359003582FE /* InterruptManager.h in Headers */,
 				492FF403215C5359003582FE /* Timer.h in Headers */,
+				492FF409215D479A003582FE /* FAT32.h in Headers */,
 				492FF3F9215C528C003582FE /* Serial.h in Headers */,
 				4962957C215AA53B0064B9C9 /* util.h in Headers */,
 			);
@@ -377,6 +384,7 @@
 				492FF3FC215C52A5003582FE /* SDFS.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
 				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,
+				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

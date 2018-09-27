@@ -60,16 +60,11 @@ void autoload()
     uint32_t addr = ARMBASE;
     uint32_t size = File::size(fp);
     
-    if (size > SDFS::clusterSize(fs)) {
-        printf("*** File is too large. File size=%d, max=%d\n", size, SDFS::clusterSize(fs));
-        return;
-    }
-
     for (uint32_t sector = 0; size != 0; ++sector) {
         char buf[512];
-        int32_t sectorsRead = File::read(fp, buf, sector, 1);
-        if (sectorsRead != 1) {
-            printf("*** File read error:%d\n", File::error(fp));
+        SDFS::Error result = File::read(fs, fp, buf, sector, 1);
+        if (result != SDFS::Error::OK) {
+            printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;
         }
         
