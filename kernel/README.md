@@ -40,4 +40,4 @@ to the corresponding page of physical memory with the appropriate permission bit
 | `2`       	| `0x2000 - 0x2fff`  	| Page fault stack 	| `rw-`                                           	    |                                             	|
 | `3`       	| `0x3000 - 0x3fff`  	| Reserved stack   	| `rw-`                                           	    | For future stack use                        	|
 | `4 - 7`   	| `0x4000 - 0x7fff`  	| Kernel stack     	| `rw-`                                           	    |                                             	|
-| `8 - 255` 	| `0x8000 - 0xfffff` 	| Kernel code/data 	| `.code (--x), .rodata (r--), .bss (rw-), heap (rw-)` 	|                                             	|
+| `8 - 255` 	| `0x8000 - 0xfffff` 	| Kernel code/data 	| `.code (--x), .rodata (r--), .bss (rw-), heap (rw-)` 	| Each segment takes up as many pages as needed |
