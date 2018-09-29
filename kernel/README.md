@@ -17,9 +17,8 @@
 
 ARM MMU is used to manage virtual memory. Memory map is as follows:
 
-| Translation Table Entry     | Page Table Entry     | Virtual Address             | Physical Address            | Notes                                                     |
-|-------------------------    |------------------    |-------------------------    |-------------------------    |-------------------------------------------------------    |
-| 0 - 2015                    |                      | 0 - 0x7e000000              | 0 - 0x7e000000              | Bare phycical memory access, Only available to kernel     |
-| 2016 - 2047                 |                      | 0x7e000000 - 0x80000000     | 0x20000000 - 0x22000000     | Peripherals                                               |
-|                             |                      |                             |                             |                                                           |
-
+| Translation Table Entry 	| Virtual Address         	| Physical Address        	| Notes                                                 	|
+|-------------------------	|-------------------------	|-------------------------	|-------------------------------------------------------	|
+| 0 - 2015                	| 0 - 0x7dffffff          	| 0 - 0x7dffffff          	| Bare phycical memory access, Only available to kernel 	|
+| 2016 - 2047             	| 0x7e000000 - 0x7fffffff 	| 0x20000000 - 0x21ffffff 	| Peripherals                                           	|
+| 2048 - 4095             	| 0x80000000 - 0xffffffff 	| 0 - 0x7ffffff           	| User Process Memory                                   	|
