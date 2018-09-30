@@ -63,4 +63,11 @@ to a free list by linking them to one another by a pointer in the first 4 bytes 
 allocated it is removed from the head of the free list and the head is pointed to the next block. When a block
 is freed, it is added to the head of the list and the previous head is linked to from the freed block.
 
+## System calls
 
+When in a user process, it's not possible to make a system call (e.g., getSystemTime()). An attempt to call an address where you thought that function lived would at best generate a permission exception. So the SWI instruction is used. This instruction generates a *software interrupt*, which switches into supervisor mode and jumps to the SWI handler. On entry, any passed params are in the first 4 registers or on the stack and the return address is in the link register,just like in a normal function call. In order to know which function has been called, stubs are used. Here's an example. Let's say there's a *read* system call with this signature:
+
+    uint32_t read(uint32_t port);
+
+This would call a function in user space which would execute a version of the SWI instruction with a code in the lower 24 bits indicating that this is the *read* function. When executed, the SWI interrupt fires, the handler reads the SWI instruction to extract the lower 24 bits and then uses a table look to call the actual *read* system function. The port parameter is passed in R0 and the return value is placed in R0. Ideally this would be an inline function which simply inserts the appropriate SWI<read> instruction.
+  
