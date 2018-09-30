@@ -15,7 +15,7 @@
 
 ## Memory management
 
-ARM MMU is used to manage virtual memory. In the kernel translation table the memory map is as follows:
+The ARM MMU is used to manage virtual memory. In the kernel translation table the memory map is as follows:
 
 | **Translation Table Entry** | **Virtual Address**       | **Physical Address**     	| **Notes**                                               |
 |-------------------------	  |-------------------------	|-------------------------	|-------------------------------------------------------	|
