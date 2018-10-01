@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "GPIO.h"
 #include "InterruptManager.h"
+#include "Print.h"
 #include "Timer.h"
 
 #ifdef __APPLE__
@@ -45,8 +46,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 using namespace placid;
-
-OutputStream placid::cout;
 
 struct UART1 {
     uint32_t _00;
@@ -153,7 +152,11 @@ Serial::Error Serial::read(uint8_t& c)
 
 bool Serial::rxReady()
 {
+#ifdef __APPLE__
+    return true;
+#else
     return (uart().LSR & 0x01) != 0;
+#endif
 }
 
 Serial::Error Serial::write(uint8_t c)
@@ -210,8 +213,8 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
 
 Serial::Error Serial::puts(double v)
 {
-    char buf[MaxToStringBufferSize];
-    if(toString(buf, v)) {
+    char buf[Print::MaxToStringBufferSize];
+    if(Print::toString(buf, v)) {
         puts(buf);
     }
     return Error::OK;
@@ -219,8 +222,8 @@ Serial::Error Serial::puts(double v)
 
 Serial::Error Serial::puts(int32_t v)
 {
-    char buf[MaxToStringBufferSize];
-    if(toString(buf, v)) {
+    char buf[Print::MaxToStringBufferSize];
+    if(Print::toString(buf, v)) {
         puts(buf);
     }
     return Error::OK;
@@ -228,8 +231,8 @@ Serial::Error Serial::puts(int32_t v)
 
 Serial::Error Serial::puts(uint32_t v)
 {
-    char buf[MaxToStringBufferSize];
-    if(toString(buf, v)) {
+    char buf[Print::MaxToStringBufferSize];
+    if(Print::toString(buf, v)) {
         puts(buf);
     }
     return Error::OK;
@@ -237,8 +240,8 @@ Serial::Error Serial::puts(uint32_t v)
 
 Serial::Error Serial::puts(int64_t v)
 {
-    char buf[MaxToStringBufferSize];
-    if(toString(buf, v)) {
+    char buf[Print::MaxToStringBufferSize];
+    if(Print::toString(buf, v)) {
         puts(buf);
     }
     return Error::OK;
@@ -246,8 +249,8 @@ Serial::Error Serial::puts(int64_t v)
 
 Serial::Error Serial::puts(uint64_t v)
 {
-    char buf[MaxToStringBufferSize];
-    if(toString(buf, v)) {
+    char buf[Print::MaxToStringBufferSize];
+    if(Print::toString(buf, v)) {
         puts(buf);
     }
     return Error::OK;

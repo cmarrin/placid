@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 #include "Mailbox.h"
+#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -48,32 +49,34 @@ static constexpr uint32_t AutoloadTimeout = 3;
 int main(int argc, const char * argv[])
 {
     Serial::init();
+    
+    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", 1.234, -47);
 
-    printf("\n\nPlacid Bootloader v0.1\n\n");
-    printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
+    Print::printf("\n\nPlacid Bootloader v0.1\n\n");
+    Print::printf("Autoloading in %d seconds\n", AutoloadTimeout);
+    Print::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     
     uint32_t responseBuf[2];
     Mailbox::getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
-    printf("FirmwareRev: %d\n", responseBuf[0]);
+    Print::printf("FirmwareRev: %d\n", responseBuf[0]);
     
     Mailbox::getParameter(Mailbox::Param::BoardModel, responseBuf, 1);
-    printf("BoardModel: %d\n", responseBuf[0]);
+    Print::printf("BoardModel: %d\n", responseBuf[0]);
     
     Mailbox::getParameter(Mailbox::Param::BoardRev, responseBuf, 1);
-    printf("BoardRev: %d\n", responseBuf[0]);
+    Print::printf("BoardRev: %d\n", responseBuf[0]);
     
     Mailbox::getParameter(Mailbox::Param::BoardSerialNo, responseBuf, 2);
-    printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
+    Print::printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
     
     Mailbox::getParameter(Mailbox::Param::ARMMemory, responseBuf, 2);
-    printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    Print::printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
     
     Mailbox::getParameter(Mailbox::Param::VCMemory, responseBuf, 2);
-    printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    Print::printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
     
     Mailbox::getParameter(Mailbox::Param::DMAChannels, responseBuf, 1);
-    printf("DMAChannels: %d\n", responseBuf[0]);
+    Print::printf("DMAChannels: %d\n", responseBuf[0]);
     
     Timer::init();
     
@@ -97,17 +100,17 @@ int main(int argc, const char * argv[])
         uint8_t c;
         Serial::read(c);
         if (c == ' ') {
-            printf("\n\nStart XMODEM upload when ready...\n\n");
+            Print::printf("\n\nStart XMODEM upload when ready...\n\n");
             xmodemReceive();
             break;
         } else if (c < 0x7f) {
-            printf("\n\nAutoloading...\n\n");
+            Print::printf("\n\nAutoloading...\n\n");
             autoload();
             break;
         }
     }
     
-    printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
+    Print::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
     while(1) { }
     return 0;
 }

@@ -89,10 +89,12 @@ volatile unsigned int icount;
 
 void  Timer::init()
 {
+#ifndef __APPLE__
     // We want a 1MHz tick. System clock is 250MHz, so we divide by 250
     // Set the prescaler (bits 16-23) to one less, or 0xf9
     armTimer().control = 0x00F90000; // Set the prescaler, but keep the timer stopped
     armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
+#endif
 }
 
 void Timer::handleInterrupt()

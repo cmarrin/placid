@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "sdcard.h"
+#include "Print.h"
 #include "SDFS.h"
 #include "Timer.h"
 #include "util.h"
@@ -45,14 +46,14 @@ void autoload()
     SDFS fs;
     SDFS::Error e = SDFS::mount(fs, 0, 0);
     if (e != SDFS::Error::OK) {
-        printf("*** error mounting:%d\n", static_cast<int>(e));
+        Print::printf("*** error mounting:%d\n", static_cast<int>(e));
         return;
     }
     
     File fp;
     bool r = SDFS::open(fs, fp, "kernel.bin", "r");
     if (!r) {
-        printf("*** File open error:%d\n", File::error(fp));
+        Print::printf("*** File open error:%d\n", File::error(fp));
         return;
     }
     
@@ -64,7 +65,7 @@ void autoload()
         char buf[512];
         SDFS::Error result = File::read(fs, fp, buf, sector, 1);
         if (result != SDFS::Error::OK) {
-            printf("*** File read error:%d\n", static_cast<uint32_t>(result));
+            Print::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;
         }
         
@@ -75,7 +76,7 @@ void autoload()
         size -= bytesToLoad;
     }
     
-    printf("Autoload complete, executing...\n");
+    Print::printf("Autoload complete, executing...\n");
     Timer::usleep(200000);
     BRANCHTO(ARMBASE);
 }

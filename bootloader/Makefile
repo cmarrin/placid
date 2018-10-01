@@ -18,6 +18,7 @@ BUILDDIR = build
 
 SRC =	bootloader.S \
         autoload.cpp \
+        nanoprintf.cpp \
         xmodem.cpp \
         main.cpp
 

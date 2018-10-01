@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "BootShell.h"
 #include "GPIO.h"
+#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -57,6 +58,8 @@ int main()
 {
     Serial::init();
     Timer::init();
+    
+    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", 1.234, -47);
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     

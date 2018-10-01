@@ -30,6 +30,9 @@
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
+		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
+		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
+		497EE460216198F1000584CE /* nanoprintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45E21619879000584CE /* nanoprintf.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +118,10 @@
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../baremetal/util.h; sourceTree = "<group>"; };
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
+		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Print.h; path = ../baremetal/Print.h; sourceTree = "<group>"; };
+		497EE45C2161982F000584CE /* printf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printf.cpp; path = ../../kernel/src/printf.cpp; sourceTree = "<group>"; };
+		497EE45E21619879000584CE /* nanoprintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nanoprintf.cpp; path = ../bootloader/nanoprintf.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +165,7 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
+				497EE45E21619879000584CE /* nanoprintf.cpp */,
 				496295542159286E0064B9C9 /* autoload.cpp */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
 				49166D582151AC5F0077ACEE /* xmodem.cpp */,
@@ -173,6 +181,7 @@
 		49166D2C21514BE30077ACEE /* src */ = {
 			isa = PBXGroup;
 			children = (
+				497EE45C2161982F000584CE /* printf.cpp */,
 				49166D3221514C050077ACEE /* BootShell.cpp */,
 				49166D3F21514C050077ACEE /* BootShell.h */,
 				49166D3B21514C050077ACEE /* dlmalloc.c */,
@@ -212,6 +221,8 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
+				497EE458216138E2000584CE /* Print.cpp */,
+				497EE459216138E2000584CE /* Print.h */,
 				492FF406215D4799003582FE /* FAT32.cpp */,
 				492FF407215D479A003582FE /* FAT32.h */,
 				492FF3F2215C4F72003582FE /* sdcard.cpp */,
@@ -359,6 +370,7 @@
 			files = (
 				49629556215929410064B9C9 /* autoload.cpp in Sources */,
 				49166D702153F0FE0077ACEE /* main.cpp in Sources */,
+				497EE460216198F1000584CE /* nanoprintf.cpp in Sources */,
 				4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,6 +381,7 @@
 			files = (
 				49166D4421514C060077ACEE /* Memory.cpp in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
+				497EE45D2161982F000584CE /* printf.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 			);
@@ -385,6 +398,7 @@
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				492FF3FC215C52A5003582FE /* SDFS.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
+				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,
 				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
 			);

@@ -39,23 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stddef.h>
 #include <stdarg.h>
 
-namespace placid {
-
-											//        sign    digits  dp      'e'     dp      exp     '\0'
-	static constexpr uint32_t MaxToStringBufferSize =	1 +     20 +   1 +     1 +     1 +     3 +      1;
-    static constexpr uint32_t ARMBASE = 0x8000;
-
-	bool toString(char* buf, double v);
-    bool toString(char* buf, int32_t v);
-    bool toString(char* buf, uint32_t v);
-    bool toString(char* buf, int64_t v);
-    bool toString(char* buf, uint64_t v);
-	inline bool toString(char* buf, float v) { return toString(buf, static_cast<double>(v)); }
-	inline bool toString(char* buf, int8_t v) { return toString(buf, static_cast<int32_t>(v)); }
-	inline bool toString(char* buf, uint8_t v) { return toString(buf, static_cast<uint32_t>(v)); }
-	inline bool toString(char* buf, int16_t v) { return toString(buf, static_cast<int32_t>(v)); }
-	inline bool toString(char* buf, uint16_t v) { return toString(buf, static_cast<uint32_t>(v)); }
-}
+static constexpr uint32_t ARMBASE = 0x8000;
 
 void disableIRQ(void);
 void enableIRQ(void);
@@ -71,15 +55,11 @@ bool interruptsSupported(void);
 
 void itos(char* buf, int32_t v);
 void utos(char* buf, uint32_t v);
+void putch(char c);
 void putstr(const char* s);
-void puti(int32_t v);
-void putu(uint32_t v);
 void* memset(void* p, int value, size_t n);
 void* memcpy(void* dst, const void* src, size_t n);
 int memcmp(const void* left, const void* right, size_t n);
-int printf(const char *format, ...);
-int vsnprintf(char *str, size_t n, const char *format, va_list);
-int snprintf(char *str, size_t n, const char *format, ...);
 void convertTo8dot3(char* name8dot3, const char* name);
 #ifdef __cplusplus
 }
