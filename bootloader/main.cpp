@@ -50,7 +50,7 @@ int main(int argc, const char * argv[])
 {
     Serial::init();
     
-    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", 1.234, -47);
+    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", -47);
 
     Print::printf("\n\nPlacid Bootloader v0.1\n\n");
     Print::printf("Autoloading in %d seconds\n", AutoloadTimeout);

@@ -84,8 +84,9 @@ void xmodemReceive()
         if (state == 0) {
             if (xstring[state] == EOT) {
                 Serial::write(ACK);
-                Timer::usleep(200000);
+                Timer::usleep(100000);
                 Print::printf("XModem upload complete, executing...\n");
+                Timer::usleep(100000);
                 BRANCHTO(ARMBASE);
                 break;
             }
