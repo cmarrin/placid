@@ -73,21 +73,22 @@ reset:
     stmia r1!,{r2,r3,r4,r5,r6,r7,r8,r9}
 
 
-    ;@ (PSR_IRQ_MODE|PSR_FIQ_DIS|PSR_IRQ_DIS)
+    // Set IRQ mode with FIQ and IRQ disabled and set the IRQ stack
     mov r0,#0xD2
     msr cpsr_c,r0
     mov sp,#0x8000
 
-    ;@ (PSR_FIQ_MODE|PSR_FIQ_DIS|PSR_IRQ_DIS)
+    // Set FIQ mode with FIQ and IRQ disabled and set the FIQ stack
     mov r0,#0xD1
     msr cpsr_c,r0
     mov sp,#0x4000
 
-    ;@ (PSR_SVC_MODE|PSR_FIQ_DIS|PSR_IRQ_DIS)
+    // Set supervisor mode with FIQ and IRQ disabled and set the supervisor stack
     mov r0,#0xD3
     msr cpsr_c,r0
     mov sp,#0x8000000
 
+    // Set supervisor mode with IRQ enabled and FIQ disabled
     ;@ SVC MODE, IRQ ENABLED, FIQ DIS
     ;@mov r0,#0x53
     ;@msr cpsr_c, r0
