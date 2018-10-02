@@ -49,34 +49,10 @@ static constexpr uint32_t AutoloadTimeout = 3;
 int main(int argc, const char * argv[])
 {
     Serial::init();
-    
-    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", -47);
-
+        
     Print::printf("\n\nPlacid Bootloader v0.1\n\n");
     Print::printf("Autoloading in %d seconds\n", AutoloadTimeout);
     Print::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
-    
-    uint32_t responseBuf[2];
-    Mailbox::getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
-    Print::printf("FirmwareRev: %d\n", responseBuf[0]);
-    
-    Mailbox::getParameter(Mailbox::Param::BoardModel, responseBuf, 1);
-    Print::printf("BoardModel: %d\n", responseBuf[0]);
-    
-    Mailbox::getParameter(Mailbox::Param::BoardRev, responseBuf, 1);
-    Print::printf("BoardRev: %d\n", responseBuf[0]);
-    
-    Mailbox::getParameter(Mailbox::Param::BoardSerialNo, responseBuf, 2);
-    Print::printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
-    
-    Mailbox::getParameter(Mailbox::Param::ARMMemory, responseBuf, 2);
-    Print::printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
-    
-    Mailbox::getParameter(Mailbox::Param::VCMemory, responseBuf, 2);
-    Print::printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
-    
-    Mailbox::getParameter(Mailbox::Param::DMAChannels, responseBuf, 1);
-    Print::printf("DMAChannels: %d\n", responseBuf[0]);
     
     Timer::init();
     

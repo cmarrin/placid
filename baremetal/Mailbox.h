@@ -55,10 +55,12 @@ public:
         BoardSerialNo = 0x00010004, // uint32_t ser[2]
         ARMMemory = 0x00010005,     // uint32_t base, uint32_t size
         VCMemory = 0x00010006,      // uint32_t base, uint32_t size
-        DMAChannels = 0x00060001,   // uint32_t nchannels
+        DMAChannelMask = 0x00060001,// uint32_t mask
     };
     
     static Error getParameter(Param, uint32_t* result, uint32_t size);
+    
+    static void printBoardParams();
 };
 
 }

@@ -145,3 +145,29 @@ Mailbox::Error Mailbox::getParameter(Param param, uint32_t* result, uint32_t siz
 
     return Error::OK;
 }
+
+void Mailbox::printBoardParams()
+{
+    uint32_t responseBuf[2];
+    getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
+    Print::printf("FirmwareRev: %d\n", responseBuf[0]);
+    
+    getParameter(Mailbox::Param::BoardModel, responseBuf, 1);
+    Print::printf("BoardModel: %d\n", responseBuf[0]);
+    
+    getParameter(Mailbox::Param::BoardRev, responseBuf, 1);
+    Print::printf("BoardRev: %d\n", responseBuf[0]);
+    
+    getParameter(Mailbox::Param::BoardSerialNo, responseBuf, 2);
+    Print::printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
+    
+    getParameter(Mailbox::Param::ARMMemory, responseBuf, 2);
+    Print::printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    
+    getParameter(Mailbox::Param::VCMemory, responseBuf, 2);
+    Print::printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    
+    getParameter(Mailbox::Param::DMAChannelMask, responseBuf, 1);
+    Print::printf("DMAChannelMask: 0x%08x\n", responseBuf[0]);
+    
+}
