@@ -38,19 +38,57 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace placid {
 
-void *mmap(void *addr, size_t length, int prot, int flags, int fd, int64_t offset);
-int munmap(void *addr, size_t length);
+    // Virtual memory management
+    //
+    // Sets up MMU, allocates kernal translation tables, sets up user process
+    // memory and handles page faults.
+    //
+    // This class may not be instantiated until the virtual memory system
+    // is setup. So the init() method is static.
+    //
+    class Memory
+    {
+    public:
+        enum class AP {
+            Control = 0,            // permission determined by control reg bits S and R
+            UserNoAccess = 1,
+            UserReadOnly = 2,
+            UserReadWrite = 3,
+        };
+            
+        static void init();
+        
+    private:
+        static constexpr uint32_t KernelTT = 0x4000;
+        
+        static void enableMMU();
+        static void disableMMU();
+        static void invalidateTLBs();
+        static void invalidateCaches();
+        static void setDomains(uint32_t domains);
+        static void setMMUSections(uint32_t vaddr, uint32_t paddr, uint32_t num, AP, uint8_t domain, bool cacheable, bool bufferable);
+        
+        template<uint32_t which> static void setTTB(uint32_t addr)
+        {
+            static_assert(which < 2, "which variable must be 0 or 1");
+            
+            addr &= 0xffffc000;
+            
+            _kernelTTB[which] = addr;
+            
+        #ifndef __APPLE__
+            __asm volatile (
+                "mcr p15,0,%1,c2,c0,%0\n"
+            :
+            : "I" (which), "r" (addr)
+            : "r0" );
+        #endif
+        }
 
-#define PROT_READ       1
-#define PROT_WRITE      2
-
-#define MAP_PRIVATE     2
-#define MAP_ANONYMOUS   0x20
-
-#ifdef __cplusplus
+        static uint32_t _kernelTTB[2];
+    };
+    
 }
-#endif
+

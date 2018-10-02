@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "BootShell.h"
 #include "GPIO.h"
+#include "Memory.h"
 #include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
@@ -54,12 +55,27 @@ public:
 	}
 };
 
+static void timingTest(const char* s)
+{
+    // Timing test
+    uint64_t startTime = Timer::systemTime();
+    volatile uint32_t n = 0;
+    for (int i = 0; i < 1000000; ++i) {
+        n += i + 234;
+    }
+    Print::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(Timer::systemTime() - startTime));
+}
+
 int main()
 {
     Serial::init();
     Timer::init();
-    
-    Print::printf("*** string='%s', float=%f, int=%d\n", "hello, world", 1.234, -47);
+
+    Print::printf("\n\nWelcome to the Placid Kernel\n\n");
+
+    timingTest("without cache");
+    Memory::init();
+    timingTest("with cache");
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     
