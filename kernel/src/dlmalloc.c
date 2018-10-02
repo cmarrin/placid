@@ -527,8 +527,36 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define HAVE_MORECORE 0
 #define NO_MALLOC_STATS 1
 #define LACKS_TIME_H
+#define LACKS_ERRNO_H
+#define MALLOC_FAILURE_ACTION
 
-#include "Memory.h"
+#include <stddef.h>
+#include <stdint.h>
+
+#define EINVAL 1
+#define ENOMEM 2
+
+#define PROT_READ       1
+#define PROT_WRITE      2
+
+#define MAP_PRIVATE     2
+#define MAP_ANONYMOUS   0x20
+
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset)
+{
+    return 0;
+}
+
+int munmap(void *addr, size_t length)
+{
+    return 0;
+}
+
+// Needed by dlmalloc to get page size
+long sysconf(int name)
+{
+    return 0; //(name == _SC_PAGE_SIZE) ? 1024 : 0;
+}
 
 /* Version identifier to allow people to support multiple versions */
 #ifndef DLMALLOC_VERSION

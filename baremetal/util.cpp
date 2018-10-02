@@ -142,6 +142,16 @@ unsigned long long __aeabi_uldivmod(unsigned long long value, unsigned long long
         return answer;
 }
 
+void abort()
+{
+    while (1) ;
+}
+
+void __aeabi_idiv0()
+{
+    abort();
+}
+
 }
 #endif
 
