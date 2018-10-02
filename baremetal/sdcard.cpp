@@ -498,7 +498,7 @@ static inline void wait(int32_t count)
 {
 #ifdef __APPLE__
 #else
-	asm volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=\n"
+	__asm volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=\n"
 		 : "=r"(count): [count]"0"(count) : "cc");
 #endif
 }

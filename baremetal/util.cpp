@@ -73,10 +73,9 @@ bool interruptsSupported()
 
 #else
 
-
 void disableIRQ()
 {
-    asm volatile (
+    __asm volatile (
         "mrs r0,cpsr\n"
         "orr r0,r0,#0x80\n"
         "msr cpsr_c,r0\n"
@@ -86,7 +85,7 @@ void disableIRQ()
 
 void enableIRQ()
 {
-    asm volatile (
+    __asm volatile (
         "mrs r0,cpsr\n"
         "bic r0,r0,#0x80\n"
         "msr cpsr_c,r0\n"
@@ -96,7 +95,7 @@ void enableIRQ()
 
 void WFE()
 {
-    asm volatile (
+    __asm volatile (
         "wfe\n"
         "bx lr"
     );
