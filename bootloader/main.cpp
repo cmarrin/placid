@@ -56,8 +56,8 @@ int main(int argc, const char * argv[])
     
     Timer::init();
     
-    uint64_t startTime = Timer::systemTime();
-    uint64_t tickTime = 1000000;
+    int64_t startTime = Timer::systemTime();
+    int64_t tickTime = 1000000;
 
     while (1) {
         if (Timer::systemTime() - startTime > tickTime) {

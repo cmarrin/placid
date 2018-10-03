@@ -58,7 +58,7 @@ public:
 static void timingTest(const char* s)
 {
     // Timing test
-    uint64_t startTime = Timer::systemTime();
+    int64_t startTime = Timer::systemTime();
     volatile uint32_t n = 0;
     for (int i = 0; i < 1000000; ++i) {
         n += i + 234;
@@ -66,10 +66,24 @@ static void timingTest(const char* s)
     Print::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(Timer::systemTime() - startTime));
 }
 
+static void showTime()
+{
+    static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+    
+    RealTime currentTime = Timer::currentTime();
+    Print::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
+        currentTime.hours(), currentTime.minutes(), currentTime.seconds(),
+        days[currentTime.dayOfWeek()],
+        currentTime.month(), currentTime.day(), currentTime.year());
+}
+
 int main()
 {
     Serial::init();
     Timer::init();
+    
+    Timer::setCurrentTime(RealTime(2018, 10, 2, 16, 50));
+    showTime();
 
     Print::printf("\n\nWelcome to the Placid Kernel\n\n");
 

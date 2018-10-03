@@ -61,13 +61,13 @@ void xmodemReceive()
     uint32_t addr = ARMBASE;
     uint32_t state = 0;
     uint32_t crc = 0;
-    uint64_t startTime = Timer::systemTime();
+    int64_t startTime = Timer::systemTime();
     
     uint8_t xstring[256];
 
     while(1)
     {
-        uint64_t curTime = Timer::systemTime();
+        int64_t curTime = Timer::systemTime();
         if ((curTime - startTime) >= 4000000)
         {
             Serial::write(NAK);

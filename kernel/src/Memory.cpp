@@ -166,6 +166,7 @@ unsigned int mmu_section ( unsigned int vadd, unsigned int padd, unsigned int fl
 
 void Memory::setMMUSections(uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap, uint8_t domain, bool cacheable, bool bufferable)
 {
+#ifndef __APPLE__
     uint32_t vaBase = vaddr >> 20;
     uint32_t paBase = paddr >> 20;
     
@@ -179,6 +180,7 @@ void Memory::setMMUSections(uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap,
         section->bits.accessPermission = static_cast<uint32_t>(ap);
         section->bits.sectionTypeIdentifier = 2;
     }
+#endif
 }
 
 void Memory::init()

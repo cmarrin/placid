@@ -71,6 +71,8 @@ struct SystemTimer
 };
 
 TimerCallback* Timer::_cb = nullptr;
+int64_t Timer::_epochOffset = 0;
+
 
 static constexpr uint32_t ARMTimerBase = 0x2000B400;
 static constexpr uint32_t SystemTimerBase = 0x20003000;
@@ -146,18 +148,99 @@ void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
 
 void Timer::usleep(uint32_t us)
 {
-    uint64_t t0 = Timer::systemTime();
+    int64_t t0 = Timer::systemTime();
     while(Timer::systemTime() < t0 + us) ;
 }
 
-uint64_t Timer::systemTime()
+int64_t Timer::systemTime()
 {
 #ifdef __APPLE__
     struct timeval time;
     gettimeofday(&time, NULL);
-    return ((static_cast<uint64_t>(time.tv_sec)) * 1000000) + (static_cast<uint64_t>(time.tv_usec));
+    return ((static_cast<int64_t>(time.tv_sec)) * 1000000) + (static_cast<int64_t>(time.tv_usec));
 #else
-    return (static_cast<uint64_t>(systemTimer().counter1) << 32) | static_cast<uint64_t>(systemTimer().counter0);
+    return (static_cast<int64_t>(systemTimer().counter1) << 32) | static_cast<int64_t>(systemTimer().counter0);
 #endif
 }
 
+void Timer::setCurrentTime(const RealTime& t)
+{
+    _epochOffset = t.usSinceEpoch() - systemTime();
+}
+
+RealTime Timer::currentTime()
+{
+    return RealTime(_epochOffset + systemTime());
+}
+
+// This returns the number of days from 0001-01-01
+static int32_t rataDie(uint32_t y, uint8_t m, uint8_t d)
+{
+    // Rata Die day one is 0001-01-01
+    if (m < 3) {
+        y -= 1;
+        m += 12;
+    }
+    return 365 * y + y / 4 - y / 100 + y / 400 + (153 * m - 457)/5 + d - 306;
+}
+
+RealTime::RealTime(int32_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, uint32_t us)
+{
+    _time = static_cast<int64_t>(rataDie(year, month, day));
+    _time *= 24 * 60 * 60;
+    _time += hour * 60 * 60 + minute * 60 + second;
+    _time *= 1000000;
+}
+
+static void toDate(int32_t& year, uint8_t& month, uint8_t& day, int64_t time)
+{
+    int32_t days = time / 1000000 / 60 / 60 / 24;
+    int32_t z = days + 306;
+    int32_t h = 100 * z - 25;
+    int32_t a = h / 3652425;
+    int32_t b = a - (a / 4);
+    year = static_cast<int32_t>((100 * b + h) / 36525);
+    int32_t c = b + z - 365 * year - year / 4;
+    month = (5 * c + 456) / 153;
+    
+    static constexpr uint16_t daysInMonth[] = { 0, 31, 61, 92, 122, 153, 184, 214, 245, 275, 306, 337 };
+    int32_t index = month - 3;
+    day = c - ((index < 0 || index >= 12) ? 0 : daysInMonth[index]);
+    if (month > 12) {
+        year += 1;
+        month -= 12;
+    }
+}
+
+uint8_t RealTime::day() const
+{
+    int32_t year;
+    uint8_t month;
+    uint8_t day;
+    toDate(year, month, day, _time);
+    return day;
+}
+
+uint8_t RealTime::month() const
+{
+    int32_t year;
+    uint8_t month;
+    uint8_t day;
+    toDate(year, month, day, _time);
+    return month;
+}
+
+int32_t RealTime::year() const
+{
+    int32_t year;
+    uint8_t month;
+    uint8_t day;
+    toDate(year, month, day, _time);
+    return year;
+}
+
+uint8_t RealTime::dayOfWeek() const
+{
+    int64_t days = _time / 1000000 / 60 / 60 / 24;
+    return days % 7;
+}
