@@ -38,17 +38,18 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "Print.h"
 #include "Timer.h"
+#include <cstdlib>
 
 using namespace placid;
 
 // mmap is only ever called like this:
 //      void* addr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0)
-extern "C" void *mmap(void *, size_t length, int prot, int flags, int fd, size_t offset)
+extern "C" void *_mapSegment(size_t length)
 {
     return Memory::mapSegment(length);
 }
 
-extern "C" int munmap(void *addr, size_t length)
+extern "C" int _unmapSegment(void *addr, size_t length)
 {
     return static_cast<int>(Memory::unmapSegment(addr, length));
 }
@@ -227,7 +228,7 @@ void Memory::init()
 void* Memory::mapSegment(size_t size)
 {
     // FIXME: Implement
-    return nullptr;    // FIXME: Implement
+    return (void *) -1;
 
 }
 
@@ -237,32 +238,32 @@ int32_t Memory::unmapSegment(void* addr, size_t size)
     return -1;
 }
 
-//void *operator new(size_t size)
-//{
-//    return malloc(size);
-//}
-//
-//void *operator new[] (size_t size)
-//{
-//    return malloc(size);
-//}
-//
-//void operator delete(void *p) noexcept
-//{
-//    free(p);
-//}
-//
-//void operator delete [ ](void *p) noexcept
-//{
-//    free(p);
-//}
-//
-//void operator delete(void *p, size_t size) noexcept
-//{
-//    free(p);
-//}
-//
-//void operator delete [ ](void *p, size_t size) noexcept
-//{
-//    free(p);
-//}
+void *operator new(size_t size)
+{
+    return malloc(size);
+}
+
+void *operator new[] (size_t size)
+{
+    return malloc(size);
+}
+
+void operator delete(void *p) noexcept
+{
+    free(p);
+}
+
+void operator delete [ ](void *p) noexcept
+{
+    free(p);
+}
+
+void operator delete(void *p, size_t size) noexcept
+{
+    free(p);
+}
+
+void operator delete [ ](void *p, size_t size) noexcept
+{
+    free(p);
+}

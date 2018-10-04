@@ -40,6 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
+#include <vector>
 
 using namespace placid;
 
@@ -90,6 +91,9 @@ int main()
     timingTest("without cache");
     Memory::init();
     timingTest("with cache");
+    
+    Print::printf("Vector test...\n");
+    std::vector<int32_t> vec = {1, 2, 3, 4, 5 };
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     
