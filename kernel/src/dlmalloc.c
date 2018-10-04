@@ -529,6 +529,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define LACKS_TIME_H
 #define LACKS_ERRNO_H
 #define MALLOC_FAILURE_ACTION
+#define USE_LOCKS 0
 
 #include <stddef.h>
 #include <stdint.h>
@@ -542,13 +543,19 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define MAP_PRIVATE     2
 #define MAP_ANONYMOUS   0x20
 
-extern void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset);
-extern int munmap(void *addr, size_t length);
+#define MMAP(s)             _mapSegment(s)
+#define DIRECT_MMAP(s)      _mapSegment(s)
+#define MUNMAP(a, s)        _unmapSegment((a), (s))
+#define MUNMAP(a, s)        _unmapSegment((a), (s))
+
+extern void *_mapSegment(size_t length);
+extern int _unmapSegment(void *addr, size_t length);
 
 // Needed by dlmalloc to get page size
 long sysconf(int name)
 {
-    return 0; //(name == _SC_PAGE_SIZE) ? 1024 : 0;
+    // FIXME: Get this from some system info place
+    return 4096;
 }
 
 /* Version identifier to allow people to support multiple versions */
@@ -702,7 +709,7 @@ long sysconf(int name)
 #if (MORECORE_CONTIGUOUS || defined(WIN32))
 #define DEFAULT_GRANULARITY (0)  /* 0 means to compute in init_mparams */
 #else   /* MORECORE_CONTIGUOUS */
-#define DEFAULT_GRANULARITY ((size_t)64U * (size_t)1024U)
+#define DEFAULT_GRANULARITY (64U * 1024U)
 #endif  /* MORECORE_CONTIGUOUS */
 #endif  /* DEFAULT_GRANULARITY */
 #ifndef DEFAULT_TRIM_THRESHOLD
@@ -1026,7 +1033,7 @@ DLMALLOC_EXPORT size_t dlmalloc_max_footprint(void);
   guarantee that this number of bytes can actually be obtained from
   the system.
 */
-DLMALLOC_EXPORT size_t dlmalloc_footprint_limit();
+DLMALLOC_EXPORT size_t dlmalloc_footprint_limit(void);
 
 /*
   malloc_set_footprint_limit();
@@ -2862,13 +2869,13 @@ static size_t traverse_and_check(mstate m);
 #if defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
 #define compute_tree_index(S, I)\
 {\
-  unsigned int X = S >> TREEBIN_SHIFT;\
+  unsigned int X = (unsigned int) S >> TREEBIN_SHIFT;\
   if (X == 0)\
     I = 0;\
   else if (X > 0xFFFF)\
     I = NTREEBINS-1;\
   else {\
-    unsigned int K = (unsigned) sizeof(X)*__CHAR_BIT__ - 1 - (unsigned) __builtin_clz(X); \
+    unsigned int K = (unsigned int) sizeof(X)*__CHAR_BIT__ - 1 - (unsigned) __builtin_clz(X); \
     I =  (bindex_t)((K << 1) + ((S >> (K + (TREEBIN_SHIFT-1)) & 1)));\
   }\
 }
@@ -3138,7 +3145,12 @@ static int init_mparams(void) {
 
 #ifndef WIN32
     psize = malloc_getpagesize;
-    gsize = ((DEFAULT_GRANULARITY != 0)? DEFAULT_GRANULARITY : psize);
+    
+#if DEFAULT_GRANULARITY == 0
+    gsize = psize;
+#else
+    gsize =  psize;
+#endif
 #else /* WIN32 */
     {
       SYSTEM_INFO system_info;
