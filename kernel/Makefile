@@ -44,7 +44,7 @@ OBJCOPY = $(TOOLCHAIN)-objcopy
 LIBS = ../baremetal/build/baremetal.a
 INCLUDES = -I../baremetal
 
-ASFLAGS = --warn --fatal-warnings -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp
+ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
 CFLAGS = $(INCLUDES) -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 LDFLAGS =
@@ -105,7 +105,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
-	$(AS) $(ASFLAGS) -c $< -o $@
+	$(CC) $(ASFLAGS) -c $< -o $@
 
 $(DIVOBJS): $(SRCDIR)/lib1funcs.asm
 	$(CC) $(LIB1FUNCSFLAGS) -o $@ -DL$(basename $(notdir $@)) -c $(SRCDIR)/lib1funcs.asm

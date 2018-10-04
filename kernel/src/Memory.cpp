@@ -35,12 +35,23 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Memory.h"
 
+#include "util.h"
 #include "Print.h"
 #include "Timer.h"
 
 using namespace placid;
 
-uint32_t Memory::_kernelTTB[2] = { KernelTT, KernelTT };
+// mmap is only ever called like this:
+//      void* addr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0)
+extern "C" void *mmap(void *, size_t length, int prot, int flags, int fd, size_t offset)
+{
+    return Memory::mapSegment(length);
+}
+
+extern "C" int munmap(void *addr, size_t length)
+{
+    return static_cast<int>(Memory::unmapSegment(addr, length));
+}
 
 inline volatile uint32_t& rawAddr(uint32_t r)
 {
@@ -137,21 +148,29 @@ void Memory::setDomains(uint32_t domain)
 
 typedef union {
     struct {
-        unsigned int sectionTypeIdentifier : 2; // Must be 2 (b10)
-        unsigned int bufferable : 1;
-        unsigned int cacheable : 1;
-        unsigned int executeNever : 1;
-        unsigned int domain : 4;
-        unsigned int present : 1;
-        unsigned int accessPermission : 2;
-        unsigned int typeExtension : 3;
-        unsigned int apx : 1;
-        unsigned int shared : 1;
-        unsigned int notGlobal : 1;
-        unsigned int mustBeZero : 1;
-        unsigned int notSecure : 1;
-        unsigned int baseAddress : 12;
-    } bits;
+        uint32_t sectionTypeIdentifier : 2; // Must be 2 (b10)
+        uint32_t bufferable : 1;
+        uint32_t cacheable : 1;
+        uint32_t executeNever : 1;
+        uint32_t domain : 4;
+        uint32_t present : 1;
+        uint32_t accessPermission : 2;
+        uint32_t typeExtension : 3;
+        uint32_t apx : 1;
+        uint32_t shared : 1;
+        uint32_t notGlobal : 1;
+        uint32_t mustBeZero : 1;
+        uint32_t notSecure : 1;
+        uint32_t baseAddress : 12;
+    } section;
+    struct {
+        uint32_t ttType : 2;
+        uint32_t : 2;
+        uint32_t alwaysOne : 1;
+        uint32_t domain : 4;
+        uint32_t : 1;
+        uint32_t baseAddress : 22;
+    } page;
     uint32_t raw;
 } SectionPageTable;
 
@@ -164,44 +183,60 @@ unsigned int mmu_section ( unsigned int vadd, unsigned int padd, unsigned int fl
     return(0);
 }
 
-void Memory::setMMUSections(uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap, uint8_t domain, bool cacheable, bool bufferable)
+void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap, uint8_t domain, bool cacheable, bool bufferable)
 {
 #ifndef __APPLE__
     uint32_t vaBase = vaddr >> 20;
     uint32_t paBase = paddr >> 20;
     
     for (uint32_t i = 0; i < num; ++i) {
-        SectionPageTable* section = reinterpret_cast<SectionPageTable*>(_kernelTTB[0] + ((vaBase + i) << 2));
+        SectionPageTable* section = reinterpret_cast<SectionPageTable*>(ttb + ((vaBase + i) << 2));
         section->raw = 0;
-        section->bits.baseAddress = paBase + i;
-        section->bits.domain = domain;
-        section->bits.cacheable = cacheable ? 1 : 0;
-        section->bits.bufferable = bufferable ? 1 : 0;
-        section->bits.accessPermission = static_cast<uint32_t>(ap);
-        section->bits.sectionTypeIdentifier = 2;
+        section->section.baseAddress = paBase + i;
+        section->section.domain = domain;
+        section->section.cacheable = cacheable ? 1 : 0;
+        section->section.bufferable = bufferable ? 1 : 0;
+        section->section.accessPermission = static_cast<uint32_t>(ap);
+        section->section.sectionTypeIdentifier = 2;
     }
 #endif
 }
 
 void Memory::init()
 {
-    // Map the kernel memory to the physical memory
-    setMMUSections(0x00000000, 0x00000000, 4096, AP::UserNoAccess, 0, true, true);
+    // Invalidate all memory
+    memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
+
+    // Map the kernel memory (the first section) to the physical memory
+    setMMUSectionDescriptors(FirstLevelTTB, 0x00000000, 0x00000000, 1, AP::UserNoAccess, 0, true, true);
 
     // Map the peripherals and make them non-cacheable
-    setMMUSections(0x20000000, 0x20000000, 256, AP::UserNoAccess, 0, false, false);
+    setMMUSectionDescriptors(FirstLevelTTB, 0x20000000, 0x20000000, 256, AP::UserNoAccess, 0, false, false);
 
     // Init the MMU and caching
     invalidateCaches();
     invalidateTLBs();
     setDomains(0xffffffff);
-    setTTB<0>(_kernelTTB[0]);
-    setTTB<1>(_kernelTTB[0]);
+    setTTB<0>(FirstLevelTTB);
+    setTTB<1>(FirstLevelTTB);
     
     enableMMU();
     invalidateTLBs();
 }
-	
+
+void* Memory::mapSegment(size_t size)
+{
+    // FIXME: Implement
+    return nullptr;    // FIXME: Implement
+
+}
+
+int32_t Memory::unmapSegment(void* addr, size_t size)
+{
+    // FIXME: Implement
+    return -1;
+}
+
 //void *operator new(size_t size)
 //{
 //    return malloc(size);

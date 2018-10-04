@@ -542,15 +542,8 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define MAP_PRIVATE     2
 #define MAP_ANONYMOUS   0x20
 
-void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset)
-{
-    return 0;
-}
-
-int munmap(void *addr, size_t length)
-{
-    return 0;
-}
+extern void *mmap(void *addr, size_t length, int prot, int flags, int fd, size_t offset);
+extern int munmap(void *addr, size_t length);
 
 // Needed by dlmalloc to get page size
 long sysconf(int name)

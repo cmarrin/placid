@@ -36,6 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 // Adapted from vectors.S from David Welch
 // Copyright (c) 2012 David Welch dwelch@dwelch.com
 
+#include "stackAddrs.h"
+
 .global _start
 _start:
     // Vector table
@@ -80,20 +82,26 @@ reset:
     stmia r1!,{r2,r3,r4,r5,r6,r7,r8,r9}
 
 
+    // The stack addresses here are temporary and will get reset when the memory system starts up
     // Set IRQ mode with FIQ and IRQ disabled and set the IRQ stack
     mov r0,#0xD2
     msr cpsr_c,r0
-    mov sp,#0x8000
+    mov sp,#_IRQStack
 
     // Set FIQ mode with FIQ and IRQ disabled and set the FIQ stack
     mov r0,#0xD1
     msr cpsr_c,r0
-    mov sp,#0x4000
+    mov sp,#_FIQStack
+
+    // Set Abort mode with FIQ and IRQ disabled and set the Abort stack
+    mov r0,#0xD7
+    msr cpsr_c,r0
+    mov sp,#_AbortStack
 
     // Set supervisor mode with FIQ and IRQ disabled and set the supervisor stack
     mov r0,#0xD3
     msr cpsr_c,r0
-    mov sp,#0x8000000
+    mov sp,#_SVCStack
 
     // Set supervisor mode with IRQ enabled and FIQ disabled
     ;@ SVC MODE, IRQ ENABLED, FIQ DIS
