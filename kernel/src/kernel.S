@@ -99,11 +99,6 @@ halt:
 	wfe
 	b	halt
 
-.global GET32
-GET32:
-    ldr r0,[r0]
-    bx lr
-
 .global BRANCHTO
 BRANCHTO:
     bx r0

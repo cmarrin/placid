@@ -53,12 +53,6 @@ void PUT8(unsigned int addr, unsigned int value)
     printf("PUT8:[%d] <= %d\n", addr, value);
 }
 
-unsigned int GET32(unsigned int addr)
-{
-    printf("GET32:[%d]\n", addr);
-    return 0;
-}
-
 void BRANCHTO(unsigned int addr)
 {
     printf("BRANCHTO: => %d\n", addr);
@@ -102,21 +96,21 @@ void WFE()
 }
 
 extern "C" {
-unsigned long long __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
-        unsigned long long answer = 0;
+uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
+        uint64_t answer = 0;
 
         unsigned int i;
         for (i = 0; i < 32; i++) {
                 if ((divisor << (31 - i)) >> (31 - i) == divisor) {
                         if (value >= divisor << (31 - i)) {
                                 value -= divisor << (31 - i);
-                                answer |= (unsigned long long)(1 << (31 - i));
+                                answer |= (uint64_t)(1 << (31 - i));
                                 if (value == 0) break;
                         } 
                 }
         }
 
-        answer |= (unsigned long long)value << 32;
+        answer |= (uint64_t)value << 32;
         return answer;
 }
 
@@ -124,22 +118,40 @@ unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
         return (unsigned int)__aeabi_uidivmod(value, divisor);
 }
 
-unsigned long long __aeabi_uldivmod(unsigned long long value, unsigned long long divisor) {
-        unsigned long long answer = 0;
+uint64_t __aeabi_uldivmod(uint64_t value, uint64_t divisor)
+{
+    uint64_t answer = 0;
 
-        unsigned int i;
-        for (i = 0; i < 32; i++) {
-                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
-                        if (value >= divisor << (31 - i)) {
-                                value -= divisor << (31 - i);
-                                answer |= (unsigned long long)(1 << (31 - i));
-                                if (value == 0) break;
-                        } 
-                }
+    unsigned int i;
+    for (i = 0; i < 32; i++) {
+        if ((divisor << (31 - i)) >> (31 - i) == divisor) {
+            if (value >= divisor << (31 - i)) {
+                value -= divisor << (31 - i);
+                answer |= (uint64_t)(1 << (31 - i));
+                if (value == 0) break;
+            } 
         }
+    }
 
-        answer |= (unsigned long long)value << 32;
-        return answer;
+    answer |= (uint64_t)value << 32;
+    return answer;
+}
+
+uint64_t __aeabi_ldivmod(int64_t numerator, int64_t denominator)
+{
+    bool sign = false;
+    if (numerator < 0) {
+        numerator = - numerator;
+        sign = true;
+    }
+
+    if (denominator < 0) {
+        denominator = - denominator;
+        sign = !sign;
+    }
+    
+    uint32_t result = __aeabi_uidiv(static_cast<uint64_t>(numerator), static_cast<uint64_t>(denominator));
+    return static_cast<int64_t>(result) * (sign ? -1 : 1);
 }
 
 void abort()

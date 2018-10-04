@@ -49,7 +49,6 @@ void WFE(void);
 extern "C" {
 #endif
 void PUT8 ( unsigned int, unsigned int );
-unsigned int GET32 ( unsigned int );
 void BRANCHTO ( unsigned int );
 bool interruptsSupported(void);
 
