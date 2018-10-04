@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .global _start
 _start:
+    // Vector table
     ldr pc,reset_handler
     ldr pc,undefined_handler
     ldr pc,swi_handler
@@ -65,6 +66,12 @@ reset:
     mov r0,#0x40000000
     fmxr fpexc,r0
 
+    // The vector table (above) is at 0x8000, the starting
+    // location of the loaded binary. The CPU expects them to
+    // be at 0x0000, so we need to move them. There are actually
+    // 16 words to move (the instructions moving an address into
+    // the pc and the addresses themselves. So we move them in
+    // 2 sets of 8.
     mov r0,#0x8000
     mov r1,#0x0000
     ldmia r0!,{r2,r3,r4,r5,r6,r7,r8,r9}
