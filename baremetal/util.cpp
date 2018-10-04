@@ -43,8 +43,6 @@ using namespace placid;
 #ifdef __APPLE__
 #include <stdio.h>
 #include <sys/time.h>
-#undef vsnprintf
-#undef snprintf
 
 extern "C" {
 
