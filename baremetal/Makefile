@@ -24,6 +24,7 @@ SRC =	sdcard.cpp \
 		SDFS.cpp \
 		Serial.cpp \
 		Timer.cpp \
+		ldivmod.S \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)

@@ -35,9 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdarg.h>
+#include <cstdint>
+#include <cstddef>
+#include <cstdarg>
+#include <cstdlib>
 
 static constexpr uint32_t ARMBASE = 0x8000;
 
@@ -51,6 +52,13 @@ extern "C" {
 void PUT8 ( unsigned int, unsigned int );
 void BRANCHTO ( unsigned int );
 bool interruptsSupported(void);
+
+typedef struct { uint64_t rem; uint64_t quot; } ulldiv_t;
+
+uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor);
+unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor);
+ulldiv_t __aeabi_uldivmod(uint64_t value, uint64_t divisor);
+lldiv_t __aeabi_ldivmod(int64_t numerator, int64_t denominator);
 
 void* memset(void* p, int value, size_t n);
 void* memcpy(void* dst, const void* src, size_t n);

@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "BootShell.h"
 #include "GPIO.h"
 #include "Memory.h"
+#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 #include <vector>
@@ -82,15 +83,15 @@ int main()
     Serial::init();
     Timer::init();
     
+    Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
+
+    timingTest("Memory perf without cache");
+    Memory::init();
+    timingTest("Memory perf with cache");
+    
     Timer::setCurrentTime(RealTime(2018, 10, 5, 10, 19));
     showTime();
 
-    Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
-
-    timingTest("without cache");
-    Memory::init();
-    timingTest("with cache");
-    
     Serial::printf("Vector test: ");
     std::vector<int32_t> vec = {1, 2, 3, 4, 5 };
     for (size_t i = 5; i < 10; ++i) {
