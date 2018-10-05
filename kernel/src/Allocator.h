@@ -92,7 +92,6 @@ namespace placid {
 
         static Allocator& kernelAllocator() { return _kernelAllocator; }
 
-    private:
         static constexpr size_t MinAllocSize = 16 * sizeof(uintptr_t) / 4;
         static constexpr size_t MinSplitSize = 32;
         static constexpr size_t BlockSize = 4096;
@@ -122,6 +121,7 @@ namespace placid {
         static_assert(sizeof(FreeChunk) < MinAllocSize, "MinAllocSize too small");
         static_assert(sizeof(FreeChunk) < MinSplitSize, "MinSplitSize too small");
 
+    private:
         void removeFromFreeList(FreeChunk*);
         void splitFreeBlock(FreeChunk*, size_t size);
         void addToFreeList(void*, size_t size);

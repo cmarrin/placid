@@ -150,7 +150,7 @@ namespace placid {
             virtual int32_t unmapSegment(void* addr, size_t size) override;
 
         private:
-            static constexpr uint32_t PageBitmapSize = (KernelHeapSize / PageSize + 7) / 8;
+            static constexpr uint32_t PageBitmapSize = KernelHeapSize / PageSize;
             typedef std::bitset<PageBitmapSize> PageBitmap;
 
             bool findFreeBits(uint32_t pages, uint32_t& startBit);

@@ -35,7 +35,24 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Allocator.h"
 
+#include "Serial.h"
+
 using namespace placid;
+
+static inline bool checkFreeList(Allocator::FreeChunk* list)
+{
+    if (list) {
+        assert(list->prev == nullptr);
+    }
+    while(list) {
+        assert(list->status() == Allocator::FreeChunk::Status::Free);
+        if (list->next) {
+            assert(list->next->prev == list);
+        }
+        list = list->next;
+    }
+    return true;
+}
 
 Allocator Allocator::_kernelAllocator;
 
@@ -45,37 +62,54 @@ Allocator::Allocator()
 
 void Allocator::removeFromFreeList(FreeChunk* chunk)
 {
+    assert(checkFreeList(_freeList));
     if (chunk == _freeList) {
         _freeList = chunk->next;
-        _freeList->prev = nullptr;
+        if (_freeList) {
+            _freeList->prev = nullptr;
+        }
     } else {
         chunk->prev->next = chunk->next;
         if (chunk->next) {
             chunk->next->prev = chunk->prev;
         }
     }
+    assert(checkFreeList(_freeList));
 }
 
 void Allocator::splitFreeBlock(FreeChunk* chunk, size_t size)
 {
     // Remove a size bytes section of the passed block from the free list
     // and leave the rest
+    assert(checkFreeList(_freeList));
     FreeChunk* newFreeChunk = reinterpret_cast<FreeChunk*>(reinterpret_cast<uint8_t*>(chunk) + size);
     newFreeChunk->setSize(chunk->size() - size);
     newFreeChunk->setStatus(Chunk::Status::Free);
+    if (chunk->next) {
+        chunk->next->prev = newFreeChunk;
+    }
     newFreeChunk->next = chunk->next;
     newFreeChunk->prev = chunk->prev;
+    if (chunk == _freeList) {
+        _freeList = newFreeChunk;
+    }
+    assert(checkFreeList(_freeList));
 }
 
 void Allocator::addToFreeList(void* mem, size_t size)
 {
     // FIXME: For now add to the head, but there might be better approaches
+    assert(checkFreeList(_freeList));
     FreeChunk* chunk = reinterpret_cast<FreeChunk*>(mem);
     chunk->setSize(size);
     chunk->setStatus(Chunk::Status::Free);
+    if (_freeList) {
+        _freeList->prev = chunk;
+    }
     chunk->next = _freeList;
     chunk->prev = nullptr;
     _freeList = chunk;
+    assert(checkFreeList(_freeList));
 }
 
 bool Allocator::alloc(size_t size, void*& mem)
@@ -94,10 +128,12 @@ bool Allocator::alloc(size_t size, void*& mem)
         // Should we split or just use it?
         if (size + MinSplitSize > entry->size()) {
             removeFromFreeList(entry);
-            mem = entry;
-            return true;
+        } else {
+            splitFreeBlock(entry, size);
         }
-        splitFreeBlock(entry, size);
+        mem = entry;
+        return true;
+        
     }
     
     // No free entry found, alloc a new block
