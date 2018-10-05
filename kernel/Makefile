@@ -57,9 +57,9 @@ SRCDIR = src
 BUILDDIR = build
 
 SRC =	kernel.S \
-        dlmalloc.c \
         main.cpp \
         printf.cpp \
+		Allocator.cpp \
 		BootShell.cpp \
 		Memory.cpp \
 		Shell.cpp \

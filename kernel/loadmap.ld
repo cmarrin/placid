@@ -42,6 +42,13 @@ SECTIONS
 {
     .text : { *(.text*) } > ram
     .rodata : { *(.rodata*) } > ram
+    .init_array : {
+        __init_start = .;
+
+        *(.init_array*)
+
+        __init_end = .;
+    } > ram
     .data : { *(.data*) } > ram
     .bss : { *(.bss*) } > ram
 }

@@ -40,19 +40,17 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 #include <cstdlib>
 
+extern void (*__init_start) (void);
+extern void (*__init_end) (void);
+
 using namespace placid;
 
-// mmap is only ever called like this:
-//      void* addr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0)
-extern "C" void *_mapSegment(size_t length)
-{
-    return Memory::mapSegment(length);
-}
+#ifdef __APPLE__
+// Test kernel heap memory
+uint8_t _kernelHeapMemory[KernelHeapSize];
+#endif
 
-extern "C" int _unmapSegment(void *addr, size_t length)
-{
-    return static_cast<int>(Memory::unmapSegment(addr, length));
-}
+Memory::KernelHeap Memory::_kernelHeap;
 
 inline volatile uint32_t& rawAddr(uint32_t r)
 {
@@ -205,6 +203,13 @@ void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t pad
 
 void Memory::init()
 {
+#ifndef __APPLE__
+    // call construtors of static objects
+    for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
+    {
+        (**pFunc) ();
+    }
+
     // Invalidate all memory
     memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
 
@@ -223,47 +228,84 @@ void Memory::init()
     
     enableMMU();
     invalidateTLBs();
+#endif
 }
 
-void* Memory::mapSegment(size_t size)
+bool Memory::mapSegment(size_t size, void*& addr)
 {
-    // FIXME: Implement
-    return (void *) -1;
-
+    return _kernelHeap.mapSegment(size, addr);
 }
 
 int32_t Memory::unmapSegment(void* addr, size_t size)
 {
-    // FIXME: Implement
+    return _kernelHeap.unmapSegment(addr, size);
+}
+
+bool Memory::KernelHeap::findFreeBits(uint32_t pages, uint32_t& startBit)
+{
+    if (pages == 0) {
+        return false;
+    }
+    
+    uint32_t firstBit = 0;
+    bool keepTrying = true;
+    for (firstBit = 0; firstBit < _pageBitmap.size(); ++firstBit) {
+        if (!_pageBitmap[firstBit]) {
+            // found a bit, see if there are enough
+            if (pages == 1) {
+                keepTrying = false;
+                break;
+            }
+            
+            keepTrying = false;
+            for (uint32_t n = 1; n < pages; ++n) {
+                if (_pageBitmap[firstBit + n]) {
+                    // not enough
+                    firstBit += n + 1;
+                    keepTrying = true;
+                    break;
+                }
+            }
+            if (!keepTrying) {
+                break;
+            }
+        }
+    }
+    if (keepTrying) {
+        return false;
+    }
+    startBit = firstBit;
+    return true;
+}
+
+void Memory::KernelHeap::setFreeBits(uint32_t startBit, uint32_t pages)
+{
+    for (uint32_t i = 0; i < pages; ++i) {
+        _pageBitmap[startBit + i] = true;
+    }
+}
+
+bool Memory::KernelHeap::mapSegment(size_t size, void*& addr)
+{
+    // Find a free area in the bitmap that is big enough
+    uint32_t pages = (static_cast<uint32_t>(size) + PageSize - 1) / PageSize;
+    uint32_t startBit;
+    if (!findFreeBits(pages, startBit)) {
+        return false;
+    }
+    
+    // Set the bits needed
+    setFreeBits(startBit, pages);
+    
+#ifdef __APPLE__
+    addr = _kernelHeapMemory + (startBit * PageSize);
+#else
+    addr = reinterpret_cast<void*>(KernelHeapStart + (startBit * PageSize));
+#endif
+    return true;
+}
+
+int32_t Memory::KernelHeap::unmapSegment(void* addr, size_t size)
+{
     return -1;
-}
-
-void *operator new(size_t size)
-{
-    return malloc(size);
-}
-
-void *operator new[] (size_t size)
-{
-    return malloc(size);
-}
-
-void operator delete(void *p) noexcept
-{
-    free(p);
-}
-
-void operator delete [ ](void *p) noexcept
-{
-    free(p);
-}
-
-void operator delete(void *p, size_t size) noexcept
-{
-    free(p);
-}
-
-void operator delete [ ](void *p, size_t size) noexcept
-{
-    free(p);
 }

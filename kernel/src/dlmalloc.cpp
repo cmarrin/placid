@@ -522,6 +522,9 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 */
 
 // Added by cmarrin for ARM bare metal
+//#define DEBUG 1
+//#define ABORT_ON_ASSERT_FAILURE 1
+
 #define LACKS_SYS_MMAN_H
 #define HAVE_MMAP 1
 #define HAVE_MORECORE 0
@@ -533,6 +536,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 
 #include <stddef.h>
 #include <stdint.h>
+#include "Print.h"
 
 #define EINVAL 1
 #define ENOMEM 2
@@ -552,7 +556,7 @@ extern void *_mapSegment(size_t length);
 extern int _unmapSegment(void *addr, size_t length);
 
 // Needed by dlmalloc to get page size
-long sysconf(int name)
+extern "C" long sysconf(int name)
 {
     // FIXME: Get this from some system info place
     return 4096;
@@ -4579,6 +4583,8 @@ static void* tmalloc_small(mstate m, size_t nb) {
 #if !ONLY_MSPACES
 
 void* dlmalloc(size_t bytes) {
+
+placid::Print::printf("***** dlmalloc:enter, size=%d\n", bytes);
   /*
      Basic algorithm:
      If a small request (< 256 bytes minus per-chunk overhead):
@@ -4615,22 +4621,33 @@ void* dlmalloc(size_t bytes) {
       nb = (bytes < MIN_REQUEST)? MIN_CHUNK_SIZE : pad_request(bytes);
       idx = small_index(nb);
       smallbits = gm->smallmap >> idx;
+placid::Print::printf("***** dlmalloc:3.1\n");
 
       if ((smallbits & 0x3U) != 0) { /* Remainderless fit to a smallbin. */
+placid::Print::printf("***** dlmalloc:3.2\n");
         mchunkptr b, p;
         idx += ~smallbits & 1;       /* Uses next bin if idx empty */
+placid::Print::printf("***** dlmalloc:3.3\n");
         b = smallbin_at(gm, idx);
         p = b->fd;
+placid::Print::printf("***** dlmalloc:3.3.2 (0x%08x, 0x%08x, 0x%08x, 0x%08x\n", p, chunksize(p), idx, small_index2size(idx));
         assert(chunksize(p) == small_index2size(idx));
+placid::Print::printf("***** dlmalloc:3.3.3 (%d, %d, %d, %d\n", gm, b, p, idx);
         unlink_first_small_chunk(gm, b, p, idx);
+placid::Print::printf("***** dlmalloc:3.3.4\n");
         set_inuse_and_pinuse(gm, p, small_index2size(idx));
+placid::Print::printf("***** dlmalloc:3.3.5\n");
         mem = chunk2mem(p);
+placid::Print::printf("***** dlmalloc:3.3.6\n");
         check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:3.3.7\n");
         goto postaction;
       }
 
       else if (nb > gm->dvsize) {
+placid::Print::printf("***** dlmalloc:3.4\n");
         if (smallbits != 0) { /* Use chunk in next nonempty smallbin */
+placid::Print::printf("***** dlmalloc:3.5\n");
           mchunkptr b, p, r;
           size_t rsize;
           bindex_t i;
@@ -4643,6 +4660,7 @@ void* dlmalloc(size_t bytes) {
           unlink_first_small_chunk(gm, b, p, i);
           rsize = small_index2size(i) - nb;
           /* Fit here cannot be remainderless if 4byte sizes */
+placid::Print::printf("***** dlmalloc:3.6\n");
           if (SIZE_T_SIZE != 4 && rsize < MIN_CHUNK_SIZE)
             set_inuse_and_pinuse(gm, p, small_index2size(i));
           else {
@@ -4651,13 +4669,18 @@ void* dlmalloc(size_t bytes) {
             set_size_and_pinuse_of_free_chunk(r, rsize);
             replace_dv(gm, r, rsize);
           }
+placid::Print::printf("***** dlmalloc:3.7\n");
           mem = chunk2mem(p);
+placid::Print::printf("***** dlmalloc:3.8\n");
           check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:3.9\n");
           goto postaction;
         }
 
         else if (gm->treemap != 0 && (mem = tmalloc_small(gm, nb)) != 0) {
+placid::Print::printf("***** dlmalloc:3.10\n");
           check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:3.11\n");
           goto postaction;
         }
       }
@@ -4668,11 +4691,14 @@ void* dlmalloc(size_t bytes) {
       nb = pad_request(bytes);
       if (gm->treemap != 0 && (mem = tmalloc_large(gm, nb)) != 0) {
         check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:3.12\n");
         goto postaction;
       }
     }
 
+placid::Print::printf("***** dlmalloc:4\n");
     if (nb <= gm->dvsize) {
+placid::Print::printf("***** dlmalloc:4.1\n");
       size_t rsize = gm->dvsize - nb;
       mchunkptr p = gm->dv;
       if (rsize >= MIN_CHUNK_SIZE) { /* split dv */
@@ -4682,32 +4708,41 @@ void* dlmalloc(size_t bytes) {
         set_size_and_pinuse_of_inuse_chunk(gm, p, nb);
       }
       else { /* exhaust dv */
+placid::Print::printf("***** dlmalloc:4.2\n");
         size_t dvs = gm->dvsize;
         gm->dvsize = 0;
         gm->dv = 0;
         set_inuse_and_pinuse(gm, p, dvs);
       }
+placid::Print::printf("***** dlmalloc:4.3\n");
       mem = chunk2mem(p);
       check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:4.4\n");
       goto postaction;
     }
 
     else if (nb < gm->topsize) { /* Split top */
+placid::Print::printf("***** dlmalloc:4.5\n");
       size_t rsize = gm->topsize -= nb;
       mchunkptr p = gm->top;
       mchunkptr r = gm->top = chunk_plus_offset(p, nb);
       r->head = rsize | PINUSE_BIT;
       set_size_and_pinuse_of_inuse_chunk(gm, p, nb);
+placid::Print::printf("***** dlmalloc:4.6\n");
       mem = chunk2mem(p);
       check_top_chunk(gm, gm->top);
       check_malloced_chunk(gm, mem, nb);
+placid::Print::printf("***** dlmalloc:4.7\n");
       goto postaction;
     }
 
+placid::Print::printf("***** dlmalloc:4.8\n");
     mem = sys_alloc(gm, nb);
+placid::Print::printf("***** dlmalloc:4.9\n");
 
   postaction:
     POSTACTION(gm);
+placid::Print::printf("***** dlmalloc:5, returned 0x%08x\n", mem);
     return mem;
   }
 

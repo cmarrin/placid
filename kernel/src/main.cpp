@@ -92,8 +92,16 @@ int main()
     Memory::init();
     timingTest("with cache");
     
-    Print::printf("Vector test...\n");
+    Print::printf("Vector test: ");
     std::vector<int32_t> vec = {1, 2, 3, 4, 5 };
+    for (size_t i = 5; i < 10; ++i) {
+        vec.push_back(static_cast<int32_t>(i + 1));
+    }
+    
+    for (size_t i = 0; i < vec.size(); ++i) {
+        Print::printf("%d, ", vec[i]);
+    }
+    Print::printf("\n");
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     

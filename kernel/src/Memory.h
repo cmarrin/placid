@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "stackAddrs.h"
 #include <stddef.h>
 #include <stdint.h>
+#include <bitset>
 
 namespace placid {
 
@@ -70,14 +71,19 @@ namespace placid {
     //      2) SVC stack and heap occupy whole pages (4096 bytes) if a page fault occurs in either and
     //      the adjacent page is allocated to the other, a kernel panic is generated
     //
-    static constexpr uint32_t FirstLevelTTB = 0x4000;
-    static constexpr uint32_t SecondLevelTTB = 0xc00;
     static constexpr uint32_t IRQStack = _IRQStack;
     static constexpr uint32_t FIQStack = _FIQStack;
     static constexpr uint32_t AbortStack = _AbortStack;
-    static constexpr uint32_t HeapStart = 0x80000;
     static constexpr uint32_t SVCStack = _SVCStack;
+
+    static constexpr uint32_t FirstLevelTTB = 0x4000;
+    static constexpr uint32_t SecondLevelTTB = 0xc00;
+
+    static constexpr uint32_t KernelHeapStart = 0x80000;
+    static constexpr uint32_t KernelHeapSize = SVCStack - KernelHeapStart;
     
+    static constexpr uint32_t PageSize = 4096;
+
     class Memory
     {
     public:
@@ -94,8 +100,8 @@ namespace placid {
         enum class Bufferable { No, Yes };
             
         static void init();
-        
-        static void* mapSegment(size_t size);
+
+        static bool mapSegment(size_t size, void*&);
         static int32_t unmapSegment(void* addr, size_t size);
         
     private:        
@@ -121,6 +127,39 @@ namespace placid {
             : "r0" );
         #endif
         }
+        
+        class Heap
+        {
+        public:
+            virtual bool mapSegment(size_t size, void*&) = 0;
+            virtual int32_t unmapSegment(void* addr, size_t size) = 0;
+        };
+        
+        // KernelHeap
+        //
+        // User processes use a heap which allocates virtual memory pages
+        // in their own process space. The kernel needs a "real" heap,
+        // one that allocates real memory for use by things like 
+        // translation tables and heap segment tables.
+        class KernelHeap : public Heap
+        {
+        public:
+            KernelHeap() { _pageBitmap.reset(); }
+        
+            virtual bool mapSegment(size_t size, void*&) override;
+            virtual int32_t unmapSegment(void* addr, size_t size) override;
+
+        private:
+            static constexpr uint32_t PageBitmapSize = (KernelHeapSize / PageSize + 7) / 8;
+            typedef std::bitset<PageBitmapSize> PageBitmap;
+
+            bool findFreeBits(uint32_t pages, uint32_t& startBit);
+            void setFreeBits(uint32_t startBit, uint32_t pages);
+            
+            PageBitmap _pageBitmap;
+        };
+        
+        static KernelHeap _kernelHeap;
     };
     
 }
