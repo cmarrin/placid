@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "BootShell.h"
 #include "GPIO.h"
 #include "Memory.h"
-#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 #include <vector>
@@ -64,7 +63,7 @@ static void timingTest(const char* s)
     for (int i = 0; i < 1000000; ++i) {
         n += i + 234;
     }
-    Print::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(Timer::systemTime() - startTime));
+    Serial::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(Timer::systemTime() - startTime));
 }
 
 static void showTime()
@@ -72,7 +71,7 @@ static void showTime()
     static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
     RealTime currentTime = Timer::currentTime();
-    Print::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
+    Serial::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
         currentTime.hours(), currentTime.minutes(), currentTime.seconds(),
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year());
@@ -83,25 +82,25 @@ int main()
     Serial::init();
     Timer::init();
     
-    Timer::setCurrentTime(RealTime(2018, 10, 2, 16, 50));
+    Timer::setCurrentTime(RealTime(2018, 10, 5, 10, 19));
     showTime();
 
-    Print::printf("\n\nWelcome to the Placid Kernel\n\n");
+    Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
 
     timingTest("without cache");
     Memory::init();
     timingTest("with cache");
     
-    Print::printf("Vector test: ");
+    Serial::printf("Vector test: ");
     std::vector<int32_t> vec = {1, 2, 3, 4, 5 };
     for (size_t i = 5; i < 10; ++i) {
         vec.push_back(static_cast<int32_t>(i + 1));
     }
     
     for (size_t i = 0; i < vec.size(); ++i) {
-        Print::printf("%d, ", vec[i]);
+        Serial::printf("%d, ", vec[i]);
     }
-    Print::printf("\n");
+    Serial::printf("\n");
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     

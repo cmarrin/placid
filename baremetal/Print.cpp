@@ -222,22 +222,6 @@ bool Print::toString(char* buf, uint64_t v, uint8_t base)
     return true;
 }
 
-class CharPrinter : public Print::Printer
-{
-    virtual int32_t outChar(char c) override { putch(c); return 1; }
-};
-
-int32_t Print::printf(const char* format, ...)
-{
-    va_list va;
-    va_start(va, format);
-    
-    CharPrinter p;
-    int32_t result = vsnprintCore(p, format, va);
-    va_end(va);
-    return result;
-}
-
 class BufferPrinter : public Print::Printer
 {
     public:

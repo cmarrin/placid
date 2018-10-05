@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "sdcard.h"
 #include "util.h"
-#include "Print.h"
+#include "Serial.h"
 #include "Timer.h"
 
 using namespace placid;
@@ -46,7 +46,7 @@ static int32_t readRaw(char* buf, uint64_t sectorAddr, uint32_t sectors)
 {
     int r = sdTransferBlocks(sectorAddr * 512, sectors, reinterpret_cast<uint8_t*>(buf), 0);
     if (r != 0) {
-        Print::printf("*** Disk Read Error: return code=%d\n", r);
+        Serial::printf("*** Disk Read Error: return code=%d\n", r);
         return -r;
     }
     return static_cast<int32_t>(sectors);

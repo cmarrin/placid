@@ -35,7 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 #include "Mailbox.h"
-#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -50,9 +49,9 @@ int main(int argc, const char * argv[])
 {
     Serial::init();
         
-    Print::printf("\n\nPlacid Bootloader v0.1\n\n");
-    Print::printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    Print::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
+    Serial::printf("\n\nPlacid Bootloader v0.1\n\n");
+    Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
+    Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     
     Timer::init();
     
@@ -76,17 +75,17 @@ int main(int argc, const char * argv[])
         uint8_t c;
         Serial::read(c);
         if (c == ' ') {
-            Print::printf("\n\nStart XMODEM upload when ready...\n\n");
+            Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
             xmodemReceive();
             break;
         } else if (c < 0x7f) {
-            Print::printf("\n\nAutoloading...\n\n");
+            Serial::printf("\n\nAutoloading...\n\n");
             autoload();
             break;
         }
     }
     
-    Print::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
+    Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
     while(1) { }
     return 0;
 }

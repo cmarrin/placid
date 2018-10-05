@@ -35,7 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 
-#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -155,13 +154,13 @@ uint64_t __aeabi_ldivmod(int64_t numerator, int64_t denominator)
 
 void abort()
 {
-    Print::printf("***********ABORTING**********\n");
+    Serial::printf("***********ABORTING**********\n");
     Timer::usleep(500000);
     while (1) ;
 }
 
 void __assert_func(const char *file, int line, const char *func, const char *what) {
-    Print::printf("Assertion failed: %s, function %s, file %s, line %d.\n", what, func, file, line);
+    Serial::printf("Assertion failed: %s, function %s, file %s, line %d.\n", what, func, file, line);
     abort();
 }
 
@@ -172,18 +171,6 @@ void __aeabi_idiv0()
 
 }
 #endif
-
-void putch(char c)
-{
-    Serial::write(c);
-}
-
-void putstr(const char* s)
-{
-    while (*s) {
-        putch(*s++);
-    }
-}
 
 void* memset(void* dst, int value, size_t n)
 {
@@ -254,110 +241,6 @@ int memcmp(const void* left, const void* right, size_t n)
     return 0;
 }
 
-// strHex, strNum, printf, sprintf and vsprintf are adapted from https://github.com/moizumi99/RPiHaribote
-
-//static int strcpy(char *dst, char const *src)
-//{
-//    int i;
-//    i = 0;
-//    while(*src!=0) {
-//        *(dst++) = *(src++);
-//        i++;
-//    } 
-//    *dst = 0;
-//    return i;
-//}
-
-//int printf(const char *format, ...)
-//{
-//    va_list ap;
-//    char s[StringGuard];
-//    int i;
-//
-//    va_start(ap, format);
-//    i = vsnprintf(s, StringGuard, format, ap);
-//    putstr(s);
-//    va_end(ap);
-//    return i;
-//}
-//
-//int vsnprintf(char *str, size_t size, const char *format, va_list listPointer)
-//{
-//    char c;
-//    int i, si;
-//    unsigned int ui;
-//    int pf;
-//    char *s;
-//    int len, fill, sign_flag;
-//    
-//    i=0;
-//    pf = 0;
-//    len = 0;
-//    fill = 0;
-//    while((c=*format++)!=0 && i < static_cast<int>(size)) {
-//        if (pf==0) {
-//            // after regular character
-//            if (c=='%') {
-//                pf=1;
-//                len = 0;
-//                fill = 0;
-//            } else {
-//                str[i++]=c;
-//            }
-//        } else if (pf>0) {
-//            // previous character was '%'
-//            if (c=='x' || c=='X') {
-//                ui = va_arg(listPointer, unsigned);
-//                i += strHex(str+i, (unsigned) ui, len, fill);
-//                pf=0;
-//            } else if (c=='u' || c=='U' || c=='i' || c=='I') {
-//                ui = va_arg(listPointer, unsigned);
-//                i += strNum(str+i, (unsigned) ui, len, fill, 0);
-//                pf=0;
-//            } else if (c=='d' || c=='D') {
-//                si = va_arg(listPointer, int);
-//                if (si<0) {
-//                    ui = -si;
-//                    sign_flag = 1;
-//                } else {
-//                    ui = si;
-//                    sign_flag = 0;
-//                }
-//                i += strNum(str+i, (unsigned) ui, len, fill, sign_flag);
-//                pf=0;
-//            } else if (c=='s' || c=='S') {
-//                s = va_arg(listPointer, char *);
-//                i += strcpy(str+i, s);
-//                pf=0;
-//            } else if ('0'<=c && c<='9') {
-//                if (pf==1 && c=='0') {
-//                    fill = 1;
-//                } else {
-//                    len = len*10+(c-'0');
-//                }
-//                pf=2;
-//            } else {
-//                // this shouldn't happen
-//                str[i++]=c;
-//                pf=0;
-//            }
-//        }
-//    }
-//    str[i]=0;
-//    return (i>0) ? i : -1;
-//}
-//
-//int snprintf(char *str, size_t size, const char *format, ...)
-//{
-//    va_list ap;
-//    int i;
-//
-//    va_start(ap, format);
-//    i = vsnprintf(str, size, format, ap);
-//    va_end(ap);
-//    return i;
-//}
-//
 static inline char toupper(char c)
 {
     return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;

@@ -34,7 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "util.h"
-#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -85,7 +84,7 @@ void xmodemReceive()
             if (xstring[state] == EOT) {
                 Serial::write(ACK);
                 Timer::usleep(100000);
-                Print::printf("XModem upload complete, executing...\n");
+                Serial::printf("XModem upload complete, executing...\n");
                 Timer::usleep(100000);
                 BRANCHTO(ARMBASE);
                 break;

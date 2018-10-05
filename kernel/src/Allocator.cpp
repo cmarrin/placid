@@ -35,8 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Allocator.h"
 
-#include "Print.h"
-
 using namespace placid;
 
 Allocator Allocator::_kernelAllocator;

@@ -61,9 +61,10 @@ namespace placid {
         static constexpr uint32_t MaxToStringBufferSize =    1 +     20 +   1 +     1 +     1 +     3 +      1;
         static constexpr uint32_t MaxStringSize = 256;
 
-        static int32_t printf(const char* format, ...);
         static int32_t snprintf(char *str, size_t n, const char *format, ...);
         static int32_t vsnprintf(char *str, size_t n, const char *format, va_list);
+
+        static int32_t vsnprintCore(Printer&, const char *format, va_list);
 
         static bool toString(char* buf, double v);
         static bool toString(char* buf, int32_t v);
@@ -80,8 +81,6 @@ namespace placid {
         Print() { }
         Print(Print&) { }
         Print& operator=(Print& other) { return other; }
-        
-        static int32_t vsnprintCore(Printer&, const char *format, va_list);
     };
     
 }

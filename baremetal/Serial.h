@@ -61,6 +61,8 @@ namespace placid {
 		
 		static void init();
 		
+        static int32_t printf(const char* format, ...);
+
 		// Blocking API
 		static Error read(uint8_t&);
         static bool rxReady();

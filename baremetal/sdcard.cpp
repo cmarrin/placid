@@ -14,7 +14,7 @@
 #include "Mailbox.h"
 #include "util.h"
 #include "GPIO.h"
-#include "Print.h"
+#include "Serial.h"
 #include "Timer.h"
 
 #define P2V_DEV(X) (X)
@@ -23,11 +23,11 @@ using namespace placid;
 
 //#define DEBUG_SD
 #ifdef DEBUG_SD
-#define LOG_DEBUG(args...) Print::printf(args)
+#define LOG_DEBUG(args...) Serial::printf(args)
 #else
 #define LOG_DEBUG(args...)
 #endif
-#define LOG_ERROR Print::printf
+#define LOG_ERROR Serial::printf
 
 // Private functions.
 static void sdParseCID(void);

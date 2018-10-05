@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Mailbox.h"
 
 #include "util.h"
-#include "Print.h"
+#include "Serial.h"
 
 using namespace placid;
 
@@ -61,7 +61,7 @@ static uint32_t readmailbox(uint32_t channel) {
   uint32_t data;
 
     if ((channel & 0xFFFFFFF0) != 0) {
-        Print::printf("Channel %d is wrong\n", (int) channel);
+        Serial::printf("Channel %d is wrong\n", (int) channel);
         return -1;
     }
 
@@ -150,24 +150,24 @@ void Mailbox::printBoardParams()
 {
     uint32_t responseBuf[2];
     getParameter(Mailbox::Param::FirmwareRev, responseBuf, 1);
-    Print::printf("FirmwareRev: %d\n", responseBuf[0]);
+    Serial::printf("FirmwareRev: %d\n", responseBuf[0]);
     
     getParameter(Mailbox::Param::BoardModel, responseBuf, 1);
-    Print::printf("BoardModel: %d\n", responseBuf[0]);
+    Serial::printf("BoardModel: %d\n", responseBuf[0]);
     
     getParameter(Mailbox::Param::BoardRev, responseBuf, 1);
-    Print::printf("BoardRev: %d\n", responseBuf[0]);
+    Serial::printf("BoardRev: %d\n", responseBuf[0]);
     
     getParameter(Mailbox::Param::BoardSerialNo, responseBuf, 2);
-    Print::printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
+    Serial::printf("BoardSerialNo: %d, %d\n", responseBuf[0], responseBuf[1]);
     
     getParameter(Mailbox::Param::ARMMemory, responseBuf, 2);
-    Print::printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    Serial::printf("ARMMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
     
     getParameter(Mailbox::Param::VCMemory, responseBuf, 2);
-    Print::printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
+    Serial::printf("VCMemory: start=0x%08x, size=0x%08x\n", responseBuf[0], responseBuf[1]);
     
     getParameter(Mailbox::Param::DMAChannelMask, responseBuf, 1);
-    Print::printf("DMAChannelMask: 0x%08x\n", responseBuf[0]);
+    Serial::printf("DMAChannelMask: 0x%08x\n", responseBuf[0]);
     
 }

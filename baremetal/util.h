@@ -52,10 +52,6 @@ void PUT8 ( unsigned int, unsigned int );
 void BRANCHTO ( unsigned int );
 bool interruptsSupported(void);
 
-void itos(char* buf, int32_t v);
-void utos(char* buf, uint32_t v);
-void putch(char c);
-void putstr(const char* s);
 void* memset(void* p, int value, size_t n);
 void* memcpy(void* dst, const void* src, size_t n);
 void* memmove(void * dst, const void* src, size_t n);
