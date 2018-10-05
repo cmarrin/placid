@@ -58,6 +58,7 @@ void putch(char c);
 void putstr(const char* s);
 void* memset(void* p, int value, size_t n);
 void* memcpy(void* dst, const void* src, size_t n);
+void* memmove(void * dst, const void* src, size_t n);
 int memcmp(const void* left, const void* right, size_t n);
 void convertTo8dot3(char* name8dot3, const char* name);
 #ifdef __cplusplus

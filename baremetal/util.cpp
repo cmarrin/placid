@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 
+#include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
 
@@ -154,7 +155,14 @@ uint64_t __aeabi_ldivmod(int64_t numerator, int64_t denominator)
 
 void abort()
 {
+    Print::printf("***********ABORTING**********\n");
+    Timer::usleep(500000);
     while (1) ;
+}
+
+void __assert_func(const char *file, int line, const char *func, const char *what) {
+    Print::printf("Assertion failed: %s, function %s, file %s, line %d.\n", what, func, file, line);
+    abort();
 }
 
 void __aeabi_idiv0()
@@ -200,6 +208,34 @@ void* memcpy(void* dst, const void* src, size_t n)
         *d++ = *s++;
     }
     return dst;
+}
+
+void* memmove(void* dst, const void* src, size_t n)
+{
+    if (n == 0) {
+        return dst;
+    }
+    
+    if (dst == src) {
+        return dst;
+    }
+
+    const char* s = reinterpret_cast<const char*>(src);
+    char* d = reinterpret_cast<char*>(dst);
+
+    // If the areas don't overlap, just do memcpy
+    if (s < d && d < s + n) {
+        // If the areas overlap, have to copy byte by byte
+        s += n;
+        d += n;
+        while (n-- > 0) {
+            *--d = *--s;
+        }
+        return dst;
+    }
+    
+    // just do memcpy
+    return memcpy(dst, src, n);
 }
 
 int memcmp(const void* left, const void* right, size_t n)
