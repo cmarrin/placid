@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "util.h"
+#include <cstdint>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
@@ -90,6 +92,8 @@ namespace placid {
             }
             return *this;
         }
+        
+        explicit operator uint32_t();
         
         const char& operator[](size_t i) const { assert(i >= 0 && i < _size - 1); return _data[i]; };
         char& operator[](size_t i) { assert(i >= 0 && i < _size - 1); return _data[i]; };

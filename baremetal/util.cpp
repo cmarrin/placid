@@ -134,8 +134,6 @@ void __aeabi_idiv0()
     abort();
 }
 
-}
-
 void* memset(void* dst, int value, size_t n)
 {
     if (n == 0) {
@@ -210,6 +208,55 @@ size_t strlen(const char* str)
     const char* s;
     for (s = str; *s; ++s) { }
     return (unsigned int)(s - str);
+}
+
+int strcmp(const char* s1, const char* s2)
+{
+    char c1;
+    char c2;
+    while (true) {
+        c1 = *s1++;
+        c2 = *s2++;
+        if (c1 != c2) {
+            break;
+        }
+        if (c1 == '\0') {
+            return 0;
+        }
+    }
+    return c1 - c2;
+}
+
+const char* strstr(const char* s1, const char* s2)
+{
+    int i, j;
+
+    if ((s1 == nullptr || s2 == nullptr)) {
+        return nullptr;
+    }
+
+    for( i = 0; ; i++) {
+        char c1 = s1[i];
+        if (c1 == '\0') {
+            return nullptr;
+        }
+        
+        char c2 = *s2;
+        if (c1 == c2) {
+            for (j = i; ; j++) {
+                c2 = s2[j - i];
+                if (c2 == '\0') {
+                    return s1 + i;
+                }
+                c1 = s1[j];
+                if (c1 != c2) {
+                    break;
+                }
+            }
+        }
+    }
+}
+
 }
 
 void convertTo8dot3(char* name8dot3, const char* name)

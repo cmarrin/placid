@@ -63,6 +63,8 @@ SRC =	kernel.S \
 		BootShell.cpp \
 		Memory.cpp \
 		Shell.cpp \
+		Scanner.cpp \
+		String.cpp \
 
 DIVOBJS :=	_divsi3.o \
 			_umodsi3.o \

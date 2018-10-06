@@ -23,6 +23,7 @@
 		492FF408215D479A003582FE /* FAT32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF406215D4799003582FE /* FAT32.cpp */; };
 		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
 		4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
+		4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
 		4962954E215572BD0064B9C9 /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D582151AC5F0077ACEE /* xmodem.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
@@ -34,6 +35,7 @@
 		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
 		497EE460216198F1000584CE /* nanoprintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45E21619879000584CE /* nanoprintf.cpp */; };
 		497EE46121628A95000584CE /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* Memory.cpp */; };
+		49931A0F2168AFA700257E42 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49931A0E2168AFA700257E42 /* String.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +120,9 @@
 		4932ACF02167156E00BDAABB /* Allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Allocator.cpp; path = ../../kernel/src/Allocator.cpp; sourceTree = "<group>"; };
 		4932ACF12167156E00BDAABB /* Allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Allocator.h; path = ../../kernel/src/Allocator.h; sourceTree = "<group>"; };
 		4932ACF521681EF200BDAABB /* ldivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = ldivmod.S; path = ../baremetal/ldivmod.S; sourceTree = "<group>"; };
+		4932ACF721689A5500BDAABB /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../../kernel/src/Scanner.cpp; sourceTree = "<group>"; };
+		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../../kernel/src/Scanner.h; sourceTree = "<group>"; };
+		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
@@ -127,6 +132,7 @@
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Print.h; path = ../baremetal/Print.h; sourceTree = "<group>"; };
 		497EE45C2161982F000584CE /* printf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printf.cpp; path = ../../kernel/src/printf.cpp; sourceTree = "<group>"; };
 		497EE45E21619879000584CE /* nanoprintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nanoprintf.cpp; path = ../bootloader/nanoprintf.cpp; sourceTree = "<group>"; };
+		49931A0E2168AFA700257E42 /* String.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +192,9 @@
 		49166D2C21514BE30077ACEE /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4932ACFA2168A8C600BDAABB /* MStream.h */,
+				4932ACF721689A5500BDAABB /* Scanner.cpp */,
+				4932ACF821689A5600BDAABB /* Scanner.h */,
 				4932ACF02167156E00BDAABB /* Allocator.cpp */,
 				4932ACF12167156E00BDAABB /* Allocator.h */,
 				497EE45C2161982F000584CE /* printf.cpp */,
@@ -199,10 +208,12 @@
 				49166D3A21514C050077ACEE /* Shell.cpp */,
 				49166D3021514C050077ACEE /* Shell.h */,
 				49166D3121514C050077ACEE /* kernel.S */,
+				49931A0E2168AFA700257E42 /* String.cpp */,
 				49166D4121514C060077ACEE /* String.h */,
 				4932ACEE2166770800BDAABB /* stackAddrs.h */,
 			);
-			path = src;
+			name = src;
+			path = ../kernel/src;
 			sourceTree = "<group>";
 		};
 		492C7413214B2A2F009A4DA4 = {
@@ -390,10 +401,12 @@
 			files = (
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				497EE45D2161982F000584CE /* printf.cpp in Sources */,
+				49931A0F2168AFA700257E42 /* String.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				497EE46121628A95000584CE /* Memory.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
+				4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

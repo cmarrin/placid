@@ -81,5 +81,19 @@ static inline void dsb() { __asm volatile ("mcr p15, #0, %[zero], c7, c10, #4" :
 static inline void flushcache() { __asm volatile ("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) ); }
 #endif
 
-inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }
-inline char toupper(char c) { return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c; }
+static inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }
+static inline char toupper(char c) { return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c; }
+static inline bool isdigit(uint8_t c)        { return c >= '0' && c <= '9'; }
+static inline bool isLCHex(uint8_t c)       { return c >= 'a' && c <= 'f'; }
+static inline bool isUCHex(uint8_t c)       { return c >= 'A' && c <= 'F'; }
+static inline bool isHex(uint8_t c)         { return isUCHex(c) || isLCHex(c); }
+static inline bool isxdigit(uint8_t c)        { return isHex(c) || isdigit(c); }
+static inline bool isOctal(uint8_t c)       { return c >= '0' && c <= '7'; }
+static inline bool isUpper(uint8_t c)        { return (c >= 'A' && c <= 'Z'); }
+static inline bool isLower(uint8_t c)        { return (c >= 'a' && c <= 'z'); }
+static inline bool isLetter(uint8_t c)        { return isUpper(c) || isLower(c); }
+static inline bool isIdFirst(uint8_t c)        { return isLetter(c) || c == '$' || c == '_'; }
+static inline bool isIdOther(uint8_t c)        { return isdigit(c) || isIdFirst(c); }
+static inline bool isspace(uint8_t c)       { return c == ' ' || c == '\n' || c == '\r' || c == '\f' || c == '\t' || c == '\v'; }
+static inline uint8_t tolower(uint8_t c)    { return isUpper(c) ? (c - 'A' + 'a') : c; }
+static inline uint8_t toupper(uint8_t c)    { return isLower(c) ? (c - 'a' + 'A') : c; }
