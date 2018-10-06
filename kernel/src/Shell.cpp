@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Shell.h"
 
 #include "util.h"
+#include "Print.h"
 
 using namespace placid;
 
@@ -73,53 +74,12 @@ void Shell::sendComplete()
 	    
 		case State::ShowHelp:
     	_state = State::NeedPrompt;
-		showMessage(MessageType::Info, helpString());
+		showMessage(MessageType::Info, (String("Commands:\n    '?' : this help message\n\n") + helpString()).c_str());
 		sendComplete();
         break;
     }
 }
 
-static inline void trim(char*& s, uint32_t& len)
-{
-	while (isspace(*s) && len) {
-		++s;
-		--len;
-	}
-	while (len && isspace(s[len - 1])) {
-		len--;
-	}
-}
-
-// static inline uint32_t split(const char* s, uint32_t length, const char**& tokens, uint32_t*& tokenLengths, uint32_t arrayLength, char separator)
-// {
-// 	trim(s, length);
-//
-// 	uint32_t index = 0;
-//
-// 	while (1) {
-// 		const char* n = s;
-// 		for (uint32_t i = 0; i < length; ++i, ++n) {
-// 			if (*n == separator) {
-// 				break;
-// 			}
-// 		}
-// 		if (!n || n - s != 0) {
-// 			tokens[index] = s;
-// 			tokenLengths[index] = n - s;
-// 		}
-// 		if (!n) {
-// 			break;
-// 		}
-// 		length -= n - s + 1;
-// 		s = n + 1;
-// 		if (++index >= arrayLength) {
-// 			break;
-// 		}
-// 	}
-//
-// 	return index;
-// }
-//
 bool Shell::received(uint8_t c)
 {
 	if (c == '\r') {
@@ -133,45 +93,48 @@ bool Shell::received(uint8_t c)
 		return true;
 	}
 	
-	char* p = _buffer;
-	trim(p, _bufferIndex);
-	p[_bufferIndex] = '\0';
-    bool returnValue = executeCommand(p);
+    std::vector<String> array = String(_buffer, _bufferIndex).trim().split(" ", true);
+   
+    bool returnValue = executeCommand(array);
 	_bufferIndex = 0;
     sendComplete();
 	return returnValue;
 }
 
-bool Shell::executeCommand(const char* s)
+bool Shell::executeCommand(const std::vector<String>& array)
 {
 	_state = State::NeedPrompt;
 	
-    if (*s == '\0') {
+    if (array.size() == 0) {
         return true;
     }
-    if (s[0] == '?') {
+    if (array[0] == "?") {
         _state = State::ShowHelp;
-    } else if (!executeShellCommand(s)) {
-        showMessage(MessageType::Error, "unrecognized command: ", s);
+    } else if (!executeShellCommand(array)) {
+        showMessage(MessageType::Error, "unrecognized command: %s", join(array, " ").c_str());
     }
     return true;
 }
 
-void Shell::showMessage(MessageType type, const char* msg, const char* altmsg)
+void Shell::showMessage(MessageType type, const char* msg, ...)
 {
     if (type == MessageType::Error) {
         _state = State::NeedPrompt;
-		shellSend("Error: ");
+        shellSend("Error: ");
     }
-	
-	shellSend(msg);
-	if (altmsg) {
-		shellSend("'");
-		shellSend(altmsg);
-		shellSend("'");
-	}
     
+    va_list args;
+    va_start(args, msg);
+    
+    char buf[200];
+    int result = Print::vsnprintf(buf, 199, msg, args);
+    if (result < 0) {
+        return;
+    }
+    
+    shellSend(buf);
+
     if (type == MessageType::Error) {
-		shellSend("\n");
+        shellSend("\n");
     }
 }

@@ -36,6 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <cstdint>
+#include <vector>
+#include "String.h"
 
 namespace placid {
 	
@@ -53,16 +55,16 @@ namespace placid {
 		virtual const char* welcomeString() const = 0;
 		virtual const char* helpString() const = 0;
 	    virtual void shellSend(const char* data, uint32_t size = 0) = 0;
-		virtual bool executeShellCommand(const char* s) = 0;
+		virtual bool executeShellCommand(const std::vector<String>&) = 0;
 
 	protected:
+        enum class MessageType { Info, Error };
+        void showMessage(MessageType type, const char* msg, ...);
+
 	    void sendComplete();
 
 	private:
-	    bool executeCommand(const char* s);
-
-	    enum class MessageType { Info, Error };
-	    void showMessage(MessageType, const char*, const char* = nullptr);
+	    bool executeCommand(const std::vector<String>&);
 
 	    State _state = State::Connect;
 		
