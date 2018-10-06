@@ -82,11 +82,24 @@ void Shell::sendComplete()
 
 bool Shell::received(uint8_t c)
 {
+#ifndef __APPLE__
+    shellSend(reinterpret_cast<const char*>(&c), 1, true);
+#endif
+
 	if (c == '\r') {
 		return true;
 	}
 	if (c != '\n') {
-		if (_bufferIndex >= BufferSize) {
+        if (c == '\b') {
+            if (_bufferIndex > 0) {
+                --_bufferIndex;
+                
+                // Erase the character we just backspaced over (by echoing)
+                shellSend(" \b", 2, true);
+            }
+            return true;
+        }
+        if (_bufferIndex >= BufferSize) {
 			return true;
 		}
 		_buffer[_bufferIndex++] = c;

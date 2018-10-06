@@ -47,7 +47,7 @@ namespace placid {
 	public:
 		virtual const char* welcomeString() const override;
 		virtual const char* helpString() const override;
-	    virtual void shellSend(const char* data, uint32_t size = 0) override;
+	    virtual void shellSend(const char* data, uint32_t size = 0, bool raw = false) override;
 		virtual bool executeShellCommand(const std::vector<String>&) override;
 	};
 	

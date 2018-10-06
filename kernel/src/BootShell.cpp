@@ -60,9 +60,17 @@ const char* BootShell::helpString() const
             "    debug [on/off]     : turn debugging on/off\n";
 } 
 
-void BootShell::shellSend(const char* data, uint32_t size)
+void BootShell::shellSend(const char* data, uint32_t size, bool raw)
 {
-	Serial::puts(data, size);
+    // puts converts control characters to printable, so if we want
+    // to send control we have to send raw
+    if (raw) {
+        while (*data) {
+            Serial::write(*data++);
+        }
+    } else {
+	    Serial::puts(data, size);
+     }   
 }
 
 static String timeString()

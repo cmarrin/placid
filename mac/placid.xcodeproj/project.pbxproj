@@ -573,6 +573,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				LINK_WITH_STANDARD_LIBRARIES = YES;
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -582,6 +583,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				LINK_WITH_STANDARD_LIBRARIES = YES;
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
