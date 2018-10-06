@@ -205,9 +205,11 @@ int memcmp(const void* left, const void* right, size_t n)
     return 0;
 }
 
-static inline char toupper(char c)
+size_t strlen(const char* str)
 {
-    return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;
+    const char* s;
+    for (s = str; *s; ++s) { }
+    return (unsigned int)(s - str);
 }
 
 void convertTo8dot3(char* name8dot3, const char* name)

@@ -30,6 +30,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include "util.h"
 #include "Print.h"
 
 using namespace placid;
@@ -69,16 +70,6 @@ using namespace placid;
 #define FLAGS_LONG      (1U <<  8U)
 #define FLAGS_LONG_LONG (1U <<  9U)
 #define FLAGS_PRECISION (1U << 10U)
-
-// internal strlen
-// \return The length of the string (excluding the terminating 0)
-static inline unsigned int _strlen(const char* str)
-{
-  const char* s;
-  for (s = str; *s; ++s);
-  return (unsigned int)(s - str);
-}
-
 
 // internal test if char is a digit (0-9)
 // \return true if char is a digit
@@ -575,7 +566,7 @@ int32_t placid::Print::vsnprintCore(Printer& printer, const char *format, va_lis
 
       case 's' : {
         char* p = va_arg(va, char*);
-        unsigned int l = _strlen(p);
+        size_t l = strlen(p);
         // pre padding
         if (flags & FLAGS_PRECISION) {
           l = (l < precision ? l : precision);

@@ -36,65 +36,225 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <cstring>
+#include <cassert>
 #include <algorithm>
 #include <vector>
 
 namespace placid {
-	
-	// String - std::string functions
-	//
 
-	class String
-	{
-	public:
-		
-		static inline std::string& trim(std::string& s)
-	    {
-			// Trim from the start
-		    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
-		        return !std::isspace(ch);
-		    }));
+    class String {
+    public:
+        String() : _size(1), _capacity(0), _data(nullptr) { }
+        String(const char* s, int32_t len = -1) : _size(1), _capacity(0), _data(nullptr)
+        {
+            if (!s) {
+                return;
+            }
+            if (len == -1) {
+                len = static_cast<int32_t>(strlen(s));
+            }
+            ensureCapacity(len + 1);
+            if (len) {
+                memcpy(_data, s, len);
+            }
+            _size = len + 1;
+            _data[_size - 1] = '\0';
+        }
+        
+        String(const String& other) : _data(nullptr)
+        {
+            *this = other;
+        };
+        
+        ~String() { delete [ ] _data; };
 
-			// Trim from the end
-		    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
-		        return !std::isspace(ch);
-		    }).base(), s.end());
-		
-			return s;
-	    }
-    
-	    // If skipEmpty is true, substrings of zero length are not added to the array
-	    static inline std::vector<std::string> split(const std::string& s, const std::string& separator, bool skipEmpty = false)
-	    {
-	        std::vector<std::string> array;
-	        const char* p = s.c_str();
-	        while (1) {
-	            const char* n = strstr(p, separator.c_str());
-	            if (!n || n - p != 0 || !skipEmpty) {
-	                array.push_back(std::string(p, static_cast<int32_t>(n ? (n - p) : -1)));
-	            }
-	            if (!n) {
-	                break;
-	            }
-	            p = n ? (n + separator.size()) : nullptr;
-	        }
-	        return array;
-	    }
+        String& operator=(const String& other)
+        {
+            if (_data) {
+                free(_data);
+            }
+            _size = other._size;
+            _capacity = other._capacity;
+            if (!other._data) {
+                _data = nullptr;
+                return *this;
+            }
+            
+            _data = new char[_capacity];
+            assert(_data);
+            if (_data) {
+                memcpy(_data, other._data, _size);
+            } else {
+                _capacity = 0;
+                _size = 1;
+            }
+            return *this;
+        }
+        
+        const char& operator[](size_t i) const { assert(i >= 0 && i < _size - 1); return _data[i]; };
+        char& operator[](size_t i) { assert(i >= 0 && i < _size - 1); return _data[i]; };
+        size_t size() const { return _size ? (_size - 1) : 0; }
+        bool empty() const { return _size <= 1; }
+        void clear() { _size = 1; if (_data) _data[0] = '\0'; }
+        String& operator+=(uint8_t c)
+        {
+            ensureCapacity(_size + 1);
+            _data[_size - 1] = c;
+            _data[_size++] = '\0';
+            return *this;
+        }
+        
+        String& operator+=(char c)
+        {
+            ensureCapacity(_size + 1);
+            _data[_size - 1] = c;
+            _data[_size] = '\0';
+            _size += 1;
+            return *this;
+        }
+        
+        String& operator+=(const char* s)
+        {
+            size_t len = strlen(s);
+            ensureCapacity(_size + len);
+            memcpy(_data + _size - 1, s, len + 1);
+            _size += len;
+            return *this;
+        }
+        
+        String& operator+=(const String& s) { return *this += s.c_str(); }
+        
+        friend String operator +(const String& s1 , const String& s2) { String s = s1; s += s2; return s; }
+        friend String operator +(const String& s1 , const char* s2) { String s = s1; s += s2; return s; }
+        friend String operator +(const char* s1 , const String& s2) { String s = s1; s += s2; return s; }
+        
+        bool operator<(const String& other) const { return strcmp(c_str(), other.c_str()) < 0; }
+        bool operator==(const String& other) const { return strcmp(c_str(), other.c_str()) == 0; }
+        bool operator!=(const String& other) const { return strcmp(c_str(), other.c_str()) != 0; }
 
-	    static inline std::string join(const std::vector<std::string>& array, const std::string& separator)
-	    {
-	        std::string s;
-	        bool first = true;
-	        for (auto it : array) {
-	            if (first) {
-	                first = false;
-	            } else {
-	                s += separator;
-	            }
-	            s += it;
-	        }
-	        return s;
-	    }
-	};
+        const char* c_str() const { return _data ? _data : ""; }
+        String& erase(size_t pos, size_t len)
+        {
+            if (pos >= _size - 1) {
+                return *this;
+            }
+            if (pos + len >= _size) {
+                len = _size - pos - 1;
+            }
+            memmove(_data + pos, _data + pos + len, _size - pos - len);
+            _size -= len;
+            return *this;
+        }
+
+        String& erase(size_t pos = 0)
+        {
+            return erase(pos, _size - pos);
+        }
+        
+        String slice(int32_t start, int32_t end) const
+        {
+            int32_t sz = static_cast<int32_t>(size());
+            if (start < 0) {
+                start = sz + start;
+            }
+            if (end < 0) {
+                end = sz + end;
+            }
+            if (end > sz) {
+                end = sz;
+            }
+            if (start >= end) {
+                return String();
+            }
+            return String(_data + start, end - start);
+        }
+        
+        String slice(int32_t start) const
+        {
+            return slice(start, static_cast<int32_t>(size()));
+        }
+        
+        String trim() const
+        {
+            if (_size < 2 || !_data) {
+                return String();
+            }
+            size_t l = _size - 1;
+            char* s = _data;
+            while (isspace(s[l - 1])) {
+                --l;
+            }
+            while (*s && isspace(*s)) {
+                ++s;
+                --l;
+            }
+            return String(s, static_cast<int32_t>(l));
+        }
+        
+        // If skipEmpty is true, substrings of zero length are not added to the array
+        std::vector<String> split(const String& separator, bool skipEmpty = false) const
+        {
+            std::vector<String> array;
+            char* p = _data;
+            while (1) {
+                char* n = strstr(p, separator.c_str());
+                if (!n || n - p != 0 || !skipEmpty) {
+                    array.push_back(String(p, static_cast<int32_t>(n ? (n - p) : -1)));
+                }
+                if (!n) {
+                    break;
+                }
+                p = n ? (n + separator.size()) : nullptr;
+            }
+            return array;
+        }
+                
+        bool isMarked() const { return _marked; }
+        void setMarked(bool b) { _marked = b; }
+        
+    private:
+        void ensureCapacity(size_t size)
+        {
+            if (_capacity >= size) {
+                return;
+            }
+            _capacity = _capacity ? _capacity * 2 : 1;
+            if (_capacity < size) {
+                _capacity = size;
+            }
+            char *newData = new char[_capacity];
+            assert(newData);
+            if (_data) {
+                if (newData) {
+                    memcpy(newData, _data, _size);
+                } else {
+                    _capacity = 0;
+                    _size = 1;
+                }
+                delete _data;
+            }
+            _data = newData;
+        };
+
+        size_t _size;
+        size_t _capacity;
+        char *_data;
+        bool _marked = true;
+    };
+
+    inline String join(const std::vector<String>& array, const String& separator)
+    {
+        String s;
+        bool first = true;
+        for (auto it : array) {
+            if (first) {
+                first = false;
+            } else {
+                s += separator;
+            }
+            s += it;
+        }
+        return s;
+    }
 
 }

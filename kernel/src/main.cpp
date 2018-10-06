@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Memory.h"
 #include "Print.h"
 #include "Serial.h"
+#include "String.h"
 #include "Timer.h"
 #include <vector>
 
@@ -92,16 +93,10 @@ int main()
     Timer::setCurrentTime(RealTime(2018, 10, 5, 10, 19));
     showTime();
 
-    Serial::printf("Vector test: ");
-    std::vector<int32_t> vec = {1, 2, 3, 4, 5 };
-    for (size_t i = 5; i < 10; ++i) {
-        vec.push_back(static_cast<int32_t>(i + 1));
-    }
-    
-    for (size_t i = 0; i < vec.size(); ++i) {
-        Serial::printf("%d, ", vec[i]);
-    }
-    Serial::printf("\n");
+    std::vector<String> vec = {"This", "is", "a" };
+    vec.push_back("nice");
+    vec[3] += " string";
+    Serial::printf("Vector test: %s\n", join(vec, " ").c_str());
     
     GPIO::setFunction(ActivityLED, GPIO::Function::Output);
     

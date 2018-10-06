@@ -65,6 +65,8 @@ void* memcpy(void* dst, const void* src, size_t n);
 void* memmove(void * dst, const void* src, size_t n);
 int memcmp(const void* left, const void* right, size_t n);
 void convertTo8dot3(char* name8dot3, const char* name);
+
+size_t strlen(const char*);
 #ifdef __cplusplus
 }
 #endif
@@ -79,5 +81,5 @@ static inline void dsb() { __asm volatile ("mcr p15, #0, %[zero], c7, c10, #4" :
 static inline void flushcache() { __asm volatile ("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) ); }
 #endif
 
-static inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }
-
+inline int isspace(char c) { return (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'); }
+inline char toupper(char c) { return (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c; }
