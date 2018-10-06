@@ -126,13 +126,9 @@ void Shell::showMessage(MessageType type, const char* msg, ...)
     va_list args;
     va_start(args, msg);
     
-    char buf[200];
-    int result = Print::vsnprintf(buf, 199, msg, args);
-    if (result < 0) {
-        return;
-    }
-    
-    shellSend(buf);
+    String string;
+    string.vprintf(msg, args);    
+    shellSend(string.c_str());
 
     if (type == MessageType::Error) {
         shellSend("\n");

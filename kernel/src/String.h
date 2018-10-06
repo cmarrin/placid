@@ -150,6 +150,9 @@ namespace placid {
             return *this;
         }
 
+        String& printf(const char* format, ...);
+        String& vprintf(const char* format, va_list);
+        
         String& erase(size_t pos = 0)
         {
             return erase(pos, _size - pos);

@@ -35,8 +35,38 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "String.h"
 
+#include "Print.h"
 #include "Scanner.h"
 
 using namespace placid;
 
 String::operator uint32_t() { return stringToUInt32(c_str()); }
+
+class StringPrinter : public Print::Printer
+{
+    public:
+    StringPrinter(String& s) : _string(s) { }
+    
+    virtual int32_t outChar(char c) override
+    {
+        _string += c;
+        return 1;
+    }
+    
+    private:
+    String& _string;
+};
+
+String& String::printf(const char* format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    return String::vprintf(format, va);
+}
+
+String& String::vprintf(const char* format, va_list va)
+{
+    StringPrinter printer(*this);
+    Print::vsnprintCore(printer, format, va);
+    return *this;
+}
