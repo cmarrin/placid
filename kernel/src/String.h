@@ -205,7 +205,7 @@ namespace placid {
             char* p = _data;
             while (1) {
                 char* n = strstr(p, separator.c_str());
-                if (!n || n - p != 0 || !skipEmpty) {
+                if ((!n && p) || n - p != 0 || !skipEmpty) {
                     array.push_back(String(p, static_cast<int32_t>(n ? (n - p) : -1)));
                 }
                 if (!n) {
