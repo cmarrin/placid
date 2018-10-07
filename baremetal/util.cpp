@@ -259,6 +259,13 @@ const char* strstr(const char* s1, const char* s2)
 
 }
 
+namespace std {
+    void __throw_bad_function_call()
+    {
+        abort();
+    }
+}
+
 void convertTo8dot3(char* name8dot3, const char* name)
 {
     // Find the dot

@@ -138,10 +138,15 @@ int32_t Serial::printf(const char* format, ...)
     va_list va;
     va_start(va, format);
     
-    CharPrinter p;
-    int32_t result = Print::vsnprintCore(p, format, va);
+    int32_t result = vprintf(format, va);
     va_end(va);
     return result;
+}
+
+int32_t Serial::vprintf(const char* format, va_list va)
+{
+    CharPrinter p;
+    return Print::vsnprintCore(p, format, va);
 }
 
 Serial::Error Serial::read(uint8_t& c)

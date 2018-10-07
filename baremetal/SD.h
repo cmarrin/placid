@@ -35,60 +35,41 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "Serial.h"
 #include <stdarg.h>
 #include <stdint.h>
 
 namespace placid {
-	
-	// Serial - Raw serial driver for Raspberry Pi
-	//
-	// The UART which comes out on GPIO pins 8 (TX) and 10 (RX). This is the "mini UART"
-	// hardware on the Raspberry Pi 3 and Zero and the "full UART" on all other Pi
-	// hardware. Currently this driver only works with the "mini UART" so it is only
-	// for the 3 and Zero. The code is derived from serial.c in this projet:
-	//
-	//		https://github.com/organix/pijFORTHos
-	//
-	// See that project for how to support the full UART. That code is in turn derived fron:
-	//
-	//		https://github.com/dwelch67/raspberrypi
-	//
-	// This is a static class and cannot be instantiated
-	//
 
-	class Serial {
-	public:
-		enum class Error { OK, Timeout, NoData, NotReady, Fail };
-		
-		static void init();
-		
-        static int32_t printf(const char* format, ...);
-        static int32_t vprintf(const char* format, va_list);
+#define DEBUG_SD
 
-		// Blocking API
-		static Error read(uint8_t&);
-        static bool rxReady();
-		static Error write(uint8_t);
-		static Error puts(const char*, uint32_t size = 0);
-        static Error puts(double);
-        static Error puts(int32_t);
-        static Error puts(uint32_t);
-        static Error puts(int64_t);
-        static Error puts(uint64_t);
+    // Interface to SD devices. This includes SD cards and SDIO devices
+    // (like the WiFi chip on the RPi 3 and Zero W)
+    class SD
+    {
+    public:
+        enum class Error { OK, Timeout, Error };
         
-        static void clearInput() { rxhead = rxtail = 0; }
+        SD(uint32_t cd, uint32_t clk, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3_);
+        
+        void ERROR_LOG(const char* format, ...) const
+        {
+            va_list va;
+            va_start(va, format);
+            Serial::vprintf(format, va);
+            va_end(va);
+        }
+#ifdef DEBUG_SD
+        void DEBUG_LOG(const char* format, ...) const
+        {
+            va_list va;
+            va_start(va, format);
+            Serial::vprintf(format, va);
+            va_end(va);
+        }
+#else
+        void DEBUG_LOG(const char* format, ...) const { }
+#endif
+    };
 
-		static void handleInterrupt();
-
-	private:
-		Serial() { }
-		Serial(Serial&) { }
-		Serial& operator=(Serial& other) { return other; }
-		
-		static constexpr uint32_t RXBUFMASK = 0xFFF;
-		static volatile unsigned int rxhead;
-		static volatile unsigned int rxtail;
-		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
-	};
-	
 }

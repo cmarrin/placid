@@ -14,13 +14,14 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	sdcard.cpp \
-		util.cpp \
+SRC =	util.cpp \
 		Print.cpp \
 		FAT32.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
 		Mailbox.cpp \
+		SD.cpp \
+		SDCard.cpp \
 		SDFS.cpp \
 		Serial.cpp \
 		Timer.cpp \

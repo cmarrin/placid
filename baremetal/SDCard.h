@@ -35,60 +35,33 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <stdarg.h>
+#include "SD.h"
 #include <stdint.h>
+#include <functional>
+
+#define SD_OK                0
+#define SD_TIMEOUT          -1
+#define SD_ERROR            -2
 
 namespace placid {
-	
-	// Serial - Raw serial driver for Raspberry Pi
-	//
-	// The UART which comes out on GPIO pins 8 (TX) and 10 (RX). This is the "mini UART"
-	// hardware on the Raspberry Pi 3 and Zero and the "full UART" on all other Pi
-	// hardware. Currently this driver only works with the "mini UART" so it is only
-	// for the 3 and Zero. The code is derived from serial.c in this projet:
-	//
-	//		https://github.com/organix/pijFORTHos
-	//
-	// See that project for how to support the full UART. That code is in turn derived fron:
-	//
-	//		https://github.com/dwelch67/raspberrypi
-	//
-	// This is a static class and cannot be instantiated
-	//
 
-	class Serial {
-	public:
-		enum class Error { OK, Timeout, NoData, NotReady, Fail };
-		
-		static void init();
-		
-        static int32_t printf(const char* format, ...);
-        static int32_t vprintf(const char* format, va_list);
-
-		// Blocking API
-		static Error read(uint8_t&);
-        static bool rxReady();
-		static Error write(uint8_t);
-		static Error puts(const char*, uint32_t size = 0);
-        static Error puts(double);
-        static Error puts(int32_t);
-        static Error puts(uint32_t);
-        static Error puts(int64_t);
-        static Error puts(uint64_t);
+    // SD Card interface. Subclass of SD
+    class SDCard : public SD
+    {
+    public:
+        SDCard();
         
-        static void clearInput() { rxhead = rxtail = 0; }
+    private:
+        bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 10000);
+        Error setClock(uint32_t freq, uint32_t hostVersion);
+        Error sendCommand(uint32_t code, uint32_t arg);
+        Error sendCommand(uint32_t code, uint32_t arg, uint32_t& response);
+        Error readStatus(uint32_t mask);
+        Error waitForInterrupt(uint32_t mask);
+        Error getSCRValues(uint32_t* scr);
+        void finishFail() const { DEBUG_LOG("SDCard: EMMC init FAILED!\n"); }
+        
+        uint32_t _rca = 0;
+    };
 
-		static void handleInterrupt();
-
-	private:
-		Serial() { }
-		Serial(Serial&) { }
-		Serial& operator=(Serial& other) { return other; }
-		
-		static constexpr uint32_t RXBUFMASK = 0xFFF;
-		static volatile unsigned int rxhead;
-		static volatile unsigned int rxtail;
-		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
-	};
-	
 }

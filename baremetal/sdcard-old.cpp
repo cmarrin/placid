@@ -1237,29 +1237,27 @@ int sdClearBlocks( long long address, int numBlocks )
  */
 static void sdInitGPIO()
   {
-	  unsigned int reg;
-	  //  LOG_DEBUG("EMMC: Init. Entry state of GPFSEL4,5: %08x %08x\n",*(unsigned int*)0x20200010,*(unsigned int*)0x20200014);
+    unsigned int reg;
 
-  // Card detect GPIO
-  GPIO::setFunction(GPIO_CD, GPIO::Function::Input);
-   GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
-  //  gpioSetDetectHighEvent(GPIO_CD,1);
-  reg = GPIO::reg(GPIO::Register::GPHEN1);
-  reg = reg | 1<<(47-32);
-  GPIO::reg(GPIO::Register::GPHEN1) = reg;
+    // Card detect GPIO
+    GPIO::setFunction(GPIO_CD, GPIO::Function::Input);
+    GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
+    reg = GPIO::reg(GPIO::Register::GPHEN1);
+    reg = reg | 1<<(47-32);
+    GPIO::reg(GPIO::Register::GPHEN1) = reg;
 
-  GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_DAT3, GPIO::Pull::Up);
-  GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_DAT2, GPIO::Pull::Up);
-  GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_DAT1, GPIO::Pull::Up);
-  GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_DAT0, GPIO::Pull::Up);
-  GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_CMD, GPIO::Pull::Up);
-  GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3);
-  GPIO::setPull(GPIO_CLK, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT2, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT1, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT0, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_CMD, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_CLK, GPIO::Pull::Up);
 
 
   LOG_DEBUG("EMMC: Init. Complete state of GPFSEL4,5: %08x %08x\n",*(unsigned int*)0x20200010,*(unsigned int*)0x20200014);

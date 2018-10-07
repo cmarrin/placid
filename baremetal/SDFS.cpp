@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "SDFS.h"
 
-#include "sdcard.h"
+//#include "sdcard.h"
 #include "util.h"
 #include "Serial.h"
 #include "Timer.h"
@@ -44,11 +44,11 @@ using namespace placid;
 
 static int32_t readRaw(char* buf, uint64_t sectorAddr, uint32_t sectors)
 {
-    int r = sdTransferBlocks(sectorAddr * 512, sectors, reinterpret_cast<uint8_t*>(buf), 0);
-    if (r != 0) {
-        Serial::printf("*** Disk Read Error: return code=%d\n", r);
-        return -r;
-    }
+//    int r = sdTransferBlocks(sectorAddr * 512, sectors, reinterpret_cast<uint8_t*>(buf), 0);
+//    if (r != 0) {
+//        Serial::printf("*** Disk Read Error: return code=%d\n", r);
+//        return -r;
+//    }
     return static_cast<int32_t>(sectors);
 }
 
@@ -64,13 +64,13 @@ SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
         return Error::UnsupportedDevice;
     }
     
-    sdInit();
+    //sdInit();
     Timer::usleep(100);
-    int r = sdInitCard();
+    //int r = sdInitCard();
     Timer::usleep(10000);
-    if (r != SD_OK && r != SD_CARD_CHANGED) {
-        return Error::SDCardInitFailed;
-    }
+//    if (r != SD_OK && r != SD_CARD_CHANGED) {
+//        return Error::SDCardInitFailed;
+//    }
     
     return static_cast<Error>(FAT32::FS::mount(fs._fatfs, partition, readRaw, writeRaw));
 }

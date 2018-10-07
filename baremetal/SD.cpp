@@ -33,62 +33,31 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "SD.h"
 
-#include <stdarg.h>
-#include <stdint.h>
+#include "GPIO.h"
 
-namespace placid {
-	
-	// Serial - Raw serial driver for Raspberry Pi
-	//
-	// The UART which comes out on GPIO pins 8 (TX) and 10 (RX). This is the "mini UART"
-	// hardware on the Raspberry Pi 3 and Zero and the "full UART" on all other Pi
-	// hardware. Currently this driver only works with the "mini UART" so it is only
-	// for the 3 and Zero. The code is derived from serial.c in this projet:
-	//
-	//		https://github.com/organix/pijFORTHos
-	//
-	// See that project for how to support the full UART. That code is in turn derived fron:
-	//
-	//		https://github.com/dwelch67/raspberrypi
-	//
-	// This is a static class and cannot be instantiated
-	//
+using namespace placid;
 
-	class Serial {
-	public:
-		enum class Error { OK, Timeout, NoData, NotReady, Fail };
-		
-		static void init();
-		
-        static int32_t printf(const char* format, ...);
-        static int32_t vprintf(const char* format, va_list);
+SD::SD(uint32_t cd, uint32_t clk, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3)
+{
+    // Initialize GPIO for all the SD pins
+    GPIO::setFunction(cd, GPIO::Function::Input);
+    GPIO::setPull(cd, GPIO::Pull::Up);
+    uint32_t reg = GPIO::reg(GPIO::Register::GPHEN1);
+    reg = reg | 1<<(47-32);
+    GPIO::reg(GPIO::Register::GPHEN1) = reg;
 
-		// Blocking API
-		static Error read(uint8_t&);
-        static bool rxReady();
-		static Error write(uint8_t);
-		static Error puts(const char*, uint32_t size = 0);
-        static Error puts(double);
-        static Error puts(int32_t);
-        static Error puts(uint32_t);
-        static Error puts(int64_t);
-        static Error puts(uint64_t);
-        
-        static void clearInput() { rxhead = rxtail = 0; }
-
-		static void handleInterrupt();
-
-	private:
-		Serial() { }
-		Serial(Serial&) { }
-		Serial& operator=(Serial& other) { return other; }
-		
-		static constexpr uint32_t RXBUFMASK = 0xFFF;
-		static volatile unsigned int rxhead;
-		static volatile unsigned int rxtail;
-		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
-	};
-	
+    GPIO::setFunction(d3, GPIO::Function::Alt3);
+    GPIO::setPull(d3, GPIO::Pull::Up);
+    GPIO::setFunction(d2, GPIO::Function::Alt3);
+    GPIO::setPull(d2, GPIO::Pull::Up);
+    GPIO::setFunction(d1, GPIO::Function::Alt3);
+    GPIO::setPull(d1, GPIO::Pull::Up);
+    GPIO::setFunction(d0, GPIO::Function::Alt3);
+    GPIO::setPull(d0, GPIO::Pull::Up);
+    GPIO::setFunction(cmd, GPIO::Function::Alt3);
+    GPIO::setPull(cmd, GPIO::Pull::Up);
+    GPIO::setFunction(clk, GPIO::Function::Alt3);
+    GPIO::setPull(clk, GPIO::Pull::Up);
 }

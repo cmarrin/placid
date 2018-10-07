@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "GPIO.h"
 #include "Memory.h"
 #include "Print.h"
+#include "SDCard.h"
 #include "Serial.h"
 #include "String.h"
 #include "Timer.h"
@@ -83,6 +84,10 @@ int main()
 {
     Serial::init();
     Timer::init();
+    
+    Serial::printf("Initializing SD card\n");
+    SDCard sd;
+    Serial::printf("Finished initializing SD card\n");
     
     Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
 
