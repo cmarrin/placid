@@ -45,6 +45,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace placid {
 
+    struct Command
+    {
+        uint32_t code;
+#ifdef DEBUG_SD
+        const char* name;
+#endif
+        operator uint32_t() { return code; }
+    };
+
     // SD Card interface. Subclass of SD
     class SDCard : public SD
     {
@@ -52,10 +61,10 @@ namespace placid {
         SDCard();
         
     private:
-        bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 10000);
+        bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);
         Error setClock(uint32_t freq, uint32_t hostVersion);
-        Error sendCommand(uint32_t code, uint32_t arg);
-        Error sendCommand(uint32_t code, uint32_t arg, uint32_t& response);
+        Error sendCommand(const Command&, uint32_t arg);
+        Error sendCommand(const Command&, uint32_t arg, uint32_t& response);
         Error readStatus(uint32_t mask);
         Error waitForInterrupt(uint32_t mask);
         Error getSCRValues(uint32_t* scr);

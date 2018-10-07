@@ -72,25 +72,31 @@ inline volatile EMMC& emmc()
 }
 
 // command flags
-#define CMD_NEED_APP        0x80000000
-#define CMD_RSPNS_48        0x00020000
-#define CMD_ERRORS_MASK     0xfff9c004
-#define CMD_RCA_MASK        0xffff0000
+#define CMDFLAG_NEED_APP        0x80000000
+#define CMDFLAG_RSPNS_48        0x00020000
+#define CMDFLAG_ERRORS_MASK     0xfff9c004
+#define CMDFLAG_RCA_MASK        0xffff0000
 
 // COMMANDs
-#define CMD_GO_IDLE         0x00000000
-#define CMD_ALL_SEND_CID    0x02010000
-#define CMD_SEND_REL_ADDR   0x03020000
-#define CMD_CARD_SELECT     0x07030000
-#define CMD_SEND_IF_COND    0x08020000
-#define CMD_STOP_TRANS      0x0C030000
-#define CMD_READ_SINGLE     0x11220010
-#define CMD_READ_MULTI      0x12220032
-#define CMD_SET_BLOCKCNT    0x17020000
-#define CMD_APP_CMD         0x37000000
-#define CMD_SET_BUS_WIDTH   (0x06020000|CMD_NEED_APP)
-#define CMD_SEND_OP_COND    (0x29020000|CMD_NEED_APP)
-#define CMD_SEND_SCR        (0x33220010|CMD_NEED_APP)
+#ifdef DEBUG_SD
+#define CMD(name, code) static inline Command name() { return { code, #name }; }
+#else
+#define CMD(name, code) static inline Command name() { return { code }; }
+#endif
+CMD(CMD_GO_IDLE,        0x00000000)
+CMD(CMD_ALL_SEND_CID,   0x02010000)
+CMD(CMD_SEND_REL_ADDR,  0x03020000)
+CMD(CMD_CARD_SELECT,    0x07030000)
+CMD(CMD_SEND_IF_COND,   0x08020000)
+//CMD(CMD_STOP_TRANS,     0x0C030000)
+//CMD(CMD_READ_SINGLE,    0x11220010)
+//CMD(CMD_READ_MULTI,     0x12220032)
+//CMD(CMD_SET_BLOCKCNT,   0x17020000)
+CMD(CMD_APP_CMD,        0x37000000)
+CMD(CMD_APP_CMD_48,     (0x37000000 | CMDFLAG_RSPNS_48))
+CMD(CMD_SET_BUS_WIDTH,  (0x06020000 | CMDFLAG_NEED_APP))
+CMD(CMD_SEND_OP_COND,   (0x29020000 | CMDFLAG_NEED_APP))
+CMD(CMD_SEND_SCR,       (0x33220010 | CMDFLAG_NEED_APP))
 
 // STATUS register settings
 #define SR_READ_AVAILABLE   0x00000800
@@ -138,24 +144,6 @@ inline volatile EMMC& emmc()
 #define ACMD41_CMD_CCS      0x40000000
 #define ACMD41_ARG_HC       0x51ff8000
     
-//#define EMMC_ARG2           ((volatile unsigned int*)(MMIO_BASE+0x00300000))
-//#define EMMC_BLKSIZECNT     ((volatile unsigned int*)(MMIO_BASE+0x00300004))
-//#define EMMC_ARG1           ((volatile unsigned int*)(MMIO_BASE+0x00300008))
-//#define EMMC_CMDTM          ((volatile unsigned int*)(MMIO_BASE+0x0030000C))
-//#define EMMC_RESP0          ((volatile unsigned int*)(MMIO_BASE+0x00300010))
-//#define EMMC_RESP1          ((volatile unsigned int*)(MMIO_BASE+0x00300014))
-//#define EMMC_RESP2          ((volatile unsigned int*)(MMIO_BASE+0x00300018))
-//#define EMMC_RESP3          ((volatile unsigned int*)(MMIO_BASE+0x0030001C))
-//#define EMMC_DATA           ((volatile unsigned int*)(MMIO_BASE+0x00300020))
-//#define EMMC_STATUS         ((volatile unsigned int*)(MMIO_BASE+0x00300024))
-//#define EMMC_CONTROL0       ((volatile unsigned int*)(MMIO_BASE+0x00300028))
-//#define EMMC_CONTROL1       ((volatile unsigned int*)(MMIO_BASE+0x0030002C))
-//#define EMMC_INTERRUPT      ((volatile unsigned int*)(MMIO_BASE+0x00300030))
-//#define EMMC_INT_MASK       ((volatile unsigned int*)(MMIO_BASE+0x00300034))
-//#define EMMC_INT_EN         ((volatile unsigned int*)(MMIO_BASE+0x00300038))
-//#define EMMC_CONTROL2       ((volatile unsigned int*)(MMIO_BASE+0x0030003C))
-//#define EMMC_SLOTISR_VER    ((volatile unsigned int*)(MMIO_BASE+0x003000FC))
-
 constexpr uint32_t GPIO_CD   = 47;
 constexpr uint32_t GPIO_CLK  = 48;
 constexpr uint32_t GPIO_CMD  = 49;
@@ -277,41 +265,44 @@ SD::Error SDCard::waitForInterrupt(uint32_t mask)
 {
     uint32_t m = mask | INT_ERROR_MASK;
     bool result = checkStatusWithTimeout(
-        [m]{ return (emmc().interrupt & m) == 0; },
-        nullptr, 1000000);
+        [m]{ return (emmc().interrupt & m) != 0; },
+        nullptr);
         
     uint32_t r = emmc().interrupt;
     if (!result || (r & INT_CMD_TIMEOUT) || r & INT_DATA_TIMEOUT) {
         emmc().interrupt = r;
+        ERROR_LOG("SDCard: ERROR waitForInterrupt timed out\n");
         return Error::Timeout;
     }
     if (r & INT_ERROR_MASK) {
         emmc().interrupt = r;
+        ERROR_LOG("SDCard: ERROR waitForInterrupt error\n");
         return Error::Error;
     }
     emmc().interrupt = mask;
     return Error::OK;
 }
 
-SD::Error SDCard::sendCommand(uint32_t code, uint32_t arg)
+SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg)
 {
     uint32_t response;
-    return sendCommand(code, arg, response);
+    return sendCommand(cmd, arg, response);
 }
 
-SD::Error SDCard::sendCommand(uint32_t code, uint32_t arg, uint32_t& response)
+SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& response)
 {
     SD::Error error = Error::OK;
+    uint32_t code = cmd.code;
 
-    if(code & CMD_NEED_APP) {
-        error = sendCommand(CMD_APP_CMD | (_rca ? CMD_RSPNS_48 : 0), _rca, response);
+    if(cmd.code & CMDFLAG_NEED_APP) {
+        error = sendCommand(_rca ? CMD_APP_CMD_48() : CMD_APP_CMD(), _rca, response);
         
         if(_rca && error != Error::OK) {
             ERROR_LOG("ERROR: failed to send SD APP command\n");
             return error;
         }
         
-        code &= ~CMD_NEED_APP;
+        code &= ~CMDFLAG_NEED_APP;
     }
     
     if (readStatus(SR_CMD_INHIBIT) != Error::OK) {
@@ -319,15 +310,17 @@ SD::Error SDCard::sendCommand(uint32_t code, uint32_t arg, uint32_t& response)
         return Error::Timeout;
     }
     
-    DEBUG_LOG("EMMC: Sending command 0x%08x arg 0x%08x\n", code, arg);
-    
+#ifdef DEBUG_SD
+    DEBUG_LOG("EMMC: Sending command %s arg 0x%08x\n", cmd.name, arg);
+#endif
+
     emmc().interrupt = emmc().interrupt;
     emmc().arg1 = arg;
     emmc().commandAndTransferMode = code;
 
-    if (code == CMD_SEND_OP_COND) {
+    if (code == CMD_SEND_OP_COND()) {
         Timer::usleep(1000000);
-    } else if (code == CMD_SEND_IF_COND || code == CMD_APP_CMD) {
+    } else if (code == CMD_SEND_IF_COND() || code == CMD_APP_CMD()) {
         Timer::usleep(100000);
     }
     
@@ -338,36 +331,36 @@ SD::Error SDCard::sendCommand(uint32_t code, uint32_t arg, uint32_t& response)
     }
     
     uint32_t resp0 = emmc().response0;
-    if (code == CMD_GO_IDLE || code == CMD_APP_CMD) {
+    if (code == CMD_GO_IDLE() || code == CMD_APP_CMD()) {
         return Error::OK; 
-    } else if (code == (CMD_APP_CMD | CMD_RSPNS_48)) {
+    } else if (code == (CMD_APP_CMD() | CMDFLAG_RSPNS_48)) {
         response = resp0 & SR_APP_CMD;
         return Error::OK;
-    } else if (code == CMD_SEND_OP_COND) {
+    } else if (code == CMD_SEND_OP_COND()) {
         response = resp0;
         return Error::OK;
-    } else if (code == CMD_SEND_IF_COND) {
+    } else if (code == CMD_SEND_IF_COND()) {
         return (resp0 == arg) ? Error::OK : Error::Error;
-    } else if (code == CMD_ALL_SEND_CID) {
+    } else if (code == CMD_ALL_SEND_CID()) {
         resp0 |= emmc().response3;
         resp0 |= emmc().response2;
         resp0 |= emmc().response1;
         response = resp0;
         return Error::OK;
-    } else if (code == CMD_SEND_REL_ADDR) {
+    } else if (code == CMD_SEND_REL_ADDR()) {
         // FIXME:should do better error handling
-        //sd_err = (((resp0 & 0x1fff)) | ((resp0 & 0x2000) << 6) | ((resp0 & 0x4000) << 8) | ((resp0 & 0x8000) << 8)) & CMD_ERRORS_MASK;
-        response = resp0 & CMD_RCA_MASK;
+        //sd_err = (((resp0 & 0x1fff)) | ((resp0 & 0x2000) << 6) | ((resp0 & 0x4000) << 8) | ((resp0 & 0x8000) << 8)) & CMDFLAG_ERRORS_MASK;
+        response = resp0 & CMDFLAG_RCA_MASK;
         return Error::Error;
     }
     
-    response = resp0 & CMD_ERRORS_MASK;
+    response = resp0 & CMDFLAG_ERRORS_MASK;
     return Error::OK;
 }
 
 SD::Error SDCard::getSCRValues(uint32_t* scr)
 {    
-    Error error = sendCommand(CMD_SEND_SCR, 0);
+    Error error = sendCommand(CMD_SEND_SCR(), 0);
     if (error != Error::OK) {
         return error;
     }
@@ -376,16 +369,16 @@ SD::Error SDCard::getSCRValues(uint32_t* scr)
         return error;
     }
     
-    uint32_t count = 10000;
     uint32_t index = 0;
-    for (count = 10000; count > 0; --count) { 
+    for (uint32_t count = 10000; index < 2 && count > 0; --count) {
         if (emmc().status & SR_READ_AVAILABLE) {
             scr[index++] = emmc().data;
         } else {
             Timer::usleep(1000);
         }
     }
-    if(index != 2) {
+    if (index != 2) {
+        ERROR_LOG("SDCard: ERROR getSCRValues SR_READ_AVAILABLE never true\n");
         return Error::Error;
     }
     return Error::OK;
@@ -427,12 +420,12 @@ SDCard::SDCard()
     emmc().interruptEnable = 0xffffffff;
     emmc().interruptMask = 0xffffffff;
 
-    if (sendCommand(CMD_GO_IDLE,0) != Error::OK) {
+    if (sendCommand(CMD_GO_IDLE(), 0) != Error::OK) {
         finishFail();
         return;
     }
 
-    if (sendCommand(CMD_SEND_IF_COND, 0x000001AA) != Error::OK) {
+    if (sendCommand(CMD_SEND_IF_COND(), 0x000001AA) != Error::OK) {
         finishFail();
         return;
     }
@@ -443,7 +436,7 @@ SDCard::SDCard()
     
     while(!(response & ACMD41_CMD_COMPLETE) && count--) {
         Timer::usleep(100);
-        error = sendCommand(CMD_SEND_OP_COND, ACMD41_ARG_HC, response);
+        error = sendCommand(CMD_SEND_OP_COND(), ACMD41_ARG_HC, response);
         DEBUG_LOG("EMMC: CMD_SEND_OP_COND returned %s%s%s 0x%08x\n",
             (response & ACMD41_CMD_COMPLETE) ? "COMPLETE " : "",
             (response & ACMD41_VOLTAGE) ? "VOLTAGE " : "",
@@ -466,8 +459,8 @@ SDCard::SDCard()
     }
     
     uint32_t ccs = (response & ACMD41_CMD_CCS) ? SCR_SUPP_CCS : 0;
-    sendCommand(CMD_ALL_SEND_CID, 0);
-    sendCommand(CMD_SEND_REL_ADDR, 0, _rca);
+    sendCommand(CMD_ALL_SEND_CID(), 0);
+    sendCommand(CMD_SEND_REL_ADDR(), 0, _rca);
     DEBUG_LOG("EMMC: CMD_SEND_REL_ADDR returned 0x%08x\n", _rca);
     if (error != Error::OK) {
         finishFail();
@@ -479,7 +472,7 @@ SDCard::SDCard()
         return;
     }
 
-    if (sendCommand(CMD_CARD_SELECT, _rca) != Error::OK) {
+    if (sendCommand(CMD_CARD_SELECT(), _rca) != Error::OK) {
         finishFail();
         return;
     }
@@ -496,9 +489,11 @@ SDCard::SDCard()
         finishFail();
         return;
     }
+    
+    DEBUG_LOG("SDCard: getSCRValues succeeded 0x%08x 0x%08x\n", scr[0], scr[1]);
 
     if (scr[0] & SCR_SD_BUS_WIDTH_4) {
-        if (sendCommand(CMD_SET_BUS_WIDTH,_rca | 2) != Error::OK) {
+        if (sendCommand(CMD_SET_BUS_WIDTH(), _rca | 2) != Error::OK) {
             finishFail();
             return;
         }
