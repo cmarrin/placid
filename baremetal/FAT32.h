@@ -74,7 +74,6 @@ public:
         uint32_t _size = 0;
         uint32_t _baseSector = 0;
         FAT32::FS* _fatfs = nullptr;
-
     };
 
     FS() { }

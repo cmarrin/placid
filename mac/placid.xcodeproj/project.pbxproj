@@ -102,11 +102,9 @@
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		492FF3EB215AF47A003582FE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../baremetal/GPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPIO.h; path = ../baremetal/GPIO.h; sourceTree = "<group>"; };
-		492FF3EE215C4F72003582FE /* sdcard-old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "sdcard-old.h"; path = "../baremetal/sdcard-old.h"; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* SDFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../baremetal/SDFS.h; sourceTree = "<group>"; };
 		492FF3F0215C4F72003582FE /* Mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mailbox.h; path = ../baremetal/Mailbox.h; sourceTree = "<group>"; };
 		492FF3F1215C4F72003582FE /* SDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../baremetal/SDFS.cpp; sourceTree = "<group>"; };
-		492FF3F2215C4F72003582FE /* sdcard-old.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sdcard-old.cpp"; path = "../baremetal/sdcard-old.cpp"; sourceTree = "<group>"; };
 		492FF3F3215C4F72003582FE /* Mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mailbox.cpp; path = ../baremetal/Mailbox.cpp; sourceTree = "<group>"; };
 		492FF3F7215C528C003582FE /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../baremetal/Serial.h; sourceTree = "<group>"; };
 		492FF3F8215C528C003582FE /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../baremetal/Serial.cpp; sourceTree = "<group>"; };
@@ -129,8 +127,6 @@
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../baremetal/util.h; sourceTree = "<group>"; };
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		4965788621695EDE00B3F088 /* sd-old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "sd-old.h"; path = "../baremetal/sd-old.h"; sourceTree = "<group>"; };
-		4965788721695EDE00B3F088 /* sd-old.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sd-old.c"; path = "../baremetal/sd-old.c"; sourceTree = "<group>"; };
 		4965788921695F9700B3F088 /* SD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SD.cpp; path = ../baremetal/SD.cpp; sourceTree = "<group>"; };
 		4965788A21695F9700B3F088 /* SD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SD.h; path = ../baremetal/SD.h; sourceTree = "<group>"; };
 		4965788C2169805800B3F088 /* SDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SDCard.cpp; path = ../baremetal/SDCard.cpp; sourceTree = "<group>"; };
@@ -247,15 +243,11 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
-				4965788721695EDE00B3F088 /* sd-old.c */,
-				4965788621695EDE00B3F088 /* sd-old.h */,
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
 				497EE458216138E2000584CE /* Print.cpp */,
 				497EE459216138E2000584CE /* Print.h */,
 				492FF406215D4799003582FE /* FAT32.cpp */,
 				492FF407215D479A003582FE /* FAT32.h */,
-				492FF3F2215C4F72003582FE /* sdcard-old.cpp */,
-				492FF3EE215C4F72003582FE /* sdcard-old.h */,
 				49629576215AA53B0064B9C9 /* util.cpp */,
 				49629578215AA53B0064B9C9 /* util.h */,
 				492FF3EB215AF47A003582FE /* GPIO.cpp */,
