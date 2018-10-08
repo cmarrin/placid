@@ -60,6 +60,8 @@ namespace placid {
     public:
         SDCard();
         
+        Error readSector(char* buf, uint32_t sectorAddr, uint32_t sectors);
+
     private:
         bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);
         Error setClock(uint32_t freq, uint32_t hostVersion);
@@ -67,10 +69,11 @@ namespace placid {
         Error sendCommand(const Command&, uint32_t arg, uint32_t& response);
         Error readStatus(uint32_t mask);
         Error waitForInterrupt(uint32_t mask);
-        Error getSCRValues(uint32_t* scr);
+        Error setSCRValues();
         void finishFail() const { DEBUG_LOG("SDCard: EMMC init FAILED!\n"); }
         
         uint32_t _rca = 0;
+        uint32_t _scr[2] { 0, 0 };
     };
 
 }

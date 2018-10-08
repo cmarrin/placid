@@ -88,10 +88,10 @@ CMD(CMD_ALL_SEND_CID,   0x02010000)
 CMD(CMD_SEND_REL_ADDR,  0x03020000)
 CMD(CMD_CARD_SELECT,    0x07030000)
 CMD(CMD_SEND_IF_COND,   0x08020000)
-//CMD(CMD_STOP_TRANS,     0x0C030000)
-//CMD(CMD_READ_SINGLE,    0x11220010)
-//CMD(CMD_READ_MULTI,     0x12220032)
-//CMD(CMD_SET_BLOCKCNT,   0x17020000)
+CMD(CMD_STOP_TRANS,     0x0C030000)
+CMD(CMD_READ_SINGLE,    0x11220010)
+CMD(CMD_READ_MULTI,     0x12220032)
+CMD(CMD_SET_BLOCKCNT,   0x17020000)
 CMD(CMD_APP_CMD,        0x37000000)
 CMD(CMD_APP_CMD_48,     (0x37000000 | CMDFLAG_RSPNS_48))
 CMD(CMD_SET_BUS_WIDTH,  (0x06020000 | CMDFLAG_NEED_APP))
@@ -358,7 +358,7 @@ SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& respon
     return Error::OK;
 }
 
-SD::Error SDCard::getSCRValues(uint32_t* scr)
+SD::Error SDCard::setSCRValues()
 {    
     Error error = sendCommand(CMD_SEND_SCR(), 0);
     if (error != Error::OK) {
@@ -372,7 +372,7 @@ SD::Error SDCard::getSCRValues(uint32_t* scr)
     uint32_t index = 0;
     for (uint32_t count = 10000; index < 2 && count > 0; --count) {
         if (emmc().status & SR_READ_AVAILABLE) {
-            scr[index++] = emmc().data;
+            _scr[index++] = emmc().data;
         } else {
             Timer::usleep(1000);
         }
@@ -484,15 +484,14 @@ SDCard::SDCard()
     
     emmc().blockSizeCount = (1 << 16) | 8;
 
-    uint32_t scr[2];
-    if (getSCRValues(scr) != Error::OK) {
+    if (setSCRValues() != Error::OK) {
         finishFail();
         return;
     }
     
-    DEBUG_LOG("SDCard: getSCRValues succeeded 0x%08x 0x%08x\n", scr[0], scr[1]);
+    DEBUG_LOG("SDCard: setSCRValues succeeded 0x%08x 0x%08x\n", _scr[0], _scr[1]);
 
-    if (scr[0] & SCR_SD_BUS_WIDTH_4) {
+    if (_scr[0] & SCR_SD_BUS_WIDTH_4) {
         if (sendCommand(CMD_SET_BUS_WIDTH(), _rca | 2) != Error::OK) {
             finishFail();
             return;
@@ -502,10 +501,78 @@ SDCard::SDCard()
     
     // add software flag
     DEBUG_LOG("EMMC: supports %s%s\n",
-        (scr[0] & SCR_SUPP_SET_BLKCNT) ? "SET_BLKCNT " : "",
+        (_scr[0] & SCR_SUPP_SET_BLKCNT) ? "SET_BLKCNT " : "",
         ccs ? "CCS " : "");
         
-    scr[0] &= ~SCR_SUPP_CCS;
-    scr[0] |= ccs;
+    _scr[0] &= ~SCR_SUPP_CCS;
+    _scr[0] |= ccs;
     DEBUG_LOG("SDCard: EMMC init succeeded\n");
+}
+
+SD::Error SDCard::readSector(char* buf, uint32_t sectorAddr, uint32_t sectors)
+{
+    if (sectors < 1) {
+        sectors = 1;
+    }
+    
+    DEBUG_LOG("SDCard: readSector addr=%llu, num=%d\n", sectorAddr, sectors);
+
+    if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
+        ERROR_LOG("SDCard: readSector timeout on readStatus(SR_DAT_INHIBIT)\n");
+        return Error::Timeout;
+    }
+    
+    uint32_t* currentPtr = reinterpret_cast<uint32_t*>(buf);
+    Error error = Error::OK;
+    
+    if (_scr[0] & SCR_SUPP_CCS) {
+        if (sectors > 1 && (_scr[0] & SCR_SUPP_SET_BLKCNT)) {
+            error = sendCommand(CMD_SET_BLOCKCNT(), sectors);
+            if(error != Error::OK) {
+                ERROR_LOG("SDCard: error sending CMD_SET_BLOCKCNT\n");
+                return error;
+            }
+        }
+        
+        emmc().blockSizeCount = (sectors << 16) | 512;
+        
+        error = sendCommand((sectors == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), sectorAddr);
+        if (error != Error::OK) {
+            ERROR_LOG("SDCard: error sending CMD_READ_*\n");
+            return error;
+        }
+    } else {
+        emmc().blockSizeCount = (1 << 16) | 512;
+    }
+    
+    for (uint32_t currentSector = 0; currentSector < sectors; ++currentSector) {
+        if(!(_scr[0] & SCR_SUPP_CCS)) {
+            error = sendCommand(CMD_READ_SINGLE(), (sectorAddr + currentSector) * 512);
+            if (error != Error::OK) {
+                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (sectorAddr + currentSector) * 512);
+                return error;
+            }
+        }
+        error = waitForInterrupt(INT_READ_RDY);
+        if (error != Error::OK) {
+            ERROR_LOG("ERROR: Timeout waiting for ready to read\n");
+            return error;
+        }
+        
+        for (uint32_t d = 0; d < 128; d++) {
+            currentPtr[d] = emmc().data;
+        }
+        
+        currentPtr += 128;
+    }
+    
+    if (sectors > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
+        error = sendCommand(CMD_STOP_TRANS(), 0);
+        if (error != Error::OK) {
+            ERROR_LOG("ERROR: sending CMD_STOP_TRANS\n");
+            return error;
+        }
+    }
+    
+    return Error::OK;
 }
