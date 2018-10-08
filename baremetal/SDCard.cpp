@@ -515,7 +515,7 @@ SD::Error SDCard::readSector(char* buf, uint32_t sectorAddr, uint32_t sectors)
         sectors = 1;
     }
     
-    DEBUG_LOG("SDCard: readSector addr=%llu, num=%d\n", sectorAddr, sectors);
+    DEBUG_LOG("SDCard: readSector addr=%d, num=%d\n", sectorAddr, sectors);
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
         ERROR_LOG("SDCard: readSector timeout on readStatus(SR_DAT_INHIBIT)\n");

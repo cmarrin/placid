@@ -49,7 +49,7 @@ int main(int argc, const char * argv[])
 {
     Serial::init();
         
-    Serial::printf("\n\nPlacid Bootloader v0.1\n\n");
+    Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
     Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
     Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     

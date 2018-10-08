@@ -41,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace placid {
 
-#define DEBUG_SD
+//#define DEBUG_SD
 
     // Interface to SD devices. This includes SD cards and SDIO devices
     // (like the WiFi chip on the RPi 3 and Zero W)

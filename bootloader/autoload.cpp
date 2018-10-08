@@ -44,14 +44,14 @@ using namespace placid;
 void autoload()
 {
     SDFS fs;
-    SDFS::Error e = SDFS::mount(fs, 0, 0);
+    SDFS::Error e = fs.mount(0, 0);
     if (e != SDFS::Error::OK) {
         Serial::printf("*** error mounting:%d\n", static_cast<int>(e));
         return;
     }
     
     File fp;
-    bool r = SDFS::open(fs, fp, "kernel.bin", "r");
+    bool r = fs.open(fp, "kernel.bin", "r");
     if (!r) {
         Serial::printf("*** File open error:%d\n", File::error(fp));
         return;
@@ -63,7 +63,7 @@ void autoload()
     
     for (uint32_t sector = 0; size != 0; ++sector) {
         char buf[512];
-        SDFS::Error result = File::read(fs, fp, buf, sector, 1);
+        SDFS::Error result = File::read(fp, buf, sector, 1);
         if (result != SDFS::Error::OK) {
             Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;

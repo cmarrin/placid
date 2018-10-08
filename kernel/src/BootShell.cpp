@@ -43,7 +43,7 @@ using namespace placid;
 
 const char* BootShell::welcomeString() const
 {
-	return "\n\nPlacid Kernel Shell v0.1";
+	return "\n\nPlacid Kernel Shell v0.2";
 }
 
 const char* BootShell::helpString() const

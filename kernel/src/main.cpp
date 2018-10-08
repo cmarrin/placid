@@ -85,19 +85,6 @@ int main()
     Serial::init();
     Timer::init();
     
-    Serial::printf("Initializing SD card\n");
-    SDCard sd;
-    Serial::printf("Finished initializing SD card\n");
-    Serial::printf("Reading sector 0\n");
-    char buf[512];
-    if (sd.readSector(buf, 0, 1) == SD::Error::OK) {
-        Serial::printf("Partition 0:\n");
-        for (int i = 0; i < 16; ++i) {
-            Serial::printf("%02x, ", buf[0x1be + i]);
-        }
-        Serial::printf("\n");
-    }
-    
     Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
 
     timingTest("Memory perf without cache");

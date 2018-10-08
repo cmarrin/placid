@@ -128,22 +128,24 @@ static inline uint16_t bufToUInt16(uint8_t* buf)
             static_cast<uint16_t>((buf[1] << 8));
 }
 
-FS::Error FS::mount(FS& fs, uint8_t partition,  ReadRawCB readRaw, WriteRawCB writeRaw)
+FS::Error FS::mount(uint8_t partition,  RawIO* rawIO)
 {
     if (partition >= 4) {
         return Error::UnsupportedPartition;
     }
     
-    if (fs._mounted) {
+    if (_mounted) {
         return Error::OK;
     }
     
-    fs._readRaw = readRaw;
-    fs._writeRaw = writeRaw;
+    _rawIO = rawIO;
+    if (!rawIO) {
+        return Error::OK;
+    }
     
     // Read the MBR
     char buf[512];
-    if (fs._readRaw(buf, 0, 1) != 1) {
+    if (_rawIO->read(buf, 0, 1) != 1) {
         return Error::MBRReadError;
     }
     
@@ -160,11 +162,11 @@ FS::Error FS::mount(FS& fs, uint8_t partition,  ReadRawCB readRaw, WriteRawCB wr
     }
     
     // Exrtract the needed values
-    fs._firstSector = bufToUInt32(mbr->partitions[partition].lbaStart);
-    fs._sizeInSectors = bufToUInt32(mbr->partitions[partition].lbaCount);
+    _firstSector = bufToUInt32(mbr->partitions[partition].lbaStart);
+    _sizeInSectors = bufToUInt32(mbr->partitions[partition].lbaCount);
     
     // Read the Boot Sector
-    if (fs._readRaw(buf, fs._firstSector, 1) != 1) {
+    if (_rawIO->read(buf, _firstSector, 1) != 1) {
         return Error::BPBReadError;
     }
     
@@ -193,31 +195,31 @@ FS::Error FS::mount(FS& fs, uint8_t partition,  ReadRawCB readRaw, WriteRawCB wr
     // Exrtract the needed values
     uint16_t reservedSectors = bufToUInt16(bootSector->reservedSectors);
     
-    fs._sectorsPerFAT = bufToUInt32(bootSector->sectorsPerFAT32);
-    fs._sectorsPerCluster = bootSector->sectorsPerCluster;
-    fs._startFATSector = fs._firstSector + reservedSectors;
-    fs._startDataSector = fs._startFATSector + (fs._sectorsPerFAT * 2);
-    fs._rootDirectoryStartSector = FS::clusterToSector(fs, bufToUInt32(bootSector->rootDirectoryStartCluster));
+    _sectorsPerFAT = bufToUInt32(bootSector->sectorsPerFAT32);
+    _sectorsPerCluster = bootSector->sectorsPerCluster;
+    _startFATSector = _firstSector + reservedSectors;
+    _startDataSector = _startFATSector + (_sectorsPerFAT * 2);
+    _rootDirectoryStartSector = FS::clusterToSector(bufToUInt32(bootSector->rootDirectoryStartCluster));
     
-    fs._mounted = true;
+    _mounted = true;
     return Error::OK;
 }
 
-bool FS::find(const FS& fs, File& file, const char* name)
+bool FS::find(File& file, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
     char nameToFind[11];
     convertTo8dot3(nameToFind, name);
 
     
-    uint32_t dirSector = fs._rootDirectoryStartSector;
+    uint32_t dirSector = _rootDirectoryStartSector;
 
     char buf[512];
     static constexpr uint32_t EntriesPerSector = 512 / 32;
     
     // Read one sector at a time
-    for (uint32_t dirSectorIndex = 0; dirSectorIndex < FS::sectorsPerCluster(fs); ++dirSectorIndex) {
-        if (fs._readRaw(buf, dirSector + dirSectorIndex, 1) != 1) {
+    for (uint32_t dirSectorIndex = 0; dirSectorIndex < FS::sectorsPerCluster(); ++dirSectorIndex) {
+        if (_rawIO->read(buf, dirSector + dirSectorIndex, 1) != 1) {
             return false;
         }
         
@@ -233,10 +235,11 @@ bool FS::find(const FS& fs, File& file, const char* name)
                 file._name[11] = '\0';
         
                 file._size = bufToUInt32(ent[entryIndex].size);
+                file._fatfs = this;
         
                 // first cluster is in this crazy hi/lo split format
                 uint32_t baseCluster = (static_cast<uint32_t>(bufToUInt16(ent[entryIndex].firstClusterHi)) << 16) + static_cast<uint32_t>(bufToUInt16(ent[entryIndex].firstClusterLo));
-                file._baseSector = clusterToSector(fs, baseCluster);
+                file._baseSector = clusterToSector(baseCluster);
                 return true;
             }
         }
@@ -246,14 +249,14 @@ bool FS::find(const FS& fs, File& file, const char* name)
     return false;
 }
     
-FS::Error FS::read(const FS& fs, const File& file, char* buf, uint64_t sectorAddr, uint32_t sectors)
+FS::Error FS::read(const File& file, char* buf, uint32_t sectorAddr, uint32_t sectors)
 {
-    int32_t result = fs._readRaw(buf, (file._baseSector + sectorAddr), sectors);
+    int32_t result = _rawIO->read(buf, (file._baseSector + sectorAddr), sectors);
     return (result == static_cast<int32_t>(sectors)) ? Error::OK : Error::WrongSizeRead;
 }
 
-FS::Error FS::write(const FS& fs, const File& file, const char* buf, uint64_t sectorAddr, uint32_t sectors)
+FS::Error FS::write(const File& file, const char* buf, uint32_t sectorAddr, uint32_t sectors)
 {
-    int32_t result = fs._writeRaw(buf, (file._baseSector + sectorAddr), sectors);
+    int32_t result = _rawIO->write(buf, (file._baseSector + sectorAddr), sectors);
     return (result == static_cast<int32_t>(sectors)) ? Error::OK : Error::WrongSizeWrite;
 }

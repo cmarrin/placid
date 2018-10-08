@@ -42,9 +42,12 @@ namespace FAT32 {
 class FS {
 public:
     static constexpr uint32_t FilenameLength = 32;
-
-    typedef int32_t (*ReadRawCB)(char* buf, uint64_t sectorAddr, uint32_t sectors);
-    typedef int32_t (*WriteRawCB)(const char* buf, uint64_t sectorAddr, uint32_t sectors);
+    
+    struct RawIO
+    {
+        virtual int32_t read(char* buf, uint32_t sectorAddr, uint32_t sectors) = 0;
+        virtual int32_t write(const char* buf, uint32_t sectorAddr, uint32_t sectors) = 0;
+    };
 
     enum class Error {
         OK = 0,
@@ -70,27 +73,29 @@ public:
         char _name[FilenameLength]; // Passed in name converted to 8.3
         uint32_t _size = 0;
         uint32_t _baseSector = 0;
+        FAT32::FS* _fatfs = nullptr;
+
     };
 
     FS() { }
     
-    static Error mount(FS&, uint8_t partition, ReadRawCB, WriteRawCB);
-    static bool mounted(const FS& fs) { return fs._mounted; }
+    Error mount(uint8_t partition, RawIO*);
+    bool mounted() { return _mounted; }
     
-    static bool find(const FS&, File&, const char* name);
+    bool find(File&, const char* name);
     
-    static Error read(const FS&, const File&, char* buf, uint64_t sectorAddr, uint32_t sectors);    
-    static Error write(const FS&, const File&, const char* buf, uint64_t sectorAddr, uint32_t sectors);    
+    Error read(const File&, char* buf, uint32_t sectorAddr, uint32_t sectors);    
+    Error write(const File&, const char* buf, uint32_t sectorAddr, uint32_t sectors);    
     
-    static uint32_t sizeInSectors(const FS& fs) { return fs._sizeInSectors; }
+    uint32_t sizeInSectors() { return _sizeInSectors; }
 
     private:    
-    static uint32_t sectorsPerCluster(const FS& fs) { return fs._sectorsPerCluster; }
-    static uint32_t clusterSize(const FS& fs) { return fs._sectorsPerCluster * 512; }
+    uint32_t sectorsPerCluster() { return _sectorsPerCluster; }
+    uint32_t clusterSize() { return _sectorsPerCluster * 512; }
     
-    static uint32_t clusterToSector(const FS& fs, uint32_t cluster)
+    uint32_t clusterToSector(uint32_t cluster)
     {
-        return fs._startDataSector + (cluster - 2) * fs._sectorsPerCluster;
+        return _startDataSector + (cluster - 2) * _sectorsPerCluster;
     }
     
     bool _mounted = false;
@@ -102,8 +107,7 @@ public:
     uint32_t _sectorsPerFAT = 0;                // size of a FAT in sectors
     uint32_t _startDataSector = 0;              // start of data
     
-    ReadRawCB _readRaw;
-    WriteRawCB _writeRaw;
+    RawIO* _rawIO = nullptr;
 };
 
 }

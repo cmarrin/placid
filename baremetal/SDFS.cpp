@@ -35,63 +35,49 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "SDFS.h"
 
-//#include "sdcard.h"
+#include "SDCard.h"
 #include "util.h"
 #include "Serial.h"
 #include "Timer.h"
 
 using namespace placid;
 
-static int32_t readRaw(char* buf, uint64_t sectorAddr, uint32_t sectors)
+int32_t SDFS::read(char* buf, uint32_t sectorAddr, uint32_t sectors)
 {
-//    int r = sdTransferBlocks(sectorAddr * 512, sectors, reinterpret_cast<uint8_t*>(buf), 0);
-//    if (r != 0) {
-//        Serial::printf("*** Disk Read Error: return code=%d\n", r);
-//        return -r;
-//    }
+    SD::Error error = _sd.readSector(buf, sectorAddr, sectors);
+    if (error != SD::Error::OK) {
+        Serial::printf("*** Disk Read Error: return code=%d\n", static_cast<uint32_t>(error));
+        return -static_cast<uint32_t>(error);
+    }
     return static_cast<int32_t>(sectors);
 }
 
-static int32_t writeRaw(const char* buf, uint64_t sectorAddr, uint32_t sectors)
-{
-    // FIXME: Implement
-    return -1;
-}
-
-SDFS::Error SDFS::mount(SDFS& fs, uint8_t device, uint8_t partition)
+SDFS::Error SDFS::mount(uint8_t device, uint8_t partition)
 {
     if (device != 0) {
         return Error::UnsupportedDevice;
     }
-    
-    //sdInit();
-    Timer::usleep(100);
-    //int r = sdInitCard();
-    Timer::usleep(10000);
-//    if (r != SD_OK && r != SD_CARD_CHANGED) {
-//        return Error::SDCardInitFailed;
-//    }
-    
-    return static_cast<Error>(FAT32::FS::mount(fs._fatfs, partition, readRaw, writeRaw));
+
+    return static_cast<Error>(_fatfs.mount(partition, this));
 }
 
-bool SDFS::open(const SDFS& fs, File& file, const char* name, const char* mode)
+bool SDFS::open(File& file, const char* name, const char* mode)
 {
-    if (!fs._fatfs.find(fs._fatfs, file._file, name)) {
+    if (!_fatfs.find(file._file, name)) {
         return false;
     }
     
     return true;
 }
 
-SDFS::Error File::read(SDFS& fs, File& file, char* buf, uint64_t sectorAddr, uint32_t sectors)
+SDFS::Error File::read(File& file, char* buf, uint32_t sectorAddr, uint32_t sectors)
 {
-    file._error = static_cast<SDFS::Error>(fs._fatfs.read(fs._fatfs, file._file, buf, sectorAddr, sectors));
+    file._error = static_cast<SDFS::Error>(file._file._fatfs->read(file._file, buf, sectorAddr, sectors));
     return file._error;
 }
 
-SDFS::Error File::write(SDFS& fs, File& file, const char* buf, uint64_t sectorAddr, uint32_t sectors)
+SDFS::Error File::write(File& file, const char* buf, uint32_t sectorAddr, uint32_t sectors)
 {
-    file._error = static_cast<SDFS::Error>(fs._fatfs.write(fs._fatfs, file._file, buf, sectorAddr, sectors));
+    file._error = static_cast<SDFS::Error>(file._file._fatfs->write(file._file, buf, sectorAddr, sectors));
     return file._error;
 }

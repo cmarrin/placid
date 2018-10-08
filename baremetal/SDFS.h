@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 #include "FAT32.h"
+#include "SDCard.h"
 
 namespace placid {
 
@@ -44,7 +45,7 @@ const uint32_t FilenameLength = 32;
 
 class File;
 
-class SDFS {
+class SDFS : public FAT32::FS::RawIO {
     friend class File;
     
 public:
@@ -56,21 +57,25 @@ public:
     
     SDFS() { }
     
-    static Error mount(SDFS&, uint8_t device, uint8_t partition);
-    static bool open(const SDFS&, File&, const char* name, const char* mode);
+    Error mount(uint8_t device, uint8_t partition);
+    bool open(File&, const char* name, const char* mode);
 
-    static uint32_t sizeInSectors(const SDFS& fs) { return fs._fatfs.sizeInSectors(fs._fatfs); }
+    uint32_t sizeInSectors() { return _fatfs.sizeInSectors(); }
     
-    private:    
-        FAT32::FS _fatfs;
+private:    
+    virtual int32_t read(char* buf, uint32_t sectorAddr, uint32_t sectors) override;
+    virtual int32_t write(const char* buf, uint32_t sectorAddr, uint32_t sectors) override { return -1; }
+        
+    SDCard _sd;
+    FAT32::FS _fatfs;
 };
 
 class File {
     friend class SDFS;
     
 public:      
-    static SDFS::Error read(SDFS&, File&, char* buf, uint64_t sectorAddr, uint32_t sectors);    
-    static SDFS::Error write(SDFS&, File&, const char* buf, uint64_t sectorAddr, uint32_t sectors);    
+    static SDFS::Error read(File&, char* buf, uint32_t sectorAddr, uint32_t sectors);    
+    static SDFS::Error write(File&, const char* buf, uint32_t sectorAddr, uint32_t sectors);    
 
     static bool valid(const File& file) { return file._error == SDFS::Error::OK; }
     static uint32_t size(const File& file) { return file._file._size; }

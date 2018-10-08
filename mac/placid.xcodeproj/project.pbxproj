@@ -28,8 +28,9 @@
 		4962957C215AA53B0064B9C9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* util.h */; };
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
-		4965788B21695F9700B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
-		4965788E2169805800B3F088 /* SDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788C2169805800B3F088 /* SDCard.cpp */; };
+		49657890216BFD7400B3F088 /* SDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788C2169805800B3F088 /* SDCard.cpp */; };
+		49657891216BFD8B00B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
+		49657892216BFDA200B3F088 /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* SDFS.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
@@ -411,12 +412,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4965788E2169805800B3F088 /* SDCard.cpp in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				497EE45D2161982F000584CE /* printf.cpp in Sources */,
 				49931A0F2168AFA700257E42 /* String.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
-				4965788B21695F9700B3F088 /* SD.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				497EE46121628A95000584CE /* Memory.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
@@ -428,8 +427,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49657891216BFD8B00B3F088 /* SD.cpp in Sources */,
 				49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */,
+				49657890216BFD7400B3F088 /* SDCard.cpp in Sources */,
 				492FF405215C5359003582FE /* InterruptManager.cpp in Sources */,
+				49657892216BFDA200B3F088 /* SDFS.cpp in Sources */,
 				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
