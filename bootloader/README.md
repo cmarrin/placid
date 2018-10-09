@@ -49,12 +49,12 @@ first attempt. I finally found sdcard.c which was part of the RPiHaribote projec
 is a great piece of code which didn't have many dependencies, and it had some nice logging code that helped
 enormously in getting it working in my environment.
 
-With code under my belt to read raw sectors, I decided to write my own FAT32 format reader. Again, I looked
+With code under my belt to read raw blocks, I decided to write my own FAT32 format reader. Again, I looked
 at a lot of code, but all of it was hard to use. For one thing many of them handled every variant of FAT
 and were therefore huge (when's the last time you saw a FAT16 formatted disk?).
 
 Turns out FAT32 isn't too bad as long as you limit what you're trying to do. First, I decided to only support
-FAT32 using LBA disk addressing. And I'm limited to 512 byte sectors and 2 FAT copies. All of the cards I've 
+FAT32 using LBA disk addressing. And I'm limited to 512 byte blocks and 2 FAT copies. All of the cards I've 
 tried so far meet these requirements. I can rethink that decision if I find something I can't support. I also
 am only doing file reading since that's all I need for a bootloader. When I start on the actual kernel I'll
 have to flesh out the implementation. I also only support bare file names with no path specifiers. So all
@@ -64,7 +64,7 @@ holds about a thousand files. So I think it will hold me for a while. Finally, I
 filenames. I convert incoming names to 8.3 so it should work pretty well in most cases.
 
 Because of all this the code is pretty light on memory. I never read in the FAT, so I don't need to take up
-memory for that. And I read the root directory one sector at a time when doing a file name search. That 
+memory for that. And I read the root directory one block at a time when doing a file name search. That 
 512 byte buffer is allocated on the stack, and since I have at least 12KB to work with, there should be 
 plenty of space. This would be very inefficient if it weren't for the fact that I'll mostly be searching
 for one file and then loading that.

@@ -35,32 +35,28 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "FS.h"
 #include <stdint.h>
 
-namespace FAT32 {
+namespace placid {
 
-class FS {
+class FAT32 : public FS::Device
+{
 public:
     static constexpr uint32_t FilenameLength = 32;
     
-    struct RawIO
-    {
-        virtual int32_t read(char* buf, uint32_t sectorAddr, uint32_t sectors) = 0;
-        virtual int32_t write(const char* buf, uint32_t sectorAddr, uint32_t sectors) = 0;
-    };
-
     enum class Error {
         OK = 0,
         UnsupportedType = 100, 
         UnsupportedPartition, 
-        UnsupportedSectorSize,
+        UnsupportedBlockSize,
         UnsupportedFATCount,
         BadMBRSignature,
         BadBPBSignature,
-        SDCardInitFailed,
         MBRReadError,
         BPBReadError,
-        RootDirReadError,
+        DirReadError,
+        FileNotFound,
         OnlyFAT32LBASupported,
         InvalidFAT32Volume,
         WrongSizeRead,
@@ -69,44 +65,38 @@ public:
         Incomplete
     };
     
-    struct File {
-        char _name[FilenameLength]; // Passed in name converted to 8.3
-        uint32_t _size = 0;
-        uint32_t _baseSector = 0;
-        FAT32::FS* _fatfs = nullptr;
-    };
-
-    FS() { }
+    FAT32(FS::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
     
-    Error mount(uint8_t partition, RawIO*);
+    virtual FS::Error mount() override;
+    virtual FS::Error read(char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) override;    
+    virtual FS::Error write(const char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) override;    
+    virtual bool find(FS::FileInfo&, const char* name) override;
+    virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
+    virtual const char* errorDetail() const override;
+
     bool mounted() { return _mounted; }
     
-    bool find(File&, const char* name);
-    
-    Error read(const File&, char* buf, uint32_t sectorAddr, uint32_t sectors);    
-    Error write(const File&, const char* buf, uint32_t sectorAddr, uint32_t sectors);    
-    
-    uint32_t sizeInSectors() { return _sizeInSectors; }
-
     private:    
-    uint32_t sectorsPerCluster() { return _sectorsPerCluster; }
-    uint32_t clusterSize() { return _sectorsPerCluster * 512; }
+    uint32_t blocksPerCluster() { return _blocksPerCluster; }
+    uint32_t clusterSize() { return _blocksPerCluster * 512; }
     
-    uint32_t clusterToSector(uint32_t cluster)
+    uint32_t clusterToBlock(uint32_t cluster)
     {
-        return _startDataSector + (cluster - 2) * _sectorsPerCluster;
+        return _startDataBlock + (cluster - 2) * _blocksPerCluster;
     }
     
     bool _mounted = false;
-    uint32_t _firstSector = 0;                  // first sector of this partition
-    uint32_t _sizeInSectors = 0;                // size in sectors of this partition
-    uint8_t _sectorsPerCluster = 0;             // cluster size in sectors
-    uint32_t _rootDirectoryStartSector = 0;     // first sector of root dir
-    uint32_t _startFATSector = 0;               // location of FAT
-    uint32_t _sectorsPerFAT = 0;                // size of a FAT in sectors
-    uint32_t _startDataSector = 0;              // start of data
+    uint32_t _firstBlock = 0;                  // first block of this partition
+    uint32_t _sizeInBlocks = 0;                // size in blocks of this partition
+    uint8_t _blocksPerCluster = 0;             // cluster size in blocks
+    uint32_t _rootDirectoryStartBlock = 0;     // first block of root dir
+    uint32_t _startFATBlock = 0;               // location of FAT
+    uint32_t _blocksPerFAT = 0;                // size of a FAT in blocks
+    uint32_t _startDataBlock = 0;              // start of data
     
-    RawIO* _rawIO = nullptr;
+    FS::RawIO* _rawIO = nullptr;
+    uint8_t _partition = 0;
+    Error _error = Error::OK;
 };
 
 }

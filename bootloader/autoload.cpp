@@ -35,7 +35,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "sdcard.h"
 #include "Serial.h"
-#include "SDFS.h"
+#include "FAT32.h"
+#include "SDCard.h"
+#include "FS.h"
 #include "Timer.h"
 #include "util.h"
 
@@ -43,28 +45,30 @@ using namespace placid;
 
 void autoload()
 {
-    SDFS fs;
-    SDFS::Error e = fs.mount(0, 0);
-    if (e != SDFS::Error::OK) {
-        Serial::printf("*** error mounting:%d\n", static_cast<int>(e));
+    SDCard sdCard;
+    FAT32 fatFS(&sdCard, 0);
+    FS fs;
+    FS::Error e = fs.mount(&fatFS);
+    if (e != FS::Error::OK) {
+        Serial::printf("*** error mounting:%s\n", fs.errorDetail());
         return;
     }
     
     File fp;
     bool r = fs.open(fp, "kernel.bin", "r");
     if (!r) {
-        Serial::printf("*** File open error:%d\n", File::error(fp));
+        Serial::printf("*** File open error:%s\n", fs.errorDetail());
         return;
     }
     
     // FIXME: Currently only loads one cluster, limiting the file size to 32KB
     uint32_t addr = ARMBASE;
-    uint32_t size = File::size(fp);
+    uint32_t size = fp.size();
     
-    for (uint32_t sector = 0; size != 0; ++sector) {
+    for (uint32_t block = 0; size != 0; ++block) {
         char buf[512];
-        SDFS::Error result = File::read(fp, buf, sector, 1);
-        if (result != SDFS::Error::OK) {
+        FS::Error result = fp.read(buf, block, 1);
+        if (result != FS::Error::OK) {
             Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;
         }

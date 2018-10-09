@@ -30,7 +30,7 @@
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49657890216BFD7400B3F088 /* SDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788C2169805800B3F088 /* SDCard.cpp */; };
 		49657891216BFD8B00B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
-		49657892216BFDA200B3F088 /* SDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* SDFS.cpp */; };
+		49657892216BFDA200B3F088 /* FS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* FS.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
@@ -102,9 +102,9 @@
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		492FF3EB215AF47A003582FE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../baremetal/GPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPIO.h; path = ../baremetal/GPIO.h; sourceTree = "<group>"; };
-		492FF3EF215C4F72003582FE /* SDFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDFS.h; path = ../baremetal/SDFS.h; sourceTree = "<group>"; };
+		492FF3EF215C4F72003582FE /* FS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FS.h; path = ../baremetal/FS.h; sourceTree = "<group>"; };
 		492FF3F0215C4F72003582FE /* Mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mailbox.h; path = ../baremetal/Mailbox.h; sourceTree = "<group>"; };
-		492FF3F1215C4F72003582FE /* SDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDFS.cpp; path = ../baremetal/SDFS.cpp; sourceTree = "<group>"; };
+		492FF3F1215C4F72003582FE /* FS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FS.cpp; path = ../baremetal/FS.cpp; sourceTree = "<group>"; };
 		492FF3F3215C4F72003582FE /* Mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mailbox.cpp; path = ../baremetal/Mailbox.cpp; sourceTree = "<group>"; };
 		492FF3F7215C528C003582FE /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../baremetal/Serial.h; sourceTree = "<group>"; };
 		492FF3F8215C528C003582FE /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../baremetal/Serial.cpp; sourceTree = "<group>"; };
@@ -260,8 +260,8 @@
 				4965788A21695F9700B3F088 /* SD.h */,
 				4965788C2169805800B3F088 /* SDCard.cpp */,
 				4965788D2169805800B3F088 /* SDCard.h */,
-				492FF3F1215C4F72003582FE /* SDFS.cpp */,
-				492FF3EF215C4F72003582FE /* SDFS.h */,
+				492FF3F1215C4F72003582FE /* FS.cpp */,
+				492FF3EF215C4F72003582FE /* FS.h */,
 				492FF3F8215C528C003582FE /* Serial.cpp */,
 				492FF3F7215C528C003582FE /* Serial.h */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
@@ -423,7 +423,7 @@
 				49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */,
 				49657890216BFD7400B3F088 /* SDCard.cpp in Sources */,
 				492FF405215C5359003582FE /* InterruptManager.cpp in Sources */,
-				49657892216BFDA200B3F088 /* SDFS.cpp in Sources */,
+				49657892216BFDA200B3F088 /* FS.cpp in Sources */,
 				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,

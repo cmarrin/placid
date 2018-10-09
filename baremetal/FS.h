@@ -36,8 +36,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <stdint.h>
-#include "FAT32.h"
-#include "SDCard.h"
 
 namespace placid {
 
@@ -45,45 +43,69 @@ const uint32_t FilenameLength = 32;
 
 class File;
 
-class SDFS : public FAT32::FS::RawIO {
+class FS {
     friend class File;
     
 public:
     enum class Error {
         OK = 0,
+        Failed,
         UnsupportedDevice, 
         SDCardInitFailed,
     };
     
-    SDFS() { }
+    struct RawIO
+    {
+        virtual int32_t read(char* buf, uint32_t blockAddr, uint32_t blocks) = 0;
+        virtual int32_t write(const char* buf, uint32_t blockAddr, uint32_t blocks) = 0;
+    };
     
-    Error mount(uint8_t device, uint8_t partition);
-    bool open(File&, const char* name, const char* mode);
+    struct FileInfo {
+        char name[FilenameLength]; // Passed in name converted to 8.3
+        uint32_t size = 0;
+        uint32_t baseBlock = 0;
+    };
 
-    uint32_t sizeInSectors() { return _fatfs.sizeInSectors(); }
+    struct Device
+    {
+        virtual uint32_t sizeInBlocks() const = 0;
+        virtual FS::Error mount() = 0;
+        virtual FS::Error read(char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) = 0;    
+        virtual FS::Error write(const char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) = 0;    
+        virtual bool find(FS::FileInfo&, const char* name) = 0;
+        virtual const char* errorDetail() const = 0;
+    };
+
+    FS() { }
+    
+    Error mount(Device*);
+    bool open(File&, const char* name, const char* mode);
+    
+    const char* errorDetail() { return _device->errorDetail(); }
+
+    uint32_t sizeInBlocks() { return _device ? _device->sizeInBlocks() : 0; }
     
 private:    
-    virtual int32_t read(char* buf, uint32_t sectorAddr, uint32_t sectors) override;
-    virtual int32_t write(const char* buf, uint32_t sectorAddr, uint32_t sectors) override { return -1; }
         
-    SDCard _sd;
-    FAT32::FS _fatfs;
+    Device* _device;
 };
 
 class File {
-    friend class SDFS;
+    friend class FS;
     
 public:      
-    static SDFS::Error read(File&, char* buf, uint32_t sectorAddr, uint32_t sectors);    
-    static SDFS::Error write(File&, const char* buf, uint32_t sectorAddr, uint32_t sectors);    
+    FS::Error read(char* buf, uint32_t blockAddr, uint32_t blocks);    
+    FS::Error write(const char* buf, uint32_t blockAddr, uint32_t blocks);    
 
-    static bool valid(const File& file) { return file._error == SDFS::Error::OK; }
-    static uint32_t size(const File& file) { return file._file._size; }
-    static SDFS::Error error(const File& file) { return file._error; }
+    bool valid() { return _error == FS::Error::OK; }
+    uint32_t size() { return _size; }
+    FS::Error error() { return _error; }
 
-protected:
-    FAT32::FS::File _file;
-    SDFS::Error _error = SDFS::Error::OK;
+private:
+    FS::Error _error = FS::Error::OK;
+    uint32_t _size = 0;
+    uint32_t _baseBlock;
+    FS::Device* _device = nullptr;
 };
 
 }

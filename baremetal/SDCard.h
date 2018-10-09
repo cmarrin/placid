@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "SD.h"
+#include "FS.h"
 #include <stdint.h>
 #include <functional>
 
@@ -55,12 +56,13 @@ namespace placid {
     };
 
     // SD Card interface. Subclass of SD
-    class SDCard : public SD
+    class SDCard : public SD, public FS::RawIO
     {
     public:
         SDCard();
         
-        Error readSector(char* buf, uint32_t sectorAddr, uint32_t sectors);
+        virtual int32_t read(char* buf, uint32_t blockAddr, uint32_t blocks) override;
+        virtual int32_t write(const char* buf, uint32_t blockAddr, uint32_t blocks) override { return -1; }
 
     private:
         bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);

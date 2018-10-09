@@ -40,6 +40,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace placid;
 
+#ifdef __APPLE__
+SDCard::SDCard()
+    : SD(0, 0, 0, 0, 0, 0, 0)
+{ }
+int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks) { return blocks; }
+#else
 static constexpr uint32_t EMMCBase = 0x20300000;
 
 struct EMMC
@@ -509,54 +515,54 @@ SDCard::SDCard()
     DEBUG_LOG("SDCard: EMMC init succeeded\n");
 }
 
-SD::Error SDCard::readSector(char* buf, uint32_t sectorAddr, uint32_t sectors)
+int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
 {
-    if (sectors < 1) {
-        sectors = 1;
+    if (blocks < 1) {
+        blocks = 1;
     }
     
-    DEBUG_LOG("SDCard: readSector addr=%d, num=%d\n", sectorAddr, sectors);
+    DEBUG_LOG("SDCard: readBlock addr=%d, num=%d\n", blockAddr, blocks);
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
-        ERROR_LOG("SDCard: readSector timeout on readStatus(SR_DAT_INHIBIT)\n");
-        return Error::Timeout;
+        ERROR_LOG("SDCard: readBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
+        return -1;
     }
     
     uint32_t* currentPtr = reinterpret_cast<uint32_t*>(buf);
     Error error = Error::OK;
     
     if (_scr[0] & SCR_SUPP_CCS) {
-        if (sectors > 1 && (_scr[0] & SCR_SUPP_SET_BLKCNT)) {
-            error = sendCommand(CMD_SET_BLOCKCNT(), sectors);
+        if (blocks > 1 && (_scr[0] & SCR_SUPP_SET_BLKCNT)) {
+            error = sendCommand(CMD_SET_BLOCKCNT(), blocks);
             if(error != Error::OK) {
                 ERROR_LOG("SDCard: error sending CMD_SET_BLOCKCNT\n");
-                return error;
+                return -1;
             }
         }
         
-        emmc().blockSizeCount = (sectors << 16) | 512;
+        emmc().blockSizeCount = (blocks << 16) | 512;
         
-        error = sendCommand((sectors == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), sectorAddr);
+        error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr);
         if (error != Error::OK) {
             ERROR_LOG("SDCard: error sending CMD_READ_*\n");
-            return error;
+            return -1;
         }
     } else {
         emmc().blockSizeCount = (1 << 16) | 512;
     }
     
-    for (uint32_t currentSector = 0; currentSector < sectors; ++currentSector) {
+    for (uint32_t currentBlock = 0; currentBlock < blocks; ++currentBlock) {
         if(!(_scr[0] & SCR_SUPP_CCS)) {
-            error = sendCommand(CMD_READ_SINGLE(), (sectorAddr + currentSector) * 512);
+            error = sendCommand(CMD_READ_SINGLE(), (blockAddr + currentBlock) * 512);
             if (error != Error::OK) {
-                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (sectorAddr + currentSector) * 512);
-                return error;
+                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr + currentBlock) * 512);
+                return -1;
             }
         }
         error = waitForInterrupt(INT_READ_RDY);
         if (error != Error::OK) {
             ERROR_LOG("ERROR: Timeout waiting for ready to read\n");
-            return error;
+            return -1;
         }
         
         for (uint32_t d = 0; d < 128; d++) {
@@ -566,13 +572,14 @@ SD::Error SDCard::readSector(char* buf, uint32_t sectorAddr, uint32_t sectors)
         currentPtr += 128;
     }
     
-    if (sectors > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
+    if (blocks > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
         error = sendCommand(CMD_STOP_TRANS(), 0);
         if (error != Error::OK) {
             ERROR_LOG("ERROR: sending CMD_STOP_TRANS\n");
-            return error;
+            return -1;
         }
     }
     
-    return Error::OK;
+    return blocks;
 }
+#endif // __APPLE__

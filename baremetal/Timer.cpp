@@ -73,7 +73,6 @@ struct SystemTimer
 TimerCallback* Timer::_cb = nullptr;
 int64_t Timer::_epochOffset = 0;
 
-
 static constexpr uint32_t ARMTimerBase = 0x2000B400;
 static constexpr uint32_t SystemTimerBase = 0x20003000;
 
