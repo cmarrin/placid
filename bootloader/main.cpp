@@ -38,7 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
-using namespace placid;
 
 void autoload(void);
 void xmodemReceive(void);
@@ -47,20 +46,20 @@ static constexpr uint32_t AutoloadTimeout = 3;
 
 int main(int argc, const char * argv[])
 {
-    Serial::init();
+    bare::Serial::init();
         
-    Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
-    Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
+    bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
+    bare::Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
+    bare::Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
     
-    Timer::init();
+    bare::Timer::init();
     
-    int64_t startTime = Timer::systemTime();
+    int64_t startTime = bare::Timer::systemTime();
     int64_t tickTime = 1000000;
 
     while (1) {
-        if (Timer::systemTime() - startTime > tickTime) {
-            Serial::write('.');
+        if (bare::Timer::systemTime() - startTime > tickTime) {
+            bare::Serial::write('.');
             tickTime += 1000000;
             if (tickTime++ > (AutoloadTimeout + 1) * 1000000) {
                 autoload();
@@ -68,24 +67,24 @@ int main(int argc, const char * argv[])
             }
         }
             
-        if (!Serial::rxReady()) {
+        if (!bare::Serial::rxReady()) {
             continue;
         }
         
         uint8_t c;
-        Serial::read(c);
+        bare::Serial::read(c);
         if (c == ' ') {
-            Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
+            bare::Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
             xmodemReceive();
             break;
         } else if (c < 0x7f) {
-            Serial::printf("\n\nAutoloading...\n\n");
+            bare::Serial::printf("\n\nAutoloading...\n\n");
             autoload();
             break;
         }
     }
     
-    Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
+    bare::Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
     while(1) { }
     return 0;
 }

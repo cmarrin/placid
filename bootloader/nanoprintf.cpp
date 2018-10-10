@@ -35,13 +35,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Print.h"
 
-using namespace placid;
-
-static int strHex(Print::Printer& printer, uint32_t ad, int len, bool fill)
+static int strHex(bare::Print::Printer& printer, uint32_t ad, int len, bool fill)
 {
     int i, j=0;
     int c;
-    char s[Print::MaxStringSize];
+    char s[bare::Print::MaxStringSize];
     int st;
 
     st = 0;
@@ -67,14 +65,14 @@ static int strHex(Print::Printer& printer, uint32_t ad, int len, bool fill)
     return j+i;
 }
 
-static int strNum(Print::Printer& printer, uint32_t ui, int len, int fill)
+static int strNum(bare::Print::Printer& printer, uint32_t ui, int len, int fill)
 {
     unsigned int cmp = 1;
     int i, j;
     int d;
     int l;
     char c;
-    char s[Print::MaxStringSize];
+    char s[bare::Print::MaxStringSize];
 
     cmp=1;
     l=1;
@@ -111,7 +109,7 @@ static int strNum(Print::Printer& printer, uint32_t ui, int len, int fill)
     return j+i;
 }
 
-int32_t placid::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
+int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
 {
     int si;
     unsigned int ui;

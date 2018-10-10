@@ -37,8 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
-using namespace placid;
-
 static constexpr uint32_t SOH = 0x01;
 static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
@@ -60,32 +58,32 @@ void xmodemReceive()
     uint32_t addr = ARMBASE;
     uint32_t state = 0;
     uint32_t crc = 0;
-    int64_t startTime = Timer::systemTime();
+    int64_t startTime = bare::Timer::systemTime();
     
     uint8_t xstring[256];
 
     while(1)
     {
-        int64_t curTime = Timer::systemTime();
+        int64_t curTime = bare::Timer::systemTime();
         if ((curTime - startTime) >= 4000000)
         {
-            Serial::write(NAK);
+            bare::Serial::write(NAK);
             startTime += 4000000;
         }
         
-        if (!Serial::rxReady()) {
+        if (!bare::Serial::rxReady()) {
             continue;
         }
         
-        Serial::read(xstring[state]);
-        startTime = Timer::systemTime();
+        bare::Serial::read(xstring[state]);
+        startTime = bare::Timer::systemTime();
         
         if (state == 0) {
             if (xstring[state] == EOT) {
-                Serial::write(ACK);
-                Timer::usleep(100000);
-                Serial::printf("XModem upload complete, executing...\n");
-                Timer::usleep(100000);
+                bare::Serial::write(ACK);
+                bare::Timer::usleep(100000);
+                bare::Serial::printf("XModem upload complete, executing...\n");
+                bare::Timer::usleep(100000);
                 BRANCHTO(ARMBASE);
                 break;
             }
@@ -97,7 +95,7 @@ void xmodemReceive()
                 crc = xstring[state];
                 state++;
             } else {
-                Serial::write(NAK);
+                bare::Serial::write(NAK);
             }
             break;
         case 1:
@@ -106,7 +104,7 @@ void xmodemReceive()
                 state++;
             } else {
                 state = 0;
-                Serial::write(NAK);
+                bare::Serial::write(NAK);
             }
             break;
         case 2:
@@ -114,7 +112,7 @@ void xmodemReceive()
                 crc += xstring[state];
                 state++;
             } else {
-                Serial::write(NAK);
+                bare::Serial::write(NAK);
                 state = 0;
             }
             break;
@@ -124,10 +122,10 @@ void xmodemReceive()
                 for (uint32_t i = 0; i < 128; i++) {
                     PUT8(addr++, xstring[i + 3]);
                 }
-                Serial::write(ACK);
+                bare::Serial::write(ACK);
                 block = (block + 1) & 0xFF;
             } else {
-                Serial::write(NAK);
+                bare::Serial::write(NAK);
             }
             state = 0;
             break;

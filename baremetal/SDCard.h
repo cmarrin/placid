@@ -44,7 +44,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SD_TIMEOUT          -1
 #define SD_ERROR            -2
 
-namespace placid {
+namespace bare {
 
     struct Command
     {

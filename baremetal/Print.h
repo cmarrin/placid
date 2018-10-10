@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <cstddef>
 #include <cstdint>
 
-namespace placid {
+namespace bare {
     
     // Print - Formatted printer
     //

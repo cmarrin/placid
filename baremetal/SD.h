@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdarg.h>
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 
 //#define DEBUG_SD
 

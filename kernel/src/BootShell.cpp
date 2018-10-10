@@ -66,10 +66,10 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
     // to send control we have to send raw
     if (raw) {
         while (*data) {
-            Serial::write(*data++);
+            bare::Serial::write(*data++);
         }
     } else {
-	    Serial::puts(data, size);
+	    bare::Serial::puts(data, size);
      }   
 }
 
@@ -77,9 +77,9 @@ static String timeString()
 {
     static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
-    RealTime currentTime = Timer::currentTime();
+    bare::RealTime currentTime = bare::Timer::currentTime();
     char buf[50];
-    Print::snprintf(buf, 49, "%s %d/%d/%d %d:%02d:%02d", 
+    bare::Print::snprintf(buf, 49, "%s %d/%d/%d %d:%02d:%02d", 
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year(),
         currentTime.hours(), currentTime.minutes(), currentTime.seconds());
@@ -104,14 +104,14 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
             //      e.g., 2018/10/05 23:57:39
             std::vector<String> dateArray = array[1].split("/");
             std::vector<String> timeArray = array[2].split(":");
-            RealTime t(
+            bare::RealTime t(
                     static_cast<uint32_t>(dateArray[0]),
                     static_cast<uint32_t>(dateArray[1]),
                     static_cast<uint32_t>(dateArray[2]), 
                     static_cast<uint32_t>(timeArray[0]), 
                     static_cast<uint32_t>(timeArray[1]), 
                     static_cast<uint32_t>(timeArray[2]));
-            Timer::setCurrentTime(t);
+            bare::Timer::setCurrentTime(t);
             showMessage(MessageType::Info, "set current time to: %s\n", timeString().c_str());
         }
     } else if (array[0] == "heap") {

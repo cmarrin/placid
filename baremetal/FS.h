@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 
 const uint32_t FilenameLength = 32;
 

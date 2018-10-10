@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
-using namespace placid;
+using namespace bare;
 
 #ifdef __APPLE__
 #include <stdio.h>

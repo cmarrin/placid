@@ -44,7 +44,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <sys/time.h>
 #endif
 
-using namespace placid;
+using namespace bare;
 
 struct ARMTimer
 {

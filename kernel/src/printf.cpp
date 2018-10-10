@@ -33,8 +33,6 @@
 #include "util.h"
 #include "Print.h"
 
-using namespace placid;
-
 // ntoa conversion buffer size, this must be big enough to hold
 // one converted numeric number including padded zeros (dynamically created on stack)
 // 32 byte is a good default
@@ -91,7 +89,7 @@ static unsigned int _atoi(const char** str)
 
 
 // internal itoa format
-static size_t _ntoa_format(Print::Printer& printer, char* buf, size_t len, bool negative, unsigned int base, unsigned int prec, unsigned int width, unsigned int flags)
+static size_t _ntoa_format(bare::Print::Printer& printer, char* buf, size_t len, bool negative, unsigned int base, unsigned int prec, unsigned int width, unsigned int flags)
 {
   size_t count = 0;
 
@@ -168,7 +166,7 @@ static size_t _ntoa_format(Print::Printer& printer, char* buf, size_t len, bool 
 
 
 // internal itoa for 'long' type
-static size_t _ntoa_long(Print::Printer& printer, unsigned long value, bool negative, unsigned long base, unsigned int prec, unsigned int width, unsigned int flags)
+static size_t _ntoa_long(bare::Print::Printer& printer, unsigned long value, bool negative, unsigned long base, unsigned int prec, unsigned int width, unsigned int flags)
 {
   char buf[PRINTF_NTOA_BUFFER_SIZE];
   size_t len = 0;
@@ -193,7 +191,7 @@ static size_t _ntoa_long(Print::Printer& printer, unsigned long value, bool nega
 
 // internal itoa for 'long long' type
 #if defined(PRINTF_SUPPORT_LONG_LONG)
-static size_t _ntoa_long_long(Print::Printer& printer, unsigned long long value, bool negative, unsigned long long base, unsigned int prec, unsigned int width, unsigned int flags)
+static size_t _ntoa_long_long(bare::Print::Printer& printer, unsigned long long value, bool negative, unsigned long long base, unsigned int prec, unsigned int width, unsigned int flags)
 {
   char buf[PRINTF_NTOA_BUFFER_SIZE];
   size_t len = 0;
@@ -218,7 +216,7 @@ static size_t _ntoa_long_long(Print::Printer& printer, unsigned long long value,
 
 
 #if defined(PRINTF_SUPPORT_FLOAT)
-static size_t _ftoa(Print::Printer& printer, double value, unsigned int prec, unsigned int width, unsigned int flags)
+static size_t _ftoa(bare::Print::Printer& printer, double value, unsigned int prec, unsigned int width, unsigned int flags)
 {
   size_t count = 0;
 
@@ -359,7 +357,7 @@ static size_t _ftoa(Print::Printer& printer, double value, unsigned int prec, un
 }
 #endif  // PRINTF_SUPPORT_FLOAT
 
-int32_t placid::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
+int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
 {
   unsigned int flags, width, precision, n;
   int32_t count = 0;

@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 	
 	// GPIO - Raw GPIO driver for Raspberry Pi
 	//

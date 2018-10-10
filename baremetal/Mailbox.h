@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 
 class Mailbox
 {

@@ -45,7 +45,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #endif
 
-using namespace placid;
+using namespace bare;
 
 struct UART1 {
     uint32_t _00;

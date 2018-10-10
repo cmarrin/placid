@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Timer.h"
 
-using namespace placid;
+using namespace bare;
 
 static constexpr uint32_t GPIOBase = 0x20200000;
 static constexpr uint32_t GPFSELOffset = 0;

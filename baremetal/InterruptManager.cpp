@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 #include "util.h"
 
-using namespace placid;
+using namespace bare;
 
 struct IRPT {
     uint32_t BasicPending;

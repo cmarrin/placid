@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <cstdint>
 
-namespace placid {
+namespace bare {
 	
 	// InterruptManager - Raw interrupt manager for Raspberry Pi
 	//

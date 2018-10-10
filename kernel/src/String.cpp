@@ -42,7 +42,7 @@ using namespace placid;
 
 String::operator uint32_t() { return stringToUInt32(c_str()); }
 
-class StringPrinter : public Print::Printer
+class StringPrinter : public bare::Print::Printer
 {
     public:
     StringPrinter(String& s) : _string(s) { }
@@ -67,6 +67,6 @@ String& String::printf(const char* format, ...)
 String& String::vprintf(const char* format, va_list va)
 {
     StringPrinter printer(*this);
-    Print::vsnprintCore(printer, format, va);
+    bare::Print::vsnprintCore(printer, format, va);
     return *this;
 }

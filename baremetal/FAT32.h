@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "FS.h"
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 
 class FAT32 : public FS::Device
 {

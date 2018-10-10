@@ -49,32 +49,32 @@ using namespace placid;
 static constexpr uint32_t ActivityLED = 47;
 static constexpr float blinkRate = 0.5;
 
-class LEDBlinker : public TimerCallback
+class LEDBlinker : public bare::TimerCallback
 {
 public:
 	virtual void handleTimerEvent()
 	{
-		GPIO::setPin(ActivityLED, !GPIO::getPin(ActivityLED));
+		bare::GPIO::setPin(ActivityLED, !bare::GPIO::getPin(ActivityLED));
 	}
 };
 
 static void timingTest(const char* s)
 {
     // Timing test
-    int64_t startTime = Timer::systemTime();
+    int64_t startTime = bare::Timer::systemTime();
     volatile uint32_t n = 0;
     for (int i = 0; i < 1000000; ++i) {
         n += i + 234;
     }
-    Serial::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(Timer::systemTime() - startTime));
+    bare::Serial::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(bare::Timer::systemTime() - startTime));
 }
 
 static void showTime()
 {
     static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
-    RealTime currentTime = Timer::currentTime();
-    Serial::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
+    bare::RealTime currentTime = bare::Timer::currentTime();
+    bare::Serial::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
         currentTime.hours(), currentTime.minutes(), currentTime.seconds(),
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year());
@@ -82,35 +82,35 @@ static void showTime()
 
 int main()
 {
-    Serial::init();
-    Timer::init();
+    bare::Serial::init();
+    bare::Timer::init();
     
-    Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
+    bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
 
     timingTest("Memory perf without cache");
     Memory::init();
     timingTest("Memory perf with cache");
     
-    Timer::setCurrentTime(RealTime(2018, 10, 5, 10, 19));
+    bare::Timer::setCurrentTime(bare::RealTime(2018, 10, 5, 10, 19));
     showTime();
 
     std::vector<String> vec = {"This", "is", "a" };
     vec.push_back("nice");
     vec[3] += " string";
-    Serial::printf("Vector test: %s\n", join(vec, " ").c_str());
+    bare::Serial::printf("Vector test: %s\n", join(vec, " ").c_str());
     
-    GPIO::setFunction(ActivityLED, GPIO::Function::Output);
+    bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
     LEDBlinker blinker;
-    Timer::start(&blinker, blinkRate, true);
+    bare::Timer::start(&blinker, blinkRate, true);
     
 	BootShell shell;
 	shell.connected();
 
 	while (1) {
         uint8_t c;
-        if (Serial::read(c) != Serial::Error::OK) {
-            Serial::puts("*** Serial Read Error\n");
+        if (bare::Serial::read(c) != bare::Serial::Error::OK) {
+            bare::Serial::puts("*** Serial Read Error\n");
         } else {
             shell.received(c);
         }

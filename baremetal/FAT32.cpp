@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "util.h"
 #include "Serial.h"
 
-using namespace placid;
+using namespace bare;
 
 struct PartitionEntry
 {

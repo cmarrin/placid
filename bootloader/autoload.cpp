@@ -41,23 +41,21 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 #include "util.h"
 
-using namespace placid;
-
 void autoload()
 {
-    SDCard sdCard;
-    FAT32 fatFS(&sdCard, 0);
-    FS fs;
-    FS::Error e = fs.mount(&fatFS);
-    if (e != FS::Error::OK) {
-        Serial::printf("*** error mounting:%s\n", fs.errorDetail());
+    bare::SDCard sdCard;
+    bare::FAT32 fatFS(&sdCard, 0);
+    bare::FS fs;
+    bare::FS::Error e = fs.mount(&fatFS);
+    if (e != bare::FS::Error::OK) {
+        bare::Serial::printf("*** error mounting:%s\n", fs.errorDetail());
         return;
     }
     
-    File fp;
+    bare::File fp;
     bool r = fs.open(fp, "kernel.bin", "r");
     if (!r) {
-        Serial::printf("*** File open error:%s\n", fs.errorDetail());
+        bare::Serial::printf("*** File open error:%s\n", fs.errorDetail());
         return;
     }
     
@@ -67,9 +65,9 @@ void autoload()
     
     for (uint32_t block = 0; size != 0; ++block) {
         char buf[512];
-        FS::Error result = fp.read(buf, block, 1);
-        if (result != FS::Error::OK) {
-            Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
+        bare::FS::Error result = fp.read(buf, block, 1);
+        if (result != bare::FS::Error::OK) {
+            bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;
         }
         
@@ -80,7 +78,7 @@ void autoload()
         size -= bytesToLoad;
     }
     
-    Serial::printf("Autoload complete, executing...\n");
-    Timer::usleep(200000);
+    bare::Serial::printf("Autoload complete, executing...\n");
+    bare::Timer::usleep(200000);
     BRANCHTO(ARMBASE);
 }

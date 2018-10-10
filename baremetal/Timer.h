@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 
-namespace placid {
+namespace bare {
 	
 	// Timer - Raw Peripheral (as opposed to System) Timer driver for Raspberry Pi
 	//

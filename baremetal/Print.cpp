@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 
-using namespace placid;
+using namespace bare;
 
 // Decompose a double into an exponent and an integet mantissa.
 // The mantissa is between 1 and 10 and multiplied by 100,000,000

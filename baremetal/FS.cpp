@@ -40,17 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
-using namespace placid;
-
-//int32_t FS::File::read(char* buf, uint32_t blockAddr, uint32_t blocks)
-//{
-//    SD::Error error = _sd.readBlock(buf, blockAddr, blocks);
-//    if (error != SD::Error::OK) {
-//        Serial::printf("*** Disk Read Error: return code=%d\n", static_cast<uint32_t>(error));
-//        return -static_cast<uint32_t>(error);
-//    }
-//    return static_cast<int32_t>(blocks);
-//}
+using namespace bare;
 
 FS::Error FS::mount(Device* device)
 {
