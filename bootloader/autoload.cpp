@@ -41,8 +41,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 #include "util.h"
 
+static const char* KernelFileName = "kernel.bin";
+
 void autoload()
 {
+    bare::Serial::printf("\n\nAutoloading '%s'...\n", KernelFileName);
+    
     bare::SDCard sdCard;
     bare::FAT32 fatFS(&sdCard, 0);
     bare::FS fs;
@@ -53,7 +57,7 @@ void autoload()
     }
     
     bare::File fp;
-    bool r = fs.open(fp, "kernel.bin", "r");
+    bool r = fs.open(fp, KernelFileName, "r");
     if (!r) {
         bare::Serial::printf("*** File open error:%s\n", fs.errorDetail());
         return;

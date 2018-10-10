@@ -41,10 +41,26 @@ POSSIBILITY OF SUCH DAMAGE.
 using namespace bare;
 
 #ifdef __APPLE__
+#include <stdio.h>
+
+static FILE* sdCardFP = nullptr;
+
 SDCard::SDCard()
     : SD(0, 0, 0, 0, 0, 0, 0)
-{ }
-int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks) { return blocks; }
+{
+    // FAT32.img is a file containing an image of a FAT32 filesystem. Use
+    // that to simulate an SD card
+    sdCardFP = fopen("FAT32.img", "r+");
+}
+int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
+{
+    if (!sdCardFP) {
+        return -1;
+    }
+    fseek(sdCardFP, blockAddr * 512, SEEK_SET);
+    size_t size = fread(buf, 1, blocks * 512, sdCardFP);
+    return (size == blocks * 512) ? blocks : -1;
+}
 #else
 static constexpr uint32_t EMMCBase = 0x20300000;
 

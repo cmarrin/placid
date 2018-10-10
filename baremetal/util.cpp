@@ -48,12 +48,13 @@ extern "C" {
 
 void PUT8(unsigned int addr, unsigned int value)
 {
-    printf("PUT8:[%d] <= %d\n", addr, value);
+    printf("PUT8:[0x%08x] <= 0x%02x\n", addr, value & 0xff);
 }
 
 void BRANCHTO(unsigned int addr)
 {
-    printf("BRANCHTO: => %d\n", addr);
+    printf("BRANCHTO: => 0x%08x\n", addr);
+    while (1) ;
 }
 
 bool interruptsSupported()

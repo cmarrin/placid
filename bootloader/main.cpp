@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
+#ifndef __APPLE__
 // FAT32 has a new statement, which is not allowed in the bootloader.
 // Put a stub here to make sure we don't use it
 void *operator new(size_t size)
@@ -45,6 +46,7 @@ void *operator new(size_t size)
     bare::Serial::printf("***** operator new not allowed in bootloader!\n");
     abort();
 }
+#endif
 
 void autoload(void);
 void xmodemReceive(void);

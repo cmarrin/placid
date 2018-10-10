@@ -54,7 +54,7 @@ static_assert(sizeof(PartitionEntry) == 16, "Wrong PartitionEntry size");
 
 struct MBR
 {
-    char bootstrap[446];
+    char bootstrap[0x1be];
     PartitionEntry partitions[4];
     uint8_t signature[2];
 };
@@ -216,7 +216,7 @@ FS::Error FAT32::mount()
 bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
-    char nameToFind[11];
+    char nameToFind[12];
     convertTo8dot3(nameToFind, name);
     
     uint32_t dirBlock = _rootDirectoryStartBlock;
@@ -231,7 +231,7 @@ bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
             return false;
         }
         
-        FATDirEntry* ent = reinterpret_cast<FATDirEntry*>(buf);
+       FATDirEntry* ent = reinterpret_cast<FATDirEntry*>(buf);
         
         // Go through each entry in this block and look for a match
         for (uint32_t entryIndex = 0; entryIndex < EntriesPerBlock; ++entryIndex) {
