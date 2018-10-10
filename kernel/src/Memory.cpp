@@ -39,6 +39,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 #include <cstdlib>
 
+extern unsigned char __bss_start;
+extern unsigned char _end;
 extern void (*__init_start) (void);
 extern void (*__init_end) (void);
 
@@ -203,6 +205,11 @@ void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t pad
 void Memory::init()
 {
 #ifndef __APPLE__
+    for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
+    {
+        *pBSS = 0;
+    }
+
     // call construtors of static objects
     for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
     {

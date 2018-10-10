@@ -50,5 +50,12 @@ SECTIONS
         __init_end = .;
     } > ram
     .data : { *(.data*) } > ram
-    .bss : { *(.bss*) } > ram
+    .bss : {
+        __bss_start = .;
+
+        *(.bss*)
+        *(COMMON)
+
+        _end = .;
+    } > ram
 }
