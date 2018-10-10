@@ -45,7 +45,7 @@ LIBS = ../baremetal/build/baremetal.a
 INCLUDES = -I../baremetal
 
 ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -DNDEBUG -Wall -O2 -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+CFLAGS = $(INCLUDES) -DNDEBUG -Wall -Os -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 LDFLAGS =
 LDLIBS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc

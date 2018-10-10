@@ -56,6 +56,8 @@ static inline bool checkFreeList(Allocator::FreeChunk* list)
 
 Allocator Allocator::_kernelAllocator;
 
+extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
+
 Allocator::Allocator()
 {
 }
