@@ -43,6 +43,8 @@ namespace bare {
 class FAT32 : public FS::Device
 {
 public:
+    friend class FAT32DirectoryIterator;
+    
     static constexpr uint32_t FilenameLength = 32;
     
     enum class Error {
@@ -73,10 +75,11 @@ public:
     virtual bool find(FS::FileInfo&, const char* name) override;
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
+    virtual DirectoryIterator* directoryIterator(const char* path) override;
 
     bool mounted() { return _mounted; }
     
-    private:    
+    uint32_t rootDirectoryStartBlock() const { return _rootDirectoryStartBlock; }
     uint32_t blocksPerCluster() { return _blocksPerCluster; }
     uint32_t clusterSize() { return _blocksPerCluster * 512; }
     
@@ -85,6 +88,8 @@ public:
         return _startDataBlock + (cluster - 2) * _blocksPerCluster;
     }
     
+    
+private:
     bool _mounted = false;
     uint32_t _firstBlock = 0;                  // first block of this partition
     uint32_t _sizeInBlocks = 0;                // size in blocks of this partition

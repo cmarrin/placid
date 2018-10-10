@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "BootShell.h"
 
+#include "FileSystem.h"
 #include "Print.h"
 #include "Serial.h"
 #include "Timer.h"
@@ -89,6 +90,10 @@ static String timeString()
 bool BootShell::executeShellCommand(const std::vector<String>& array)
 {
     if (array[0] == "ls") {
+        bare::DirectoryIterator* it = FileSystem::sharedFileSystem()->directoryIterator("/");
+        for ( ; it; ++it) {
+            showMessage(MessageType::Info, "%s %d\n", it->name(), it->size());
+        }
     } else if (array[0] == "get") {
     } else if (array[0] == "put") {
     } else if (array[0] == "rm") {

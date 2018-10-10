@@ -40,7 +40,9 @@ POSSIBILITY OF SUCH DAMAGE.
 namespace bare {
 
 const uint32_t FilenameLength = 32;
+const uint32_t BlockSize = 512;
 
+class DirectoryIterator;
 class File;
 
 class FS {
@@ -74,12 +76,14 @@ public:
         virtual FS::Error write(const char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) = 0;    
         virtual bool find(FS::FileInfo&, const char* name) = 0;
         virtual const char* errorDetail() const = 0;
+        virtual DirectoryIterator* directoryIterator(const char* path) = 0;
     };
 
     FS() { }
     
     Error mount(Device*);
     bool open(File&, const char* name, const char* mode);
+    DirectoryIterator* directoryIterator(const char* path) { return _device->directoryIterator(path); }
     
     const char* errorDetail() { return _device->errorDetail(); }
 
@@ -108,5 +112,12 @@ private:
     FS::Device* _device = nullptr;
 };
 
-}
+class DirectoryIterator
+{
+public:
+    virtual DirectoryIterator& operator++() = 0;
+    virtual const char* name() const = 0;
+    virtual uint32_t size() const = 0;
+};
 
+}

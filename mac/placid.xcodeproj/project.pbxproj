@@ -31,6 +31,7 @@
 		49657890216BFD7400B3F088 /* SDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788C2169805800B3F088 /* SDCard.cpp */; };
 		49657891216BFD8B00B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
 		49657892216BFDA200B3F088 /* FS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* FS.cpp */; };
+		49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
@@ -131,6 +132,8 @@
 		4965788A21695F9700B3F088 /* SD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SD.h; path = ../baremetal/SD.h; sourceTree = "<group>"; };
 		4965788C2169805800B3F088 /* SDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SDCard.cpp; path = ../baremetal/SDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDCard.h; path = ../baremetal/SDCard.h; sourceTree = "<group>"; };
+		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
+		49657898216D1E2D00B3F088 /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Print.h; path = ../baremetal/Print.h; sourceTree = "<group>"; };
 		497EE45C2161982F000584CE /* printf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printf.cpp; path = ../../kernel/src/printf.cpp; sourceTree = "<group>"; };
@@ -214,6 +217,8 @@
 				49931A0E2168AFA700257E42 /* String.cpp */,
 				49166D4121514C060077ACEE /* String.h */,
 				4932ACEE2166770800BDAABB /* stackAddrs.h */,
+				49657897216D1E2D00B3F088 /* FileSystem.cpp */,
+				49657898216D1E2D00B3F088 /* FileSystem.h */,
 			);
 			name = src;
 			path = ../kernel/src;
@@ -408,6 +413,7 @@
 				497EE45D2161982F000584CE /* printf.cpp in Sources */,
 				49931A0F2168AFA700257E42 /* String.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
+				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				497EE46121628A95000584CE /* Memory.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,

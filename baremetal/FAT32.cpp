@@ -271,6 +271,75 @@ FS::Error FAT32::write(const char* buf, uint32_t baseBlock, uint32_t relativeBlo
     return (_error == Error::OK) ? FS::Error::OK : FS::Error::Failed;
 }
 
+class FAT32DirectoryIterator : public DirectoryIterator
+{
+public:
+    static constexpr uint32_t EntriesPerBlock = 512 / 32;
+
+    FAT32DirectoryIterator(FAT32* fs, const char* path)
+        : _fs(fs)
+    {
+        // FIXME: Ignore path for now
+        _startBlock = _fs->rootDirectoryStartBlock();
+        _blockIndex = 0;
+        _entryIndex = 0;
+        _valid = getBlock();
+        if (_valid) {
+            getFileInfo();
+        }
+    }
+    
+    virtual DirectoryIterator& operator++() override
+    {
+        // FIXME: Handle more than one cluster
+        if (++_entryIndex > EntriesPerBlock) {
+            if (++_blockIndex < _fs->blocksPerCluster()) {
+                getBlock();
+            } else {
+                _valid = false;
+                return *this;
+            }
+        }
+        getFileInfo();
+        return *this;
+    }
+    
+    virtual const char* name() const override { return _valid ? _fileInfo.name : ""; }
+    virtual uint32_t size() const override { return _valid ? _fileInfo.size : 0; }
+    
+private:
+    bool getBlock()
+    {
+        if (_fs->read(_buf, _startBlock, _blockIndex, 1) != FS::Error::OK) {
+            return false;
+        }
+        return true;
+    }
+    
+    void getFileInfo()
+    {
+        FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
+        strcpy(_fileInfo.name, entry->name);
+        _fileInfo.size = bufToUInt32(entry->size);
+        uint32_t baseCluster = (static_cast<uint32_t>(bufToUInt16(entry->firstClusterHi)) << 16) + 
+                                static_cast<uint32_t>(bufToUInt16(entry->firstClusterLo));
+        _fileInfo.baseBlock = _fs->clusterToBlock(baseCluster);
+    }
+    
+    FAT32* _fs;
+    FS::FileInfo _fileInfo;
+    uint32_t _startBlock = 0;
+    uint32_t _blockIndex = 0;
+    uint32_t _entryIndex = 0;
+    char _buf[512];
+    bool _valid = true;
+};
+
+DirectoryIterator* FAT32::directoryIterator(const char* path)
+{
+    return new FAT32DirectoryIterator(this, path);
+}
+
 const char* FAT32::errorDetail() const
 {
     switch(_error) {

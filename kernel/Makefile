@@ -61,6 +61,7 @@ SRC =	kernel.S \
         printf.cpp \
 		Allocator.cpp \
 		BootShell.cpp \
+		FileSystem.cpp \
 		Memory.cpp \
 		Shell.cpp \
 		Scanner.cpp \

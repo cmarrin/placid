@@ -67,6 +67,7 @@ int memcmp(const void* left, const void* right, size_t n);
 void convertTo8dot3(char* name8dot3, const char* name);
 
 size_t strlen(const char*);
+char* strcpy(char* dst, const char* src);
 #ifdef __cplusplus
 }
 #endif

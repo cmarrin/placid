@@ -210,6 +210,15 @@ size_t strlen(const char* str)
     return (unsigned int)(s - str);
 }
 
+char* strcpy(char* dst, const char* src)
+{
+    char* ret = dst;
+    while (*src) {
+        *dst++ = *src++;
+    }
+    return ret;
+}
+
 int strcmp(const char* s1, const char* s2)
 {
     char c1;

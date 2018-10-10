@@ -33,65 +33,39 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "util.h"
-#include "Mailbox.h"
-#include "Serial.h"
-#include "Timer.h"
+#pragma once
 
-// FAT32 has a new statement, which is not allowed in the bootloader.
-// Put a stub here to make sure we don't use it
-void *operator new(size_t size)
-{
-    bare::Serial::printf("***** operator new not allowed in bootloader!\n");
-    abort();
+#include "FAT32.h"
+#include "FS.h"
+#include "SDCard.h"
+
+namespace placid {
+
+    // FileSystem
+    //
+    // This is essentially a wrapper around bare::FS to give that file system
+    // more capabilities. bare::FS is really just a single device, so maybe 
+    // we'll rename it at some point. FileSystem should eventually be able to
+    // handle multiple bare::FS devices at different mount points, presenting
+    // a single unified file system. But for now we just support a single
+    // FS instance for the built-in FAT32 SD card.
+    class FileSystem
+    {
+    public:
+        FileSystem();
+        
+        bare::DirectoryIterator* directoryIterator(const char* path);
+        
+        static FileSystem* sharedFileSystem();
+        
+    private:
+        bare::FS _fs;
+        bare::SDCard _sdCard;
+        bare::FAT32 _fatFS;
+
+        
+        static FileSystem* _sharedFileSystem;
+    };
+
 }
 
-void autoload(void);
-void xmodemReceive(void);
-
-static constexpr uint32_t AutoloadTimeout = 3;
-
-int main(int argc, const char * argv[])
-{
-    bare::Serial::init();
-        
-    bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
-    bare::Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    bare::Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
-    
-    bare::Timer::init();
-    
-    int64_t startTime = bare::Timer::systemTime();
-    int64_t tickTime = 1000000;
-
-    while (1) {
-        if (bare::Timer::systemTime() - startTime > tickTime) {
-            bare::Serial::write('.');
-            tickTime += 1000000;
-            if (tickTime++ > (AutoloadTimeout + 1) * 1000000) {
-                autoload();
-                break;
-            }
-        }
-            
-        if (!bare::Serial::rxReady()) {
-            continue;
-        }
-        
-        uint8_t c;
-        bare::Serial::read(c);
-        if (c == ' ') {
-            bare::Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
-            xmodemReceive();
-            break;
-        } else if (c < 0x7f) {
-            bare::Serial::printf("\n\nAutoloading...\n\n");
-            autoload();
-            break;
-        }
-    }
-    
-    bare::Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
-    while(1) { }
-    return 0;
-}
