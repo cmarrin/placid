@@ -91,8 +91,8 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
 {
     if (array[0] == "ls") {
         bare::DirectoryIterator* it = FileSystem::sharedFileSystem()->directoryIterator("/");
-        for ( ; it; ++it) {
-            showMessage(MessageType::Info, "%s %d\n", it->name(), it->size());
+        for ( ; *it; it->next()) {
+            showMessage(MessageType::Info, "%-13s %10d\n", it->name(), it->size());
         }
     } else if (array[0] == "get") {
     } else if (array[0] == "put") {

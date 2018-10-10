@@ -115,9 +115,10 @@ private:
 class DirectoryIterator
 {
 public:
-    virtual DirectoryIterator& operator++() = 0;
+    virtual DirectoryIterator& next() = 0;
     virtual const char* name() const = 0;
     virtual uint32_t size() const = 0;
+    virtual operator bool() const = 0;
 };
 
 }

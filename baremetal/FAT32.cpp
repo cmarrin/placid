@@ -281,31 +281,43 @@ public:
     {
         // FIXME: Ignore path for now
         _startBlock = _fs->rootDirectoryStartBlock();
-        _blockIndex = 0;
-        _entryIndex = 0;
-        _valid = getBlock();
-        if (_valid) {
-            getFileInfo();
-        }
+        next();
     }
     
-    virtual DirectoryIterator& operator++() override
+    virtual DirectoryIterator& next() override
     {
         // FIXME: Handle more than one cluster
-        if (++_entryIndex > EntriesPerBlock) {
-            if (++_blockIndex < _fs->blocksPerCluster()) {
-                getBlock();
+        while (1) {
+            if (_entryIndex < 0 || ++_entryIndex > static_cast<int32_t>(EntriesPerBlock)) {
+                if (++_blockIndex < static_cast<int32_t>(_fs->blocksPerCluster())) {
+                    if (!getBlock()) {
+                        // Could not get a block
+                        _valid = false;
+                        return *this;
+                    }
+                    _entryIndex = 0;
+                } else {
+                    // FIXME: At the end of the cluster. Need to support going to the next
+                    _valid = false;
+                    return *this;
+                }
+            }
+            FileInfoResult result = getFileInfo();
+            if (result == FileInfoResult::OK) {
+                _valid = true;
+            } else if (result == FileInfoResult::Skip) {
+                continue;
             } else {
                 _valid = false;
-                return *this;
             }
+            
+            return *this;
         }
-        getFileInfo();
-        return *this;
     }
     
     virtual const char* name() const override { return _valid ? _fileInfo.name : ""; }
     virtual uint32_t size() const override { return _valid ? _fileInfo.size : 0; }
+    virtual operator bool() const override { return _valid; }
     
 private:
     bool getBlock()
@@ -316,28 +328,59 @@ private:
         return true;
     }
     
-    void getFileInfo()
+    enum class FileInfoResult { OK, Skip, End };
+    FileInfoResult getFileInfo()
     {
         FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
-        strcpy(_fileInfo.name, entry->name);
+        if (entry->attr & 0x0f) {
+            // Regular files have lower 4 bits
+            return FileInfoResult::Skip;
+        }
+        
+        if (entry->name[0] == '\0') {
+            // End of directory
+            return FileInfoResult::End;
+        }
+
+        // Format the name
+        uint32_t j = 0;
+        for (uint32_t i = 0; i < 8; ++i) {
+            if (entry->name[i] == ' ') {
+                break;
+            }
+            _fileInfo.name[j++] = entry->name[i];
+        }
+        
+        _fileInfo.name[j++] = '.';
+        
+        for (uint32_t i = 8; i < 11; ++i) {
+            if (entry->name[i] == ' ') {
+                break;
+            }
+            _fileInfo.name[j++] = entry->name[i];
+        }
+        
+        _fileInfo.name[j] = '\0';
         _fileInfo.size = bufToUInt32(entry->size);
         uint32_t baseCluster = (static_cast<uint32_t>(bufToUInt16(entry->firstClusterHi)) << 16) + 
                                 static_cast<uint32_t>(bufToUInt16(entry->firstClusterLo));
         _fileInfo.baseBlock = _fs->clusterToBlock(baseCluster);
+        return FileInfoResult::OK;
     }
     
     FAT32* _fs;
     FS::FileInfo _fileInfo;
     uint32_t _startBlock = 0;
-    uint32_t _blockIndex = 0;
-    uint32_t _entryIndex = 0;
+    int32_t _blockIndex = -1;
+    int32_t _entryIndex = -1;
     char _buf[512];
     bool _valid = true;
 };
 
 DirectoryIterator* FAT32::directoryIterator(const char* path)
 {
-    return new FAT32DirectoryIterator(this, path);
+    FAT32DirectoryIterator* it = new FAT32DirectoryIterator(this, path);
+    return it;
 }
 
 const char* FAT32::errorDetail() const
