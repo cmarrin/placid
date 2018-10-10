@@ -158,7 +158,7 @@ FS::Error FAT32::mount()
     }
         
     uint8_t partitionType = mbr->partitions[_partition].type;
-    if (partitionType != 0x0c) {
+    if (partitionType != 0x0b && partitionType != 0x0c) {
         _error = Error::OnlyFAT32LBASupported;
         return FS::Error::Failed;
     }
