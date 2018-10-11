@@ -58,7 +58,6 @@ public:
         MBRReadError,
         BPBReadError,
         DirReadError,
-        FileNotFound,
         OnlyFAT32LBASupported,
         InvalidFAT32Volume,
         WrongSizeRead,

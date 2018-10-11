@@ -53,7 +53,7 @@ FS::Error FS::mount(Device* device)
     return _device->mount();
 }
 
-bool FS::open(RawFile& file, const char* name, const char* mode)
+bool FS::open(RawFile& file, const char* name)
 {
     FileInfo fileInfo;
     if (!_device->find(fileInfo, name)) {

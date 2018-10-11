@@ -236,10 +236,18 @@ bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
             return false;
         }
         
-       FATDirEntry* ent = reinterpret_cast<FATDirEntry*>(buf);
+        FATDirEntry* ent = reinterpret_cast<FATDirEntry*>(buf);
         
         // Go through each entry in this block and look for a match
         for (uint32_t entryIndex = 0; entryIndex < EntriesPerBlock; ++entryIndex) {
+            if ((ent[entryIndex].attr & 0x0f) != 0) {
+                continue;
+            }
+        
+            if (ent[entryIndex].name[0] == '\0') {
+                return false;
+            }
+            
             if (memcmp(nameToFind, ent[entryIndex].name, 11) == 0) {
                 // A match was found, init the directory object
                 for (int i = 0; i < 11; ++i) {
@@ -258,7 +266,6 @@ bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
     }
     
     // No match
-    _error = Error::FileNotFound;
     return false;
 }
     
@@ -293,7 +300,7 @@ public:
     {
         // FIXME: Handle more than one cluster
         while (1) {
-            if (_entryIndex < 0 || ++_entryIndex > static_cast<int32_t>(EntriesPerBlock)) {
+            if (_entryIndex < 0 || ++_entryIndex >= static_cast<int32_t>(EntriesPerBlock)) {
                 if (++_blockIndex < static_cast<int32_t>(_fs->blocksPerCluster())) {
                     if (!getBlock()) {
                         // Could not get a block
@@ -401,7 +408,6 @@ const char* FAT32::errorDetail() const
     case Error::MBRReadError:           return "MBR read error";
     case Error::BPBReadError:           return "BPB read error";
     case Error::DirReadError:           return "dir read error";
-    case Error::FileNotFound:           return "file not found";
     case Error::OnlyFAT32LBASupported:  return "only FAT32 LBA supported";
     case Error::InvalidFAT32Volume:     return "invalid FAT32 volume";
     case Error::WrongSizeRead:          return "wrong size read";

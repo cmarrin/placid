@@ -41,6 +41,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace placid {
 
+    class File;
+
     // FileSystem
     //
     // This is essentially a wrapper around bare::FS to give that file system
@@ -52,9 +54,31 @@ namespace placid {
     class FileSystem
     {
     public:
+        enum class Error {
+            OK,
+            FileNotFound,
+        };
+        
         FileSystem();
         
+        // Modes are slightly different than the C standard. Read and Append are
+        // the same, but Write will not overwrite an existing file. Attempting to 
+        // open an existing file in OpenMode::Write will fail. This matches the
+        // behavior of the 'x' mode in the 2011 C standard. OpenOption::Update
+        // is the same as the '+' modifier in the C standard. There is no concept
+        // of text vs binary. All files are accessed in raw binary format. Also
+        // OpenMode::Append ignores seek() unless OpenOption::Update is present. 
+        // In that case the seek() is accepted but is only used for read. The
+        // next write operation resets the file position to the end of the file 
+        // and writes there. This also matches the C standard
+        
+        enum class OpenMode { Read, Write, Append };
+        enum class OpenOption { None, Update };
+         
         bare::DirectoryIterator* directoryIterator(const char* path);
+        File* open(const char* name, OpenMode = OpenMode::Read, OpenOption = OpenOption::None);
+
+        const char* errorDetail(Error error) const;
         
         static FileSystem* sharedFileSystem();
         
@@ -63,8 +87,46 @@ namespace placid {
         bare::SDCard _sdCard;
         bare::FAT32 _fatFS;
 
-        
         static FileSystem* _sharedFileSystem;
+    };
+    
+    class File
+    {
+        friend class FileSystem;
+        
+    public:
+        enum class SeekWhence { Set, Cur, End };
+        
+        ~File() { close(); }
+        
+        void close() { flush(); }
+      
+        int32_t read(char* buf, uint32_t size);
+        int32_t write(const char* buf, uint32_t size);
+    
+        bool seek(int32_t offset, SeekWhence);
+        int32_t tell() const { return _offset; }
+        bool eof() const { return _offset >= _rawFile.size(); }
+        
+        void flush();
+    
+        bool valid() const { return _error == FileSystem::Error::OK; }
+        FileSystem::Error error() const { return _error; }
+
+    private:
+        bool prepareBuffer(uint32_t offset);
+        int32_t io(char* buf, uint32_t size, bool write);
+
+        uint32_t _offset = 0;
+        FileSystem::Error _error = FileSystem::Error::OK;
+        bare::RawFile _rawFile;
+        bool _bufferValid = false;
+        bool _bufferNeedsWriting = false;
+        bool _canWrite;
+        bool _canRead;
+        bool _appendOnly;
+        uint32_t _bufferAddr = 0; // Block addr of the contents of the buffer, if any
+        char _buffer[bare::BlockSize];
     };
 
 }

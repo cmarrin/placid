@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "util.h"
 #include "BootShell.h"
+#include "FileSystem.h"
 #include "GPIO.h"
 #include "Memory.h"
 #include "Print.h"
@@ -93,11 +94,22 @@ int main()
     
     bare::Timer::setCurrentTime(bare::RealTime(2018, 10, 5, 10, 19));
     showTime();
-
-    std::vector<String> vec = {"This", "is", "a" };
-    vec.push_back("nice");
-    vec[3] += " string";
-    bare::Serial::printf("Vector test: %s\n", join(vec, " ").c_str());
+    
+    // Test file read
+    File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read);
+    if (!fp->valid()) {
+        bare::Serial::printf("File open error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    } else {
+        char buf[10];
+        fp->seek(508, File::SeekWhence::Set);
+        int32_t size = fp->read(buf, 9);
+        buf[9] = '\0';
+        if (size < 0) {
+            bare::Serial::printf("File read:'%s'\n", buf);
+        } else {
+            bare::Serial::printf("File read:'%s'\n", buf);
+        }
+    }
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     

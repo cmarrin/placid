@@ -53,7 +53,7 @@ public:
         OK = 0,
         Failed,
         UnsupportedDevice, 
-        SDCardInitFailed,
+        FileNotFound,
     };
     
     struct RawIO
@@ -82,7 +82,7 @@ public:
     FS() { }
     
     Error mount(Device*);
-    bool open(RawFile&, const char* name, const char* mode);
+    bool open(RawFile&, const char* name);
     DirectoryIterator* directoryIterator(const char* path) { return _device->directoryIterator(path); }
     
     const char* errorDetail() { return _device->errorDetail(); }
@@ -101,9 +101,9 @@ public:
     FS::Error read(char* buf, uint32_t blockAddr, uint32_t blocks);    
     FS::Error write(const char* buf, uint32_t blockAddr, uint32_t blocks);    
 
-    bool valid() { return _error == FS::Error::OK; }
-    uint32_t size() { return _size; }
-    FS::Error error() { return _error; }
+    bool valid() const { return _error == FS::Error::OK; }
+    uint32_t size() const { return _size; }
+    FS::Error error() const { return _error; }
 
 private:
     FS::Error _error = FS::Error::OK;

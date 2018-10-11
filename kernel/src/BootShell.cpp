@@ -100,8 +100,22 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         for ( ; *it; it->next()) {
             showMessage(MessageType::Info, "%-13s %10d\n", it->name(), it->size());
         }
-    } else if (array[0] == "get") {
     } else if (array[0] == "put") {
+        if (array.size() != 2) {
+            showMessage(MessageType::Error, "requires one file name\n");
+            return true;
+        }
+        
+        File* fp = FileSystem::sharedFileSystem()->open(array[1].c_str(), FileSystem::OpenMode::Write);
+        if (!fp) {
+            showMessage(MessageType::Error, "open of '%s' failed\n", array[2].c_str());
+            return true;
+        }
+        
+        showMessage(MessageType::Info, "Start XModem download when ready, or press any key to cancel...\n");
+        xmodemReceive([fp](uint32_t addr, char byte)
+        {
+            fp->write(&byte, 1); });
     } else if (array[0] == "rm") {
     } else if (array[0] == "mv") {
     } else if (array[0] == "date") {
