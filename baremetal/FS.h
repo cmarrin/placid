@@ -43,10 +43,10 @@ const uint32_t FilenameLength = 32;
 const uint32_t BlockSize = 512;
 
 class DirectoryIterator;
-class File;
+class RawFile;
 
 class FS {
-    friend class File;
+    friend class RawFile;
     
 public:
     enum class Error {
@@ -82,7 +82,7 @@ public:
     FS() { }
     
     Error mount(Device*);
-    bool open(File&, const char* name, const char* mode);
+    bool open(RawFile&, const char* name, const char* mode);
     DirectoryIterator* directoryIterator(const char* path) { return _device->directoryIterator(path); }
     
     const char* errorDetail() { return _device->errorDetail(); }
@@ -94,7 +94,7 @@ private:
     Device* _device;
 };
 
-class File {
+class RawFile {
     friend class FS;
     
 public:      
