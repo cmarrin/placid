@@ -46,6 +46,8 @@ namespace placid {
 
     class String {
     public:
+        static constexpr size_t npos = std::numeric_limits<size_t>::max();
+        
         String() : _size(1), _capacity(0), _data(nullptr) { }
         String(const char* s, int32_t len = -1) : _size(1), _capacity(0), _data(nullptr)
         {
@@ -158,6 +160,34 @@ namespace placid {
             return erase(pos, _size - pos);
         }
         
+        size_t find(const char* str, size_t pos = 0) const
+        {
+            if (str == nullptr) {
+                return npos;
+            }
+
+            for(size_t i = pos; ; i++) {
+                char c1 = _data[i];
+                if (c1 == '\0') {
+                    return npos;
+                }
+                
+                char c2 = *str;
+                if (c1 == c2) {
+                    for (size_t j = i; ; j++) {
+                        c2 = str[j - i];
+                        if (c2 == '\0') {
+                            return i;
+                        }
+                        c1 = _data[j];
+                        if (c1 != c2) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         String slice(int32_t start, int32_t end) const
         {
             int32_t sz = static_cast<int32_t>(size());
@@ -202,16 +232,23 @@ namespace placid {
         std::vector<String> split(const String& separator, bool skipEmpty = false) const
         {
             std::vector<String> array;
-            char* p = _data;
+            if (!size()) {
+                return array;
+            }
+            
+            size_t offset = 0;
             while (1) {
-                char* n = strstr(p, separator.c_str());
-                if ((!n && p) || n - p != 0 || !skipEmpty) {
-                    array.push_back(String(p, static_cast<int32_t>(n ? (n - p) : -1)));
+                size_t n = find(separator.c_str(), offset);
+                bool found = n != npos;
+                size_t length = (found ? n : size()) - offset;
+                if (length || !skipEmpty) {
+                    array.push_back(slice(static_cast<int32_t>(offset), static_cast<int32_t>(offset + length)));
                 }
-                if (!n) {
+                
+                if (!found) {
                     break;
                 }
-                p = n ? (n + separator.size()) : nullptr;
+                offset = n + separator.size();
             }
             return array;
         }

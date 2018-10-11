@@ -237,36 +237,6 @@ int strcmp(const char* s1, const char* s2)
     return c1 - c2;
 }
 
-const char* strstr(const char* s1, const char* s2)
-{
-    int i, j;
-
-    if ((s1 == nullptr || s2 == nullptr)) {
-        return nullptr;
-    }
-
-    for( i = 0; ; i++) {
-        char c1 = s1[i];
-        if (c1 == '\0') {
-            return nullptr;
-        }
-        
-        char c2 = *s2;
-        if (c1 == c2) {
-            for (j = i; ; j++) {
-                c2 = s2[j - i];
-                if (c2 == '\0') {
-                    return s1 + i;
-                }
-                c1 = s1[j];
-                if (c1 != c2) {
-                    break;
-                }
-            }
-        }
-    }
-}
-
 }
 
 namespace std {
