@@ -106,9 +106,14 @@ struct FATDirEntry
 {
     char name[11];
     uint8_t attr;
-    uint8_t reserved1[8];
+    uint8_t reserved1;
+    uint8_t creationTime;
+    uint8_t createTime[2];
+    uint8_t createDate[2];
+    uint8_t accessedDate[2];
     uint8_t firstClusterHi[2];
-    uint8_t reserved2[4];
+    uint8_t modificationTime[2];
+    uint8_t modificationDate[2];
     uint8_t firstClusterLo[2];
     uint8_t size[4];
 };
