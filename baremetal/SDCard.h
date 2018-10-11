@@ -61,8 +61,8 @@ namespace bare {
     public:
         SDCard();
         
-        virtual int32_t read(char* buf, uint32_t blockAddr, uint32_t blocks) override;
-        virtual int32_t write(const char* buf, uint32_t blockAddr, uint32_t blocks) override { return -1; }
+        virtual int32_t read(char* buf, Block blockAddr, uint32_t blocks) override;
+        virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) override { return -1; }
 
     private:
         bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);

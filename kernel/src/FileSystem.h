@@ -97,6 +97,7 @@ namespace placid {
     public:
         enum class SeekWhence { Set, Cur, End };
         
+        File() { }
         ~File() { close(); }
         
         void close() { flush(); }

@@ -52,12 +52,12 @@ SDCard::SDCard()
     // that to simulate an SD card
     sdCardFP = fopen("FAT32.img", "r+");
 }
-int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
+int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
 {
     if (!sdCardFP) {
         return -1;
     }
-    fseek(sdCardFP, blockAddr * 512, SEEK_SET);
+    fseek(sdCardFP, blockAddr.value * 512, SEEK_SET);
     size_t size = fread(buf, 1, blocks * 512, sdCardFP);
     return (size == blocks * 512) ? blocks : -1;
 }

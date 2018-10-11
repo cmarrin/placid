@@ -67,13 +67,13 @@ bool FS::open(RawFile& file, const char* name)
     return true;
 }
 
-FS::Error RawFile::read(char* buf, uint32_t blockAddr, uint32_t blocks)
+FS::Error RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
 {
     _error = static_cast<FS::Error>(_device->read(buf, _baseBlock, blockAddr, blocks));
     return _error;
 }
 
-FS::Error RawFile::write(const char* buf, uint32_t blockAddr, uint32_t blocks)
+FS::Error RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
 {
     _error = static_cast<FS::Error>(_device->write(buf, _baseBlock, blockAddr, blocks));
     return _error;

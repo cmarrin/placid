@@ -45,6 +45,15 @@ const uint32_t BlockSize = 512;
 class DirectoryIterator;
 class RawFile;
 
+// Strong typed block
+struct Block
+{
+    Block() { }
+    Block(uint32_t v) : value(v) { }
+    Block operator +(Block other) { return value + other.value; }
+    uint32_t value = 0;
+};
+
 class FS {
     friend class RawFile;
     
@@ -58,22 +67,22 @@ public:
     
     struct RawIO
     {
-        virtual int32_t read(char* buf, uint32_t blockAddr, uint32_t blocks) = 0;
-        virtual int32_t write(const char* buf, uint32_t blockAddr, uint32_t blocks) = 0;
+        virtual int32_t read(char* buf, Block blockAddr, uint32_t blocks) = 0;
+        virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
     };
     
     struct FileInfo {
         char name[FilenameLength]; // Passed in name converted to 8.3
         uint32_t size = 0;
-        uint32_t baseBlock = 0;
+        Block baseBlock = 0;
     };
 
     struct Device
     {
         virtual uint32_t sizeInBlocks() const = 0;
         virtual FS::Error mount() = 0;
-        virtual FS::Error read(char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) = 0;    
-        virtual FS::Error write(const char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) = 0;    
+        virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
+        virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
         virtual bool find(FS::FileInfo&, const char* name) = 0;
         virtual const char* errorDetail() const = 0;
         virtual DirectoryIterator* directoryIterator(const char* path) = 0;
@@ -97,9 +106,11 @@ private:
 class RawFile {
     friend class FS;
     
-public:      
-    FS::Error read(char* buf, uint32_t blockAddr, uint32_t blocks);    
-    FS::Error write(const char* buf, uint32_t blockAddr, uint32_t blocks);    
+public:
+    RawFile() { }
+    
+    FS::Error read(char* buf, Block blockAddr, uint32_t blocks);    
+    FS::Error write(const char* buf, Block blockAddr, uint32_t blocks);    
 
     bool valid() const { return _error == FS::Error::OK; }
     uint32_t size() const { return _size; }
@@ -108,7 +119,7 @@ public:
 private:
     FS::Error _error = FS::Error::OK;
     uint32_t _size = 0;
-    uint32_t _baseBlock;
+    Block _baseBlock;
     FS::Device* _device = nullptr;
 };
 

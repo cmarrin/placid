@@ -40,11 +40,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace bare {
 
+// Strong typed cluster
+struct Cluster
+{
+    Cluster() { }
+    Cluster(uint32_t v) : value(v) { }
+    Cluster operator +(Cluster other) { return value + other.value; }
+    uint32_t value = 0;
+};
+
 class FAT32 : public FS::Device
 {
 public:
-    friend class FAT32DirectoryIterator;
-    
     static constexpr uint32_t FilenameLength = 32;
     
     enum class Error {
@@ -57,6 +64,7 @@ public:
         BadBPBSignature,
         MBRReadError,
         BPBReadError,
+        FATReadError,
         DirReadError,
         OnlyFAT32LBASupported,
         InvalidFAT32Volume,
@@ -69,8 +77,8 @@ public:
     FAT32(FS::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
     
     virtual FS::Error mount() override;
-    virtual FS::Error read(char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) override;    
-    virtual FS::Error write(const char* buf, uint32_t baseBlock, uint32_t relativeBlock, uint32_t blocks) override;    
+    virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
+    virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
     virtual bool find(FS::FileInfo&, const char* name) override;
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
@@ -78,25 +86,30 @@ public:
 
     bool mounted() { return _mounted; }
     
-    uint32_t rootDirectoryStartBlock() const { return _rootDirectoryStartBlock; }
+    Block rootDirectoryStartBlock() const { return _rootDirectoryStartBlock; }
     uint32_t blocksPerCluster() { return _blocksPerCluster; }
     uint32_t clusterSize() { return _blocksPerCluster * 512; }
     
-    uint32_t clusterToBlock(uint32_t cluster)
+    Block clusterToBlock(Cluster cluster)
     {
-        return _startDataBlock + (cluster - 2) * _blocksPerCluster;
+        return _startDataBlock.value + (cluster.value - 2) * _blocksPerCluster;
     }
-    
-    
+
+    uint32_t nextBlockFATEntry(Block block);
+
 private:
     bool _mounted = false;
-    uint32_t _firstBlock = 0;                  // first block of this partition
-    uint32_t _sizeInBlocks = 0;                // size in blocks of this partition
-    uint8_t _blocksPerCluster = 0;             // cluster size in blocks
-    uint32_t _rootDirectoryStartBlock = 0;     // first block of root dir
-    uint32_t _startFATBlock = 0;               // location of FAT
-    uint32_t _blocksPerFAT = 0;                // size of a FAT in blocks
-    uint32_t _startDataBlock = 0;              // start of data
+    Block _firstBlock = 0;                  // first block of this partition
+    uint32_t _sizeInBlocks = 0;             // size in blocks of this partition
+    uint8_t _blocksPerCluster = 0;          // cluster size in blocks
+    Block _rootDirectoryStartBlock = 0;     // first block of root dir
+    Block _startFATBlock = 0;               // location of FAT
+    uint32_t _blocksPerFAT = 0;             // size of a FAT in blocks
+    Block _startDataBlock = 0;              // start of data
+    
+    char _fatBuffer[512];
+    uint32_t _currentFATBufferAddr = 0;
+    bool _fatBufferValid = false;
     
     FS::RawIO* _rawIO = nullptr;
     uint8_t _partition = 0;

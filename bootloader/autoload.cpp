@@ -57,7 +57,7 @@ void autoload()
     }
     
     bare::RawFile fp;
-    bool r = fs.open(fp, KernelFileName, "r");
+    bool r = fs.open(fp, KernelFileName);
     if (!r) {
         bare::Serial::printf("*** File open error:%s\n", fs.errorDetail());
         return;
