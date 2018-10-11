@@ -15,6 +15,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 BUILDDIR = build
 
 SRC =	util.cpp \
+		xmodem.cpp \
 		Print.cpp \
 		FAT32.cpp \
 		GPIO.cpp \

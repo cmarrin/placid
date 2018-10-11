@@ -49,7 +49,6 @@ void *operator new(size_t size)
 #endif
 
 void autoload(void);
-void xmodemReceive(void);
 
 static constexpr uint32_t AutoloadTimeout = 3;
 
@@ -84,8 +83,10 @@ int main(int argc, const char * argv[])
         bare::Serial::read(c);
         if (c == ' ') {
             bare::Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
-            xmodemReceive();
-            break;
+            if (xmodemReceive([](uint32_t addr, char byte) { PUT8(addr, byte); })) {
+                BRANCHTO(ARMBASE);
+                break;
+            }
         } else if (c < 0x7f) {
             bare::Serial::printf("\n\nAutoloading...\n\n");
             autoload();

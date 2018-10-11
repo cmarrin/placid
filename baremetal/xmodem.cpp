@@ -42,7 +42,7 @@ static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
 static constexpr uint32_t EOT = 0x04;
 
-void xmodemReceive()
+bool xmodemReceive(XModemReceiveFunction func)
 {
     // block numbers start with 1
 
@@ -82,10 +82,7 @@ void xmodemReceive()
             if (xstring[state] == EOT) {
                 bare::Serial::write(ACK);
                 bare::Timer::usleep(100000);
-                bare::Serial::printf("XModem upload complete, executing...\n");
-                bare::Timer::usleep(100000);
-                BRANCHTO(ARMBASE);
-                break;
+                return true;
             }
         }
         
@@ -120,7 +117,7 @@ void xmodemReceive()
             crc &= 0xFF;
             if (xstring[state] == crc) {
                 for (uint32_t i = 0; i < 128; i++) {
-                    PUT8(addr++, xstring[i + 3]);
+                    func(addr++, xstring[i + 3]);
                 }
                 bare::Serial::write(ACK);
                 block = (block + 1) & 0xFF;
