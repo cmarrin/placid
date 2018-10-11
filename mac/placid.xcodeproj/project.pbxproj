@@ -144,6 +144,7 @@
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDCard.h; path = ../baremetal/SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
 		49657898216D1E2D00B3F088 /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
+		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
 		49731F78216E914500F9A79F /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../baremetal/xmodem.cpp; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
@@ -194,6 +195,7 @@
 		49166D2921514BB60077ACEE /* bootloader */ = {
 			isa = PBXGroup;
 			children = (
+				496C3BAF216FEEE6004DBC22 /* sample.txt */,
 				497EE45E21619879000584CE /* nanoprintf.cpp */,
 				496295542159286E0064B9C9 /* autoload.cpp */,
 				49166D6F2153F0FE0077ACEE /* main.cpp */,
