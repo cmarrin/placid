@@ -66,7 +66,7 @@ void Shell::sendComplete()
         
 		case State::NeedPrompt:
         _state = State::ShowingPrompt;
-        shellSend("\n> ");
+        showMessage(MessageType::Info, "\n[%s]> ", promptString());
         break;
         
 		case State::ShowingPrompt:

@@ -54,6 +54,7 @@ namespace placid {
 		
 		virtual const char* welcomeString() const = 0;
 		virtual const char* helpString() const = 0;
+        virtual const char* promptString() const = 0;
 	    virtual void shellSend(const char* data, uint32_t size = 0, bool raw = false) = 0;
 		virtual bool executeShellCommand(const std::vector<String>&) = 0;
 

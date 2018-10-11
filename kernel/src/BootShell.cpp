@@ -59,7 +59,13 @@ const char* BootShell::helpString() const
             "    run <file>         : run user program\n"
             "    stop <pid>         : stop user program\n"
             "    debug [on/off]     : turn debugging on/off\n";
-} 
+}
+
+const char* BootShell::promptString() const
+{
+    // FIXME: We want to display which process we're set to. For now, just kernel
+    return "kernel";
+}
 
 void BootShell::shellSend(const char* data, uint32_t size, bool raw)
 {
