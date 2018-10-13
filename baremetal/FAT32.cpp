@@ -134,13 +134,35 @@ static inline uint16_t bufToUInt16(uint8_t* buf)
             static_cast<uint16_t>((buf[1] << 8));
 }
 
+class FAT32RawFile : public RawFile
+{
+public:
+    FAT32RawFile(FS::Device* device) : RawFile(device) { }
+    
+    virtual FS::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
+    virtual FS::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
+
+    virtual uint32_t size() const override { return _size; }
+    virtual const char* name() const override { return _name; }
+    
+    void setName(const char* name) { strcpy(_name, name); }
+    void setSize(uint32_t size) { _size = size; }
+    void setBaseCluster(Cluster cluster) { _baseCluster = cluster; }
+
+private:
+    char _name[FilenameLength];
+    uint32_t _size = 0;
+    Cluster _baseCluster = 0;
+};
+
 class FAT32DirectoryIterator : public DirectoryIterator
 {
 public:
     static constexpr uint32_t EntriesPerBlock = 512 / 32;
 
     FAT32DirectoryIterator(FAT32* fs, const char* path)
-        : _fs(fs)
+        : _rawFile(fs)
+        , _fs(fs)
     {
         // FIXME: Ignore path for now
         _startBlock = _fs->rootDirectoryStartBlock();
@@ -180,9 +202,8 @@ public:
         }
     }
     
-    virtual const char* name() const override { return _valid ? _fileInfo.name : ""; }
-    virtual uint32_t size() const override { return _valid ? _fileInfo.size : 0; }
-    Block baseBlock() const { return _valid ? _fileInfo.baseBlock : 0; }
+    virtual const char* name() const override { return _valid ? _rawFile.name() : ""; }
+    virtual uint32_t size() const override { return _valid ? _rawFile.size() : 0; }
     virtual operator bool() const override { return _valid; }
     
 private:
@@ -213,32 +234,34 @@ private:
 
         // Format the name
         uint32_t j = 0;
+        char name[FilenameLength];
         for (uint32_t i = 0; i < 8; ++i) {
             if (entry->name[i] == ' ') {
                 break;
             }
-            _fileInfo.name[j++] = entry->name[i];
+            name[j++] = entry->name[i];
         }
         
-        _fileInfo.name[j++] = '.';
+        name[j++] = '.';
         
         for (uint32_t i = 8; i < 11; ++i) {
             if (entry->name[i] == ' ') {
                 break;
             }
-            _fileInfo.name[j++] = entry->name[i];
+            name[j++] = entry->name[i];
         }
         
-        _fileInfo.name[j] = '\0';
-        _fileInfo.size = bufToUInt32(entry->size);
-        Cluster baseCluster = (static_cast<uint32_t>(bufToUInt16(entry->firstClusterHi)) << 16) + 
-                                static_cast<uint32_t>(bufToUInt16(entry->firstClusterLo));
-        _fileInfo.baseBlock = _fs->clusterToBlock(baseCluster);
+        name[j] = '\0';
+        _rawFile.setName(name);
+        
+        _rawFile.setSize(bufToUInt32(entry->size));
+        _rawFile.setBaseCluster((static_cast<uint32_t>(bufToUInt16(entry->firstClusterHi)) << 16) + 
+                                static_cast<uint32_t>(bufToUInt16(entry->firstClusterLo)));
         return FileInfoResult::OK;
     }
     
     FAT32* _fs;
-    FS::FileInfo _fileInfo;
+    FAT32RawFile _rawFile;
     Block _startBlock = 0;
     int32_t _blockIndex = -1;
     int32_t _entryIndex = -1;
@@ -347,7 +370,7 @@ uint32_t FAT32::nextBlockFATEntry(Block block)
     return bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));    
 }
 
-bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
+bool FAT32::find(RawFile* rawFile, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
     char nameToFind[12];
@@ -358,7 +381,8 @@ bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
         char testName[12];
         convertTo8dot3(testName, it.name());
         if (memcmp(nameToFind, testName, 11) == 0) {
-            memcpy(fileInfo.name, it.name(), 11);
+            
+            memcpy(rawFile.setFile, it.name(), 11);
             fileInfo.name[11] = '\0';
             fileInfo.size = it.size();
             fileInfo.baseBlock = it.baseBlock();

@@ -53,28 +53,7 @@ FS::Error FS::mount(Device* device)
     return _device->mount();
 }
 
-bool FS::open(RawFile& file, const char* name)
+bool FS::open(RawFile* file, const char* name)
 {
-    FileInfo fileInfo;
-    if (!_device->find(fileInfo, name)) {
-        return false;
-    }
-    
-    file._baseBlock = fileInfo.baseBlock;
-    file._size = fileInfo.size;
-    file._device = _device;
-    
-    return true;
-}
-
-FS::Error RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<FS::Error>(_device->read(buf, _baseBlock, blockAddr, blocks));
-    return _error;
-}
-
-FS::Error RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<FS::Error>(_device->write(buf, _baseBlock, blockAddr, blocks));
-    return _error;
+    return _device->find(file, name);
 }

@@ -71,19 +71,13 @@ public:
         virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
     };
     
-    struct FileInfo {
-        char name[FilenameLength]; // Passed in name converted to 8.3
-        uint32_t size = 0;
-        Block baseBlock = 0;
-    };
-
     struct Device
     {
         virtual uint32_t sizeInBlocks() const = 0;
         virtual FS::Error mount() = 0;
         virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
         virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
-        virtual bool find(FS::FileInfo&, const char* name) = 0;
+        virtual bool find(RawFile*, const char* name) = 0;
         virtual const char* errorDetail() const = 0;
         virtual DirectoryIterator* directoryIterator(const char* path) = 0;
     };
@@ -91,7 +85,7 @@ public:
     FS() { }
     
     Error mount(Device*);
-    bool open(RawFile&, const char* name);
+    bool open(RawFile*, const char* name);
     DirectoryIterator* directoryIterator(const char* path) { return _device->directoryIterator(path); }
     
     const char* errorDetail() { return _device->errorDetail(); }
@@ -107,19 +101,20 @@ class RawFile {
     friend class FS;
     
 public:
-    RawFile() { }
+    RawFile(FS::Device* device) : _device(device) { }
+    virtual ~RawFile() { }
     
-    FS::Error read(char* buf, Block blockAddr, uint32_t blocks);    
-    FS::Error write(const char* buf, Block blockAddr, uint32_t blocks);    
+    virtual FS::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;
+    virtual FS::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
+
+    virtual uint32_t size() const = 0;
+    virtual const char* name() const = 0;
 
     bool valid() const { return _error == FS::Error::OK; }
-    uint32_t size() const { return _size; }
     FS::Error error() const { return _error; }
 
 private:
     FS::Error _error = FS::Error::OK;
-    uint32_t _size = 0;
-    Block _baseBlock;
     FS::Device* _device = nullptr;
 };
 

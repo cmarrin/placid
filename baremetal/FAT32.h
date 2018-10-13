@@ -79,7 +79,7 @@ public:
     virtual FS::Error mount() override;
     virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
     virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
-    virtual bool find(FS::FileInfo&, const char* name) override;
+    virtual bool find(RawFile*, const char* name) override;
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
