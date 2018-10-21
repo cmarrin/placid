@@ -72,7 +72,7 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
     // puts converts control characters to printable, so if we want
     // to send control we have to send raw
     if (raw) {
-        while (*data) {
+        while (size--) {
             bare::Serial::write(*data++);
         }
     } else {

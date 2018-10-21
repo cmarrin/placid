@@ -85,8 +85,6 @@ bool Shell::received(uint8_t c)
 {
 #ifndef __APPLE__
     shellSend(reinterpret_cast<const char*>(&c), 1, true);
-    
-    bare::Serial::printf("*** echo 0x%02x\n", c);
 #endif
 
 	if (c == '\r') {
