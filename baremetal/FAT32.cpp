@@ -238,7 +238,7 @@ private:
     }
     
     FAT32* _fs;
-    Volume::FileInfo _fileInfo;
+    FAT32::FileInfo _fileInfo;
     Block _startBlock = 0;
     int32_t _blockIndex = -1;
     int32_t _entryIndex = -1;
@@ -347,7 +347,7 @@ uint32_t FAT32::nextBlockFATEntry(Block block)
     return bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));    
 }
 
-bool FAT32::find(Volume::FileInfo& fileInfo, const char* name)
+bool FAT32::find(FileInfo& fileInfo, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
     char nameToFind[12];
@@ -411,4 +411,45 @@ const char* FAT32::errorDetail() const
     case Error::Incomplete:             return "incomplete";
     default:                            return "***";
     }
+}
+
+class FAT32RawFile: public RawFile
+{
+public:
+    FAT32RawFile(Block baseBlock, uint32_t size, Volume* volume)
+        : _baseBlock(baseBlock)
+        , _size(size)
+        , _volume(volume)
+    { }
+    
+    virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
+    virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
+    virtual uint32_t size() const override { return _size; }
+
+private:
+    Block _baseBlock;
+    uint32_t _size = 0;
+    Volume* _volume;
+};
+
+RawFile* FAT32::open(const char* name)
+{
+    FileInfo fileInfo;
+    if (!find(fileInfo, name)) {
+        return nullptr;
+    }
+    
+    return new FAT32RawFile(fileInfo.baseBlock, fileInfo.size, this);
+}
+
+Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
+{
+    _error = static_cast<Volume::Error>(_volume->read(buf, _baseBlock, blockAddr, blocks));
+    return _error;
+}
+
+Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
+{
+    _error = static_cast<Volume::Error>(_volume->write(buf, _baseBlock, blockAddr, blocks));
+    return _error;
 }

@@ -31,6 +31,7 @@
 		49657891216BFD8B00B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
 		49657892216BFDA200B3F088 /* Volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* Volume.cpp */; };
 		49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
+		496C3BB5217D0689004DBC22 /* nanoalloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */; };
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* xmodem.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
@@ -98,7 +99,6 @@
 		49166D3621514C050077ACEE /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Memory.h; path = ../../kernel/src/Memory.h; sourceTree = "<group>"; };
 		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../kernel/src/lib1funcs.asm; sourceTree = "<group>"; };
 		49166D3A21514C050077ACEE /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../../kernel/src/Shell.cpp; sourceTree = "<group>"; };
-		49166D3B21514C050077ACEE /* dlmalloc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlmalloc.cpp; path = ../../kernel/src/dlmalloc.cpp; sourceTree = "<group>"; };
 		49166D3E21514C050077ACEE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../kernel/src/main.cpp; sourceTree = "<group>"; };
 		49166D3F21514C050077ACEE /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../../kernel/src/BootShell.h; sourceTree = "<group>"; };
 		49166D4121514C060077ACEE /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = String.h; path = ../../kernel/src/String.h; sourceTree = "<group>"; };
@@ -145,6 +145,7 @@
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
 		49657898216D1E2D00B3F088 /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
+		496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = nanoalloc.cpp; path = ../bootloader/nanoalloc.cpp; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
 		49731F78216E914500F9A79F /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../baremetal/xmodem.cpp; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
@@ -204,6 +205,7 @@
 				49166D57215194260077ACEE /* Makefile */,
 				49166D5A2151AC5F0077ACEE /* loader */,
 				49166D5121514C2C0077ACEE /* config.txt */,
+				496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */,
 			);
 			name = bootloader;
 			sourceTree = "<group>";
@@ -211,27 +213,26 @@
 		49166D2C21514BE30077ACEE /* src */ = {
 			isa = PBXGroup;
 			children = (
+				49166D3121514C050077ACEE /* kernel.S */,
+				49166D3721514C050077ACEE /* lib1funcs.asm */,
+				4932ACEE2166770800BDAABB /* stackAddrs.h */,
+				49166D3E21514C050077ACEE /* main.cpp */,
+				497EE45C2161982F000584CE /* printf.cpp */,
+				4932ACF02167156E00BDAABB /* Allocator.cpp */,
+				4932ACF12167156E00BDAABB /* Allocator.h */,
+				49166D3221514C050077ACEE /* BootShell.cpp */,
+				49166D3F21514C050077ACEE /* BootShell.h */,
+				49657897216D1E2D00B3F088 /* FileSystem.cpp */,
+				49657898216D1E2D00B3F088 /* FileSystem.h */,
+				49166D2D21514C050077ACEE /* Memory.cpp */,
+				49166D3621514C050077ACEE /* Memory.h */,
 				4932ACFA2168A8C600BDAABB /* MStream.h */,
 				4932ACF721689A5500BDAABB /* Scanner.cpp */,
 				4932ACF821689A5600BDAABB /* Scanner.h */,
-				4932ACF02167156E00BDAABB /* Allocator.cpp */,
-				4932ACF12167156E00BDAABB /* Allocator.h */,
-				497EE45C2161982F000584CE /* printf.cpp */,
-				49166D3221514C050077ACEE /* BootShell.cpp */,
-				49166D3F21514C050077ACEE /* BootShell.h */,
-				49166D3B21514C050077ACEE /* dlmalloc.cpp */,
-				49166D3721514C050077ACEE /* lib1funcs.asm */,
-				49166D3E21514C050077ACEE /* main.cpp */,
-				49166D3621514C050077ACEE /* Memory.h */,
-				49166D2D21514C050077ACEE /* Memory.cpp */,
 				49166D3A21514C050077ACEE /* Shell.cpp */,
 				49166D3021514C050077ACEE /* Shell.h */,
-				49166D3121514C050077ACEE /* kernel.S */,
 				49931A0E2168AFA700257E42 /* String.cpp */,
 				49166D4121514C060077ACEE /* String.h */,
-				4932ACEE2166770800BDAABB /* stackAddrs.h */,
-				49657897216D1E2D00B3F088 /* FileSystem.cpp */,
-				49657898216D1E2D00B3F088 /* FileSystem.h */,
 			);
 			name = src;
 			path = ../kernel/src;
@@ -415,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49629556215929410064B9C9 /* autoload.cpp in Sources */,
+				496C3BB5217D0689004DBC22 /* nanoalloc.cpp in Sources */,
 				49166D702153F0FE0077ACEE /* main.cpp in Sources */,
 				497EE460216198F1000584CE /* nanoprintf.cpp in Sources */,
 			);

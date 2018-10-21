@@ -38,22 +38,38 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
-#ifndef __APPLE__
-// FAT32 has a new statement, which is not allowed in the bootloader.
-// Put a stub here to make sure we don't use it
-void *operator new(size_t size)
-{
-    bare::Serial::printf("***** operator new not allowed in bootloader!\n");
-    abort();
-}
-#endif
-
 void autoload(void);
 
 static constexpr uint32_t AutoloadTimeout = 3;
 
+extern bool UseAllocator;
+
+extern unsigned char __bss_start;
+extern unsigned char _end;
+extern void (*__init_start) (void);
+extern void (*__init_end) (void);
+
 int main(int argc, const char * argv[])
 {
+#ifndef __APPLE__
+    for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
+    {
+        *pBSS = 0;
+    }
+
+    // call construtors of static objects
+    for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
+    {
+        (**pFunc) ();
+    }
+#endif
+    
+    // This is only used on Mac. We are essentially overriding new and there
+    // are system libraries on Mac which use new and we don't want them using our
+    // little block of heap. So we tell them to just allocate using malloc() and
+    // then we set this true and start using the nanoallocator.
+    UseAllocator = true;
+
     bare::Serial::init();
         
     bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");

@@ -105,7 +105,7 @@ namespace placid {
     
         bool seek(int32_t offset, SeekWhence);
         int32_t tell() const { return _offset; }
-        bool eof() const { return _offset >= _rawFile.size(); }
+        bool eof() const { return _offset >= _rawFile->size(); }
         
         void flush();
     
@@ -118,7 +118,7 @@ namespace placid {
 
         uint32_t _offset = 0;
         FileSystem::Error _error = FileSystem::Error::OK;
-        bare::RawFile _rawFile;
+        bare::RawFile* _rawFile;
         bool _bufferValid = false;
         bool _bufferNeedsWriting = false;
         bool _canWrite;

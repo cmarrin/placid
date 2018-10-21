@@ -71,23 +71,16 @@ public:
         virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
     };
     
-    struct FileInfo {
-        char name[FilenameLength]; // Passed in name converted to 8.3
-        uint32_t size = 0;
-        Block baseBlock = 0;
-    };
-
     virtual uint32_t sizeInBlocks() const = 0;
     virtual Error mount() = 0;
+    virtual RawFile* open(const char* name) = 0;
     virtual Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
     virtual Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
-    virtual bool find(FileInfo&, const char* name) = 0;
     virtual const char* errorDetail() const = 0;
     virtual DirectoryIterator* directoryIterator(const char* path) = 0;
 
     Volume() { }
     
-    bool open(RawFile&, const char* name);
 };
 
 class RawFile {
@@ -96,18 +89,15 @@ class RawFile {
 public:
     RawFile() { }
     
-    Volume::Error read(char* buf, Block blockAddr, uint32_t blocks);    
-    Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks);    
-
+    virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
+    virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
+    virtual uint32_t size() const = 0;
+    
     bool valid() const { return _error == Volume::Error::OK; }
-    uint32_t size() const { return _size; }
     Volume::Error error() const { return _error; }
 
-private:
+protected:
     Volume::Error _error = Volume::Error::OK;
-    uint32_t _size = 0;
-    Block _baseBlock;
-    Volume* _volume = nullptr;
 };
 
 class DirectoryIterator

@@ -41,29 +41,3 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 
 using namespace bare;
-
-bool Volume::open(RawFile& file, const char* name)
-{
-    FileInfo fileInfo;
-    if (!find(fileInfo, name)) {
-        return false;
-    }
-    
-    file._baseBlock = fileInfo.baseBlock;
-    file._size = fileInfo.size;
-    file._volume = this;
-    
-    return true;
-}
-
-Volume::Error RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<Volume::Error>(_volume->read(buf, _baseBlock, blockAddr, blocks));
-    return _error;
-}
-
-Volume::Error RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<Volume::Error>(_volume->write(buf, _baseBlock, blockAddr, blocks));
-    return _error;
-}

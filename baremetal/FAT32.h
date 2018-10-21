@@ -74,12 +74,18 @@ public:
         Incomplete
     };
     
+    struct FileInfo {
+        char name[FilenameLength]; // Passed in name converted to 8.3
+        uint32_t size = 0;
+        Block baseBlock = 0;
+    };
+
     FAT32(Volume::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
     
     virtual Volume::Error mount() override;
+    virtual RawFile* open(const char* name) override;
     virtual Volume::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
     virtual Volume::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
-    virtual bool find(Volume::FileInfo&, const char* name) override;
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
@@ -98,6 +104,8 @@ public:
     uint32_t nextBlockFATEntry(Block block);
 
 private:
+    bool find(FileInfo&, const char* name);
+
     bool _mounted = false;
     Block _firstBlock = 0;                  // first block of this partition
     uint32_t _sizeInBlocks = 0;             // size in blocks of this partition

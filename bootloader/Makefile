@@ -18,6 +18,7 @@ BUILDDIR = build
 
 SRC =	bootloader.S \
         autoload.cpp \
+        nanoalloc.cpp \
         nanoprintf.cpp \
         main.cpp
 

@@ -132,6 +132,7 @@ void __assert_func(const char *file, int line, const char *func, const char *wha
 
 void __aeabi_idiv0()
 {
+    Serial::printf("Divide by zero\n");
     abort();
 }
 
@@ -242,6 +243,7 @@ int strcmp(const char* s1, const char* s2)
 namespace std {
     void __throw_bad_function_call()
     {
+        Serial::printf("bad function call\n");
         abort();
     }
 }

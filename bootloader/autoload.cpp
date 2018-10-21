@@ -53,20 +53,19 @@ void autoload()
         return;
     }
     
-    bare::RawFile fp;
-    bool r = fatFS.open(fp, KernelFileName);
-    if (!r) {
+    bare::RawFile* fp = fatFS.open(KernelFileName);
+    if (!fp) {
         bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail());
         return;
     }
     
     // FIXME: Currently only loads one cluster, limiting the file size to 32KB
     uint32_t addr = ARMBASE;
-    uint32_t size = fp.size();
+    uint32_t size = fp->size();
     
     for (uint32_t block = 0; size != 0; ++block) {
         char buf[512];
-        bare::Volume::Error result = fp.read(buf, block, 1);
+        bare::Volume::Error result = fp->read(buf, block, 1);
         if (result != bare::Volume::Error::OK) {
             bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;

@@ -7,6 +7,22 @@ MEMORY
 SECTIONS
 {
     .text : { *(.text*) } > ram
-    .bss : { *(.bss*) } > ram
+    .rodata : { *(.rodata*) } > ram
+    .init_array : {
+        __init_start = .;
+
+        *(.init_array*)
+
+        __init_end = .;
+    } > ram
+    .data : { *(.data*) } > ram
+    .bss : {
+        __bss_start = .;
+
+        *(.bss*)
+        *(COMMON)
+
+        _end = .;
+    } > ram
 }
 

@@ -69,7 +69,8 @@ bare::DirectoryIterator* FileSystem::directoryIterator(const char* path)
 File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 {
     File* fp = new File;
-    if (!_fatFS.open(fp->_rawFile, name)) {
+    fp->_rawFile = _fatFS.open(name);
+    if (!fp->_rawFile) {
         fp->_error = FileSystem::Error::FileNotFound;
     } else {
         fp->_canRead = mode == OpenMode::Read;
@@ -99,7 +100,7 @@ bool File::prepareBuffer(uint32_t offset)
 
     // Write out any needed data
     if (_bufferNeedsWriting) {
-        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
+        if (_rawFile->write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
             return false;
         }
         _bufferNeedsWriting = false;
@@ -121,7 +122,7 @@ int32_t File::io(char* buf, uint32_t size, bool write)
     if (write && !_bufferValid) {
         // We need to preload the buffer to fill the parts we're not
         // going to change
-        if (_rawFile.read(_buffer, bufferAddr, 1) != bare::Volume::Error::OK) {
+        if (_rawFile->read(_buffer, bufferAddr, 1) != bare::Volume::Error::OK) {
             return -1;
         }
         
@@ -132,8 +133,8 @@ int32_t File::io(char* buf, uint32_t size, bool write)
     while (1) {
         if (!_bufferValid) {
             bare::Volume::Error error = write ? 
-                _rawFile.write(_buffer, bufferAddr, 1) :
-                _rawFile.read(_buffer, bufferAddr, 1);
+                _rawFile->write(_buffer, bufferAddr, 1) :
+                _rawFile->read(_buffer, bufferAddr, 1);
             
             if (error != bare::Volume::Error::OK) {
                 return -1;
@@ -188,12 +189,12 @@ bool File::seek(int32_t offset, SeekWhence whence)
     if (whence == SeekWhence::Cur) {
         offset += _offset;
     } else if (whence == SeekWhence::End) {
-        offset = static_cast<int32_t>(_rawFile.size()) - offset;
+        offset = static_cast<int32_t>(_rawFile->size()) - offset;
     }
     if (offset < 0) {
         offset = 0;
-    } else if (offset > static_cast<int32_t>(_rawFile.size())) {
-        offset = _rawFile.size();
+    } else if (offset > static_cast<int32_t>(_rawFile->size())) {
+        offset = _rawFile->size();
     }
     _offset = offset;
     _bufferValid = false;
@@ -203,7 +204,7 @@ bool File::seek(int32_t offset, SeekWhence whence)
 void File::flush()
 {
     if (_bufferNeedsWriting && _bufferValid) {
-        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
+        if (_rawFile->write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
             return;
         }
         _bufferNeedsWriting = false;
