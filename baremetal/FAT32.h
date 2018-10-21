@@ -84,12 +84,12 @@ public:
     
     virtual Volume::Error mount() override;
     virtual RawFile* open(const char* name) override;
-    virtual Volume::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
-    virtual Volume::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
 
+    Volume::Error rawRead(char* buf, Block block, uint32_t blocks);    
+    Volume::Error rawWrite(const char* buf, Block block, uint32_t blocks);    
     bool mounted() { return _mounted; }
     
     Block rootDirectoryStartBlock() const { return _rootDirectoryStartBlock; }

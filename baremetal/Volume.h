@@ -74,8 +74,6 @@ public:
     virtual uint32_t sizeInBlocks() const = 0;
     virtual Error mount() = 0;
     virtual RawFile* open(const char* name) = 0;
-    virtual Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
-    virtual Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
     virtual const char* errorDetail() const = 0;
     virtual DirectoryIterator* directoryIterator(const char* path) = 0;
 

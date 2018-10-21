@@ -134,6 +134,20 @@ static inline uint16_t bufToUInt16(uint8_t* buf)
             static_cast<uint16_t>((buf[1] << 8));
 }
 
+Volume::Error FAT32::rawRead(char* buf, Block block, uint32_t blocks)
+{
+    int32_t result = _rawIO->read(buf, block, blocks);
+    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeRead;
+    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
+}
+
+Volume::Error FAT32::rawWrite(const char* buf, Block block, uint32_t blocks)
+{
+    int32_t result = _rawIO->write(buf, block, blocks);
+    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeWrite;
+    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
+}
+
 class FAT32DirectoryIterator : public DirectoryIterator
 {
 public:
@@ -188,7 +202,7 @@ public:
 private:
     bool getBlock()
     {
-        if (_fs->read(_buf, _startBlock, _blockIndex, 1) != Volume::Error::OK) {
+        if (_fs->rawRead(_buf, _startBlock + _blockIndex, 1) != Volume::Error::OK) {
             return false;
         }
         return true;
@@ -370,20 +384,6 @@ bool FAT32::find(FileInfo& fileInfo, const char* name)
     return false;
 }
     
-Volume::Error FAT32::read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
-{
-    int32_t result = _rawIO->read(buf, (baseBlock + relativeBlock), blocks);
-    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeRead;
-    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
-}
-
-Volume::Error FAT32::write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
-{
-    int32_t result = _rawIO->write(buf, (baseBlock + relativeBlock), blocks);
-    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeWrite;
-    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
-}
-
 DirectoryIterator* FAT32::directoryIterator(const char* path)
 {
     FAT32DirectoryIterator* it = new FAT32DirectoryIterator(this, path);
@@ -416,10 +416,10 @@ const char* FAT32::errorDetail() const
 class FAT32RawFile: public RawFile
 {
 public:
-    FAT32RawFile(Block baseBlock, uint32_t size, Volume* volume)
+    FAT32RawFile(Block baseBlock, uint32_t size, FAT32* fat32)
         : _baseBlock(baseBlock)
         , _size(size)
-        , _volume(volume)
+        , _fat32(fat32)
     { }
     
     virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
@@ -429,7 +429,7 @@ public:
 private:
     Block _baseBlock;
     uint32_t _size = 0;
-    Volume* _volume;
+    FAT32* _fat32;
 };
 
 RawFile* FAT32::open(const char* name)
@@ -444,12 +444,20 @@ RawFile* FAT32::open(const char* name)
 
 Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
 {
-    _error = static_cast<Volume::Error>(_volume->read(buf, _baseBlock, blockAddr, blocks));
+    _error = static_cast<Volume::Error>(_fat32->rawRead(buf, _baseBlock + blockAddr, blocks));
     return _error;
 }
 
 Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
 {
-    _error = static_cast<Volume::Error>(_volume->write(buf, _baseBlock, blockAddr, blocks));
+    _error = static_cast<Volume::Error>(_fat32->rawWrite(buf, _baseBlock + blockAddr, blocks));
     return _error;
 }
+
+
+
+
+
+
+
+
