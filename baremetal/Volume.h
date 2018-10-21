@@ -54,7 +54,7 @@ struct Block
     uint32_t value = 0;
 };
 
-class FS {
+class Volume {
     friend class RawFile;
     
 public:
@@ -77,50 +77,37 @@ public:
         Block baseBlock = 0;
     };
 
-    struct Device
-    {
-        virtual uint32_t sizeInBlocks() const = 0;
-        virtual FS::Error mount() = 0;
-        virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
-        virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
-        virtual bool find(FS::FileInfo&, const char* name) = 0;
-        virtual const char* errorDetail() const = 0;
-        virtual DirectoryIterator* directoryIterator(const char* path) = 0;
-    };
+    virtual uint32_t sizeInBlocks() const = 0;
+    virtual Error mount() = 0;
+    virtual Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
+    virtual Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) = 0;    
+    virtual bool find(FileInfo&, const char* name) = 0;
+    virtual const char* errorDetail() const = 0;
+    virtual DirectoryIterator* directoryIterator(const char* path) = 0;
 
-    FS() { }
+    Volume() { }
     
-    Error mount(Device*);
     bool open(RawFile&, const char* name);
-    DirectoryIterator* directoryIterator(const char* path) { return _device->directoryIterator(path); }
-    
-    const char* errorDetail() { return _device->errorDetail(); }
-
-    uint32_t sizeInBlocks() { return _device ? _device->sizeInBlocks() : 0; }
-    
-private:    
-        
-    Device* _device;
 };
 
 class RawFile {
-    friend class FS;
+    friend class Volume;
     
 public:
     RawFile() { }
     
-    FS::Error read(char* buf, Block blockAddr, uint32_t blocks);    
-    FS::Error write(const char* buf, Block blockAddr, uint32_t blocks);    
+    Volume::Error read(char* buf, Block blockAddr, uint32_t blocks);    
+    Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks);    
 
-    bool valid() const { return _error == FS::Error::OK; }
+    bool valid() const { return _error == Volume::Error::OK; }
     uint32_t size() const { return _size; }
-    FS::Error error() const { return _error; }
+    Volume::Error error() const { return _error; }
 
 private:
-    FS::Error _error = FS::Error::OK;
+    Volume::Error _error = Volume::Error::OK;
     uint32_t _size = 0;
     Block _baseBlock;
-    FS::Device* _device = nullptr;
+    Volume* _volume = nullptr;
 };
 
 class DirectoryIterator

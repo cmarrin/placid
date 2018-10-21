@@ -33,11 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "sdcard.h"
 #include "Serial.h"
 #include "FAT32.h"
 #include "SDCard.h"
-#include "FS.h"
 #include "Timer.h"
 #include "util.h"
 
@@ -49,17 +47,16 @@ void autoload()
     
     bare::SDCard sdCard;
     bare::FAT32 fatFS(&sdCard, 0);
-    bare::FS fs;
-    bare::FS::Error e = fs.mount(&fatFS);
-    if (e != bare::FS::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", fs.errorDetail());
+    bare::Volume::Error e = fatFS.mount();
+    if (e != bare::Volume::Error::OK) {
+        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail());
         return;
     }
     
     bare::RawFile fp;
-    bool r = fs.open(fp, KernelFileName);
+    bool r = fatFS.open(fp, KernelFileName);
     if (!r) {
-        bare::Serial::printf("*** File open error:%s\n", fs.errorDetail());
+        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail());
         return;
     }
     
@@ -69,8 +66,8 @@ void autoload()
     
     for (uint32_t block = 0; size != 0; ++block) {
         char buf[512];
-        bare::FS::Error result = fp.read(buf, block, 1);
-        if (result != bare::FS::Error::OK) {
+        bare::Volume::Error result = fp.read(buf, block, 1);
+        if (result != bare::Volume::Error::OK) {
             bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
             return;
         }

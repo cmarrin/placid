@@ -36,7 +36,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "FAT32.h"
-#include "FS.h"
 #include "SDCard.h"
 
 namespace placid {
@@ -83,7 +82,6 @@ namespace placid {
         static FileSystem* sharedFileSystem();
         
     private:
-        bare::FS _fs;
         bare::SDCard _sdCard;
         bare::FAT32 _fatFS;
 

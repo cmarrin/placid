@@ -33,7 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "FS.h"
+#include "Volume.h"
 
 #include "SDCard.h"
 #include "util.h"
@@ -42,39 +42,28 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-FS::Error FS::mount(Device* device)
-{
-    if (!device) {
-        return Error::UnsupportedDevice;
-    }
-    
-    _device = device;
-
-    return _device->mount();
-}
-
-bool FS::open(RawFile& file, const char* name)
+bool Volume::open(RawFile& file, const char* name)
 {
     FileInfo fileInfo;
-    if (!_device->find(fileInfo, name)) {
+    if (!find(fileInfo, name)) {
         return false;
     }
     
     file._baseBlock = fileInfo.baseBlock;
     file._size = fileInfo.size;
-    file._device = _device;
+    file._volume = this;
     
     return true;
 }
 
-FS::Error RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
+Volume::Error RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
 {
-    _error = static_cast<FS::Error>(_device->read(buf, _baseBlock, blockAddr, blocks));
+    _error = static_cast<Volume::Error>(_volume->read(buf, _baseBlock, blockAddr, blocks));
     return _error;
 }
 
-FS::Error RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
+Volume::Error RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
 {
-    _error = static_cast<FS::Error>(_device->write(buf, _baseBlock, blockAddr, blocks));
+    _error = static_cast<Volume::Error>(_volume->write(buf, _baseBlock, blockAddr, blocks));
     return _error;
 }

@@ -54,22 +54,22 @@ FileSystem::FileSystem()
 {
     // FIXME: For now we just create a bare::FS for the FAT32 filesystem 
     // partition 0 of the SD card
-    bare::FS::Error e = _fs.mount(&_fatFS);
-    if (e != bare::FS::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", _fs.errorDetail());
+    bare::Volume::Error e = _fatFS.mount();
+    if (e != bare::Volume::Error::OK) {
+        bare::Serial::printf("*** error mounting:%s\n", _fatFS.errorDetail());
         return;
     }
 }
 
 bare::DirectoryIterator* FileSystem::directoryIterator(const char* path)
 {
-    return _fs.directoryIterator(path);
+    return _fatFS.directoryIterator(path);
 }
 
 File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 {
     File* fp = new File;
-    if (!_fs.open(fp->_rawFile, name)) {
+    if (!_fatFS.open(fp->_rawFile, name)) {
         fp->_error = FileSystem::Error::FileNotFound;
     } else {
         fp->_canRead = mode == OpenMode::Read;
@@ -99,7 +99,7 @@ bool File::prepareBuffer(uint32_t offset)
 
     // Write out any needed data
     if (_bufferNeedsWriting) {
-        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::FS::Error::OK) {
+        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
             return false;
         }
         _bufferNeedsWriting = false;
@@ -121,7 +121,7 @@ int32_t File::io(char* buf, uint32_t size, bool write)
     if (write && !_bufferValid) {
         // We need to preload the buffer to fill the parts we're not
         // going to change
-        if (_rawFile.read(_buffer, bufferAddr, 1) != bare::FS::Error::OK) {
+        if (_rawFile.read(_buffer, bufferAddr, 1) != bare::Volume::Error::OK) {
             return -1;
         }
         
@@ -131,11 +131,11 @@ int32_t File::io(char* buf, uint32_t size, bool write)
 
     while (1) {
         if (!_bufferValid) {
-            bare::FS::Error error = write ? 
+            bare::Volume::Error error = write ? 
                 _rawFile.write(_buffer, bufferAddr, 1) :
                 _rawFile.read(_buffer, bufferAddr, 1);
             
-            if (error != bare::FS::Error::OK) {
+            if (error != bare::Volume::Error::OK) {
                 return -1;
             }
             
@@ -203,7 +203,7 @@ bool File::seek(int32_t offset, SeekWhence whence)
 void File::flush()
 {
     if (_bufferNeedsWriting && _bufferValid) {
-        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::FS::Error::OK) {
+        if (_rawFile.write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
             return;
         }
         _bufferNeedsWriting = false;

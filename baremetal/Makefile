@@ -23,7 +23,7 @@ SRC =	util.cpp \
 		Mailbox.cpp \
 		SD.cpp \
 		SDCard.cpp \
-		FS.cpp \
+		Volume.cpp \
 		Serial.cpp \
 		Timer.cpp \
 		ldivmod.S \

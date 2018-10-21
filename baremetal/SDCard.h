@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "SD.h"
-#include "FS.h"
+#include "Volume.h"
 #include <stdint.h>
 #include <functional>
 
@@ -56,7 +56,7 @@ namespace bare {
     };
 
     // SD Card interface. Subclass of SD
-    class SDCard : public SD, public FS::RawIO
+    class SDCard : public SD, public Volume::RawIO
     {
     public:
         SDCard();

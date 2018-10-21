@@ -188,7 +188,7 @@ public:
 private:
     bool getBlock()
     {
-        if (_fs->read(_buf, _startBlock, _blockIndex, 1) != FS::Error::OK) {
+        if (_fs->read(_buf, _startBlock, _blockIndex, 1) != Volume::Error::OK) {
             return false;
         }
         return true;
@@ -238,7 +238,7 @@ private:
     }
     
     FAT32* _fs;
-    FS::FileInfo _fileInfo;
+    Volume::FileInfo _fileInfo;
     Block _startBlock = 0;
     int32_t _blockIndex = -1;
     int32_t _entryIndex = -1;
@@ -246,24 +246,24 @@ private:
     bool _valid = true;
 };
 
-FS::Error FAT32::mount()
+Volume::Error FAT32::mount()
 {
     _error = Error::OK;
     
     if (_partition >= 4) {
         _error = Error::UnsupportedPartition;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     if (_mounted) {
-        return FS::Error::OK;
+        return Volume::Error::OK;
     }
     
     // Read the MBR
     char buf[512];
     if (_rawIO->read(buf, 0, 1) != 1) {
         _error = Error::MBRReadError;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     MBR* mbr = reinterpret_cast<MBR*>(buf);
@@ -271,13 +271,13 @@ FS::Error FAT32::mount()
     // Do validation checks
     if (mbr->signature[0] != 0x55 || mbr->signature[1] != 0xaa) {
         _error = Error::BadMBRSignature;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
         
     uint8_t partitionType = mbr->partitions[_partition].type;
     if (partitionType != 0x0b && partitionType != 0x0c) {
         _error = Error::OnlyFAT32LBASupported;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     // Exrtract the needed values
@@ -287,34 +287,34 @@ FS::Error FAT32::mount()
     // Read the Boot Block
     if (_rawIO->read(buf, _firstBlock, 1) != 1) {
         _error = Error::BPBReadError;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     // Do validation checks
     BootBlock* bootBlock = reinterpret_cast<BootBlock*>(buf);
     if (bootBlock->signature[0] != 0x55 || bootBlock->signature[1] != 0xaa) {
         _error = Error::BadBPBSignature;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
             
     if (bufToUInt16(bootBlock->bytesPerBlock) != 512) {
         _error = Error::UnsupportedBlockSize;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     if (bootBlock->numberOfFATCopies != 2) {
         _error = Error::UnsupportedFATCount;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     if (bufToUInt16(bootBlock->rootDirEntries) != 0) {
         _error = Error::InvalidFAT32Volume;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     if (bufToUInt16(bootBlock->blocksPerFATOld) != 0 || bufToUInt16(bootBlock->blocksPerFATOld) != 0) {
         _error = Error::InvalidFAT32Volume;
-        return FS::Error::Failed;
+        return Volume::Error::Failed;
     }
     
     // Exrtract the needed values
@@ -327,7 +327,7 @@ FS::Error FAT32::mount()
     _rootDirectoryStartBlock = clusterToBlock(bufToUInt32(bootBlock->rootDirectoryStartCluster));
     
     _mounted = true;
-    return FS::Error::OK;
+    return Volume::Error::OK;
 }
 
 uint32_t FAT32::nextBlockFATEntry(Block block)
@@ -347,7 +347,7 @@ uint32_t FAT32::nextBlockFATEntry(Block block)
     return bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));    
 }
 
-bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
+bool FAT32::find(Volume::FileInfo& fileInfo, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
     char nameToFind[12];
@@ -370,18 +370,18 @@ bool FAT32::find(FS::FileInfo& fileInfo, const char* name)
     return false;
 }
     
-FS::Error FAT32::read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
+Volume::Error FAT32::read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
 {
     int32_t result = _rawIO->read(buf, (baseBlock + relativeBlock), blocks);
     _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeRead;
-    return (_error == Error::OK) ? FS::Error::OK : FS::Error::Failed;
+    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
 }
 
-FS::Error FAT32::write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
+Volume::Error FAT32::write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks)
 {
     int32_t result = _rawIO->write(buf, (baseBlock + relativeBlock), blocks);
     _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeWrite;
-    return (_error == Error::OK) ? FS::Error::OK : FS::Error::Failed;
+    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
 }
 
 DirectoryIterator* FAT32::directoryIterator(const char* path)

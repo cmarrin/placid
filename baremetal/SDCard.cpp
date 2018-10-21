@@ -531,13 +531,13 @@ SDCard::SDCard()
     DEBUG_LOG("SDCard: EMMC init succeeded\n");
 }
 
-int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
+int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
 {
     if (blocks < 1) {
         blocks = 1;
     }
     
-    DEBUG_LOG("SDCard: readBlock addr=%d, num=%d\n", blockAddr, blocks);
+    DEBUG_LOG("SDCard: readBlock addr=%d, num=%d\n", blockAddr.value, blocks);
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
         ERROR_LOG("SDCard: readBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
@@ -558,7 +558,7 @@ int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
         
         emmc().blockSizeCount = (blocks << 16) | 512;
         
-        error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr);
+        error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr.value);
         if (error != Error::OK) {
             ERROR_LOG("SDCard: error sending CMD_READ_*\n");
             return -1;
@@ -569,9 +569,9 @@ int32_t SDCard::read(char* buf, uint32_t blockAddr, uint32_t blocks)
     
     for (uint32_t currentBlock = 0; currentBlock < blocks; ++currentBlock) {
         if(!(_scr[0] & SCR_SUPP_CCS)) {
-            error = sendCommand(CMD_READ_SINGLE(), (blockAddr + currentBlock) * 512);
+            error = sendCommand(CMD_READ_SINGLE(), (blockAddr.value + currentBlock) * 512);
             if (error != Error::OK) {
-                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr + currentBlock) * 512);
+                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr.value + currentBlock) * 512);
                 return -1;
             }
         }

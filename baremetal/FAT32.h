@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "FS.h"
+#include "Volume.h"
 #include <stdint.h>
 
 namespace bare {
@@ -49,7 +49,7 @@ struct Cluster
     uint32_t value = 0;
 };
 
-class FAT32 : public FS::Device
+class FAT32 : public Volume
 {
 public:
     static constexpr uint32_t FilenameLength = 32;
@@ -74,12 +74,12 @@ public:
         Incomplete
     };
     
-    FAT32(FS::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
+    FAT32(Volume::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
     
-    virtual FS::Error mount() override;
-    virtual FS::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
-    virtual FS::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
-    virtual bool find(FS::FileInfo&, const char* name) override;
+    virtual Volume::Error mount() override;
+    virtual Volume::Error read(char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
+    virtual Volume::Error write(const char* buf, Block baseBlock, Block relativeBlock, uint32_t blocks) override;    
+    virtual bool find(Volume::FileInfo&, const char* name) override;
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail() const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
@@ -111,7 +111,7 @@ private:
     uint32_t _currentFATBufferAddr = 0;
     bool _fatBufferValid = false;
     
-    FS::RawIO* _rawIO = nullptr;
+    Volume::RawIO* _rawIO = nullptr;
     uint8_t _partition = 0;
     Error _error = Error::OK;
 };
