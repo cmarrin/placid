@@ -18,6 +18,8 @@ SRC =	util.cpp \
 		xmodem.cpp \
 		Print.cpp \
 		FAT32.cpp \
+		FAT32DirectoryIterator.cpp \
+		FAT32RawFile.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
 		Mailbox.cpp \

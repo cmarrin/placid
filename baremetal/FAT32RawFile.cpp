@@ -90,8 +90,7 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cl
         }
         
         while (_lastLogicalCluster.value++ < currentLogicalCluster.value) {
-            Cluster nextCluster;
-            FAT32::FATEntryType type = _fat32->nextClusterFATEntry(_lastPhysicalCluster, nextCluster);
+            FAT32::FATEntryType type = _fat32->nextClusterFATEntry(_lastPhysicalCluster, _lastPhysicalCluster);
             if (type == FAT32::FATEntryType::Normal) {
                 continue;
             }

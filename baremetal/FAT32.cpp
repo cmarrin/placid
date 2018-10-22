@@ -219,7 +219,7 @@ FAT32::FATEntryType FAT32::nextClusterFATEntry(Cluster cluster, Cluster& nextClu
     if (entry == 0) {
         return FATEntryType::Free;
     }
-    if (entry >= 0xfffffff8) {
+    if (entry >= 0x0ffffff8) {
         return FATEntryType::End;
     }
     nextCluster = entry & 0x0fffffff;
