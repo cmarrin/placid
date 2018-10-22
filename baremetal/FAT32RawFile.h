@@ -35,78 +35,34 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <stdint.h>
+#include "FAT32.h"
 
 namespace bare {
 
-const uint32_t FilenameLength = 32;
-const uint32_t BlockSize = 512;
-
-class DirectoryIterator;
-class RawFile;
-
-// Strong typed block
-struct Block
-{
-    Block() { }
-    Block(uint32_t v) : value(v) { }
-    Block operator +(Block other) { return value + other.value; }
-    uint32_t value = 0;
-};
-
-class Volume {
-    friend class RawFile;
-    
-public:
-    enum class Error {
-        OK = 0,
-        Failed,
-        UnsupportedDevice, 
-        FileNotFound,
-        InternalError,
-        EndOfFile,
-    };
-    
-    struct RawIO
+    class FAT32RawFile: public RawFile
     {
-        virtual int32_t read(char* buf, Block blockAddr, uint32_t blocks) = 0;
-        virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
+    public:
+        FAT32RawFile(Cluster baseCluster, uint32_t size, FAT32* fat32)
+            : _baseCluster(baseCluster)
+            , _size(size)
+            , _fat32(fat32)
+            , _lastPhysicalCluster(baseCluster)
+        { }
+        
+        virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
+        virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
+        virtual uint32_t size() const override { return _size; }
+
+    private:
+        Volume::Error logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset);
+
+        Cluster _baseCluster;
+        uint32_t _size = 0;
+        FAT32* _fat32;
+        
+        Cluster _lastLogicalCluster = 0;
+        Cluster _lastPhysicalCluster = 0;
     };
-    
-    virtual uint32_t sizeInBlocks() const = 0;
-    virtual Error mount() = 0;
-    virtual RawFile* open(const char* name) = 0;
-    virtual const char* errorDetail() const = 0;
-    virtual DirectoryIterator* directoryIterator(const char* path) = 0;
-
-    Volume() { }
-    
-};
-
-class RawFile {
-    friend class Volume;
-    
-public:
-    RawFile() { }
-    
-    virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
-    virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
-    virtual uint32_t size() const = 0;
-    
-    bool valid() const { return _error == Volume::Error::OK; }
-    Volume::Error error() const { return _error; }
-
-protected:
-    Volume::Error _error = Volume::Error::OK;
-};
-
-class DirectoryIterator
-{
-public:
-    virtual DirectoryIterator& next() = 0;
-    virtual const char* name() const = 0;
-    virtual uint32_t size() const = 0;
-    virtual operator bool() const = 0;
-};
 
 }
+

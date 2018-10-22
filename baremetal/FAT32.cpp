@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "FAT32.h"
 
+#include "FAT32DirectoryIterator.h"
 #include "util.h"
 #include "Serial.h"
 
@@ -102,38 +103,6 @@ struct BootBlock
 
 static_assert(sizeof(BootBlock) == 512, "Wrong BootBlock size");
 
-struct FATDirEntry
-{
-    char name[11];
-    uint8_t attr;
-    uint8_t reserved1;
-    uint8_t creationTime;
-    uint8_t createTime[2];
-    uint8_t createDate[2];
-    uint8_t accessedDate[2];
-    uint8_t firstClusterHi[2];
-    uint8_t modificationTime[2];
-    uint8_t modificationDate[2];
-    uint8_t firstClusterLo[2];
-    uint8_t size[4];
-};
-
-static_assert(sizeof(FATDirEntry) == 32, "Wrong FATDirEntry size");
-
-static inline uint32_t bufToUInt32(uint8_t* buf)
-{
-    return  static_cast<uint32_t>(buf[0]) + 
-            static_cast<uint32_t>((buf[1] << 8)) + 
-            static_cast<uint32_t>((buf[2] << 16)) + 
-            static_cast<uint32_t>((buf[3] << 24));
-}
-
-static inline uint16_t bufToUInt16(uint8_t* buf)
-{
-    return  static_cast<uint16_t>(buf[0]) + 
-            static_cast<uint16_t>((buf[1] << 8));
-}
-
 Volume::Error FAT32::rawRead(char* buf, Block block, uint32_t blocks)
 {
     int32_t result = _rawIO->read(buf, block, blocks);
@@ -147,118 +116,6 @@ Volume::Error FAT32::rawWrite(const char* buf, Block block, uint32_t blocks)
     _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeWrite;
     return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
 }
-
-class FAT32DirectoryIterator : public DirectoryIterator
-{
-public:
-    static constexpr uint32_t EntriesPerBlock = 512 / 32;
-
-    FAT32DirectoryIterator(FAT32* fs, const char* path)
-        : _fs(fs)
-    {
-        // FIXME: Ignore path for now
-        _startBlock = _fs->rootDirectoryStartBlock();
-        next();
-    }
-    
-    virtual DirectoryIterator& next() override
-    {
-        // FIXME: Handle more than one cluster
-        while (1) {
-            if (_entryIndex < 0 || ++_entryIndex >= static_cast<int32_t>(EntriesPerBlock)) {
-                if (++_blockIndex < static_cast<int32_t>(_fs->blocksPerCluster())) {
-                    if (!getBlock()) {
-                        // Could not get a block
-                        _valid = false;
-                        return *this;
-                    }
-                    _entryIndex = 0;
-                } else {
-                    // Go to the next cluster
-                    _startBlock = _fs->nextBlockFATEntry(_startBlock.value + _blockIndex - 1);
-                    _blockIndex = -1;
-                    _entryIndex = -1;
-                    continue;
-                }
-            }
-            FileInfoResult result = getFileInfo();
-            if (result == FileInfoResult::OK) {
-                _valid = true;
-            } else if (result == FileInfoResult::Skip) {
-                continue;
-            } else {
-                _valid = false;
-            }
-            
-            return *this;
-        }
-    }
-    
-    virtual const char* name() const override { return _valid ? _fileInfo.name : ""; }
-    virtual uint32_t size() const override { return _valid ? _fileInfo.size : 0; }
-    Block baseBlock() const { return _valid ? _fileInfo.baseBlock : 0; }
-    virtual operator bool() const override { return _valid; }
-    
-private:
-    bool getBlock()
-    {
-        if (_fs->rawRead(_buf, _startBlock + _blockIndex, 1) != Volume::Error::OK) {
-            return false;
-        }
-        return true;
-    }
-    
-    enum class FileInfoResult { OK, Skip, End };
-    FileInfoResult getFileInfo()
-    {
-        FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
-        if (entry->attr & 0x1f || static_cast<uint8_t>(entry->name[0]) == 0xe5 || entry->name[0] == 0x05) {
-            // Regular files have lower 4 bits clear.
-            // Bit 0x10 is the subdir bit. Skip them for now
-            // If the first char of the name is 0x05 or 0xe5 it means the file has been deleted so ignore it
-            return FileInfoResult::Skip;
-        }
-        
-        
-        if (entry->name[0] == '\0') {
-            // End of directory
-            return FileInfoResult::End;
-        }
-
-        // Format the name
-        uint32_t j = 0;
-        for (uint32_t i = 0; i < 8; ++i) {
-            if (entry->name[i] == ' ') {
-                break;
-            }
-            _fileInfo.name[j++] = entry->name[i];
-        }
-        
-        _fileInfo.name[j++] = '.';
-        
-        for (uint32_t i = 8; i < 11; ++i) {
-            if (entry->name[i] == ' ') {
-                break;
-            }
-            _fileInfo.name[j++] = entry->name[i];
-        }
-        
-        _fileInfo.name[j] = '\0';
-        _fileInfo.size = bufToUInt32(entry->size);
-        Cluster baseCluster = (static_cast<uint32_t>(bufToUInt16(entry->firstClusterHi)) << 16) + 
-                                static_cast<uint32_t>(bufToUInt16(entry->firstClusterLo));
-        _fileInfo.baseBlock = _fs->clusterToBlock(baseCluster);
-        return FileInfoResult::OK;
-    }
-    
-    FAT32* _fs;
-    FAT32::FileInfo _fileInfo;
-    Block _startBlock = 0;
-    int32_t _blockIndex = -1;
-    int32_t _entryIndex = -1;
-    char _buf[512];
-    bool _valid = true;
-};
 
 Volume::Error FAT32::mount()
 {
@@ -275,7 +132,7 @@ Volume::Error FAT32::mount()
     
     // Read the MBR
     char buf[512];
-    if (_rawIO->read(buf, 0, 1) != 1) {
+    if (rawRead(buf, 0, 1) != Volume::Error::OK) {
         _error = Error::MBRReadError;
         return Volume::Error::Failed;
     }
@@ -299,7 +156,7 @@ Volume::Error FAT32::mount()
     _sizeInBlocks = bufToUInt32(mbr->partitions[_partition].lbaCount);
     
     // Read the Boot Block
-    if (_rawIO->read(buf, _firstBlock, 1) != 1) {
+    if (rawRead(buf, _firstBlock, 1) != Volume::Error::OK) {
         _error = Error::BPBReadError;
         return Volume::Error::Failed;
     }
@@ -338,27 +195,35 @@ Volume::Error FAT32::mount()
     _blocksPerCluster = bootBlock->blocksPerCluster;
     _startFATBlock = _firstBlock + reservedBlocks;
     _startDataBlock = _startFATBlock + (_blocksPerFAT * 2);
-    _rootDirectoryStartBlock = clusterToBlock(bufToUInt32(bootBlock->rootDirectoryStartCluster));
+    _rootDirectoryStartCluster = bufToUInt32(bootBlock->rootDirectoryStartCluster);
     
     _mounted = true;
     return Volume::Error::OK;
 }
 
-uint32_t FAT32::nextBlockFATEntry(Block block)
+FAT32::FATEntryType FAT32::nextClusterFATEntry(Cluster cluster, Cluster& nextCluster)
 {
-    uint32_t fatBlockAddr = block.value * 4 / 512 + _startFATBlock.value;
-    uint32_t fatBlockOffset = block.value * 4 % 512;
+    uint32_t fatBlockAddr = cluster.value * 4 / 512 + _startFATBlock.value;
+    uint32_t fatBlockOffset = cluster.value * 4 % 512;
     
     if (!_fatBufferValid || fatBlockAddr != _currentFATBufferAddr) {
-        if (_rawIO->read(_fatBuffer, fatBlockAddr, 1) != 1) {
+        if (rawRead(_fatBuffer, fatBlockAddr, 1) != Volume::Error::OK) {
             _error = Error::FATReadError;
-            return 0;
+            return FATEntryType::Error;
         }
         _fatBufferValid = true;
         _currentFATBufferAddr = fatBlockAddr;
     }
     
-    return bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));    
+    uint32_t entry = bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
+    if (entry == 0) {
+        return FATEntryType::Free;
+    }
+    if (entry >= 0xfffffff8) {
+        return FATEntryType::End;
+    }
+    nextCluster = entry & 0x0fffffff;
+    return FATEntryType::Normal;
 }
 
 bool FAT32::find(FileInfo& fileInfo, const char* name)
@@ -375,7 +240,7 @@ bool FAT32::find(FileInfo& fileInfo, const char* name)
             memcpy(fileInfo.name, it.name(), 11);
             fileInfo.name[11] = '\0';
             fileInfo.size = it.size();
-            fileInfo.baseBlock = it.baseBlock();
+            fileInfo.baseCluster = it.baseCluster();
             return true;
         }
     }
@@ -413,25 +278,6 @@ const char* FAT32::errorDetail() const
     }
 }
 
-class FAT32RawFile: public RawFile
-{
-public:
-    FAT32RawFile(Block baseBlock, uint32_t size, FAT32* fat32)
-        : _baseBlock(baseBlock)
-        , _size(size)
-        , _fat32(fat32)
-    { }
-    
-    virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
-    virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
-    virtual uint32_t size() const override { return _size; }
-
-private:
-    Block _baseBlock;
-    uint32_t _size = 0;
-    FAT32* _fat32;
-};
-
 RawFile* FAT32::open(const char* name)
 {
     FileInfo fileInfo;
@@ -439,25 +285,5 @@ RawFile* FAT32::open(const char* name)
         return nullptr;
     }
     
-    return new FAT32RawFile(fileInfo.baseBlock, fileInfo.size, this);
+    return new FAT32RawFile(fileInfo.baseCluster, fileInfo.size, this);
 }
-
-Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<Volume::Error>(_fat32->rawRead(buf, _baseBlock + blockAddr, blocks));
-    return _error;
-}
-
-Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
-{
-    _error = static_cast<Volume::Error>(_fat32->rawWrite(buf, _baseBlock + blockAddr, blocks));
-    return _error;
-}
-
-
-
-
-
-
-
-

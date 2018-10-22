@@ -77,7 +77,7 @@ public:
     struct FileInfo {
         char name[FilenameLength]; // Passed in name converted to 8.3
         uint32_t size = 0;
-        Block baseBlock = 0;
+        Cluster baseCluster = 0;
     };
 
     FAT32(Volume::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
@@ -92,7 +92,7 @@ public:
     Volume::Error rawWrite(const char* buf, Block block, uint32_t blocks);    
     bool mounted() { return _mounted; }
     
-    Block rootDirectoryStartBlock() const { return _rootDirectoryStartBlock; }
+    Cluster rootDirectoryStartCluster() const { return _rootDirectoryStartCluster; }
     uint32_t blocksPerCluster() { return _blocksPerCluster; }
     uint32_t clusterSize() { return _blocksPerCluster * 512; }
     
@@ -101,7 +101,25 @@ public:
         return _startDataBlock.value + (cluster.value - 2) * _blocksPerCluster;
     }
 
-    uint32_t nextBlockFATEntry(Block block);
+    enum class FATEntryType { Normal, Free, End, Error };
+    FATEntryType nextClusterFATEntry(Cluster cluster, Cluster& nextCluster);
+    
+    enum class FindClusterFrom { Here, Start };
+    Cluster findPhysicalCluster(Cluster logicalCluster, FindClusterFrom);
+    
+    static uint32_t bufToUInt32(uint8_t* buf)
+    {
+        return  static_cast<uint32_t>(buf[0]) + 
+                static_cast<uint32_t>((buf[1] << 8)) + 
+                static_cast<uint32_t>((buf[2] << 16)) + 
+                static_cast<uint32_t>((buf[3] << 24));
+    }
+
+    static uint16_t bufToUInt16(uint8_t* buf)
+    {
+        return  static_cast<uint16_t>(buf[0]) + 
+                static_cast<uint16_t>((buf[1] << 8));
+    }
 
 private:
     bool find(FileInfo&, const char* name);
@@ -110,7 +128,7 @@ private:
     Block _firstBlock = 0;                  // first block of this partition
     uint32_t _sizeInBlocks = 0;             // size in blocks of this partition
     uint8_t _blocksPerCluster = 0;          // cluster size in blocks
-    Block _rootDirectoryStartBlock = 0;     // first block of root dir
+    Cluster _rootDirectoryStartCluster = 0; // first cluster of root dir
     Block _startFATBlock = 0;               // location of FAT
     uint32_t _blocksPerFAT = 0;             // size of a FAT in blocks
     Block _startDataBlock = 0;              // start of data

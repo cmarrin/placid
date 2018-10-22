@@ -35,78 +35,37 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <stdint.h>
+#include "FAT32.h"
+#include "FAT32RawFile.h"
 
 namespace bare {
 
-const uint32_t FilenameLength = 32;
-const uint32_t BlockSize = 512;
-
-class DirectoryIterator;
-class RawFile;
-
-// Strong typed block
-struct Block
-{
-    Block() { }
-    Block(uint32_t v) : value(v) { }
-    Block operator +(Block other) { return value + other.value; }
-    uint32_t value = 0;
-};
-
-class Volume {
-    friend class RawFile;
-    
-public:
-    enum class Error {
-        OK = 0,
-        Failed,
-        UnsupportedDevice, 
-        FileNotFound,
-        InternalError,
-        EndOfFile,
-    };
-    
-    struct RawIO
+    class FAT32DirectoryIterator : public DirectoryIterator
     {
-        virtual int32_t read(char* buf, Block blockAddr, uint32_t blocks) = 0;
-        virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
+    public:
+        static constexpr uint32_t EntriesPerBlock = 512 / 32;
+
+        FAT32DirectoryIterator(FAT32* fs, const char* path);
+        
+        virtual DirectoryIterator& next() override;
+        
+        virtual const char* name() const override { return _valid ? _fileInfo.name : ""; }
+        virtual uint32_t size() const override { return _valid ? _fileInfo.size : 0; }
+        Cluster baseCluster() const { return _valid ? _fileInfo.baseCluster : 0; }
+        virtual operator bool() const override { return _valid; }
+        
+    private:
+        enum class FileInfoResult { OK, Skip, End };
+        
+        FileInfoResult getFileInfo();
+        
+        FAT32* _fs;
+        FAT32::FileInfo _fileInfo;
+        FAT32RawFile* _file = nullptr;
+        int32_t _blockIndex = -1;
+        int32_t _entryIndex = -1;
+        char _buf[512];
+        bool _valid = true;
     };
-    
-    virtual uint32_t sizeInBlocks() const = 0;
-    virtual Error mount() = 0;
-    virtual RawFile* open(const char* name) = 0;
-    virtual const char* errorDetail() const = 0;
-    virtual DirectoryIterator* directoryIterator(const char* path) = 0;
-
-    Volume() { }
-    
-};
-
-class RawFile {
-    friend class Volume;
-    
-public:
-    RawFile() { }
-    
-    virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
-    virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
-    virtual uint32_t size() const = 0;
-    
-    bool valid() const { return _error == Volume::Error::OK; }
-    Volume::Error error() const { return _error; }
-
-protected:
-    Volume::Error _error = Volume::Error::OK;
-};
-
-class DirectoryIterator
-{
-public:
-    virtual DirectoryIterator& next() = 0;
-    virtual const char* name() const = 0;
-    virtual uint32_t size() const = 0;
-    virtual operator bool() const = 0;
-};
 
 }
