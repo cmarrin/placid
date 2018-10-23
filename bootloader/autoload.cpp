@@ -59,7 +59,6 @@ void autoload()
         return;
     }
     
-    // FIXME: Currently only loads one cluster, limiting the file size to 32KB
     uint32_t addr = ARMBASE;
     uint32_t size = fp->size();
     
