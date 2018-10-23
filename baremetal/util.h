@@ -56,6 +56,7 @@ extern "C" {
 void PUT8 ( unsigned int, unsigned int );
 void BRANCHTO ( unsigned int );
 bool interruptsSupported(void);
+void _start();
 
 typedef struct { uint64_t rem; uint64_t quot; } ulldiv_t;
 

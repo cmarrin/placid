@@ -49,16 +49,19 @@ const char* BootShell::welcomeString() const
 
 const char* BootShell::helpString() const
 {
-	return  "    ls                 : list files\n"
-            "    get <file>         : get file (XModem receive)\n"
-            "    put <file>         : put file (XModem send)\n"
-            "    rm <file>          : remove file\n"
-            "    mv <src> <dst>     : rename file\n"
+	return
             "    date [<time/date>] : set/get time/date\n"
+            "    debug [on/off]     : turn debugging on/off\n"
+            "    get <file>         : get file (XModem receive)\n"
             "    heap               : show heap status\n"
+            "    put <file>         : put file (XModem send)\n"
+            "    ls                 : list files\n"
+            "    mv <src> <dst>     : rename file\n"
+            "    reset              : restart kernel\n"
+            "    rm <file>          : remove file\n"
             "    run <file>         : run user program\n"
             "    stop <pid>         : stop user program\n"
-            "    debug [on/off]     : turn debugging on/off\n";
+    ;
 }
 
 const char* BootShell::promptString() const
@@ -116,6 +119,8 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         xmodemReceive([fp](uint32_t addr, char byte)
         {
             fp->write(&byte, 1); });
+    } else if (array[0] == "reset") {
+        _start();
     } else if (array[0] == "rm") {
     } else if (array[0] == "mv") {
     } else if (array[0] == "date") {

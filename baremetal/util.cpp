@@ -62,6 +62,8 @@ bool interruptsSupported()
     return false;
 }
 
+void _start() { }
+
 }
 
 #else
