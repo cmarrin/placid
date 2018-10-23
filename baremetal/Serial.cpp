@@ -174,7 +174,7 @@ Serial::Error Serial::read(uint8_t& c)
 bool Serial::rxReady()
 {
 #ifdef __APPLE__
-    return false;
+    return true;
 #else
     return (uart().LSR & 0x01) != 0;
 #endif

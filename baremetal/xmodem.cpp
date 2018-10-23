@@ -79,10 +79,10 @@ bool xmodemReceive(XModemReceiveFunction func)
         startTime = bare::Timer::systemTime();
         
         if (state == 0) {
-            if (xstring[state] == EOT) {
+            if (xstring[state] == EOT || xstring[state] == 0x1b) {
                 bare::Serial::write(ACK);
                 bare::Timer::usleep(100000);
-                return true;
+                return xstring[state] == EOT;
             }
         }
         
@@ -117,7 +117,11 @@ bool xmodemReceive(XModemReceiveFunction func)
             crc &= 0xFF;
             if (xstring[state] == crc) {
                 for (uint32_t i = 0; i < 128; i++) {
-                    func(addr++, xstring[i + 3]);
+                    if (!func(addr++, xstring[i + 3])) {
+                        bare::Serial::write(ACK);
+                        bare::Timer::usleep(100000);
+                        return false;
+                    }
                 }
                 bare::Serial::write(ACK);
                 block = (block + 1) & 0xFF;

@@ -56,6 +56,10 @@ namespace placid {
         enum class Error {
             OK,
             FileNotFound,
+            CreationFailure,
+            InternalError,
+            FileExists,
+            NotImplemented,
         };
         
         FileSystem();
@@ -69,15 +73,18 @@ namespace placid {
         // OpenMode::Append ignores seek() unless OpenOption::Update is present. 
         // In that case the seek() is accepted but is only used for read. The
         // next write operation resets the file position to the end of the file 
-        // and writes there. This also matches the C standard
+        // and writes there. This matches the C standard
         
         enum class OpenMode { Read, Write, Append };
         enum class OpenOption { None, Update };
          
         bare::DirectoryIterator* directoryIterator(const char* path);
         File* open(const char* name, OpenMode = OpenMode::Read, OpenOption = OpenOption::None);
+        
+        Error create(const char* name);
+        Error remove(const char* name) { return Error::NotImplemented; }
 
-        const char* errorDetail(Error error) const;
+        static const char* errorDetail(Error error);
         
         static FileSystem* sharedFileSystem();
         

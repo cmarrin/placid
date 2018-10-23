@@ -111,14 +111,25 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         
         File* fp = FileSystem::sharedFileSystem()->open(array[1].c_str(), FileSystem::OpenMode::Write);
         if (!fp) {
-            showMessage(MessageType::Error, "open of '%s' failed\n", array[2].c_str());
+            showMessage(MessageType::Error, "open of '%s' failed\n", array[1].c_str());
             return true;
         }
         
-        showMessage(MessageType::Info, "Start XModem download when ready, or press any key to cancel...\n");
-        xmodemReceive([fp](uint32_t addr, char byte)
+        showMessage(MessageType::Info, "Start XModem download when ready, or press [esc] key to cancel...\n");
+        if (!xmodemReceive([fp](uint32_t addr, char byte) -> bool
         {
-            fp->write(&byte, 1); });
+            return fp->write(&byte, 1) == 1;
+        })) {
+            showMessage(MessageType::Error, "XModem upload failed\n");
+            delete fp;
+            FileSystem::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
+            if (error != FileSystem::Error::OK) {
+                showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
+                    array[1].c_str(), FileSystem::errorDetail(error));
+            }
+        } else {
+            delete fp;
+        }
     } else if (array[0] == "reset") {
         _start();
     } else if (array[0] == "rm") {

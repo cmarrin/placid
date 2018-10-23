@@ -43,7 +43,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 static constexpr uint32_t ARMBASE = 0x8000;
 
-typedef std::function<void(uint32_t addr, char byte)> XModemReceiveFunction;
+typedef std::function<bool(uint32_t addr, char byte)> XModemReceiveFunction;
 bool xmodemReceive(XModemReceiveFunction);
 
 void disableIRQ(void);

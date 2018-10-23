@@ -69,25 +69,53 @@ bare::DirectoryIterator* FileSystem::directoryIterator(const char* path)
 File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 {
     File* fp = new File;
+    fp->_error = Error::OK;
     fp->_rawFile = _fatFS.open(name);
     if (!fp->_rawFile) {
-        fp->_error = FileSystem::Error::FileNotFound;
-    } else {
-        fp->_canRead = mode == OpenMode::Read;
-        fp->_canWrite = mode != OpenMode::Read;
-        fp->_appendOnly = mode == OpenMode::Append;
-        if (option == OpenOption::Update) {
-            fp->_canWrite = true;
+        if (mode == OpenMode::Write) {
+            // File does not exist, create it
+            if (create(name) != Error::OK) {
+                fp->_error = Error::CreationFailure;
+                return fp;
+            }
+            fp->_rawFile = _fatFS.open(name);
+            if (!fp->_rawFile) {
+                fp->_error = Error::InternalError;
+                return fp;
+            }
+        } else {
+            fp->_error = FileSystem::Error::FileNotFound;
+            return fp;
         }
+    } else if (mode == OpenMode::Write) {
+        fp->_error = FileSystem::Error::FileExists;
+        return fp;
     }
+
+    fp->_canRead = mode == OpenMode::Read;
+    fp->_canWrite = mode != OpenMode::Read;
+    fp->_appendOnly = mode == OpenMode::Append;
+    if (option == OpenOption::Update) {
+        fp->_canWrite = true;
+    }
+    
     return fp;
 }
 
-const char* FileSystem::errorDetail(Error error) const
+FileSystem::Error FileSystem::create(const char* name)
+{
+    return Error::NotImplemented;
+}
+
+const char* FileSystem::errorDetail(Error error)
 {
     switch (error) {
-    case FileSystem::Error::OK: return "NONE";
-    case FileSystem::Error::FileNotFound: return "file not found";
+    case Error::OK: return "NONE";
+    case Error::FileNotFound: return "file not found";
+    case Error::CreationFailure: return "creation failure";
+    case Error::InternalError: return "internal error";
+    case Error::FileExists: return "file exists";
+    case Error::NotImplemented: return "not implemented";
     default: return "*****";
     }
 }

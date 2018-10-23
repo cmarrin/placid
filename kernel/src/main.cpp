@@ -98,16 +98,32 @@ int main()
     // Test file read
     File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read);
     if (!fp->valid()) {
-        bare::Serial::printf("File open error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        bare::Serial::printf("File read open error for '%s': %s\n", "sample.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
     } else {
         char buf[10];
         fp->seek(508, File::SeekWhence::Set);
         int32_t size = fp->read(buf, 9);
         buf[9] = '\0';
         if (size < 0) {
-            bare::Serial::printf("File read:'%s'\n", buf);
+            bare::Serial::printf("File read error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
             bare::Serial::printf("File read:'%s'\n", buf);
+        }
+    }
+    
+    delete fp;
+    fp = nullptr;
+    
+    // Test file write
+    fp = FileSystem::sharedFileSystem()->open("test.txt", FileSystem::OpenMode::Write);
+    if (!fp->valid()) {
+        bare::Serial::printf("File write open error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    } else {
+        int32_t size = fp->write("The quick brown fox", 19);
+        if (size < 0) {
+            bare::Serial::printf("File write error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        } else {
+            bare::Serial::printf("File write successful\n");
         }
     }
     
