@@ -52,14 +52,25 @@ SDCard::SDCard()
     // that to simulate an SD card
     sdCardFP = fopen("FAT32.img", "r+");
 }
-int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
+
+Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
 {
     if (!sdCardFP) {
-        return -1;
+        return Volume::Error::InternalError;
     }
     fseek(sdCardFP, blockAddr.value * 512, SEEK_SET);
     size_t size = fread(buf, 1, blocks * 512, sdCardFP);
-    return (size == blocks * 512) ? blocks : -1;
+    return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
+}
+
+Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
+{
+    if (!sdCardFP) {
+        return Volume::Error::InternalError;
+    }
+    fseek(sdCardFP, blockAddr.value * 512, SEEK_SET);
+    size_t size = fwrite(buf, 1, blocks * 512, sdCardFP);
+    return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
 }
 #else
 static constexpr uint32_t EMMCBase = 0x20300000;
@@ -113,6 +124,8 @@ CMD(CMD_SEND_IF_COND,   0x08020000)
 CMD(CMD_STOP_TRANS,     0x0C030000)
 CMD(CMD_READ_SINGLE,    0x11220010)
 CMD(CMD_READ_MULTI,     0x12220032)
+CMD(CMD_WRITE_SINGLE,   0x18220000)
+CMD(CMD_WRITE_MULTI,    0x19220022)
 CMD(CMD_SET_BLOCKCNT,   0x17020000)
 CMD(CMD_APP_CMD,        0x37000000)
 CMD(CMD_APP_CMD_48,     (0x37000000 | CMDFLAG_RSPNS_48))
@@ -130,6 +143,7 @@ CMD(CMD_SEND_SCR,       (0x33220010 | CMDFLAG_NEED_APP))
 #define INT_DATA_TIMEOUT    0x00100000
 #define INT_CMD_TIMEOUT     0x00010000
 #define INT_READ_RDY        0x00000020
+#define INT_WRITE_RDY       0x00000010
 #define INT_CMD_DONE        0x00000001
 
 #define INT_ERROR_MASK      0x017E8000
@@ -531,7 +545,7 @@ SDCard::SDCard()
     DEBUG_LOG("SDCard: EMMC init succeeded\n");
 }
 
-int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
+Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
 {
     if (blocks < 1) {
         blocks = 1;
@@ -541,7 +555,7 @@ int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
         ERROR_LOG("SDCard: readBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
-        return -1;
+        return Volume::Error::InternalError;
     }
     
     uint32_t* currentPtr = reinterpret_cast<uint32_t*>(buf);
@@ -552,7 +566,7 @@ int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
             error = sendCommand(CMD_SET_BLOCKCNT(), blocks);
             if(error != Error::OK) {
                 ERROR_LOG("SDCard: error sending CMD_SET_BLOCKCNT\n");
-                return -1;
+                return Volume::Error::InternalError;
             }
         }
         
@@ -561,7 +575,7 @@ int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
         error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr.value);
         if (error != Error::OK) {
             ERROR_LOG("SDCard: error sending CMD_READ_*\n");
-            return -1;
+            return Volume::Error::InternalError;
         }
     } else {
         emmc().blockSizeCount = (1 << 16) | 512;
@@ -572,13 +586,13 @@ int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
             error = sendCommand(CMD_READ_SINGLE(), (blockAddr.value + currentBlock) * 512);
             if (error != Error::OK) {
                 ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr.value + currentBlock) * 512);
-                return -1;
+                return Volume::Error::InternalError;
             }
         }
         error = waitForInterrupt(INT_READ_RDY);
         if (error != Error::OK) {
             ERROR_LOG("ERROR: Timeout waiting for ready to read\n");
-            return -1;
+            return Volume::Error::InternalError;
         }
         
         for (uint32_t d = 0; d < 128; d++) {
@@ -592,10 +606,79 @@ int32_t SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
         error = sendCommand(CMD_STOP_TRANS(), 0);
         if (error != Error::OK) {
             ERROR_LOG("ERROR: sending CMD_STOP_TRANS\n");
-            return -1;
+            return Volume::Error::InternalError;
         }
     }
     
-    return blocks;
+    return Volume::Error::OK;
 }
+
+Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
+{
+    if (blocks < 1) {
+        blocks = 1;
+    }
+    
+    DEBUG_LOG("SDCard: writeBlock addr=%d, num=%d\n", blockAddr.value, blocks);
+
+    if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
+        ERROR_LOG("SDCard: writeBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
+        return Volume::Error::InternalError;
+    }
+    
+    uint32_t* currentPtr = reinterpret_cast<uint32_t*>(buf);
+    Error error = Error::OK;
+    
+    if (_scr[0] & SCR_SUPP_CCS) {
+        if (blocks > 1 && (_scr[0] & SCR_SUPP_SET_BLKCNT)) {
+            error = sendCommand(CMD_SET_BLOCKCNT(), blocks);
+            if(error != Error::OK) {
+                ERROR_LOG("SDCard: error sending CMD_SET_BLOCKCNT\n");
+                return Volume::Error::InternalError;
+            }
+        }
+        
+        emmc().blockSizeCount = (blocks << 16) | 512;
+        
+        error = sendCommand((blocks == 1) ? CMD_WRITE_SINGLE() : CMD_WRITE_MULTI(), blockAddr.value);
+        if (error != Error::OK) {
+            ERROR_LOG("SDCard: error sending CMD_WRITE_*\n");
+            return Volume::Error::InternalError;
+        }
+    } else {
+        emmc().blockSizeCount = (1 << 16) | 512;
+    }
+    
+    for (uint32_t currentBlock = 0; currentBlock < blocks; ++currentBlock) {
+        if(!(_scr[0] & SCR_SUPP_CCS)) {
+            error = sendCommand(CMD_WRITE_SINGLE(), (blockAddr.value + currentBlock) * 512);
+            if (error != Error::OK) {
+                ERROR_LOG("SDCard: error sending CMD_WRITE_SINGLE for addr %d\n", (blockAddr.value + currentBlock) * 512);
+                return Volume::Error::InternalError;
+            }
+        }
+        error = waitForInterrupt(INT_WRITE_RDY);
+        if (error != Error::OK) {
+            ERROR_LOG("ERROR: Timeout waiting for ready to write\n");
+            return Volume::Error::InternalError;
+        }
+        
+        for (uint32_t d = 0; d < 128; d++) {
+            currentPtr[d] = emmc().data;
+        }
+        
+        currentPtr += 128;
+    }
+    
+    if (blocks > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
+        error = sendCommand(CMD_STOP_TRANS(), 0);
+        if (error != Error::OK) {
+            ERROR_LOG("ERROR: sending CMD_STOP_TRANS\n");
+            return Volume::Error::InternalError;
+        }
+    }
+    
+    return Volume::Error::OK;
+}
+
 #endif // __APPLE__

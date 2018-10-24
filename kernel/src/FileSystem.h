@@ -53,15 +53,6 @@ namespace placid {
     class FileSystem
     {
     public:
-        enum class Error {
-            OK,
-            FileNotFound,
-            CreationFailure,
-            InternalError,
-            FileExists,
-            NotImplemented,
-        };
-        
         FileSystem();
         
         // Modes are slightly different than the C standard. Read and Append are
@@ -81,10 +72,10 @@ namespace placid {
         bare::DirectoryIterator* directoryIterator(const char* path);
         File* open(const char* name, OpenMode = OpenMode::Read, OpenOption = OpenOption::None);
         
-        Error create(const char* name);
-        Error remove(const char* name) { return Error::NotImplemented; }
+        bare::Volume::Error create(const char* name);
+        bare::Volume::Error remove(const char* name) { return bare::Volume::Error::NotImplemented; }
 
-        static const char* errorDetail(Error error);
+        const char* errorDetail(bare::Volume::Error error) const { return _fatFS.errorDetail(error); }
         
         static FileSystem* sharedFileSystem();
         
@@ -116,15 +107,15 @@ namespace placid {
         
         void flush();
     
-        bool valid() const { return _error == FileSystem::Error::OK; }
-        FileSystem::Error error() const { return _error; }
+        bool valid() const { return _error == bare::Volume::Error::OK; }
+        bare::Volume::Error error() const { return _error; }
 
     private:
         bool prepareBuffer(uint32_t offset);
         int32_t io(char* buf, uint32_t size, bool write);
 
         uint32_t _offset = 0;
-        FileSystem::Error _error = FileSystem::Error::OK;
+        bare::Volume::Error _error = bare::Volume::Error::OK;
         bare::RawFile* _rawFile;
         bool _bufferValid = false;
         bool _bufferNeedsWriting = false;

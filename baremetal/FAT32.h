@@ -55,8 +55,7 @@ public:
     static constexpr uint32_t FilenameLength = 32;
     
     enum class Error {
-        OK = 0,
-        UnsupportedType = 100, 
+        UnsupportedType = 1000, 
         UnsupportedPartition, 
         UnsupportedBlockSize,
         UnsupportedFATCount,
@@ -70,8 +69,7 @@ public:
         InvalidFAT32Volume,
         WrongSizeRead,
         WrongSizeWrite,
-        NotImplemented,
-        Incomplete
+        Incomplete,
     };
     
     struct FileInfo {
@@ -84,8 +82,11 @@ public:
     
     virtual Volume::Error mount() override;
     virtual RawFile* open(const char* name) override;
+    virtual Volume::Error create(const char* name) override;
+    virtual Volume::Error remove(const char* name) override;
+
     virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
-    virtual const char* errorDetail() const override;
+    virtual const char* errorDetail(Volume::Error) const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
 
     Volume::Error rawRead(char* buf, Block block, uint32_t blocks);    
@@ -139,7 +140,7 @@ private:
     
     Volume::RawIO* _rawIO = nullptr;
     uint8_t _partition = 0;
-    Error _error = Error::OK;
+    Error _error = static_cast<FAT32::Error>(Volume::Error::OK);
 };
 
 }

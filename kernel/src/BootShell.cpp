@@ -122,10 +122,10 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         })) {
             showMessage(MessageType::Error, "XModem upload failed\n");
             delete fp;
-            FileSystem::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
-            if (error != FileSystem::Error::OK) {
+            bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
+            if (error != bare::Volume::Error::OK) {
                 showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
-                    array[1].c_str(), FileSystem::errorDetail(error));
+                    array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(error));
             }
         } else {
             delete fp;

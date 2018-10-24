@@ -60,23 +60,31 @@ class Volume {
 public:
     enum class Error {
         OK = 0,
+        CreationFailure,
         Failed,
-        UnsupportedDevice, 
+        FileExists,
+        ReadOnly,
+        WriteOnly,
         FileNotFound,
         InternalError,
         EndOfFile,
+        NotImplemented,
+        PlatformSpecificError,
+        UnsupportedDevice, 
     };
     
     struct RawIO
     {
-        virtual int32_t read(char* buf, Block blockAddr, uint32_t blocks) = 0;
-        virtual int32_t write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
+        virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;
+        virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;
     };
     
     virtual uint32_t sizeInBlocks() const = 0;
     virtual Error mount() = 0;
     virtual RawFile* open(const char* name) = 0;
-    virtual const char* errorDetail() const = 0;
+    virtual Error create(const char* name) = 0;
+    virtual Error remove(const char* name) = 0;
+    virtual const char* errorDetail(Error) const;
     virtual DirectoryIterator* directoryIterator(const char* path) = 0;
 
     Volume() { }

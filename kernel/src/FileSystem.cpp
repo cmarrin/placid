@@ -56,7 +56,7 @@ FileSystem::FileSystem()
     // partition 0 of the SD card
     bare::Volume::Error e = _fatFS.mount();
     if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", _fatFS.errorDetail());
+        bare::Serial::printf("*** error mounting:%s\n", _fatFS.errorDetail(e));
         return;
     }
 }
@@ -69,26 +69,26 @@ bare::DirectoryIterator* FileSystem::directoryIterator(const char* path)
 File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 {
     File* fp = new File;
-    fp->_error = Error::OK;
+    fp->_error = bare::Volume::Error::OK;
     fp->_rawFile = _fatFS.open(name);
     if (!fp->_rawFile) {
         if (mode == OpenMode::Write) {
             // File does not exist, create it
-            if (create(name) != Error::OK) {
-                fp->_error = Error::CreationFailure;
+            if (create(name) != bare::Volume::Error::OK) {
+                fp->_error = bare::Volume::Error::CreationFailure;
                 return fp;
             }
             fp->_rawFile = _fatFS.open(name);
             if (!fp->_rawFile) {
-                fp->_error = Error::InternalError;
+                fp->_error = bare::Volume::Error::InternalError;
                 return fp;
             }
         } else {
-            fp->_error = FileSystem::Error::FileNotFound;
+            fp->_error = bare::Volume::Error::FileNotFound;
             return fp;
         }
     } else if (mode == OpenMode::Write) {
-        fp->_error = FileSystem::Error::FileExists;
+        fp->_error = bare::Volume::Error::FileExists;
         return fp;
     }
 
@@ -102,22 +102,9 @@ File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
     return fp;
 }
 
-FileSystem::Error FileSystem::create(const char* name)
+bare::Volume::Error FileSystem::create(const char* name)
 {
-    return Error::NotImplemented;
-}
-
-const char* FileSystem::errorDetail(Error error)
-{
-    switch (error) {
-    case Error::OK: return "NONE";
-    case Error::FileNotFound: return "file not found";
-    case Error::CreationFailure: return "creation failure";
-    case Error::InternalError: return "internal error";
-    case Error::FileExists: return "file exists";
-    case Error::NotImplemented: return "not implemented";
-    default: return "*****";
-    }
+    return bare::Volume::Error::NotImplemented;
 }
 
 bool File::prepareBuffer(uint32_t offset)
@@ -128,7 +115,8 @@ bool File::prepareBuffer(uint32_t offset)
 
     // Write out any needed data
     if (_bufferNeedsWriting) {
-        if (_rawFile->write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
+    _error = _rawFile->write(_buffer, _bufferAddr, 1);
+    if (_error != bare::Volume::Error::OK) {
             return false;
         }
         _bufferNeedsWriting = false;
@@ -150,7 +138,8 @@ int32_t File::io(char* buf, uint32_t size, bool write)
     if (write && !_bufferValid) {
         // We need to preload the buffer to fill the parts we're not
         // going to change
-        if (_rawFile->read(_buffer, bufferAddr, 1) != bare::Volume::Error::OK) {
+        _error = _rawFile->read(_buffer, bufferAddr, 1);
+        if (_error != bare::Volume::Error::OK) {
             return -1;
         }
         
@@ -203,12 +192,20 @@ int32_t File::io(char* buf, uint32_t size, bool write)
 
 int32_t File::read(char* buf, uint32_t size)
 {
+    if (!_canRead) {
+        _error = bare::Volume::Error::WriteOnly;
+        return -1;
+    }
     return io(buf, size, false);
 }
 
 
 int32_t File::write(const char* buf, uint32_t size)
 {
+    if (!_canWrite) {
+        _error = bare::Volume::Error::ReadOnly;
+        return -1;
+    }
     return io(const_cast<char*>(buf), size, true);
 }
 

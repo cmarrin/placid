@@ -66,11 +66,24 @@ FAT32DirectoryIterator::FAT32DirectoryIterator(FAT32* fs, const char* path)
 DirectoryIterator& FAT32DirectoryIterator::next()
 {
     while (1) {
+        rawNext();
+        if (!deleted() && !subdir()) {
+            return *this;
+        }
+    }
+}
+
+void FAT32DirectoryIterator::rawNext()
+{
+    _subdir = false;
+    _deleted = false;
+    
+    while (1) {
         if (_entryIndex < 0 || ++_entryIndex >= static_cast<int32_t>(EntriesPerBlock)) {
             // get the next block
             if (_file->read(_buf, ++_blockIndex, 1) != Volume::Error::OK) {
                 _valid = false;
-                return *this;
+                return;
             }
             
             _entryIndex = 0;
@@ -81,24 +94,31 @@ DirectoryIterator& FAT32DirectoryIterator::next()
             _valid = true;
         } else if (result == FileInfoResult::Skip) {
             continue;
-        } else {
+        } else if (result == FileInfoResult::End) {
             _valid = false;
         }
         
-        return *this;
+        return;
     }
 }
 
 FAT32DirectoryIterator::FileInfoResult FAT32DirectoryIterator::getFileInfo()
 {
     FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
-    if (entry->attr & 0x1f || static_cast<uint8_t>(entry->name[0]) == 0xe5 || entry->name[0] == 0x05) {
-        // Regular files have lower 4 bits clear.
-        // Bit 0x10 is the subdir bit. Skip them for now
-        // If the first char of the name is 0x05 or 0xe5 it means the file has been deleted so ignore it
+    if (entry->attr & 0x0f) {
+        // Regular files have lower 4 bits clear. Skip other types
         return FileInfoResult::Skip;
     }
     
+    if (entry->attr & 0x10) {
+        // Bit 0x10 is the subdir bit.
+        return FileInfoResult::SubDir;
+    }
+
+    if (static_cast<uint8_t>(entry->name[0]) == 0xe5 || entry->name[0] == 0x05) {
+        // If the first char of the name is 0x05 or 0xe5 it means the file has been deleted
+        return FileInfoResult::Deleted;
+    }
     
     if (entry->name[0] == '\0') {
         // End of directory

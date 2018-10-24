@@ -99,7 +99,7 @@ int main(int argc, const char * argv[])
         bare::Serial::read(c);
         if (c == ' ') {
             bare::Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
-            if (xmodemReceive([](uint32_t addr, char byte) { PUT8(addr, byte); })) {
+            if (xmodemReceive([](uint32_t addr, char byte) -> bool { PUT8(addr, byte); return true; })) {
                 BRANCHTO(ARMBASE);
                 break;
             }

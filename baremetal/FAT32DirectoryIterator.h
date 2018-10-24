@@ -42,6 +42,8 @@ namespace bare {
 
     class FAT32DirectoryIterator : public DirectoryIterator
     {
+        friend class FAT32;
+    
     public:
         static constexpr uint32_t EntriesPerBlock = 512 / 32;
 
@@ -54,16 +56,23 @@ namespace bare {
         Cluster baseCluster() const { return _valid ? _fileInfo.baseCluster : 0; }
         virtual operator bool() const override { return _valid; }
         
+        bool subdir() const { return _subdir; }
+        bool deleted() const { return _deleted; }
+        
     private:
-        enum class FileInfoResult { OK, Skip, End };
+        enum class FileInfoResult { OK, SubDir, Deleted, Skip, End };
         
         FileInfoResult getFileInfo();
+        void rawNext();
+        //Volume::Error
         
         FAT32* _fs;
         FAT32::FileInfo _fileInfo;
         FAT32RawFile* _file = nullptr;
         int32_t _blockIndex = -1;
         int32_t _entryIndex = -1;
+        bool _subdir = false;
+        bool _deleted = false;
         char _buf[512];
         bool _valid = true;
     };

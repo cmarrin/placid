@@ -96,14 +96,14 @@ int main()
     showTime();
     
     // Test file read
-    File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read);
+    File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read, FileSystem::OpenOption::Update);
     if (!fp->valid()) {
         bare::Serial::printf("File read open error for '%s': %s\n", "sample.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
     } else {
-        char buf[10];
-        fp->seek(508, File::SeekWhence::Set);
-        int32_t size = fp->read(buf, 9);
-        buf[9] = '\0';
+        char buf[26];
+        fp->seek(511, File::SeekWhence::Set);
+        int32_t size = fp->read(buf, 25);
+        buf[25] = '\0';
         if (size < 0) {
             bare::Serial::printf("File read error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
@@ -111,6 +111,40 @@ int main()
         }
     }
     
+    // Test update
+    fp->seek(518, File::SeekWhence::Set);
+    int32_t size = fp->write("0123456789", 10);
+    if (size < 0) {
+        bare::Serial::printf("File update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    } else {
+        fp->seek(-17, File::SeekWhence::Cur);
+        char buf[26];
+        int32_t size = fp->read(buf, 25);
+        buf[25] = '\0';
+        if (size < 0) {
+            bare::Serial::printf("Reading back after update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        } else {
+            bare::Serial::printf("After update read:'%s'\n", buf);
+        }
+    }
+    
+    // Repair the file
+    fp->seek(518, File::SeekWhence::Set);
+    size = fp->write("altogether", 10);
+    if (size < 0) {
+        bare::Serial::printf("File repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    } else {
+        fp->seek(-17, File::SeekWhence::Cur);
+        char buf[26];
+        int32_t size = fp->read(buf, 25);
+        buf[25] = '\0';
+        if (size < 0) {
+            bare::Serial::printf("Reading back after repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        } else {
+            bare::Serial::printf("After repair read:'%s'\n", buf);
+        }
+    }
+
     delete fp;
     fp = nullptr;
     

@@ -105,21 +105,17 @@ static_assert(sizeof(BootBlock) == 512, "Wrong BootBlock size");
 
 Volume::Error FAT32::rawRead(char* buf, Block block, uint32_t blocks)
 {
-    int32_t result = _rawIO->read(buf, block, blocks);
-    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeRead;
-    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
+    return _rawIO->read(buf, block, blocks);
 }
 
 Volume::Error FAT32::rawWrite(const char* buf, Block block, uint32_t blocks)
 {
-    int32_t result = _rawIO->write(buf, block, blocks);
-    _error = (result == static_cast<int32_t>(blocks)) ? Error::OK : Error::WrongSizeWrite;
-    return (_error == Error::OK) ? Volume::Error::OK : Volume::Error::Failed;
+    return _rawIO->write(buf, block, blocks);
 }
 
 Volume::Error FAT32::mount()
 {
-    _error = Error::OK;
+    _error = static_cast<FAT32::Error>(Volume::Error::OK);
     
     if (_partition >= 4) {
         _error = Error::UnsupportedPartition;
@@ -255,10 +251,13 @@ DirectoryIterator* FAT32::directoryIterator(const char* path)
     return it;
 }
 
-const char* FAT32::errorDetail() const
+const char* FAT32::errorDetail(Volume::Error error) const
 {
-    switch(_error) {
-    case Error::OK:                     return "OK";
+    if (error != Volume::Error::PlatformSpecificError) {
+        return Volume::errorDetail(error);
+    }
+    
+    switch(static_cast<FAT32::Error>(error)) {
     case Error::UnsupportedType:        return "unsupported type";
     case Error::UnsupportedPartition:   return "unsupported partition";
     case Error::UnsupportedBlockSize:  return "unsupported block size";
@@ -272,7 +271,6 @@ const char* FAT32::errorDetail() const
     case Error::InvalidFAT32Volume:     return "invalid FAT32 volume";
     case Error::WrongSizeRead:          return "wrong size read";
     case Error::WrongSizeWrite:         return "wrong size write";
-    case Error::NotImplemented:         return "not implemented";
     case Error::Incomplete:             return "incomplete";
     default:                            return "***";
     }
@@ -286,4 +284,38 @@ RawFile* FAT32::open(const char* name)
     }
     
     return new FAT32RawFile(fileInfo.baseCluster, fileInfo.size, this);
+}
+
+Volume::Error FAT32::create(const char* name)
+{
+//    // Find an empty directory entry
+//    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");;
+//    for ( ; it; it.rawNext()) {
+//        if (it.deleted()) {
+//            
+//    }
+//    
+//    // No match
+//    return false;
+//    
+//
+//
+//
+//
+//
+//    // Convert the incoming filename to 8.3 and then compare all 11 characters
+//    char nameToFind[12];
+//    convertTo8dot3(nameToFind, name);
+//    
+//
+//
+//
+//
+//
+    return Volume::Error::NotImplemented;
+}
+
+Volume::Error FAT32::remove(const char* name)
+{
+    return Volume::Error::NotImplemented;
 }

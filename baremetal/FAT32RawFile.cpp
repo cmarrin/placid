@@ -65,7 +65,7 @@ Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blo
     }
 
     Block baseBlock = _fat32->clusterToBlock(physical);
-    _error = static_cast<Volume::Error>(_fat32->rawWrite(buf, baseBlock + blockAddr, blocks));
+    _error = static_cast<Volume::Error>(_fat32->rawWrite(buf, baseBlock + offset, blocks));
     return _error;
 }
 

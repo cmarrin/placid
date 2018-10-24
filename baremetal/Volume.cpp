@@ -41,3 +41,23 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.h"
 
 using namespace bare;
+
+const char* Volume::errorDetail(Error error) const
+{
+    switch (error) {
+    case Error::OK: return "OK";
+    case Error::Failed: return "failed";
+    case Error::FileNotFound: return "file not found";
+    case Error::CreationFailure: return "creation failure";
+    case Error::InternalError: return "internal error";
+    case Error::FileExists: return "file exists";
+    case Error::ReadOnly: return "read only";
+    case Error::WriteOnly: return "write only";
+    case Error::EndOfFile: return "end of file";
+    case Error::PlatformSpecificError: return "platform specific error";
+    case Error::UnsupportedDevice: return "unsupported device";
+    case Error::NotImplemented: return "not implemented";
+    default: return "*****";
+    }
+}
+
