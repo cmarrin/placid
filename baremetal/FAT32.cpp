@@ -146,8 +146,8 @@ Volume::Error FAT32::mount()
         _error = Error::OnlyFAT32LBASupported;
         return Volume::Error::Failed;
     }
-    
-    // Exrtract the needed values
+
+    // Extract the needed values
     _firstBlock = bufToUInt32(mbr->partitions[_partition].lbaStart);
     _sizeInBlocks = bufToUInt32(mbr->partitions[_partition].lbaCount);
     
