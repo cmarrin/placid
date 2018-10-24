@@ -52,6 +52,7 @@ namespace bare {
         virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
         virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
         virtual uint32_t size() const override { return _size; }
+        virtual Volume::Error insertCluster() override;
 
     private:
         Volume::Error logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset);

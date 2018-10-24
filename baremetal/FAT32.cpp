@@ -184,31 +184,59 @@ Volume::Error FAT32::mount()
         return Volume::Error::Failed;
     }
     
-    // Exrtract the needed values
-    uint16_t reservedBlocks = bufToUInt16(bootBlock->reservedBlocks);
+    // Extract the needed values
+    Block reservedBlocks = bufToUInt16(bootBlock->reservedBlocks);
     
     _blocksPerFAT = bufToUInt32(bootBlock->blocksPerFAT32);
     _blocksPerCluster = bootBlock->blocksPerCluster;
     _startFATBlock = _firstBlock + reservedBlocks;
-    _startDataBlock = _startFATBlock + (_blocksPerFAT * 2);
+    _startDataBlock = _startFATBlock + Block(_blocksPerFAT * 2);
     _rootDirectoryStartCluster = bufToUInt32(bootBlock->rootDirectoryStartCluster);
     
     _mounted = true;
     return Volume::Error::OK;
 }
 
-FAT32::FATEntryType FAT32::nextClusterFATEntry(Cluster cluster, Cluster& nextCluster)
+bool FAT32::readFATBlock(uint32_t block)
 {
-    uint32_t fatBlockAddr = cluster.value * 4 / 512 + _startFATBlock.value;
-    uint32_t fatBlockOffset = cluster.value * 4 % 512;
-    
-    if (!_fatBufferValid || fatBlockAddr != _currentFATBufferAddr) {
-        if (rawRead(_fatBuffer, fatBlockAddr, 1) != Volume::Error::OK) {
+    if (!_fatBufferValid || block != _currentFATBufferAddr) {
+        if (rawRead(_fatBuffer, block, 1) != Volume::Error::OK) {
             _error = Error::FATReadError;
-            return FATEntryType::Error;
+            return false;
         }
         _fatBufferValid = true;
-        _currentFATBufferAddr = fatBlockAddr;
+        _currentFATBufferAddr = block;
+    }
+    return true;
+}
+
+bool FAT32::writeFATBlock()
+{
+    if (!_fatBufferValid) {
+        return true;
+    }
+    
+    // Assume 2 FAT copies
+    if (rawWrite(_fatBuffer, _currentFATBufferAddr, 1) != Volume::Error::OK) {
+        _error = Error::FATWriteError;
+        return false;
+    }
+
+    if (rawWrite(_fatBuffer, _currentFATBufferAddr + _blocksPerFAT, 1) != Volume::Error::OK) {
+        _error = Error::FATWriteError;
+        return false;
+    }
+
+    return true;
+}
+
+FAT32::FATEntryType FAT32::nextClusterFATEntry(Cluster cluster, Cluster& nextCluster)
+{
+    uint32_t fatBlockAddr = cluster.value() * 4 / 512 + _startFATBlock.value();
+    uint32_t fatBlockOffset = cluster.value() * 4 % 512;
+    
+    if (!readFATBlock(fatBlockAddr)) {
+        return FATEntryType::Error;
     }
     
     uint32_t entry = bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
@@ -220,6 +248,56 @@ FAT32::FATEntryType FAT32::nextClusterFATEntry(Cluster cluster, Cluster& nextClu
     }
     nextCluster = entry & 0x0fffffff;
     return FATEntryType::Normal;
+}
+
+Cluster FAT32::allocateCluster(Cluster prev)
+{
+    Cluster dummyCluster;
+    uint32_t lastCluster = _blocksPerFAT * 512 / sizeof(uint32_t) - 1;
+    
+    for (uint32_t currentCluster = 2; currentCluster <= lastCluster; ++currentCluster) {
+        FATEntryType type = nextClusterFATEntry(currentCluster, dummyCluster);
+        if (type == FATEntryType::Free) {
+            uint32_t oldNext = 0x0ffffff8; // By default make this the last cluster in the chain
+            uint32_t fatBlockAddr;
+            uint32_t fatBlockOffset;
+           
+            if (prev.value() > 0) {
+                // Insert this cluster into the FAT chain
+                fatBlockAddr = prev.value() * 4 / 512 + _startFATBlock.value();
+                fatBlockOffset = prev.value() * 4 % 512;
+                
+                if (!readFATBlock(fatBlockAddr)) {
+                    return 0;
+                }
+                
+                oldNext = bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
+                uint32ToBuf(currentCluster, reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
+                
+                if (!writeFATBlock()) {
+                    return 0;
+                }
+            }
+                
+            fatBlockAddr = currentCluster * 4 / 512 + _startFATBlock.value();
+            fatBlockOffset = currentCluster * 4 % 512;
+                
+            if (!readFATBlock(fatBlockAddr)) {
+                return 0;
+            }
+            
+            uint32ToBuf(oldNext, reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
+
+            if (!writeFATBlock()) {
+                return 0;
+            }
+            
+            return currentCluster;
+        }
+    }
+    
+    // There is no Cluster 0, so check for this on return mean we've run out of disk space
+    return 0;
 }
 
 bool FAT32::find(FileInfo& fileInfo, const char* name)
@@ -266,6 +344,8 @@ const char* FAT32::errorDetail(Volume::Error error) const
     case Error::BadBPBSignature:        return "bad BPB signature";
     case Error::MBRReadError:           return "MBR read error";
     case Error::BPBReadError:           return "BPB read error";
+    case Error::FATReadError:           return "FAT read error";
+    case Error::FATWriteError:          return "FAT write error";
     case Error::DirReadError:           return "dir read error";
     case Error::OnlyFAT32LBASupported:  return "only FAT32 LBA supported";
     case Error::InvalidFAT32Volume:     return "invalid FAT32 volume";
@@ -288,30 +368,20 @@ RawFile* FAT32::open(const char* name)
 
 Volume::Error FAT32::create(const char* name)
 {
-//    // Find an empty directory entry
-//    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");;
-//    for ( ; it; it.rawNext()) {
-//        if (it.deleted()) {
-//            
-//    }
-//    
-//    // No match
-//    return false;
-//    
-//
-//
-//
-//
-//
-//    // Convert the incoming filename to 8.3 and then compare all 11 characters
-//    char nameToFind[12];
-//    convertTo8dot3(nameToFind, name);
-//    
-//
-//
-//
-//
-//
+    // Find an empty directory entry
+    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");
+    
+    while (1) {
+        if (it.deleted() || !it) {
+            // Create an initial cluster
+            Cluster cluster = allocateCluster();
+            it.createEntry(name, 0, cluster);
+            return Volume::Error::OK;
+        }
+        it.rawNext(true);
+    }
+    
+    // FIXME: extend the directory if we run out of entries
     return Volume::Error::NotImplemented;
 }
 

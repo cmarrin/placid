@@ -33,6 +33,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+// This code was adapted from:
+//
+//  https://github.com/bztsrc/raspi3-tutorial/tree/master/0B_readsector
+//
+//  Copyright (C) 2018 bzt (bztsrc@github)
+
+
 #include "SDCard.h"
 
 #include "Serial.h"
@@ -58,7 +65,7 @@ Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
     if (!sdCardFP) {
         return Volume::Error::InternalError;
     }
-    fseek(sdCardFP, blockAddr.value * 512, SEEK_SET);
+    fseek(sdCardFP, blockAddr.value() * 512, SEEK_SET);
     size_t size = fread(buf, 1, blocks * 512, sdCardFP);
     return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
 }
@@ -68,7 +75,7 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
     if (!sdCardFP) {
         return Volume::Error::InternalError;
     }
-    fseek(sdCardFP, blockAddr.value * 512, SEEK_SET);
+    fseek(sdCardFP, blockAddr.value() * 512, SEEK_SET);
     size_t size = fwrite(buf, 1, blocks * 512, sdCardFP);
     return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
 }
@@ -551,7 +558,7 @@ Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
         blocks = 1;
     }
     
-    DEBUG_LOG("SDCard: readBlock addr=%d, num=%d\n", blockAddr.value, blocks);
+    DEBUG_LOG("SDCard: readBlock addr=%d, num=%d\n", blockAddr.value(), blocks);
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
         ERROR_LOG("SDCard: readBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
@@ -572,7 +579,7 @@ Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
         
         emmc().blockSizeCount = (blocks << 16) | 512;
         
-        error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr.value);
+        error = sendCommand((blocks == 1) ? CMD_READ_SINGLE() : CMD_READ_MULTI(), blockAddr.value());
         if (error != Error::OK) {
             ERROR_LOG("SDCard: error sending CMD_READ_*\n");
             return Volume::Error::InternalError;
@@ -583,9 +590,9 @@ Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
     
     for (uint32_t currentBlock = 0; currentBlock < blocks; ++currentBlock) {
         if(!(_scr[0] & SCR_SUPP_CCS)) {
-            error = sendCommand(CMD_READ_SINGLE(), (blockAddr.value + currentBlock) * 512);
+            error = sendCommand(CMD_READ_SINGLE(), (blockAddr.value() + currentBlock) * 512);
             if (error != Error::OK) {
-                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr.value + currentBlock) * 512);
+                ERROR_LOG("SDCard: error sending CMD_READ_SINGLE for addr %d\n", (blockAddr.value() + currentBlock) * 512);
                 return Volume::Error::InternalError;
             }
         }
@@ -619,14 +626,14 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
         blocks = 1;
     }
     
-    DEBUG_LOG("SDCard: writeBlock addr=%d, num=%d\n", blockAddr.value, blocks);
+    DEBUG_LOG("SDCard: writeBlock addr=%d, num=%d\n", blockAddr.value(), blocks);
 
     if (readStatus(SR_DAT_INHIBIT) != Error::OK) {
         ERROR_LOG("SDCard: writeBlock timeout on readStatus(SR_DAT_INHIBIT)\n");
         return Volume::Error::InternalError;
     }
     
-    uint32_t* currentPtr = reinterpret_cast<uint32_t*>(buf);
+    const uint32_t* currentPtr = reinterpret_cast<const uint32_t*>(buf);
     Error error = Error::OK;
     
     if (_scr[0] & SCR_SUPP_CCS) {
@@ -640,7 +647,7 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
         
         emmc().blockSizeCount = (blocks << 16) | 512;
         
-        error = sendCommand((blocks == 1) ? CMD_WRITE_SINGLE() : CMD_WRITE_MULTI(), blockAddr.value);
+        error = sendCommand((blocks == 1) ? CMD_WRITE_SINGLE() : CMD_WRITE_MULTI(), blockAddr.value());
         if (error != Error::OK) {
             ERROR_LOG("SDCard: error sending CMD_WRITE_*\n");
             return Volume::Error::InternalError;
@@ -651,9 +658,9 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
     
     for (uint32_t currentBlock = 0; currentBlock < blocks; ++currentBlock) {
         if(!(_scr[0] & SCR_SUPP_CCS)) {
-            error = sendCommand(CMD_WRITE_SINGLE(), (blockAddr.value + currentBlock) * 512);
+            error = sendCommand(CMD_WRITE_SINGLE(), (blockAddr.value() + currentBlock) * 512);
             if (error != Error::OK) {
-                ERROR_LOG("SDCard: error sending CMD_WRITE_SINGLE for addr %d\n", (blockAddr.value + currentBlock) * 512);
+                ERROR_LOG("SDCard: error sending CMD_WRITE_SINGLE for addr %d\n", (blockAddr.value() + currentBlock) * 512);
                 return Volume::Error::InternalError;
             }
         }
@@ -664,7 +671,7 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
         }
         
         for (uint32_t d = 0; d < 128; d++) {
-            currentPtr[d] = emmc().data;
+            emmc().data = currentPtr[d];
         }
         
         currentPtr += 128;

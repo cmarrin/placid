@@ -74,10 +74,11 @@ File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
     if (!fp->_rawFile) {
         if (mode == OpenMode::Write) {
             // File does not exist, create it
-            if (create(name) != bare::Volume::Error::OK) {
-                fp->_error = bare::Volume::Error::CreationFailure;
+            fp->_error = create(name);
+            if (fp->_error != bare::Volume::Error::OK) {
                 return fp;
             }
+            
             fp->_rawFile = _fatFS.open(name);
             if (!fp->_rawFile) {
                 fp->_error = bare::Volume::Error::InternalError;
@@ -104,7 +105,7 @@ File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 
 bare::Volume::Error FileSystem::create(const char* name)
 {
-    return bare::Volume::Error::NotImplemented;
+    return _fatFS.create(name);
 }
 
 bool File::prepareBuffer(uint32_t offset)

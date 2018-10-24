@@ -49,13 +49,13 @@ void autoload()
     bare::FAT32 fatFS(&sdCard, 0);
     bare::Volume::Error e = fatFS.mount();
     if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail());
+        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail(e));
         return;
     }
     
     bare::RawFile* fp = fatFS.open(KernelFileName);
     if (!fp) {
-        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail());
+        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail(fp->error()));
         return;
     }
     

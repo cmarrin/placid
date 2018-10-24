@@ -16,18 +16,18 @@ BUILDDIR = build
 
 SRC =	util.cpp \
 		xmodem.cpp \
-		Print.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
 		GPIO.cpp \
 		InterruptManager.cpp \
 		Mailbox.cpp \
+		Print.cpp \
 		SD.cpp \
 		SDCard.cpp \
-		Volume.cpp \
 		Serial.cpp \
 		Timer.cpp \
+		Volume.cpp \
 		ldivmod.S \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))

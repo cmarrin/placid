@@ -160,6 +160,8 @@ int main()
             bare::Serial::printf("File write successful\n");
         }
     }
+    delete fp;
+    fp = nullptr;
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     

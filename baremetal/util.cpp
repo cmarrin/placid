@@ -138,6 +138,12 @@ void __aeabi_idiv0()
     abort();
 }
 
+void __cxa_pure_virtual()
+{
+    Serial::printf("pure virtual call\n");
+    abort();
+}
+
 void* memset(void* dst, int value, size_t n)
 {
     if (n == 0) {

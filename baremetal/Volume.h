@@ -45,14 +45,40 @@ const uint32_t BlockSize = 512;
 class DirectoryIterator;
 class RawFile;
 
-// Strong typed block
-struct Block
+// Strong types
+template<typename T, typename S>
+class Scalar
 {
-    Block() { }
-    Block(uint32_t v) : value(v) { }
-    Block operator +(Block other) { return value + other.value; }
-    uint32_t value = 0;
+public:
+    Scalar() { }
+    Scalar(uint32_t v) : _value(v) { }
+    
+    Scalar operator +(Scalar other) { return _value + other._value; }
+    Scalar operator -(Scalar other) { return _value - other._value; }
+    Scalar operator *(Scalar other) { return _value * other._value; }
+    Scalar operator /(Scalar other) { return _value / other._value; }
+    Scalar operator %(Scalar other) { return _value % other._value; }
+
+    S value() const { return _value; }
+
+    bool operator==(const Scalar& other) { return _value == other._value; }
+    bool operator!=(const Scalar& other) { return !operator==(other);   }
+    bool operator< (const Scalar& other) { return _value < other._value;  }
+    bool operator> (const Scalar& other) { return  operator< (other);   }
+    bool operator<=(const Scalar& other) { return !operator> (other);   }
+    bool operator>=(const Scalar& other) { return !operator< (other);   }
+    
+    Scalar operator++() { ++_value; return *this; }
+    Scalar operator++(int) { S v = _value; ++_value; return Scalar(v); }
+    Scalar operator--() { --_value; return *this; }
+    Scalar operator--(int) { S v = _value; --_value; return Scalar(v); }
+
+private:
+    S _value = 0;
 };
+
+class BlockType;
+using Block = Scalar<BlockType, uint32_t>;
 
 class Volume {
     friend class RawFile;
@@ -100,6 +126,8 @@ public:
     virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
     virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
     virtual uint32_t size() const = 0;
+    
+    virtual Volume::Error insertCluster() = 0;
     
     bool valid() const { return _error == Volume::Error::OK; }
     Volume::Error error() const { return _error; }

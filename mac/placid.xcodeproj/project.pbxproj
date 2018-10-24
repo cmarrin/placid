@@ -269,6 +269,9 @@
 			isa = PBXGroup;
 			children = (
 				4962958F215AAF8F0064B9C9 /* Makefile */,
+				49629576215AA53B0064B9C9 /* util.cpp */,
+				49629578215AA53B0064B9C9 /* util.h */,
+				49731F78216E914500F9A79F /* xmodem.cpp */,
 				492FF406215D4799003582FE /* FAT32.cpp */,
 				492FF407215D479A003582FE /* FAT32.h */,
 				49731F74216E23AC00F9A79F /* FAT32.img */,
@@ -280,7 +283,6 @@
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				492FF401215C5359003582FE /* InterruptManager.cpp */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
-				4932ACF521681EF200BDAABB /* ldivmod.S */,
 				492FF3F3215C4F72003582FE /* Mailbox.cpp */,
 				492FF3F0215C4F72003582FE /* Mailbox.h */,
 				497EE458216138E2000584CE /* Print.cpp */,
@@ -295,9 +297,7 @@
 				492FF3FF215C5359003582FE /* Timer.h */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
 				492FF3EF215C4F72003582FE /* Volume.h */,
-				49629576215AA53B0064B9C9 /* util.cpp */,
-				49629578215AA53B0064B9C9 /* util.h */,
-				49731F78216E914500F9A79F /* xmodem.cpp */,
+				4932ACF521681EF200BDAABB /* ldivmod.S */,
 			);
 			name = baremetal;
 			sourceTree = "<group>";

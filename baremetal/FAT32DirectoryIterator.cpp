@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "FAT32DirectoryIterator.h"
 
+#include "util.h"
+
 using namespace bare;
 
 struct FATDirEntry
@@ -73,7 +75,7 @@ DirectoryIterator& FAT32DirectoryIterator::next()
     }
 }
 
-void FAT32DirectoryIterator::rawNext()
+void FAT32DirectoryIterator::rawNext(bool extend)
 {
     _subdir = false;
     _deleted = false;
@@ -82,8 +84,22 @@ void FAT32DirectoryIterator::rawNext()
         if (_entryIndex < 0 || ++_entryIndex >= static_cast<int32_t>(EntriesPerBlock)) {
             // get the next block
             if (_file->read(_buf, ++_blockIndex, 1) != Volume::Error::OK) {
-                _valid = false;
-                return;
+                if (_file->error() != Volume::Error::EndOfFile || !extend) {                
+                    _valid = false;
+                    return;
+                }
+                
+                // Extend the directory
+                _file->insertCluster();
+                
+                // Clear all the directory entries
+                memset(_buf, 0, sizeof(_buf));
+
+                // Write out the new directory block
+                if (_file->write(_buf, _blockIndex, 1) != Volume::Error::OK) {
+                    _valid = false;
+                    return;
+                }
             }
             
             _entryIndex = 0;
@@ -148,4 +164,17 @@ FAT32DirectoryIterator::FileInfoResult FAT32DirectoryIterator::getFileInfo()
     _fileInfo.baseCluster = (static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterHi)) << 16) + 
                             static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterLo));
     return FileInfoResult::OK;
+}
+
+bool FAT32DirectoryIterator::createEntry(const char* name, uint32_t size, Cluster baseCluster)
+{
+    FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
+    
+    memset(entry, 0, sizeof(FATDirEntry));
+    convertTo8dot3(entry->name, name);
+    FAT32::uint32ToBuf(size, entry->size);
+    FAT32::uint16ToBuf(baseCluster.value() >> 16, entry->firstClusterHi);
+    FAT32::uint16ToBuf(baseCluster.value(), entry->firstClusterLo);
+
+    return _file->write(_buf, _blockIndex, 1) == Volume::Error::OK;
 }

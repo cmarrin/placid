@@ -41,13 +41,9 @@ POSSIBILITY OF SUCH DAMAGE.
 namespace bare {
 
 // Strong typed cluster
-struct Cluster
-{
-    Cluster() { }
-    Cluster(uint32_t v) : value(v) { }
-    Cluster operator +(Cluster other) { return value + other.value; }
-    uint32_t value = 0;
-};
+class ClusterType;
+using Cluster = Scalar<ClusterType, uint32_t>;
+
 
 class FAT32 : public Volume
 {
@@ -64,6 +60,7 @@ public:
         MBRReadError,
         BPBReadError,
         FATReadError,
+        FATWriteError,
         DirReadError,
         OnlyFAT32LBASupported,
         InvalidFAT32Volume,
@@ -80,12 +77,11 @@ public:
 
     FAT32(Volume::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }
     
+    virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual Volume::Error mount() override;
     virtual RawFile* open(const char* name) override;
     virtual Volume::Error create(const char* name) override;
     virtual Volume::Error remove(const char* name) override;
-
-    virtual uint32_t sizeInBlocks() const override { return _sizeInBlocks; }
     virtual const char* errorDetail(Volume::Error) const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
 
@@ -99,14 +95,14 @@ public:
     
     Block clusterToBlock(Cluster cluster)
     {
-        return _startDataBlock.value + (cluster.value - 2) * _blocksPerCluster;
+        return _startDataBlock + Block((cluster.value() - 2) * _blocksPerCluster);
     }
 
     enum class FATEntryType { Normal, Free, End, Error };
     FATEntryType nextClusterFATEntry(Cluster cluster, Cluster& nextCluster);
     
-    enum class FindClusterFrom { Here, Start };
-    Cluster findPhysicalCluster(Cluster logicalCluster, FindClusterFrom);
+    // Passing 0 as prev Cluster indicates that this is the first cluster of a file
+    Cluster allocateCluster(Cluster prev = 0);
     
     static uint32_t bufToUInt32(uint8_t* buf)
     {
@@ -121,9 +117,25 @@ public:
         return  static_cast<uint16_t>(buf[0]) + 
                 static_cast<uint16_t>((buf[1] << 8));
     }
+    
+    static void uint32ToBuf(uint32_t value, uint8_t* buf)
+    {
+        buf[0] = static_cast<uint8_t>(value);
+        buf[1] = static_cast<uint8_t>(value >> 8);
+        buf[2] = static_cast<uint8_t>(value >> 16);
+        buf[3] = static_cast<uint8_t>(value >> 24);
+    }
+
+    static void uint16ToBuf(uint16_t value, uint8_t* buf)
+    {
+        buf[0] = static_cast<uint8_t>(value);
+        buf[1] = static_cast<uint8_t>(value >> 8);
+    }
 
 private:
     bool find(FileInfo&, const char* name);
+    bool readFATBlock(uint32_t block);
+    bool writeFATBlock();
 
     bool _mounted = false;
     Block _firstBlock = 0;                  // first block of this partition

@@ -44,9 +44,9 @@ Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
     Block offset = 0;
     Cluster physical;
     
-    Volume::Error error = logicalToPhysicalBlock(_baseCluster, blockAddr, physical, offset);
-    if (error != Volume::Error::OK) {
-        return error;
+    _error = logicalToPhysicalBlock(_baseCluster, blockAddr, physical, offset);
+    if (_error != Volume::Error::OK) {
+        return _error;
     }
 
     Block baseBlock = _fat32->clusterToBlock(physical);
@@ -69,6 +69,15 @@ Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blo
     return _error;
 }
 
+Volume::Error FAT32RawFile::insertCluster()
+{
+    if (_lastPhysicalCluster == 0) {
+        return Volume::Error::InternalError;
+    }
+    
+    return (_fat32->allocateCluster(_lastPhysicalCluster) == 0) ? Volume::Error::PlatformSpecificError : Volume::Error::OK;
+}
+
 Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset)
 {
     // 4 cases:
@@ -80,20 +89,25 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cl
     //      3) Cluster number is higher that the last but not consecutive - search the FAT from this point
     //      4) Cluster number is lower or we don't have a last entry - search from the start of the FAT
     //
-    Cluster currentLogicalCluster = block.value / _fat32->blocksPerCluster();
-    Block currentLogicalClusterBlock = block.value % _fat32->blocksPerCluster();
+    Cluster currentLogicalCluster = (block / Block(_fat32->blocksPerCluster())).value();
+    Block currentLogicalClusterBlock = block % Block(_fat32->blocksPerCluster());
     
-    if (_lastLogicalCluster.value != currentLogicalCluster.value) {
-        if (currentLogicalCluster.value < _lastLogicalCluster.value) {
+    if (_lastLogicalCluster != currentLogicalCluster) {
+        if (currentLogicalCluster < _lastLogicalCluster) {
             _lastPhysicalCluster = _baseCluster;
             _lastLogicalCluster = 0;
         }
         
-        while (_lastLogicalCluster.value++ < currentLogicalCluster.value) {
+        while (_lastLogicalCluster++ < currentLogicalCluster) {
             FAT32::FATEntryType type = _fat32->nextClusterFATEntry(_lastPhysicalCluster, _lastPhysicalCluster);
             if (type == FAT32::FATEntryType::Normal) {
                 continue;
             }
+            
+            // The only time _lastPhysicalCluster gets updated is if the return type is Normal.
+            // If we have an error decrement _lastLogicalCluster to keep it consistent with
+            // the existing value of _lastPhysicalCluster.
+            _lastLogicalCluster--;
             if (type == FAT32::FATEntryType::End) {
                 return Volume::Error::EndOfFile;
             }

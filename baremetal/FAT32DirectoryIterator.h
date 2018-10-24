@@ -59,11 +59,15 @@ namespace bare {
         bool subdir() const { return _subdir; }
         bool deleted() const { return _deleted; }
         
+        bool createEntry(const char* name, uint32_t size, Cluster baseCluster);
+        
     private:
         enum class FileInfoResult { OK, SubDir, Deleted, Skip, End };
         
         FileInfoResult getFileInfo();
-        void rawNext();
+        
+        // If extend is true, append block when hit the end of the directory
+        void rawNext(bool extend = false);
         //Volume::Error
         
         FAT32* _fs;
