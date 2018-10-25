@@ -176,6 +176,9 @@ bool Serial::rxReady()
 #ifdef __APPLE__
     return true;
 #else
+    if (interruptsSupported()) {
+        return rxtail != rxhead;
+    }
     return (uart().LSR & 0x01) != 0;
 #endif
 }
