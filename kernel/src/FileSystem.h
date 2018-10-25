@@ -96,7 +96,7 @@ namespace placid {
         File() { }
         ~File() { close(); }
         
-        void close() { flush(); }
+        bare::Volume::Error close() { return flush(); }
       
         int32_t read(char* buf, uint32_t size);
         int32_t write(const char* buf, uint32_t size);
@@ -105,7 +105,7 @@ namespace placid {
         int32_t tell() const { return _offset; }
         bool eof() const { return _offset >= _rawFile->size(); }
         
-        void flush();
+        bare::Volume::Error flush();
     
         bool valid() const { return _error == bare::Volume::Error::OK; }
         bare::Volume::Error error() const { return _error; }
@@ -122,6 +122,7 @@ namespace placid {
         bool _canWrite;
         bool _canRead;
         bool _appendOnly;
+        bool _needsSizeUpate = false;
         uint32_t _bufferAddr = 0; // Block addr of the contents of the buffer, if any
 
         // RawFile has a requirement for 4 byte alignment

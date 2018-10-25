@@ -338,15 +338,12 @@ bool FAT32::find(FileInfo& fileInfo, const char* name)
     char nameToFind[12];
     convertTo8dot3(nameToFind, name);
     
-    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");;
+    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");
     for ( ; it; it.next()) {
         char testName[12];
         convertTo8dot3(testName, it.name());
         if (memcmp(nameToFind, testName, 11) == 0) {
-            memcpy(fileInfo.name, it.name(), 11);
-            fileInfo.name[11] = '\0';
-            fileInfo.size = it.size();
-            fileInfo.baseCluster = it.baseCluster();
+            memcpy(&fileInfo, &it.fileInfo(), sizeof(FileInfo));
             return true;
         }
     }
@@ -395,7 +392,7 @@ RawFile* FAT32::open(const char* name)
         return nullptr;
     }
     
-    return new FAT32RawFile(fileInfo.baseCluster, fileInfo.size, this);
+    return new FAT32RawFile(this, fileInfo.baseCluster, fileInfo.size, fileInfo.directoryBlock, fileInfo.directoryBlockIndex);
 }
 
 Volume::Error FAT32::create(const char* name)

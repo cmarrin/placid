@@ -39,29 +39,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-struct FATDirEntry
-{
-    char name[11];
-    uint8_t attr;
-    uint8_t reserved1;
-    uint8_t creationTime;
-    uint8_t createTime[2];
-    uint8_t createDate[2];
-    uint8_t accessedDate[2];
-    uint8_t firstClusterHi[2];
-    uint8_t modificationTime[2];
-    uint8_t modificationDate[2];
-    uint8_t firstClusterLo[2];
-    uint8_t size[4];
-};
-
-static_assert(sizeof(FATDirEntry) == 32, "Wrong FATDirEntry size");
-
 FAT32DirectoryIterator::FAT32DirectoryIterator(FAT32* fs, const char* path)
     : _fs(fs)
 {
     // FIXME: Ignore path for now
-    _file = new FAT32RawFile(_fs->rootDirectoryStartCluster(), 0, fs);
+    _file = new FAT32RawFile(_fs, _fs->rootDirectoryStartCluster(), 0);
     next();
 }
 
@@ -108,10 +90,11 @@ void FAT32DirectoryIterator::rawNext(bool extend)
         FileInfoResult result = getFileInfo();
         if (result == FileInfoResult::OK) {
             _valid = true;
-        } else if (result == FileInfoResult::Skip) {
-            continue;
         } else if (result == FileInfoResult::End) {
             _valid = false;
+        } else {
+            // All other results are skipped
+            continue;
         }
         
         return;
@@ -163,6 +146,9 @@ FAT32DirectoryIterator::FileInfoResult FAT32DirectoryIterator::getFileInfo()
     _fileInfo.size = FAT32::bufToUInt32(entry->size);
     _fileInfo.baseCluster = (static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterHi)) << 16) + 
                             static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterLo));
+    _fileInfo.directoryBlock = _file->physicalBlockFromLogicalBlock(_blockIndex);
+    _fileInfo.directoryBlockIndex = _entryIndex;
+    
     return FileInfoResult::OK;
 }
 

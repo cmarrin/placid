@@ -73,6 +73,8 @@ public:
         char name[FilenameLength]; // Passed in name converted to 8.3
         uint32_t size = 0;
         Cluster baseCluster = 0;
+        Block directoryBlock = 0;
+        uint32_t directoryBlockIndex = 0;
     };
 
     FAT32(Volume::RawIO* rawIO, uint8_t partition) : _rawIO(rawIO), _partition(partition) { }

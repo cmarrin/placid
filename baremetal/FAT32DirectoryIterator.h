@@ -40,6 +40,24 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace bare {
 
+    struct FATDirEntry
+    {
+        char name[11];
+        uint8_t attr;
+        uint8_t reserved1;
+        uint8_t creationTime;
+        uint8_t createTime[2];
+        uint8_t createDate[2];
+        uint8_t accessedDate[2];
+        uint8_t firstClusterHi[2];
+        uint8_t modificationTime[2];
+        uint8_t modificationDate[2];
+        uint8_t firstClusterLo[2];
+        uint8_t size[4];
+    };
+
+    static_assert(sizeof(FATDirEntry) == 32, "Wrong FATDirEntry size");
+
     class FAT32DirectoryIterator : public DirectoryIterator
     {
         friend class FAT32;
@@ -65,6 +83,7 @@ namespace bare {
         bool subdir() const { return _subdir; }
         bool deleted() const { return _deleted; }
         
+        const FAT32::FileInfo& fileInfo() const { return _fileInfo; }
         
     private:
         enum class FileInfoResult { OK, SubDir, Deleted, Skip, End };

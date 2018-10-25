@@ -35,9 +35,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "FAT32RawFile.h"
 
+#include "FAT32DirectoryIterator.h"
 #include "Serial.h"
 
 using namespace bare;
+
+Block FAT32RawFile::physicalBlockFromLogicalBlock(Block block)
+{
+    return 0;
+}
 
 Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
 {
@@ -76,6 +82,25 @@ Volume::Error FAT32RawFile::insertCluster()
     }
     
     return (_fat32->allocateCluster(_lastPhysicalCluster) == 0) ? Volume::Error::PlatformSpecificError : Volume::Error::OK;
+}
+
+Volume::Error FAT32RawFile::updateSize()
+{
+    if (_directoryBlock == 0) {
+        Serial::printf("*** FAT32RawFile::updateSize invalid directoryBlock\n");
+        return Volume::Error::InternalError;
+    }
+    
+    char buf[BlockSize];
+    Volume::Error error = _fat32->rawRead(buf, _directoryBlock, 1);
+    if (error != Volume::Error::OK) {
+        return error;
+    }
+    
+    FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(buf) + _directoryBlockIndex;
+    FAT32::uint32ToBuf(_size, entry->size);
+    
+    return _fat32->rawWrite(buf, _directoryBlock, 1);
 }
 
 Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset)

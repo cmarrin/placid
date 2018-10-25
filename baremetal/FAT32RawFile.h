@@ -42,27 +42,36 @@ namespace bare {
     class FAT32RawFile: public RawFile
     {
     public:
-        FAT32RawFile(Cluster baseCluster, uint32_t size, FAT32* fat32)
-            : _baseCluster(baseCluster)
-            , _size(size)
-            , _fat32(fat32)
+        FAT32RawFile(FAT32* fat32, Cluster baseCluster, uint32_t size, Block dirBlock = 0, uint32_t dirIndex = 0)
+            : _fat32(fat32)
+            , _baseCluster(baseCluster)
             , _lastPhysicalCluster(baseCluster)
-        { }
+            , _directoryBlock(dirBlock)
+            , _directoryBlockIndex(dirIndex)
+        {
+            _size = size;
+        }
+        
+        virtual ~FAT32RawFile() { }
         
         virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
         virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
-        virtual uint32_t size() const override { return _size; }
         virtual Volume::Error insertCluster() override;
+        virtual Volume::Error updateSize() override;
 
+        Block physicalBlockFromLogicalBlock(Block);
+        
     private:
         Volume::Error logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset);
 
-        Cluster _baseCluster;
-        uint32_t _size = 0;
         FAT32* _fat32;
+        Cluster _baseCluster;
         
         Cluster _lastLogicalCluster = 0;
         Cluster _lastPhysicalCluster = 0;
+        
+        Block _directoryBlock;
+        uint32_t _directoryBlockIndex;
     };
 
 }

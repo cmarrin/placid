@@ -125,15 +125,18 @@ public:
     
     virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
     virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
-    virtual uint32_t size() const = 0;
     
     virtual Volume::Error insertCluster() = 0;
+    virtual Volume::Error updateSize() = 0;
     
     bool valid() const { return _error == Volume::Error::OK; }
     Volume::Error error() const { return _error; }
+    uint32_t size() const { return _size; }
+    void setSize(uint32_t size) { _size = size; }
 
 protected:
     Volume::Error _error = Volume::Error::OK;
+    uint32_t _size = 0;
 };
 
 class DirectoryIterator

@@ -162,6 +162,11 @@ int main()
             bare::Serial::printf("File write successful\n");
         }
     }
+    
+    if (fp->close() != bare::Volume::Error::OK) {
+        bare::Serial::printf("File write close error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    }
+    
     delete fp;
     fp = nullptr;
     

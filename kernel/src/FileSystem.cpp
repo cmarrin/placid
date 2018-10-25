@@ -212,6 +212,11 @@ int32_t File::write(const char* buf, uint32_t size)
         _error = bare::Volume::Error::ReadOnly;
         return -1;
     }
+    
+    if (_offset + size > _rawFile->size()) {
+        _rawFile->setSize(_offset + size);
+        _needsSizeUpate = true;
+    }
     return io(const_cast<char*>(buf), size, true);
 }
 
@@ -232,13 +237,23 @@ bool File::seek(int32_t offset, SeekWhence whence)
     return true;
 }
 
-void File::flush()
+bare::Volume::Error File::flush()
 {
+    _error = bare::Volume::Error::OK;
+    
     if (_bufferNeedsWriting && _bufferValid) {
-        if (_rawFile->write(_buffer, _bufferAddr, 1) != bare::Volume::Error::OK) {
-            return;
+        bare::Volume::Error  error = _rawFile->write(_buffer, _bufferAddr, 1);
+        if (error != bare::Volume::Error::OK) {
+            return error;
         }
         _bufferNeedsWriting = false;
         _bufferValid = false;
     }
+    
+    if (_needsSizeUpate) {
+        _error = _rawFile->updateSize();
+        _needsSizeUpate = false;
+    }
+    
+    return _error;
 }
