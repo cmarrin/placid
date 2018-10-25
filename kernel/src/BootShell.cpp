@@ -110,8 +110,12 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         }
         
         File* fp = FileSystem::sharedFileSystem()->open(array[1].c_str(), FileSystem::OpenMode::Write);
-        if (!fp) {
-            showMessage(MessageType::Error, "open of '%s' failed\n", array[1].c_str());
+        if (!fp->valid()) {
+            if (fp->error() == bare::Volume::Error::FileExists) {
+                showMessage(MessageType::Error, "'%s' exists. Please select a new file name\n", array[1].c_str());
+            } else {
+                showMessage(MessageType::Error, "open of '%s' failed: %s\n", array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            }
             return true;
         }
         
