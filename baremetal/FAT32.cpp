@@ -200,6 +200,12 @@ Volume::Error FAT32::mount()
 bool FAT32::readFATBlock(uint32_t block)
 {
     if (!_fatBufferValid || block != _currentFATBufferAddr) {
+        if (_fatBufferNeedsWriting) {
+            if (!writeFATBlock()) {
+                return false;
+            }
+        }
+        
         if (rawRead(_fatBuffer, block, 1) != Volume::Error::OK) {
             _error = Error::FATReadError;
             return false;
@@ -212,10 +218,12 @@ bool FAT32::readFATBlock(uint32_t block)
 
 bool FAT32::writeFATBlock()
 {
-    if (!_fatBufferValid) {
+    if (!_fatBufferValid || !_fatBufferNeedsWriting) {
         return true;
     }
-    
+                
+    _fatBufferNeedsWriting = false;
+
     // Assume 2 FAT copies
     if (rawWrite(_fatBuffer, _currentFATBufferAddr, 1) != Volume::Error::OK) {
         _error = Error::FATWriteError;
@@ -273,10 +281,7 @@ Cluster FAT32::allocateCluster(Cluster prev)
                 
                 oldNext = bufToUInt32(reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
                 uint32ToBuf(currentCluster, reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
-                
-                if (!writeFATBlock()) {
-                    return 0;
-                }
+                _fatBufferNeedsWriting = true;
             }
                 
             fatBlockAddr = currentCluster * 4 / 512 + _startFATBlock.value();

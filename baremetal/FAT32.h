@@ -149,6 +149,7 @@ private:
     char _fatBuffer[512] __attribute__((aligned(4)));
     uint32_t _currentFATBufferAddr = 0;
     bool _fatBufferValid = false;
+    bool _fatBufferNeedsWriting = false;
     
     Volume::RawIO* _rawIO = nullptr;
     uint8_t _partition = 0;
