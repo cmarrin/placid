@@ -127,7 +127,7 @@ Volume::Error FAT32::mount()
     }
     
     // Read the MBR
-    char buf[512];
+    char buf[512] __attribute__((aligned(4)));
     if (rawRead(buf, 0, 1) != Volume::Error::OK) {
         _error = Error::MBRReadError;
         return Volume::Error::Failed;

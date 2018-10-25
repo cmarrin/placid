@@ -146,7 +146,7 @@ private:
     uint32_t _blocksPerFAT = 0;             // size of a FAT in blocks
     Block _startDataBlock = 0;              // start of data
     
-    char _fatBuffer[512];
+    char _fatBuffer[512] __attribute__((aligned(4)));
     uint32_t _currentFATBufferAddr = 0;
     bool _fatBufferValid = false;
     

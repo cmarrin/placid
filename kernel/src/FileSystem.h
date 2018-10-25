@@ -123,7 +123,9 @@ namespace placid {
         bool _canRead;
         bool _appendOnly;
         uint32_t _bufferAddr = 0; // Block addr of the contents of the buffer, if any
-        char _buffer[bare::BlockSize];
+
+        // RawFile has a requirement for 4 byte alignment
+        char _buffer[bare::BlockSize] __attribute__((aligned(4)));
     };
 
 }

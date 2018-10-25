@@ -75,10 +75,10 @@ namespace bare {
         FAT32RawFile* _file = nullptr;
         int32_t _blockIndex = -1;
         int32_t _entryIndex = -1;
+        char _buf[512] __attribute__((aligned(4)));
+        bool _valid = true;
         bool _subdir = false;
         bool _deleted = false;
-        char _buf[512];
-        bool _valid = true;
     };
 
 }
