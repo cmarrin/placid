@@ -296,7 +296,7 @@ SD::Error SDCard::readStatus(uint32_t mask)
 {
     bool result = checkStatusWithTimeout(
         [mask]{ return (emmc().status & mask && emmc().interrupt & INT_ERROR_MASK) == 0; },
-        nullptr, 50000);
+        nullptr, 500000);
         
     if (!result || emmc().interrupt & INT_ERROR_MASK) {
         return Error::Error;
@@ -677,6 +677,9 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
         currentPtr += 128;
     }
     
+    // Sleep to give write a chance to finish
+    Timer::usleep(20000);
+
     if (blocks > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
         error = sendCommand(CMD_STOP_TRANS(), 0);
         if (error != Error::OK) {
