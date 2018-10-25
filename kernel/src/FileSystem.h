@@ -73,7 +73,7 @@ namespace placid {
         File* open(const char* name, OpenMode = OpenMode::Read, OpenOption = OpenOption::None);
         
         bare::Volume::Error create(const char* name);
-        bare::Volume::Error remove(const char* name) { return bare::Volume::Error::NotImplemented; }
+        bare::Volume::Error remove(const char* name);
 
         const char* errorDetail(bare::Volume::Error error) const { return _fatFS.errorDetail(error); }
         

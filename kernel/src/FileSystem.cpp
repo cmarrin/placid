@@ -108,6 +108,11 @@ bare::Volume::Error FileSystem::create(const char* name)
     return _fatFS.create(name);
 }
 
+bare::Volume::Error FileSystem::remove(const char* name)
+{
+    return _fatFS.remove(name);
+}
+
 bool File::prepareBuffer(uint32_t offset)
 {
     if (offset / bare::BlockSize == _bufferAddr) {

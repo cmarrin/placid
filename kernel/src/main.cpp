@@ -149,6 +149,8 @@ int main()
     fp = nullptr;
     
     // Test file write
+    FileSystem::sharedFileSystem()->remove("test.txt");
+    
     fp = FileSystem::sharedFileSystem()->open("test.txt", FileSystem::OpenMode::Write);
     if (!fp->valid()) {
         bare::Serial::printf("File write open error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
