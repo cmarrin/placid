@@ -48,6 +48,12 @@ namespace bare {
         static constexpr uint32_t EntriesPerBlock = 512 / 32;
 
         FAT32DirectoryIterator(FAT32* fs, const char* path);
+        ~FAT32DirectoryIterator()
+        {
+            if (_file) {
+                delete _file;
+            }
+        }
         
         virtual DirectoryIterator& next() override;
         
@@ -59,7 +65,6 @@ namespace bare {
         bool subdir() const { return _subdir; }
         bool deleted() const { return _deleted; }
         
-        bool createEntry(const char* name, uint32_t size, Cluster baseCluster);
         
     private:
         enum class FileInfoResult { OK, SubDir, Deleted, Skip, End };
@@ -68,8 +73,10 @@ namespace bare {
         
         // If extend is true, append block when hit the end of the directory
         void rawNext(bool extend = false);
-        //Volume::Error
-        
+
+        bool createEntry(const char* name, uint32_t size, Cluster baseCluster);
+        bool deleteEntry();
+                
         FAT32* _fs;
         FAT32::FileInfo _fileInfo;
         FAT32RawFile* _file = nullptr;

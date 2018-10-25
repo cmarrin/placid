@@ -104,6 +104,8 @@ public:
     // Passing 0 as prev Cluster indicates that this is the first cluster of a file
     Cluster allocateCluster(Cluster prev = 0);
     
+    bool freeClusters(Cluster start);
+    
     static uint32_t bufToUInt32(uint8_t* buf)
     {
         return  static_cast<uint32_t>(buf[0]) + 

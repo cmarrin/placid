@@ -305,6 +305,33 @@ Cluster FAT32::allocateCluster(Cluster prev)
     return 0;
 }
 
+bool FAT32::freeClusters(Cluster cluster)
+{
+    Cluster nextCluster;
+    
+    while (1) {
+        FATEntryType type = nextClusterFATEntry(cluster, nextCluster);
+        if (type == FATEntryType::Error) {
+            return false;
+        }
+  
+        // Free this cluster
+        uint32_t fatBlockOffset = cluster.value() * 4 % 512;
+        uint32ToBuf(0, reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
+        _fatBufferNeedsWriting = true;
+
+        if (type == FATEntryType::Normal) {
+            cluster = nextCluster;
+            continue;
+        }
+        
+        if (!writeFATBlock()) {
+            return false;
+        }
+        return type == FATEntryType::End;
+    }
+}
+
 bool FAT32::find(FileInfo& fileInfo, const char* name)
 {
     // Convert the incoming filename to 8.3 and then compare all 11 characters
@@ -385,12 +412,25 @@ Volume::Error FAT32::create(const char* name)
         }
         it.rawNext(true);
     }
-    
-    // FIXME: extend the directory if we run out of entries
-    return Volume::Error::NotImplemented;
 }
 
 Volume::Error FAT32::remove(const char* name)
 {
-    return Volume::Error::NotImplemented;
+    // Convert the incoming filename to 8.3 and then compare all 11 characters
+    char nameToFind[12];
+    convertTo8dot3(nameToFind, name);
+    
+    FAT32DirectoryIterator it = FAT32DirectoryIterator(this, "/");
+    for ( ; it; it.next()) {
+        char testName[12];
+        convertTo8dot3(testName, it.name());
+        if (memcmp(nameToFind, testName, 11) == 0) {
+            freeClusters(it.baseCluster());
+            it.deleteEntry();
+            return Volume::Error::OK;
+        }
+    }
+    
+    // No match
+    return Volume::Error::FileNotFound;
 }

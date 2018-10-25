@@ -178,3 +178,10 @@ bool FAT32DirectoryIterator::createEntry(const char* name, uint32_t size, Cluste
 
     return _file->write(_buf, _blockIndex, 1) == Volume::Error::OK;
 }
+
+bool FAT32DirectoryIterator::deleteEntry()
+{
+    FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
+    entry->name[0] = 0xe5;
+    return _file->write(_buf, _blockIndex, 1) == Volume::Error::OK;
+}

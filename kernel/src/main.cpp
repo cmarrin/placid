@@ -165,6 +165,8 @@ int main()
     delete fp;
     fp = nullptr;
     
+    FileSystem::sharedFileSystem()->remove("test.txt");
+
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
     LEDBlinker blinker;
