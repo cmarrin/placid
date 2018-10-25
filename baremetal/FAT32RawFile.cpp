@@ -40,39 +40,26 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-Block FAT32RawFile::physicalBlockFromLogicalBlock(Block block)
+Volume::Error FAT32RawFile::read(char* buf, Block logicalBlock, uint32_t blocks)
 {
-    return 0;
-}
-
-Volume::Error FAT32RawFile::read(char* buf, Block blockAddr, uint32_t blocks)
-{
-    Block offset = 0;
-    Cluster physical;
-    
-    _error = logicalToPhysicalBlock(_baseCluster, blockAddr, physical, offset);
+    Block physicalBlock;
+    _error = logicalToPhysicalBlock(logicalBlock, physicalBlock);
     if (_error != Volume::Error::OK) {
         return _error;
     }
 
-    Block baseBlock = _fat32->clusterToBlock(physical);
-    _error = static_cast<Volume::Error>(_fat32->rawRead(buf, baseBlock + offset, blocks));
-    return _error;
+    return static_cast<Volume::Error>(_fat32->rawRead(buf, physicalBlock, blocks));
 }
 
-Volume::Error FAT32RawFile::write(const char* buf, Block blockAddr, uint32_t blocks)
+Volume::Error FAT32RawFile::write(const char* buf, Block logicalBlock, uint32_t blocks)
 {
-    Block offset = 0;
-    Cluster physical;
-    
-    Volume::Error error = logicalToPhysicalBlock(_baseCluster, blockAddr, physical, offset);
+    Block physicalBlock;
+    Volume::Error error = logicalToPhysicalBlock(logicalBlock, physicalBlock);
     if (error != Volume::Error::OK) {
         return error;
     }
 
-    Block baseBlock = _fat32->clusterToBlock(physical);
-    _error = static_cast<Volume::Error>(_fat32->rawWrite(buf, baseBlock + offset, blocks));
-    return _error;
+    return static_cast<Volume::Error>(_fat32->rawWrite(buf, physicalBlock, blocks));
 }
 
 Volume::Error FAT32RawFile::insertCluster()
@@ -103,7 +90,7 @@ Volume::Error FAT32RawFile::updateSize()
     return _fat32->rawWrite(buf, _directoryBlock, 1);
 }
 
-Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset)
+Volume::Error FAT32RawFile::logicalToPhysicalBlock(Block logicalBlock, Block& physicalBlock)
 {
     // 4 cases:
     //
@@ -114,8 +101,8 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cl
     //      3) Cluster number is higher that the last but not consecutive - search the FAT from this point
     //      4) Cluster number is lower or we don't have a last entry - search from the start of the FAT
     //
-    Cluster currentLogicalCluster = (block / Block(_fat32->blocksPerCluster())).value();
-    Block currentLogicalClusterBlock = block % Block(_fat32->blocksPerCluster());
+    Cluster currentLogicalCluster = (logicalBlock / Block(_fat32->blocksPerCluster())).value();
+    Block currentLogicalClusterBlock = logicalBlock % Block(_fat32->blocksPerCluster());
     
     if (_lastLogicalCluster != currentLogicalCluster) {
         if (currentLogicalCluster < _lastLogicalCluster) {
@@ -145,9 +132,8 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Cluster base, Block block, Cl
         }
     }
 
-    physical = _lastPhysicalCluster;
+    physicalBlock = _fat32->clusterToBlock(_lastPhysicalCluster) + currentLogicalClusterBlock;
     _lastLogicalCluster = currentLogicalCluster;
-    offset = currentLogicalClusterBlock;
     return Volume::Error::OK;
 }
 

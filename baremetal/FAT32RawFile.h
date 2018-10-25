@@ -59,11 +59,9 @@ namespace bare {
         virtual Volume::Error insertCluster() override;
         virtual Volume::Error updateSize() override;
 
-        Block physicalBlockFromLogicalBlock(Block);
+        Volume::Error logicalToPhysicalBlock(Block logical, Block& physical);
         
     private:
-        Volume::Error logicalToPhysicalBlock(Cluster base, Block block, Cluster& physical, Block& offset);
-
         FAT32* _fat32;
         Cluster _baseCluster;
         

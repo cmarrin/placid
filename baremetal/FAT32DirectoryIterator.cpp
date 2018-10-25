@@ -146,7 +146,12 @@ FAT32DirectoryIterator::FileInfoResult FAT32DirectoryIterator::getFileInfo()
     _fileInfo.size = FAT32::bufToUInt32(entry->size);
     _fileInfo.baseCluster = (static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterHi)) << 16) + 
                             static_cast<uint32_t>(FAT32::bufToUInt16(entry->firstClusterLo));
-    _fileInfo.directoryBlock = _file->physicalBlockFromLogicalBlock(_blockIndex);
+
+    Block physicalBlock;
+    if (_file->logicalToPhysicalBlock(_blockIndex, physicalBlock) != Volume::Error::OK) {
+        return FileInfoResult::Skip;
+    }
+    _fileInfo.directoryBlock = physicalBlock;
     _fileInfo.directoryBlockIndex = _entryIndex;
     
     return FileInfoResult::OK;
