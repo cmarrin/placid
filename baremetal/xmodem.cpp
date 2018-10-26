@@ -41,9 +41,26 @@ static constexpr uint32_t SOH = 0x01;
 static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
 static constexpr uint32_t EOT = 0x04;
+//#define CAPTURE_DATA
+#ifdef CAPTURE_DATA
+char _buffer[512];
+uint32_t _bufferIndex;
+
+void showXModemData()
+{
+    bare::Serial::printf("\n\nxmodem buffer:\n");
+    for (uint32_t i = 0; i < _bufferIndex; ++i) {
+        bare::Serial::printf("    0x%02x\n", _buffer[i]);
+    }
+    bare::Serial::printf("\n\n");
+}
+#endif
 
 bool xmodemReceive(XModemReceiveFunction func)
 {
+#ifdef CAPTURE_DATA
+    _bufferIndex = 0;
+#endif
     // block numbers start with 1
 
     // 132 byte packet
@@ -76,6 +93,12 @@ bool xmodemReceive(XModemReceiveFunction func)
         }
         
         bare::Serial::read(xstring[state]);
+#ifdef CAPTURE_DATA
+        if (_bufferIndex < 512) {
+            _buffer[_bufferIndex++] = xstring[state];
+        }
+#endif
+        
         startTime = bare::Timer::systemTime();
         
         if (state == 0) {
