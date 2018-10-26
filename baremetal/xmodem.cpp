@@ -41,6 +41,8 @@ static constexpr uint32_t SOH = 0x01;
 static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
 static constexpr uint32_t EOT = 0x04;
+static constexpr uint32_t CAN = 0x18;
+
 //#define CAPTURE_DATA
 //#define TEST_XMODEM
 #define TEST_XMODEM_HEADER
@@ -157,6 +159,13 @@ bool xmodemReceive(XModemReceiveFunction func)
     uint32_t crc = 0;
     int64_t startTime = bare::Timer::systemTime();
     
+    static constexpr uint32_t MaxFilenameLength = 255;
+    char filename[MaxFilenameLength + 1];
+    int32_t size = -1;
+    bool firstBlock = true;
+    
+    uint32_t packetSize = 128;
+    
     uint8_t xstring[256];
 
     while(1)
@@ -185,6 +194,15 @@ bool xmodemReceive(XModemReceiveFunction func)
         if (state == 0) {
             if (xstring[state] == EOT || xstring[state] == 0x1b) {
                 writeFunc(ACK);
+                
+                // If this is ymodem, it's going to want to send more stuff.
+                // It's a batch format and they're going to want to send 
+                // and end file packet. CANcel all that
+                writeFunc(CAN);
+                writeFunc(CAN);
+                writeFunc(CAN);
+                writeFunc(CAN);
+                writeFunc(CAN);
                 bare::Timer::usleep(100000);
 
 #ifdef CAPTURE_DATA
@@ -205,7 +223,8 @@ bool xmodemReceive(XModemReceiveFunction func)
             }
             break;
         case 1:
-            if (xstring[state] == block) {
+            // Block 0 holds the filename and size
+            if (xstring[state] == block || (xstring[state] == 0 && firstBlock)) {
                 crc += xstring[state];
                 state++;
             } else {
@@ -225,13 +244,82 @@ bool xmodemReceive(XModemReceiveFunction func)
         case 131:
             crc &= 0xFF;
             if (xstring[state] == crc) {
-                for (uint32_t i = 0; i < 128; i++) {
-                    if (!func(addr++, xstring[i + 3])) {
-                        bare::Timer::usleep(100000);
-                        return false;
+                if (xstring[1] == 0 && firstBlock) {
+                    // Header block
+                    firstBlock = false;
+                    
+                    uint32_t index = 0;
+                    for ( ; index < packetSize; ++index) {
+                        filename[index] = xstring[index + 3];
+                        if (filename[index] == '\0') {
+                            break;
+                        }                        
                     }
+                    
+                    if (index == packetSize) {
+                        // Bad header
+                        writeFunc(NAK);
+                        state = 0;
+                        break;
+                    }
+                    
+                    // Get the size string
+                    uint32_t offset = index + 1;
+                    size = 0;
+                    for (index = 0; index + offset < packetSize; ++index) {
+                        char c = xstring[index + offset + 3];
+                        if (c == ' ') {
+                            break;
+                        }
+
+                        if (c < '0' || c > '9') {
+                            // Bad header
+                            writeFunc(NAK);
+                            state = 0;
+                            break;
+                        }
+                        
+                        size *= 10;
+                        size += c - '0';
+                    }
+                    
+                    if (index + offset == packetSize) {
+                        // Bad header
+                        writeFunc(NAK);
+                        state = 0;
+                        break;
+                    }
+                } else {
+                    uint32_t sizeToWrite = packetSize;
+                    if (size >= 0) {
+                        if (static_cast<uint32_t>(size) < packetSize) {
+                            sizeToWrite = size;
+                        }
+                        size -= sizeToWrite;
+                    }
+                    
+                    for (uint32_t i = 0; i < sizeToWrite; i++) {
+                        if (!func(addr++, xstring[i + 3])) {
+                            writeFunc(ACK);
+                            bare::Timer::usleep(100000);
+                            return false;
+                        }
+                    }
+                    
+                    block = (block + 1) & 0xFF;
                 }
-                block = (block + 1) & 0xFF;
+                writeFunc(ACK);
+#ifdef TEST_XMODEM
+                if (testBlock == HeaderBlock) {
+                    testBlock = DataBlock0;
+                    testIndex = 0;
+                } else if (testBlock == DataBlock0) {
+                    testBlock = DataBlock1;
+                    testIndex = 0;
+                } else {
+                    return true;
+                }
+#endif
             } else {
                 writeFunc(NAK);
             }
