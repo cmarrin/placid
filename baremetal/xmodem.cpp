@@ -42,6 +42,70 @@ static constexpr uint32_t ACK = 0x06;
 static constexpr uint32_t NAK = 0x15;
 static constexpr uint32_t EOT = 0x04;
 //#define CAPTURE_DATA
+//#define TEST_XMODEM
+#define TEST_XMODEM_HEADER
+
+#ifdef TEST_XMODEM
+static const char HeaderBlock[] = 
+    "\x01\x00\xff"
+    "FileSystem.d\0"
+    "187 13364527115 100644 0 1 187"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0\0\0\0\0\0\0"
+    "\0\0\0\0"
+    "\x02\x3f"
+;
+
+static_assert(sizeof(HeaderBlock) == 133, "Wrong Size HeaderBlock");
+
+static const char DataBlock0[] = 
+    "\x01\x01\xfe"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "01234567"
+    "\x38"
+;
+
+static_assert(sizeof(DataBlock0) == 133, "Wrong Size DataBlock0");
+
+static const char DataBlock1[] = 
+    "\x01\x02\xfd"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "0123456789"
+    "01234567"
+    "\x38"
+;
+
+static_assert(sizeof(DataBlock1) == 133, "Wrong Size DataBlock1");
+
+#endif
+
 #ifdef CAPTURE_DATA
 char _buffer[512];
 uint32_t _bufferIndex;
@@ -60,6 +124,22 @@ bool xmodemReceive(XModemReceiveFunction func)
 {
 #ifdef CAPTURE_DATA
     _bufferIndex = 0;
+#endif
+
+#ifdef TEST_XMODEM
+    uint32_t testIndex = 0;
+#ifdef TEST_XMODEM_HEADER
+    const char* testBlock = HeaderBlock;
+#else
+    const char* testBlock = DataBlock0;
+#endif
+    auto readFunc = [&testBlock, &testIndex](uint8_t& c) { c = testBlock[testIndex++]; };
+    auto writeFunc = [](uint8_t c) { };
+    auto rxReadyFunc = []() -> bool { return true; };
+#else
+    auto readFunc = [](uint8_t& c) { bare::Serial::read(c); };
+    auto writeFunc = [](uint8_t c) { bare::Serial::write(c); };
+    auto rxReadyFunc = []() -> bool { return bare::Serial::rxReady(); };
 #endif
     // block numbers start with 1
 
@@ -84,15 +164,16 @@ bool xmodemReceive(XModemReceiveFunction func)
         int64_t curTime = bare::Timer::systemTime();
         if ((curTime - startTime) >= 4000000)
         {
-            bare::Serial::write(NAK);
+            writeFunc(NAK);
             startTime += 4000000;
         }
         
-        if (!bare::Serial::rxReady()) {
+        if (!rxReadyFunc()) {
             continue;
         }
         
-        bare::Serial::read(xstring[state]);
+        readFunc(xstring[state]);
+
 #ifdef CAPTURE_DATA
         if (_bufferIndex < 512) {
             _buffer[_bufferIndex++] = xstring[state];
@@ -103,8 +184,13 @@ bool xmodemReceive(XModemReceiveFunction func)
         
         if (state == 0) {
             if (xstring[state] == EOT || xstring[state] == 0x1b) {
-                bare::Serial::write(ACK);
+                writeFunc(ACK);
                 bare::Timer::usleep(100000);
+
+#ifdef CAPTURE_DATA
+                showXModemData();
+#endif
+
                 return xstring[state] == EOT;
             }
         }
@@ -115,7 +201,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 crc = xstring[state];
                 state++;
             } else {
-                bare::Serial::write(NAK);
+                writeFunc(NAK);
             }
             break;
         case 1:
@@ -124,7 +210,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 state++;
             } else {
                 state = 0;
-                bare::Serial::write(NAK);
+                writeFunc(NAK);
             }
             break;
         case 2:
@@ -132,7 +218,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 crc += xstring[state];
                 state++;
             } else {
-                bare::Serial::write(NAK);
+                writeFunc(NAK);
                 state = 0;
             }
             break;
@@ -141,15 +227,13 @@ bool xmodemReceive(XModemReceiveFunction func)
             if (xstring[state] == crc) {
                 for (uint32_t i = 0; i < 128; i++) {
                     if (!func(addr++, xstring[i + 3])) {
-                        bare::Serial::write(ACK);
                         bare::Timer::usleep(100000);
                         return false;
                     }
                 }
-                bare::Serial::write(ACK);
                 block = (block + 1) & 0xFF;
             } else {
-                bare::Serial::write(NAK);
+                writeFunc(NAK);
             }
             state = 0;
             break;
