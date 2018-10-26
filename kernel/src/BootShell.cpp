@@ -149,6 +149,32 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         }
         return true;
     } else if (array[0] == "mv") {
+        if (array.size() != 3) {
+            showMessage(MessageType::Error, "mv requires from and to file names\n");
+            return true;
+        }
+        
+        File* fp = FileSystem::sharedFileSystem()->open(array[1].c_str(), FileSystem::OpenMode::Read);
+        if (!fp->valid()) {
+            if (fp->error() == bare::Volume::Error::FileNotFound) {
+                showMessage(MessageType::Error, "from filename '%s' does not exist\n", array[1].c_str());
+            } else {
+                showMessage(MessageType::Error, "open of '%s' failed: %s\n", array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            }
+            delete fp;
+            return true;
+        }
+
+        bare::Volume::Error error = fp->rename(array[2].c_str());
+        if (error == bare::Volume::Error::FileExists) {
+            showMessage(MessageType::Error, "to filename '%s' exists. Please select a new file name\n", array[2].c_str());
+        } else if (fp->error() != bare::Volume::Error::OK) {
+            showMessage(MessageType::Error, "rename of '%s' to '%s' failed: %s\n", array[1].c_str(), array[2].c_str(), FileSystem::sharedFileSystem()->errorDetail(error));
+        } else {
+            showMessage(MessageType::Info, "'%s' renamed to '%s'\n", array[1].c_str(), array[2].c_str());
+        }
+        
+        delete fp;
     } else if (array[0] == "date") {
         if (array.size() == 1) {
             showMessage(MessageType::Info, "current time: %s\n", timeString().c_str());

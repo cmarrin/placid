@@ -56,6 +56,7 @@ namespace bare {
         
         virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
         virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
+        virtual Volume::Error rename(const char* to) override;
         virtual Volume::Error insertCluster() override;
         virtual Volume::Error updateSize() override;
 

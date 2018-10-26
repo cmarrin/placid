@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "FAT32DirectoryIterator.h"
 #include "Serial.h"
+#include "util.h"
 
 using namespace bare;
 
@@ -60,6 +61,31 @@ Volume::Error FAT32RawFile::write(const char* buf, Block logicalBlock, uint32_t 
     }
 
     return static_cast<Volume::Error>(_fat32->rawWrite(buf, physicalBlock, blocks));
+}
+
+Volume::Error FAT32RawFile::rename(const char* to)
+{
+    if (_directoryBlock == 0) {
+        Serial::printf("*** FAT32RawFile::rename invalid directoryBlock\n");
+        return Volume::Error::InternalError;
+    }
+    
+    // First make sure to does not exist
+    if (_fat32->exists(to)) {
+        _error = Volume::Error::FileExists;
+        return _error;
+    }
+    
+    char buf[BlockSize];
+    Volume::Error error = _fat32->rawRead(buf, _directoryBlock, 1);
+    if (error != Volume::Error::OK) {
+        return error;
+    }
+    
+    FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(buf) + _directoryBlockIndex;
+    convertTo8dot3(entry->name, to);
+    
+    return _fat32->rawWrite(buf, _directoryBlock, 1);
 }
 
 Volume::Error FAT32RawFile::insertCluster()

@@ -84,6 +84,7 @@ public:
     virtual RawFile* open(const char* name) override;
     virtual Volume::Error create(const char* name) override;
     virtual Volume::Error remove(const char* name) override;
+    virtual bool exists(const char* name) override;
     virtual const char* errorDetail(Volume::Error) const override;
     virtual DirectoryIterator* directoryIterator(const char* path) override;
 

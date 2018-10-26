@@ -110,6 +110,7 @@ public:
     virtual RawFile* open(const char* name) = 0;
     virtual Error create(const char* name) = 0;
     virtual Error remove(const char* name) = 0;
+    virtual bool exists(const char* name) = 0;
     virtual const char* errorDetail(Error) const;
     virtual DirectoryIterator* directoryIterator(const char* path) = 0;
 
@@ -125,6 +126,8 @@ public:
     
     virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) = 0;    
     virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) = 0;    
+
+    virtual Volume::Error rename(const char* to) = 0;
     
     virtual Volume::Error insertCluster() = 0;
     virtual Volume::Error updateSize() = 0;

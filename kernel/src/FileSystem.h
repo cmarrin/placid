@@ -100,6 +100,8 @@ namespace placid {
       
         int32_t read(char* buf, uint32_t size);
         int32_t write(const char* buf, uint32_t size);
+        
+        bare::Volume::Error rename(const char* to) { return _rawFile->rename(to); }
     
         bool seek(int32_t offset, SeekWhence);
         int32_t tell() const { return _offset; }

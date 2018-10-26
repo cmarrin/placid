@@ -431,3 +431,9 @@ Volume::Error FAT32::remove(const char* name)
     // No match
     return Volume::Error::FileNotFound;
 }
+
+bool FAT32::exists(const char* name)
+{
+    FileInfo dummy;
+    return find(dummy, name);
+}
