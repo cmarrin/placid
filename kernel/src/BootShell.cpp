@@ -52,9 +52,8 @@ const char* BootShell::helpString() const
 	return
             "    date [<time/date>] : set/get time/date\n"
             "    debug [on/off]     : turn debugging on/off\n"
-            "    get <file>         : get file (XModem receive)\n"
             "    heap               : show heap status\n"
-            "    put <file>         : put file (XModem send)\n"
+            "    put <file>         : put file (X/YModem send)\n"
             "    ls                 : list files\n"
             "    mv <src> <dst>     : rename file\n"
             "    reset              : restart kernel\n"
@@ -119,12 +118,13 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
             return true;
         }
         
-        showMessage(MessageType::Info, "Start XModem download when ready, or press [esc] key to cancel...\n");
+        showMessage(MessageType::Info, "Start X/YModem download when ready, or press [esc] key to cancel...\n");
+        showMessage(MessageType::Info, "    (Use YModem to accurately set file size)\n");
         if (!xmodemReceive([fp](uint32_t addr, char byte) -> bool
         {
             return fp->write(&byte, 1) == 1;
         })) {
-            showMessage(MessageType::Error, "XModem upload failed\n");
+            showMessage(MessageType::Error, "X/YModem upload failed\n");
             delete fp;
             bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
             if (error != bare::Volume::Error::OK) {

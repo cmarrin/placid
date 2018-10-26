@@ -74,7 +74,7 @@ int main(int argc, const char * argv[])
         
     bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
     bare::Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    bare::Serial::printf("    (press [space] for XMODEM upload or any other key to autoload immediately)\n");
+    bare::Serial::printf("    (press [space] for X/YMODEM upload or any other key to autoload immediately)\n");
     
     bare::Timer::init();
     
@@ -98,7 +98,7 @@ int main(int argc, const char * argv[])
         uint8_t c;
         bare::Serial::read(c);
         if (c == ' ') {
-            bare::Serial::printf("\n\nStart XMODEM upload when ready...\n\n");
+            bare::Serial::printf("\n\nStart X/YMODEM upload when ready...\n\n");
             if (xmodemReceive([](uint32_t addr, char byte) -> bool { PUT8(addr, byte); return true; })) {
                 BRANCHTO(ARMBASE);
                 break;
