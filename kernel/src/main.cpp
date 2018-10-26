@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
 #include "util.h"
+#include "Allocator.h"
 #include "BootShell.h"
 #include "FileSystem.h"
 #include "GPIO.h"
@@ -83,6 +84,8 @@ static void showTime()
 
 int main()
 {
+    Allocator::kernelAllocator().setUseAllocator(true);
+    
     bare::Serial::init();
     bare::Timer::init();
     

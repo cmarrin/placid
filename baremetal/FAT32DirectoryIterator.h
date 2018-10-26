@@ -66,7 +66,7 @@ namespace bare {
         static constexpr uint32_t EntriesPerBlock = 512 / 32;
 
         FAT32DirectoryIterator(FAT32* fs, const char* path);
-        ~FAT32DirectoryIterator()
+        virtual ~FAT32DirectoryIterator()
         {
             if (_file) {
                 delete _file;

@@ -56,7 +56,7 @@ static inline bool checkFreeList(Allocator::FreeChunk* list)
 
 Allocator Allocator::_kernelAllocator;
 
-extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
+//extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
 
 Allocator::Allocator()
 {
@@ -83,19 +83,9 @@ void Allocator::splitFreeBlock(FreeChunk* chunk, size_t size)
 {
     // Remove a size bytes section of the passed block from the free list
     // and leave the rest
-    assert(checkFreeList(_freeList));
+    removeFromFreeList(chunk);
     FreeChunk* newFreeChunk = reinterpret_cast<FreeChunk*>(reinterpret_cast<uint8_t*>(chunk) + size);
-    newFreeChunk->setSize(chunk->size() - size);
-    newFreeChunk->setStatus(Chunk::Status::Free);
-    if (chunk->next) {
-        chunk->next->prev = newFreeChunk;
-    }
-    newFreeChunk->next = chunk->next;
-    newFreeChunk->prev = chunk->prev;
-    if (chunk == _freeList) {
-        _freeList = newFreeChunk;
-    }
-    assert(checkFreeList(_freeList));
+    addToFreeList(newFreeChunk, chunk->size() - size);
 }
 
 void Allocator::addToFreeList(void* mem, size_t size)
@@ -116,7 +106,12 @@ void Allocator::addToFreeList(void* mem, size_t size)
 
 bool Allocator::alloc(size_t size, void*& mem)
 {
-    size = (size + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
+    if (!_useAllocator) {
+        mem = ::malloc(size);
+        return mem;
+    }
+
+    size = (size + sizeof(Chunk) + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
     
     // Try to find a block in the free list
     FreeChunk* entry = _freeList;
@@ -133,32 +128,43 @@ bool Allocator::alloc(size_t size, void*& mem)
         } else {
             splitFreeBlock(entry, size);
         }
-        mem = entry;
-        return true;
+    } else {
+        // No free entry found, alloc a new block
+        // Allocate as much as needed, in multiples of BlockSize
+        size_t sizeToAlloc = (size + BlockSize - 1) / BlockSize * BlockSize;
+        void* newSegment;
+        if (!Memory::mapSegment(sizeToAlloc, newSegment)) {
+            return false;
+        }
         
-    }
-    
-    // No free entry found, alloc a new block
-    // Allocate as much as needed, in multiples of BlockSize
-    size_t sizeToAlloc = (size + BlockSize - 1) / BlockSize * BlockSize;
-    if (!Memory::mapSegment(sizeToAlloc, mem)) {
-        return false;
-    }
-    
-    Chunk* newChunk = reinterpret_cast<Chunk*>(mem);
-    size_t newSize = BlockSize;
-    if (size + MinSplitSize < BlockSize) {
-        addToFreeList(reinterpret_cast<uint8_t*>(newChunk) + size, sizeToAlloc - size);
-        newSize = size;
+        entry = reinterpret_cast<FreeChunk*>(newSegment);
+        size_t newSize = BlockSize;
+        if (size + MinSplitSize < BlockSize) {
+            addToFreeList(reinterpret_cast<uint8_t*>(entry) + size, sizeToAlloc - size);
+        } else {
+            size = newSize;
+        }
     }
            
-    newChunk->setSize(newSize);
-    newChunk->setStatus(Chunk::Status::InUse);
-    return newChunk;
+    entry->setSize(size);
+    entry->setStatus(Chunk::Status::InUse);
+    _size += size;
+    
+    // return the part of the block past the header
+    mem = reinterpret_cast<Chunk*>(entry) + 1;
+    return true;
 }
 
 void Allocator::free(void *addr)
 {
+    if (!_useAllocator) {
+        ::free(addr);
+        return;
+    }
+
+    Chunk* chunk = reinterpret_cast<Chunk*>(addr) - 1;
+    addToFreeList(chunk, chunk->size());
+    _size -= chunk->size();
 }
 
 void *operator new(size_t size)

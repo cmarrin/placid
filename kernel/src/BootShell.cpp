@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "BootShell.h"
 
+#include "Allocator.h"
 #include "FileSystem.h"
 #include "Print.h"
 #include "Serial.h"
@@ -102,6 +103,7 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         for ( ; *it; it->next()) {
             showMessage(MessageType::Info, "%-13s %10d\n", it->name(), it->size());
         }
+        delete it;
     } else if (array[0] == "put") {
         if (array.size() != 2) {
             showMessage(MessageType::Error, "put requires one file name\n");
@@ -115,6 +117,7 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
             } else {
                 showMessage(MessageType::Error, "open of '%s' failed: %s\n", array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(fp->error()));
             }
+            delete fp;
             return true;
         }
         
@@ -198,7 +201,8 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
             showMessage(MessageType::Info, "set current time to: %s\n", timeString().c_str());
         }
     } else if (array[0] == "heap") {
-        showMessage(MessageType::Info, "heap size: %d\n", 0);
+        uint32_t size = Allocator::kernelAllocator().size();
+        showMessage(MessageType::Info, "heap size: %d\n", size);
     } else if (array[0] == "run") {
         showMessage(MessageType::Info, "Program started...\n");
     } else if (array[0] == "stop") {

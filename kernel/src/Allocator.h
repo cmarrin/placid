@@ -89,6 +89,11 @@ namespace placid {
         
         bool alloc(size_t size, void*&);
         void free(void *);
+        
+        uint32_t size() const { return _size; }
+        
+        // Used by Mac to avoid using this allocator for system allocations
+        void setUseAllocator(bool v) { _useAllocator = v; }
 
         static Allocator& kernelAllocator() { return _kernelAllocator; }
 
@@ -129,6 +134,9 @@ namespace placid {
         FreeChunk* _freeList = nullptr;
         
         static Allocator _kernelAllocator;
+        
+        uint32_t _size = 0;
+        bool _useAllocator = false;
     };
     
 }

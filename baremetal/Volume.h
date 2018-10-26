@@ -145,6 +145,7 @@ protected:
 class DirectoryIterator
 {
 public:
+    virtual ~DirectoryIterator() { }
     virtual DirectoryIterator& next() = 0;
     virtual const char* name() const = 0;
     virtual uint32_t size() const = 0;
