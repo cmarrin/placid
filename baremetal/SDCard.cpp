@@ -678,7 +678,7 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
     }
     
     // Sleep to give write a chance to finish
-    Timer::usleep(20000);
+    Timer::usleep(50000);
 
     if (blocks > 1 && !(_scr[0] & SCR_SUPP_SET_BLKCNT) && (_scr[0] & SCR_SUPP_CCS)) {
         error = sendCommand(CMD_STOP_TRANS(), 0);
