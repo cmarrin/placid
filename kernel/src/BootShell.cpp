@@ -105,7 +105,7 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         }
     } else if (array[0] == "put") {
         if (array.size() != 2) {
-            showMessage(MessageType::Error, "requires one file name\n");
+            showMessage(MessageType::Error, "put requires one file name\n");
             return true;
         }
         
@@ -137,6 +137,17 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
     } else if (array[0] == "reset") {
         _start();
     } else if (array[0] == "rm") {
+        if (array.size() != 2) {
+            showMessage(MessageType::Error, "rm requires one file name\n");
+            return true;
+        }
+        bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
+        if (error != bare::Volume::Error::OK) {
+            showMessage(MessageType::Error, "attempting to rm: %s\n", FileSystem::sharedFileSystem()->errorDetail(error));
+        } else {
+            showMessage(MessageType::Info, "'%s' removed\n", array[1].c_str());
+        }
+        return true;
     } else if (array[0] == "mv") {
     } else if (array[0] == "date") {
         if (array.size() == 1) {
