@@ -132,6 +132,7 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
                     array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(error));
             }
         } else {
+            showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", array[1].c_str(), fp->size());
             delete fp;
         }
     } else if (array[0] == "reset") {
