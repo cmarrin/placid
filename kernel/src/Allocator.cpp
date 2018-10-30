@@ -56,7 +56,10 @@ static inline bool checkFreeList(Allocator::FreeChunk* list)
 
 Allocator Allocator::_kernelAllocator;
 
-//extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
+#ifndef __APPLE__
+extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
+extern "C" void* malloc(size_t s) { void* m; return Allocator::kernelAllocator().alloc(s, m) ? m : nullptr; }
+#endif
 
 Allocator::Allocator()
 {

@@ -42,6 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Print.h"
 #include "SDCard.h"
 #include "Serial.h"
+#include "SPI.h"
 #include "String.h"
 #include "Timer.h"
 #include <vector>
@@ -90,6 +91,13 @@ int main()
     bare::Timer::init();
     
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
+    
+//    bare::Serial::printf("SPI test\n");
+//    bare::SPI::init();
+//    
+//    char spibuf[256];
+//    bare::SPI::readWrite(spibuf, "hi from RPi", 11);
+//    bare::Serial::printf("    SPI received: '%s'\n", spibuf);
 
     timingTest("Memory perf without cache");
     Memory::init();

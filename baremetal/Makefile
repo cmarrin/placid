@@ -26,6 +26,7 @@ SRC =	util.cpp \
 		SD.cpp \
 		SDCard.cpp \
 		Serial.cpp \
+		SPI.cpp \
 		Timer.cpp \
 		Volume.cpp \
 		ldivmod.S \
