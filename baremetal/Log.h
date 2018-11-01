@@ -35,47 +35,25 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "SD.h"
-#include "Volume.h"
-#include <stdint.h>
-#include <functional>
+#include "Serial.h"
 
-#define SD_OK                0
-#define SD_TIMEOUT          -1
-#define SD_ERROR            -2
-
-namespace bare {
-
-    struct Command
-    {
-        uint32_t code;
-#ifdef DEBUG_SD
-        const char* name;
-#endif
-        operator uint32_t() { return code; }
-    };
-
-    // SD Card interface. Subclass of SD
-    class SDCard : public SD, public Volume::RawIO
-    {
-    public:
-        SDCard();
-        
-        virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
-        virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
-
-    private:
-        bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);
-        Error setClock(uint32_t freq, uint32_t hostVersion);
-        Error sendCommand(const Command&, uint32_t arg);
-        Error sendCommand(const Command&, uint32_t arg, uint32_t& response);
-        Error readStatus(uint32_t mask);
-        Error waitForInterrupt(uint32_t mask);
-        Error setSCRValues();
-        void finishFail() const;
-        
-        uint32_t _rca = 0;
-        uint32_t _scr[2] { 0, 0 };
-    };
-
+static inline void ERROR_LOG(const char* format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    bare::Serial::vprintf(format, va);
+    va_end(va);
 }
+#ifdef ENABLE_DEBUG_LOG
+static inline void DEBUG_LOG(const char* format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    bare::Serial::vprintf(format, va);
+    va_end(va);
+}
+#else
+static inline void DEBUG_LOG(const char* format, ...) { }
+#endif
+
+#undef ENABLE_DEBUG_LOG

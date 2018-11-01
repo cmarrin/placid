@@ -45,7 +45,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "Timer.h"
 
+//#define ENABLE_DEBUG_LOG
+#include "Log.h"
+
 using namespace bare;
+
+void SDCard::finishFail() const
+{
+    DEBUG_LOG("SDCard: EMMC init FAILED!\n");
+}
 
 #ifdef __APPLE__
 #include <stdio.h>

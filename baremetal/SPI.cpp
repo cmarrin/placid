@@ -38,6 +38,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "GPIO.h"
 #include "Timer.h"
 
+//#define ENABLE_DEBUG_LOG
+#include "Log.h"
+
 using namespace bare;
 
 struct SPI0 {
@@ -77,6 +80,17 @@ static constexpr uint32_t SPI0Base = 0x20204000;
 
 inline volatile SPI0& spi()
 {
+#ifdef __APPLE__
+    static SPI0 _dummy;
+    _dummy.CS = 0xffffffff;
+    return _dummy;
+#else
+    return *(reinterpret_cast<volatile SPI0*>(SPI0Base));
+#endif
+
+
+
+
     return *(reinterpret_cast<volatile SPI0*>(SPI0Base));
 }
 

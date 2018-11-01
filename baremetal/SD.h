@@ -41,8 +41,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace bare {
 
-//#define DEBUG_SD
-
     // Interface to SD devices. This includes SD cards and SDIO devices
     // (like the WiFi chip on the RPi 3 and Zero W)
     class SD
@@ -51,25 +49,6 @@ namespace bare {
         enum class Error { OK, Timeout, Error };
         
         SD(uint32_t cd, uint32_t clk, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3_);
-        
-        void ERROR_LOG(const char* format, ...) const
-        {
-            va_list va;
-            va_start(va, format);
-            Serial::vprintf(format, va);
-            va_end(va);
-        }
-#ifdef DEBUG_SD
-        void DEBUG_LOG(const char* format, ...) const
-        {
-            va_list va;
-            va_start(va, format);
-            Serial::vprintf(format, va);
-            va_end(va);
-        }
-#else
-        void DEBUG_LOG(const char* format, ...) const { }
-#endif
     };
 
 }

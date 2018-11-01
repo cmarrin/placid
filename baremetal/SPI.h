@@ -40,8 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdint.h>
 #include <stddef.h>
 
-#define DEBUG_SPI
-
 namespace bare {
     
     // SPI - Serial Peripheral Interface driver for SPI0 on the Raspberry Pi
@@ -57,26 +55,6 @@ namespace bare {
         
         static void write(uint32_t c);
         static int32_t read();
-
-        static void ERROR_LOG(const char* format, ...)
-        {
-            va_list va;
-            va_start(va, format);
-            Serial::vprintf(format, va);
-            va_end(va);
-        }
-
-#ifdef DEBUG_SPI
-        static void DEBUG_LOG(const char* format, ...)
-        {
-            va_list va;
-            va_start(va, format);
-            Serial::vprintf(format, va);
-            va_end(va);
-        }
-#else
-        static void DEBUG_LOG(const char* format, ...) { }
-#endif
 
     private:
     };
