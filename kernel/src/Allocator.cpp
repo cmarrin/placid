@@ -35,7 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Allocator.h"
 
-#include "Serial.h"
+//#define ENABLE_DEBUG_LOG
+#include "Log.h"
 
 using namespace placid;
 
@@ -116,6 +117,7 @@ bool Allocator::alloc(size_t size, void*& mem)
     }
 #endif
 
+    DEBUG_LOG("Allocator::alloc: enter, size=%d, useAllocator=%s\n", static_cast<uint32_t>(size), _useAllocator ? "true" : "false");
     size = (size + sizeof(Chunk) + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
     
     // Try to find a block in the free list
@@ -127,26 +129,35 @@ bool Allocator::alloc(size_t size, void*& mem)
     }
     
     if (entry) {
+        DEBUG_LOG("Allocator::alloc: found free chunk, size=%d\n", entry->size());
+        
         // Should we split or just use it?
         if (size + MinSplitSize > entry->size()) {
+            DEBUG_LOG("Allocator::alloc: using entire free chunk\n");
             removeFromFreeList(entry);
         } else {
+            DEBUG_LOG("Allocator::alloc: splitting free chunk\n");
             splitFreeBlock(entry, size);
         }
     } else {
+        DEBUG_LOG("Allocator::alloc: no free chunk found\n");
+
         // No free entry found, alloc a new block
         // Allocate as much as needed, in multiples of BlockSize
         size_t sizeToAlloc = (size + BlockSize - 1) / BlockSize * BlockSize;
         void* newSegment;
         if (!Memory::mapSegment(sizeToAlloc, newSegment)) {
+            ERROR_LOG("Allocator::alloc: failed to allocate segment of size %d\n", sizeToAlloc);
             return false;
         }
         
         entry = reinterpret_cast<FreeChunk*>(newSegment);
         size_t newSize = BlockSize;
         if (size + MinSplitSize < BlockSize) {
+            DEBUG_LOG("Allocator::alloc: splitting newly allocated segment\n");
             addToFreeList(reinterpret_cast<uint8_t*>(entry) + size, sizeToAlloc - size);
         } else {
+            DEBUG_LOG("Allocator::alloc: using entire newly allocated segment\n");
             size = newSize;
         }
     }
@@ -157,6 +168,7 @@ bool Allocator::alloc(size_t size, void*& mem)
     
     // return the part of the block past the header
     mem = reinterpret_cast<Chunk*>(entry) + 1;
+    DEBUG_LOG("Allocator::alloc: exit with allocated memory\n");
     return true;
 }
 
@@ -169,9 +181,11 @@ void Allocator::free(void *addr)
     }
 #endif
 
+    DEBUG_LOG("Allocator::free: enter, addr=0x%08p\n", addr);
     Chunk* chunk = reinterpret_cast<Chunk*>(addr) - 1;
     addToFreeList(chunk, chunk->size());
     _size -= chunk->size();
+    DEBUG_LOG("Allocator::free: exit, size=%d\n", chunk->size());
 }
 
 void *operator new(size_t size)
