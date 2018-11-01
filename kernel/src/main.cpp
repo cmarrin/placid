@@ -107,6 +107,7 @@ int main()
     showTime();
     
     // Test file read
+    bare::Serial::printf("File read test...\n");
     File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read, FileSystem::OpenOption::Update);
     if (!fp->valid()) {
         bare::Serial::printf("File read open error for '%s': %s\n", "sample.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
@@ -123,6 +124,7 @@ int main()
     }
     
     // Test update
+    bare::Serial::printf("File update test...\n");
     fp->seek(518, File::SeekWhence::Set);
     int32_t size = fp->write("0123456789", 10);
     if (size < 0) {
@@ -140,6 +142,7 @@ int main()
     }
     
     // Repair the file
+    bare::Serial::printf("File repair test...\n");
     fp->seek(518, File::SeekWhence::Set);
     size = fp->write("altogether", 10);
     if (size < 0) {
@@ -160,6 +163,7 @@ int main()
     fp = nullptr;
     
     // Test file write
+    bare::Serial::printf("File write test...\n");
     FileSystem::sharedFileSystem()->remove("test.txt");
     
     fp = FileSystem::sharedFileSystem()->open("test.txt", FileSystem::OpenMode::Write);
