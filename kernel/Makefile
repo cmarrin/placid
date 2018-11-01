@@ -45,7 +45,15 @@ LIBS = ../baremetal/build/baremetal.a
 INCLUDES = -I../baremetal
 
 ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -DNDEBUG -Wall -Os -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+CFLAGS = $(INCLUDES) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	CFLAGS += -DDEBUG -g
+else 
+	CFLAGS += -DNDEBUG -Os
+endif
+
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 LDFLAGS =
 LDLIBS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
@@ -91,7 +99,7 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal; make -f Makefile
+	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
 
 $(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) $(DIVOBJS) makelibs
 	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf

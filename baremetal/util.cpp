@@ -255,6 +255,18 @@ namespace std {
         Serial::printf("bad function call\n");
         abort();
     }
+
+    void __throw_length_error(const char* s)
+    {
+        Serial::printf("length error:%s\n", s);
+        abort();
+    }
+
+    void __throw_bad_alloc()
+    {
+        Serial::printf("bad alloc\n");
+        abort();
+    }
 }
 
 void convertTo8dot3(char* name8dot3, const char* name)

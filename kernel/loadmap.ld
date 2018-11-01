@@ -35,7 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 MEMORY
 {
-    ram : ORIGIN = 0x8000, LENGTH = 0x10000
+    /* Kernel limited to 1MB */
+    ram : ORIGIN = 0x8000, LENGTH = 0x100000
 }
 
 SECTIONS
