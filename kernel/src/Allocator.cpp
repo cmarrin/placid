@@ -109,10 +109,12 @@ void Allocator::addToFreeList(void* mem, size_t size)
 
 bool Allocator::alloc(size_t size, void*& mem)
 {
+#ifdef __APPLE__
     if (!_useAllocator) {
         mem = ::malloc(size);
         return mem;
     }
+#endif
 
     size = (size + sizeof(Chunk) + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
     
@@ -160,10 +162,12 @@ bool Allocator::alloc(size_t size, void*& mem)
 
 void Allocator::free(void *addr)
 {
+#ifdef __APPLE__
     if (!_useAllocator) {
         ::free(addr);
         return;
     }
+#endif
 
     Chunk* chunk = reinterpret_cast<Chunk*>(addr) - 1;
     addToFreeList(chunk, chunk->size());
