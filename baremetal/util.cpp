@@ -116,8 +116,9 @@ uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor) {
         return answer;
 }
 
-unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor) {
-        return (unsigned int)__aeabi_uidivmod(value, divisor);
+unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor)
+{
+    return (unsigned int)__aeabi_uidivmod(value, divisor);
 }
 
 void abort()
