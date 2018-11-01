@@ -155,6 +155,7 @@
 		496C3BBA217E2368004DBC22 /* FAT32DirectoryIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FAT32DirectoryIterator.h; path = ../baremetal/FAT32DirectoryIterator.h; sourceTree = "<group>"; };
 		496C3BBE21876279004DBC22 /* SPI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SPI.cpp; path = ../baremetal/SPI.cpp; sourceTree = "<group>"; };
 		496C3BBF21876279004DBC22 /* SPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SPI.h; path = ../baremetal/SPI.h; sourceTree = "<group>"; };
+		496C3BC221891FC2004DBC22 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../baremetal/Log.h; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
 		49731F78216E914500F9A79F /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../baremetal/xmodem.cpp; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
@@ -286,6 +287,7 @@
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				492FF401215C5359003582FE /* InterruptManager.cpp */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
+				496C3BC221891FC2004DBC22 /* Log.h */,
 				492FF3F3215C4F72003582FE /* Mailbox.cpp */,
 				492FF3F0215C4F72003582FE /* Mailbox.h */,
 				497EE458216138E2000584CE /* Print.cpp */,
