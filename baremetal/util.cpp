@@ -121,6 +121,14 @@ unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor)
     return (unsigned int)__aeabi_uidivmod(value, divisor);
 }
 
+#ifndef __APPLE__
+int __aeabi_idiv(int value, int divisor)
+{
+    lldiv_t result = __aeabi_ldivmod(value, divisor);
+    return static_cast<int>(result.quot);
+}
+#endif
+
 void abort()
 {
     Serial::printf("***********ABORTING**********\n");

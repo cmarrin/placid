@@ -22,7 +22,8 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 
 BUILDDIR = build
 
-SRC =	util.cpp \
+SRC =	ldivmod.S \
+		util.cpp \
 		xmodem.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
@@ -37,7 +38,6 @@ SRC =	util.cpp \
 		SPI.cpp \
 		Timer.cpp \
 		Volume.cpp \
-		ldivmod.S \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)

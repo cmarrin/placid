@@ -62,6 +62,7 @@ typedef struct { uint64_t rem; uint64_t quot; } ulldiv_t;
 
 uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor);
 unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor);
+int __aeabi_idiv(int value, int divisor);
 ulldiv_t __aeabi_uldivmod(uint64_t value, uint64_t divisor);
 lldiv_t __aeabi_ldivmod(int64_t numerator, int64_t denominator);
 
