@@ -51,10 +51,10 @@ makelibs:
 	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
 
 bin/bootloader.bin : loader $(OBJS) makelibs
-	$(LD) $(OBJS) $(LIBS) -T loader -o $(BUILDDIR)/bootloader04.elf
-	$(OBJDUMP) -D $(BUILDDIR)/bootloader04.elf > $(BUILDDIR)/bootloader04.list
-	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O ihex $(BUILDDIR)/bootloader04.hex
-	$(OBJCOPY) $(BUILDDIR)/bootloader04.elf -O binary bin/bootloader.bin
+	$(LD) $(OBJS) $(LIBS) -T loader -Map $(BUILDDIR)/bootloader.map -o $(BUILDDIR)/bootloader.elf
+	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
+	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
+	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary bin/bootloader.bin
 	wc -c bin/bootloader.bin
 
 $(BUILDDIR)/%.o: %.c Makefile

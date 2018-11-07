@@ -102,7 +102,7 @@ makelibs:
 	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
 
 $(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) $(DIVOBJS) makelibs
-	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -o $(BUILDDIR)/bootloader.elf
+	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -Map $(BUILDDIR)/bootloader.map -o $(BUILDDIR)/bootloader.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
 	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
