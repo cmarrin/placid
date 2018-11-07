@@ -42,6 +42,7 @@
 		497EE45D2161982F000584CE /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45C2161982F000584CE /* printf.cpp */; };
 		497EE460216198F1000584CE /* nanoprintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE45E21619879000584CE /* nanoprintf.cpp */; };
 		497EE46121628A95000584CE /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* Memory.cpp */; };
+		4987478B2191F68E00245E91 /* ESPWifi.ino in Sources */ = {isa = PBXBuildFile; fileRef = 4987478A2191F68E00245E91 /* ESPWifi.ino */; };
 		49931A0F2168AFA700257E42 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49931A0E2168AFA700257E42 /* String.cpp */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,15 @@
 				49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		498747862191F68E00245E91 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -162,6 +172,8 @@
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Print.h; path = ../baremetal/Print.h; sourceTree = "<group>"; };
 		497EE45C2161982F000584CE /* printf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printf.cpp; path = ../../kernel/src/printf.cpp; sourceTree = "<group>"; };
 		497EE45E21619879000584CE /* nanoprintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nanoprintf.cpp; path = ../bootloader/nanoprintf.cpp; sourceTree = "<group>"; };
+		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
+		4987478A2191F68E00245E91 /* ESPWifi.ino */ = {isa = PBXFileReference; lastKnownFileType = text; path = ESPWifi.ino; sourceTree = "<group>"; };
 		49931A0E2168AFA700257E42 /* String.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +195,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4962956E215AA4DF0064B9C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		498747852191F68E00245E91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -254,6 +273,7 @@
 				49629575215AA4EB0064B9C9 /* baremetal */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
+				498747892191F68E00245E91 /* ESPWifi */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 				49629588215AAA760064B9C9 /* Frameworks */,
 			);
@@ -265,6 +285,7 @@
 				492C741C214B2A2F009A4DA4 /* kerneltest */,
 				49166D6D2153F0FE0077ACEE /* bltest */,
 				49629571215AA4DF0064B9C9 /* libbaremetal.a */,
+				498747882191F68E00245E91 /* ESPWifi */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -314,6 +335,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		498747892191F68E00245E91 /* ESPWifi */ = {
+			isa = PBXGroup;
+			children = (
+				4987478A2191F68E00245E91 /* ESPWifi.ino */,
+			);
+			path = ESPWifi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -388,6 +417,23 @@
 			productReference = 49629571215AA4DF0064B9C9 /* libbaremetal.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		498747872191F68E00245E91 /* ESPWifi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4987478E2191F68E00245E91 /* Build configuration list for PBXNativeTarget "ESPWifi" */;
+			buildPhases = (
+				498747842191F68E00245E91 /* Sources */,
+				498747852191F68E00245E91 /* Frameworks */,
+				498747862191F68E00245E91 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ESPWifi;
+			productName = ESPWifi;
+			productReference = 498747882191F68E00245E91 /* ESPWifi */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -406,6 +452,9 @@
 					49629570215AA4DF0064B9C9 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
+					498747872191F68E00245E91 = {
+						CreatedOnToolsVersion = 10.0;
+					};
 				};
 			};
 			buildConfigurationList = 492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "placid" */;
@@ -423,6 +472,7 @@
 				492C741B214B2A2F009A4DA4 /* kerneltest */,
 				49166D6C2153F0FE0077ACEE /* bltest */,
 				49629570215AA4DF0064B9C9 /* baremetal */,
+				498747872191F68E00245E91 /* ESPWifi */,
 			);
 		};
 /* End PBXProject section */
@@ -474,6 +524,14 @@
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,
 				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		498747842191F68E00245E91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4987478B2191F68E00245E91 /* ESPWifi.ino in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -658,6 +716,27 @@
 			};
 			name = Release;
 		};
+		4987478C2191F68E00245E91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4987478D2191F68E00245E91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -693,6 +772,15 @@
 			buildConfigurations = (
 				49629573215AA4DF0064B9C9 /* Debug */,
 				49629574215AA4DF0064B9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4987478E2191F68E00245E91 /* Build configuration list for PBXNativeTarget "ESPWifi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4987478C2191F68E00245E91 /* Debug */,
+				4987478D2191F68E00245E91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
