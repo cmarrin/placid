@@ -98,18 +98,21 @@ void SPI::init()
 {
     DEBUG_LOG("SPI:Initializing\n");
 
-    GPIO::setFunction(7, GPIO::Function::Alt0);
     GPIO::setFunction(8, GPIO::Function::Alt0);
     GPIO::setFunction(9, GPIO::Function::Alt0);
     GPIO::setFunction(10, GPIO::Function::Alt0);
     GPIO::setFunction(11, GPIO::Function::Alt0);
     
     spi().CS = 0x30; // Clear FIFOs
-    spi().CS = 0; // Disable SPI - all CS lines high
     spi().CLK = 0; // 250MHz / 65536 = 3814.7Hz (slowest possible transfer rate)
     
+    bool polarity = false;
+    bool phase = false;
+    Timer::usleep(1000); 
+    spi().CS = (polarity ? (1 << SPI0::CPOLShift) : 0) | (phase ? (1 << SPI0::CPHAShift) : 0);
+    
     // FIXME: Wait a bit for things to settle. Not sure if we need this
-    Timer::usleep(100); 
+    Timer::usleep(1000); 
     DEBUG_LOG("SPI:Initialization complete\n");
 }
 
@@ -117,6 +120,7 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
 {
     DEBUG_LOG("SPI:readWrite: readBuf=0x%p, writeBuf=0x%p, size=%d\n", readBuf, writeBuf, size);
 
+    Timer::usleep(1000);
     spi().DLEN = static_cast<uint32_t>(size);
     spi().CS = (spi().CS & ~SPI0::WhichCS) | SPI0::CLEAR_RX | SPI0::CLEAR_TX | SPI0::TA;
 
@@ -148,6 +152,7 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
     }
     
     spi().CS = spi().CS & ~SPI0::TA;
+    Timer::usleep(1000);
     
     DEBUG_LOG("SPI:readWrite: finished, return\n");
     return (int) size;

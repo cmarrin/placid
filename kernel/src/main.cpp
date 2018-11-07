@@ -89,16 +89,10 @@ int main()
     
     bare::Serial::init();
     bare::Timer::init();
-    
-    bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
-    
-    bare::Serial::printf("SPI test\n");
     bare::SPI::init();
     
-    char spibuf[256];
-    bare::SPI::readWrite(spibuf, "hi from RPi", 11);
-    bare::Serial::printf("    SPI received: '%s'\n", spibuf);
-
+    bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
+        
     timingTest("Memory perf without cache");
     Memory::init();
     timingTest("Memory perf with cache");

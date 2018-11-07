@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "FileSystem.h"
 #include "Print.h"
 #include "Serial.h"
+#include "SPI.h"
 #include "Timer.h"
 
 using namespace placid;
@@ -209,6 +210,14 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         showMessage(MessageType::Info, "Program stopped\n");
     } else if (array[0] == "debug") {
         showMessage(MessageType::Info, "Debug true\n");
+    } else if (array[0] == "spi") {
+        bare::Serial::printf("SPI test\n");
+        char spibuf[256];
+        for (int i = 0; i < 10; ++i) {
+            bare::SPI::readWrite(spibuf, "\x01\x02\x03\x04" "abc", 7);
+            bare::Serial::printf("    SPI received: '%s'\n", spibuf);
+            bare::Timer::usleep(1000000);
+        }
     } else {
         return false;
     }
