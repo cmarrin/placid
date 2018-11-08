@@ -222,30 +222,15 @@ bool Print::toString(char* buf, uint64_t v, uint8_t base)
     return true;
 }
 
-class BufferPrinter : public Print::Printer
-{
-    public:
-    BufferPrinter(char* buf, size_t count) : _buf(buf), _count(count) { }
-    
-    virtual int32_t outChar(char c) override
-    {
-        if (_count > 0) {
-            *_buf++ = c;
-            --_count;
-            return 1;
-        }
-        return -1;
-    }
-    
-    private:
-    char* _buf;
-    size_t _count;
-};
-
 int32_t Print::vsnprintf(char* buffer, size_t count, const char* format, va_list va)
 {
-    BufferPrinter p(buffer, count);
-    return vsnprintCore(p, format, va);
+    return vsnprintCore([&buffer, &count](char c)
+    {
+        if (count > 0) {
+            *buffer++ = c;
+            --count;
+        }
+    }, format, va);
 }
 
 int32_t Print::snprintf(char* buffer, size_t count, const char* format, ...)

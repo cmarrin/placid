@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Print.h"
 
-static int strHex(bare::Print::Printer& printer, uint32_t ad, int len, bool fill)
+static int strHex(bare::Print::Printer printer, uint32_t ad, int len, bool fill)
 {
     int i, j=0;
     int c;
@@ -55,11 +55,11 @@ static int strHex(bare::Print::Printer& printer, uint32_t ad, int len, bool fill
     }
     s[j] = 0;
     for (i = 0; i < len - j; i++) {
-        printer.outChar((fill) ? '0' : ' ');
+        printer((fill) ? '0' : ' ');
     }
     
     for (char* p = s; *p != '\0'; ++p) {
-        printer.outChar(*p);
+        printer(*p);
     }
     
     return j+i;
@@ -99,17 +99,17 @@ static int strNum(bare::Print::Printer& printer, uint32_t ui, int len, int fill)
     s[j]=0;
 
     for (i = 0; i < len - l; i++) {
-        printer.outChar((fill) ? '0' : ' ');
+        printer((fill) ? '0' : ' ');
     }
     
     for (char* p = s; *p != '\0'; ++p) {
-        printer.outChar(*p);
+        printer(*p);
     }
     
     return j+i;
 }
 
-int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
+int32_t bare::Print::vsnprintCore(Printer printer, const char *format, va_list va)
 {
     int si;
     unsigned int ui;
@@ -129,7 +129,7 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
                 len = 0;
                 fill = 0;
             } else {
-                printer.outChar(c);
+                printer(c);
             }
         } else if (pf>0) {
             // previous character was '%'
@@ -145,7 +145,7 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
                 si = va_arg(va, int);
                 if (si<0) {
                     ui = -si;
-                    printer.outChar('-');
+                    printer('-');
                 } else {
                     ui = si;
                 }
@@ -154,7 +154,7 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
             } else if (c=='s' || c=='S') {
                 s = va_arg(va, char *);
                 for (char* p = s; *p; ++p) {
-                    printer.outChar(*p);
+                    printer(*p);
                 }
                 pf=0;
             } else if ('0'<=c && c<='9') {
@@ -166,11 +166,11 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
                 pf=2;
             } else {
                 // this shouldn't happen
-                printer.outChar(c);
+                printer(c);
                 pf=0;
             }
         }
     }
-    printer.outChar('\0');
+    printer('\0');
     return (i>0) ? i : -1;
 }

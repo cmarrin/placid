@@ -128,11 +128,6 @@ void Serial::init()
 #endif
 }
 
-class CharPrinter : public Print::Printer
-{
-    virtual int32_t outChar(char c) override { Serial::write(c); return 1; }
-};
-
 int32_t Serial::printf(const char* format, ...)
 {
     va_list va;
@@ -145,8 +140,7 @@ int32_t Serial::printf(const char* format, ...)
 
 int32_t Serial::vprintf(const char* format, va_list va)
 {
-    CharPrinter p;
-    return Print::vsnprintCore(p, format, va);
+    return Print::vsnprintCore([](char c) { Serial::write(c); }, format, va);
 }
 
 Serial::Error Serial::read(uint8_t& c)

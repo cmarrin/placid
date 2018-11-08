@@ -91,6 +91,10 @@ int main()
     bare::Timer::init();
     bare::SPI::init();
     
+    
+    bare::Serial::printf("\n\nHex value = %#010x\n\n", 0x1234);
+
+    
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
         
     timingTest("Memory perf without cache");

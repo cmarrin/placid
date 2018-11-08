@@ -142,21 +142,21 @@ static size_t _ntoa_format(bare::Print::Printer& printer, char* buf, size_t len,
   // pad spaces up to given width
   if (!(flags & FLAGS_LEFT) && !(flags & FLAGS_ZEROPAD)) {
     for (size_t i = len; i < width; i++) {
-      printer.outChar(' ');
+      printer(' ');
       count++;
     }
   }
 
   // reverse string
   for (size_t i = 0U; i < len; i++) {
-    printer.outChar(buf[len - i - 1U]);
+    printer(buf[len - i - 1U]);
     count++;
 }
 
   // append pad spaces up to given width
   if (flags & FLAGS_LEFT) {
     while (count < width) {
-      printer.outChar(' ');
+      printer(' ');
       count++;
     }
   }
@@ -335,21 +335,21 @@ static size_t _ftoa(bare::Print::Printer& printer, double value, unsigned int pr
   // pad spaces up to given width
   if (!(flags & FLAGS_LEFT) && !(flags & FLAGS_ZEROPAD)) {
     for (size_t i = len; i < width; i++) {
-      printer.outChar(' ');
+      printer(' ');
       count++;
     }
   }
 
   // reverse string
   for (size_t i = 0U; i < len; i++) {
-    printer.outChar(buf[len - i - 1U]);
+    printer(buf[len - i - 1U]);
     count++;
   }
 
   // append pad spaces up to given width
   if (flags & FLAGS_LEFT) {
     while (count < width) {
-      printer.outChar(' ');
+      printer(' ');
       count++;
     }
   }
@@ -357,7 +357,7 @@ static size_t _ftoa(bare::Print::Printer& printer, double value, unsigned int pr
 }
 #endif  // PRINTF_SUPPORT_FLOAT
 
-int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list va)
+int32_t bare::Print::vsnprintCore(Printer printer, const char *format, va_list va)
 {
   unsigned int flags, width, precision, n;
   int32_t count = 0;
@@ -367,7 +367,7 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
     // format specifier?  %[flags][width][.precision][length]
     if (*format != '%') {
       // no
-      printer.outChar(*format);
+      printer(*format);
       count++;
       format++;
       continue;
@@ -545,16 +545,16 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
         // pre padding
         if (!(flags & FLAGS_LEFT)) {
           while (l++ < width) {
-            printer.outChar(' ');
+            printer(' ');
             count++;
           }
         }
         // char output
-        printer.outChar((char)va_arg(va, int));
+        printer((char)va_arg(va, int));
         // post padding
         if (flags & FLAGS_LEFT) {
           while (l++ < width) {
-            printer.outChar(' ');
+            printer(' ');
             count++;
           }
         }
@@ -571,19 +571,19 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
         }
         if (!(flags & FLAGS_LEFT)) {
           while (l++ < width) {
-            printer.outChar(' ');
+            printer(' ');
             count++;
           }
         }
         // string output
         while ((*p != 0) && (!(flags & FLAGS_PRECISION) || precision--)) {
-          printer.outChar(*(p++));
+          printer(*(p++));
           count++;
         }
         // post padding
         if (flags & FLAGS_LEFT) {
           while (l++ < width) {
-            printer.outChar(' ');
+            printer(' ');
             count++;
           }
         }
@@ -610,13 +610,13 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
       }
 
       case '%' :
-        printer.outChar('%');
+        printer('%');
         count++;
         format++;
         break;
 
       default :
-        printer.outChar(*format);
+        printer(*format);
         count++;
         format++;
         break;
@@ -624,7 +624,7 @@ int32_t bare::Print::vsnprintCore(Printer& printer, const char *format, va_list 
   }
 
   // termination
-  printer.outChar('\0');
+  printer('\0');
 
   // return written chars without terminating \0
   return count;

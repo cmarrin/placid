@@ -38,24 +38,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 
 namespace bare {
     
     // Print - Formatted printer
-    //
-    // Adapted from https://github.com/mpaland/printf
-    // 
-    // (c) Marco Paland (info@paland.com)
-    // 2014-2018, PALANDesign Hannover, Germany
-    // The MIT License (MIT)
-    //
 
     class Print {
     public:
-        struct Printer
-        {
-            virtual int32_t outChar(char c) = 0;
-        };
+        using Printer = std::function<void(char)>;
         
         //                                                 sign    digits  dp      'e'     dp      exp     '\0'
         static constexpr uint32_t MaxToStringBufferSize =    1 +     20 +   1 +     1 +     1 +     3 +      1;
@@ -64,7 +55,7 @@ namespace bare {
         static int32_t snprintf(char *str, size_t n, const char *format, ...);
         static int32_t vsnprintf(char *str, size_t n, const char *format, va_list);
 
-        static int32_t vsnprintCore(Printer&, const char *format, va_list);
+        static int32_t vsnprintCore(Printer, const char *format, va_list);
 
         static bool toString(char* buf, double v);
         static bool toString(char* buf, int32_t v);

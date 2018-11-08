@@ -42,21 +42,6 @@ using namespace placid;
 
 String::operator uint32_t() { return stringToUInt32(c_str()); }
 
-class StringPrinter : public bare::Print::Printer
-{
-    public:
-    StringPrinter(String& s) : _string(s) { }
-    
-    virtual int32_t outChar(char c) override
-    {
-        _string += c;
-        return 1;
-    }
-    
-    private:
-    String& _string;
-};
-
 String& String::printf(const char* format, ...)
 {
     va_list va;
@@ -66,7 +51,6 @@ String& String::printf(const char* format, ...)
 
 String& String::vprintf(const char* format, va_list va)
 {
-    StringPrinter printer(*this);
-    bare::Print::vsnprintCore(printer, format, va);
+    bare::Print::vsnprintCore([this](char c) { *this += c; }, format, va);
     return *this;
 }
