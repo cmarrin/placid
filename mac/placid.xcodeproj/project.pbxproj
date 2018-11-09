@@ -22,6 +22,7 @@
 		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
 		4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
 		4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
+		494FD5FB21960D4B005C2A6B /* PrintfCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD5F821960817005C2A6B /* PrintfCore.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* util.cpp */; };
 		4962957C215AA53B0064B9C9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* util.h */; };
@@ -144,6 +145,8 @@
 		4932ACF721689A5500BDAABB /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../../kernel/src/Scanner.cpp; sourceTree = "<group>"; };
 		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../../kernel/src/Scanner.h; sourceTree = "<group>"; };
 		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
+		494FD5F821960817005C2A6B /* PrintfCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PrintfCore.cpp; path = ../baremetal/PrintfCore.cpp; sourceTree = "<group>"; };
+		494FD5F921960817005C2A6B /* PrintfCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PrintfCore.h; path = ../baremetal/PrintfCore.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
@@ -307,6 +310,8 @@
 				492FF3F0215C4F72003582FE /* Mailbox.h */,
 				497EE458216138E2000584CE /* Print.cpp */,
 				497EE459216138E2000584CE /* Print.h */,
+				494FD5F821960817005C2A6B /* PrintfCore.cpp */,
+				494FD5F921960817005C2A6B /* PrintfCore.h */,
 				4965788921695F9700B3F088 /* SD.cpp */,
 				4965788A21695F9700B3F088 /* SD.h */,
 				4965788C2169805800B3F088 /* SDCard.cpp */,
@@ -512,6 +517,7 @@
 				4962957A215AA53B0064B9C9 /* util.cpp in Sources */,
 				496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
+				494FD5FB21960D4B005C2A6B /* PrintfCore.cpp in Sources */,
 				492FF3FD215C52AB003582FE /* Mailbox.cpp in Sources */,
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				492FF3FA215C528C003582FE /* Serial.cpp in Sources */,

@@ -32,6 +32,7 @@ SRC =	ldivmod.S \
 		InterruptManager.cpp \
 		Mailbox.cpp \
 		Print.cpp \
+		PrintfCore.cpp \
 		SD.cpp \
 		SDCard.cpp \
 		Serial.cpp \
