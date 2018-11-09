@@ -121,13 +121,23 @@ unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor)
     return (unsigned int)__aeabi_uidivmod(value, divisor);
 }
 
-#ifndef __APPLE__
 int __aeabi_idiv(int value, int divisor)
 {
-    lldiv_t result = __aeabi_ldivmod(value, divisor);
-    return static_cast<int>(result.quot);
+    bool sign = false;
+    if (value < 0) {
+        value = -value;
+        sign = !sign;
+    }
+    if (divisor < 0) {
+        divisor = -value;
+        sign = !sign;
+    }
+    int32_t result = static_cast<int32_t>(__aeabi_uidivmod(value, divisor));
+    if (sign) {
+        result = -result;
+    }
+    return result;
 }
-#endif
 
 void abort()
 {

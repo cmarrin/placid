@@ -75,14 +75,7 @@ SRC =	kernel.S \
 		Shell.cpp \
 		String.cpp \
 
-DIVOBJS :=	_divsi3.o \
-			_umodsi3.o \
-			_modsi3.o \
-			_div0.o \
-			_div.o
-
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
-DIVOBJS := $(addprefix $(BUILDDIR)/, $(DIVOBJS))
 DEP = $(OBJS:%.o=%.d)
 
 all: checkdirs $(BUILDDIR)/kernel.bin
@@ -101,8 +94,8 @@ $(BUILDDIR):
 makelibs:
 	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
 
-$(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) $(DIVOBJS) makelibs
-	$(LD) $(LDFLAGS) $(OBJS) $(DIVOBJS) $(LIBS) -T loadmap.ld -Map $(BUILDDIR)/bootloader.map -o $(BUILDDIR)/bootloader.elf
+$(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) makelibs
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -T loadmap.ld -Map $(BUILDDIR)/bootloader.map -o $(BUILDDIR)/bootloader.elf
 	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
 	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
 	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
@@ -117,6 +110,3 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
 	$(CC) $(ASFLAGS) -c $< -o $@
-
-$(DIVOBJS): $(SRCDIR)/lib1funcs.asm
-	$(CC) $(LIB1FUNCSFLAGS) -o $@ -DL$(basename $(notdir $@)) -c $(SRCDIR)/lib1funcs.asm
