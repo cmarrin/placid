@@ -140,7 +140,7 @@ int32_t Serial::printf(const char* format, ...)
 
 int32_t Serial::vprintf(const char* format, va_list va)
 {
-    return Print::vsnprintCore([](char c) { Serial::write(c); }, format, va);
+    return Print::printfCore([](char c) { Serial::write(c); }, format, va);
 }
 
 Serial::Error Serial::read(uint8_t& c)

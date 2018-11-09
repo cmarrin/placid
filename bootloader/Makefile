@@ -27,7 +27,6 @@ BUILDDIR = build
 SRC =	bootloader.S \
         autoload.cpp \
         nanoalloc.cpp \
-        nanoprintf.cpp \
         main.cpp
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))

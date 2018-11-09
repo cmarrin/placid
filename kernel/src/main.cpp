@@ -93,6 +93,7 @@ int main()
     
     
     bare::Serial::printf("\n\nHex value = %#010x\n\n", 0x1234);
+    bare::Serial::printf("\n\nFloat value = %g\n\n", 1234.5078);
 
     
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");

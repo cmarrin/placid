@@ -66,7 +66,6 @@ BUILDDIR = build
 
 SRC =	kernel.S \
         main.cpp \
-        printf.cpp \
 		Allocator.cpp \
 		BootShell.cpp \
 		FileSystem.cpp \
