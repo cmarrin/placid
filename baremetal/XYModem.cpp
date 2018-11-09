@@ -33,9 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "util.h"
-#include "Serial.h"
-#include "Timer.h"
+#include "XYModem.h"
+
+using namespace bare;
 
 static constexpr uint32_t SOH = 0x01;
 static constexpr uint32_t ACK = 0x06;
@@ -122,7 +122,7 @@ void showXModemData()
 }
 #endif
 
-bool xmodemReceive(XModemReceiveFunction func)
+bool XYModem::receive(ReceiveFunction func)
 {
 #ifdef CAPTURE_DATA
     _bufferIndex = 0;
@@ -135,13 +135,9 @@ bool xmodemReceive(XModemReceiveFunction func)
 #else
     const char* testBlock = DataBlock0;
 #endif
-    auto readFunc = [&testBlock, &testIndex](uint8_t& c) { c = testBlock[testIndex++]; };
-    auto writeFunc = [](uint8_t c) { };
-    auto rxReadyFunc = []() -> bool { return true; };
-#else
-    auto readFunc = [](uint8_t& c) { bare::Serial::read(c); };
-    auto writeFunc = [](uint8_t c) { bare::Serial::write(c); };
-    auto rxReadyFunc = []() -> bool { return bare::Serial::rxReady(); };
+    _readFunc = [&testBlock, &testIndex](uint8_t& c) { c = testBlock[testIndex++]; };
+    _writeFunc = [](uint8_t c) { };
+    _rxReadyFunc = []() -> bool { return true; };
 #endif
     // block numbers start with 1
 
@@ -154,10 +150,9 @@ bool xmodemReceive(XModemReceiveFunction func)
     // a single EOT instead of SOH when done, send an ACK on it too
 
     uint32_t block = 1;
-    uint32_t addr = ARMBASE;
     uint32_t state = 0;
     uint32_t crc = 0;
-    int64_t startTime = bare::Timer::systemTime();
+    uint32_t startTime = _systemTime();
     
     static constexpr uint32_t MaxFilenameLength = 255;
     char filename[MaxFilenameLength + 1];
@@ -170,18 +165,18 @@ bool xmodemReceive(XModemReceiveFunction func)
 
     while(1)
     {
-        int64_t curTime = bare::Timer::systemTime();
-        if ((curTime - startTime) >= 4000000)
+        int64_t curTime = _systemTime();
+        if ((curTime - startTime) >= 4000)
         {
-            writeFunc(NAK);
-            startTime += 4000000;
+            _writeFunc(NAK);
+            startTime += 4000;
         }
         
-        if (!rxReadyFunc()) {
+        if (!_rxReadyFunc()) {
             continue;
         }
         
-        readFunc(xstring[state]);
+        _readFunc(xstring[state]);
 
 #ifdef CAPTURE_DATA
         if (_bufferIndex < 512) {
@@ -189,21 +184,20 @@ bool xmodemReceive(XModemReceiveFunction func)
         }
 #endif
         
-        startTime = bare::Timer::systemTime();
+        startTime = _systemTime();
         
         if (state == 0) {
             if (xstring[state] == EOT || xstring[state] == 0x1b) {
-                writeFunc(ACK);
+                _writeFunc(ACK);
                 
                 // If this is ymodem, it's going to want to send more stuff.
                 // It's a batch format and they're going to want to send 
                 // and end file packet. CANcel all that
-                writeFunc(CAN);
-                writeFunc(CAN);
-                writeFunc(CAN);
-                writeFunc(CAN);
-                writeFunc(CAN);
-                bare::Timer::usleep(100000);
+                _writeFunc(CAN);
+                _writeFunc(CAN);
+                _writeFunc(CAN);
+                _writeFunc(CAN);
+                _writeFunc(CAN);
 
 #ifdef CAPTURE_DATA
                 showXModemData();
@@ -219,7 +213,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 crc = xstring[state];
                 state++;
             } else {
-                writeFunc(NAK);
+                _writeFunc(NAK);
             }
             break;
         case 1:
@@ -229,7 +223,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 state++;
             } else {
                 state = 0;
-                writeFunc(NAK);
+                _writeFunc(NAK);
             }
             break;
         case 2:
@@ -237,7 +231,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 crc += xstring[state];
                 state++;
             } else {
-                writeFunc(NAK);
+                _writeFunc(NAK);
                 state = 0;
             }
             break;
@@ -258,7 +252,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                     
                     if (index == packetSize) {
                         // Bad header
-                        writeFunc(NAK);
+                        _writeFunc(NAK);
                         state = 0;
                         break;
                     }
@@ -274,7 +268,7 @@ bool xmodemReceive(XModemReceiveFunction func)
 
                         if (c < '0' || c > '9') {
                             // Bad header
-                            writeFunc(NAK);
+                            _writeFunc(NAK);
                             state = 0;
                             break;
                         }
@@ -285,7 +279,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                     
                     if (index + offset == packetSize) {
                         // Bad header
-                        writeFunc(NAK);
+                        _writeFunc(NAK);
                         state = 0;
                         break;
                     }
@@ -299,16 +293,15 @@ bool xmodemReceive(XModemReceiveFunction func)
                     }
                     
                     for (uint32_t i = 0; i < sizeToWrite; i++) {
-                        if (!func(addr++, xstring[i + 3])) {
-                            writeFunc(ACK);
-                            bare::Timer::usleep(100000);
+                        if (!func(xstring[i + 3])) {
+                            _writeFunc(ACK);
                             return false;
                         }
                     }
                     
                     block = (block + 1) & 0xFF;
                 }
-                writeFunc(ACK);
+                _writeFunc(ACK);
 #ifdef TEST_XMODEM
                 if (testBlock == HeaderBlock) {
                     testBlock = DataBlock0;
@@ -321,7 +314,7 @@ bool xmodemReceive(XModemReceiveFunction func)
                 }
 #endif
             } else {
-                writeFunc(NAK);
+                _writeFunc(NAK);
             }
             state = 0;
             break;

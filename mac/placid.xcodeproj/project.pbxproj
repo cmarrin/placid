@@ -37,7 +37,7 @@
 		496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */; };
 		496C3BC12187BDBA004DBC22 /* SPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BBE21876279004DBC22 /* SPI.cpp */; };
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
-		49731F7A216EAB4000F9A79F /* xmodem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* xmodem.cpp */; };
+		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
 		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		497EE46121628A95000584CE /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* Memory.cpp */; };
@@ -147,6 +147,7 @@
 		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
 		494FD5F821960817005C2A6B /* PrintfCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PrintfCore.cpp; path = ../baremetal/PrintfCore.cpp; sourceTree = "<group>"; };
 		494FD5F921960817005C2A6B /* PrintfCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PrintfCore.h; path = ../baremetal/PrintfCore.h; sourceTree = "<group>"; };
+		494FD5FC219615FE005C2A6B /* XYModem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XYModem.h; path = ../baremetal/XYModem.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../baremetal/util.cpp; sourceTree = "<group>"; };
@@ -168,7 +169,7 @@
 		496C3BBF21876279004DBC22 /* SPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SPI.h; path = ../baremetal/SPI.h; sourceTree = "<group>"; };
 		496C3BC221891FC2004DBC22 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../baremetal/Log.h; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
-		49731F78216E914500F9A79F /* xmodem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmodem.cpp; path = ../baremetal/xmodem.cpp; sourceTree = "<group>"; };
+		49731F78216E914500F9A79F /* XYModem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XYModem.cpp; path = ../baremetal/XYModem.cpp; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Print.h; path = ../baremetal/Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,7 +294,8 @@
 				4962958F215AAF8F0064B9C9 /* Makefile */,
 				49629576215AA53B0064B9C9 /* util.cpp */,
 				49629578215AA53B0064B9C9 /* util.h */,
-				49731F78216E914500F9A79F /* xmodem.cpp */,
+				49731F78216E914500F9A79F /* XYModem.cpp */,
+				494FD5FC219615FE005C2A6B /* XYModem.h */,
 				492FF406215D4799003582FE /* FAT32.cpp */,
 				492FF407215D479A003582FE /* FAT32.h */,
 				49731F74216E23AC00F9A79F /* FAT32.img */,
@@ -508,7 +510,7 @@
 			files = (
 				496C3BC12187BDBA004DBC22 /* SPI.cpp in Sources */,
 				49657891216BFD8B00B3F088 /* SD.cpp in Sources */,
-				49731F7A216EAB4000F9A79F /* xmodem.cpp in Sources */,
+				49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */,
 				49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */,
 				496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */,
 				49657890216BFD7400B3F088 /* SDCard.cpp in Sources */,

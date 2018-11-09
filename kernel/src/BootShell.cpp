@@ -41,6 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Serial.h"
 #include "SPI.h"
 #include "Timer.h"
+#include "XYModem.h"
 
 using namespace placid;
 
@@ -124,10 +125,18 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
         
         showMessage(MessageType::Info, "Start X/YModem download when ready, or press [esc] key to cancel...\n");
         showMessage(MessageType::Info, "    (Use YModem to accurately set file size)\n");
-        if (!xmodemReceive([fp](uint32_t addr, char byte) -> bool
+        
+        bare::XYModem xyModem(
+            [](uint8_t& c) { bare::Serial::read(c); },
+            [](uint8_t c) { bare::Serial::write(c); },
+            []() -> bool { return bare::Serial::rxReady(); },
+            []() -> uint32_t { return static_cast<uint32_t>(bare::Timer::systemTime() / 1000); });
+
+        if (!xyModem.receive([fp](char byte) -> bool
         {
             return fp->write(&byte, 1) == 1;
         })) {
+            bare::Timer::usleep(100000);
             showMessage(MessageType::Error, "X/YModem upload failed\n");
             delete fp;
             bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
@@ -136,6 +145,7 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
                     array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(error));
             }
         } else {
+            bare::Timer::usleep(100000);
             showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", array[1].c_str(), fp->size());
             delete fp;
         }

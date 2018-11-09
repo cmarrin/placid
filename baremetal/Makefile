@@ -24,7 +24,6 @@ BUILDDIR = build
 
 SRC =	ldivmod.S \
 		util.cpp \
-		xmodem.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
@@ -39,6 +38,7 @@ SRC =	ldivmod.S \
 		SPI.cpp \
 		Timer.cpp \
 		Volume.cpp \
+		XYModem.cpp \
 
 OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
 DEP = $(OBJS:%.o=%.d)

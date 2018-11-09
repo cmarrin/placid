@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Mailbox.h"
 #include "Serial.h"
 #include "Timer.h"
+#include "XYModem.h"
 
 void autoload(void);
 
@@ -99,7 +100,15 @@ int main(int argc, const char * argv[])
         bare::Serial::read(c);
         if (c == ' ') {
             bare::Serial::printf("\n\nStart X/YMODEM upload when ready...\n\n");
-            if (xmodemReceive([](uint32_t addr, char byte) -> bool { PUT8(addr, byte); return true; })) {
+            uint32_t addr = ARMBASE;
+            bare::XYModem xyModem(
+                [](uint8_t& c) { bare::Serial::read(c); },
+                [](uint8_t c) { bare::Serial::write(c); },
+                []() -> bool { return bare::Serial::rxReady(); },
+                []() -> uint32_t { return static_cast<uint32_t>(bare::Timer::systemTime() / 1000); });
+
+            if (xyModem.receive([&addr](char byte) -> bool { PUT8(addr++, byte); return true; })) {
+                bare::Timer::usleep(100000);
                 BRANCHTO(ARMBASE);
                 break;
             }
@@ -110,6 +119,7 @@ int main(int argc, const char * argv[])
         }
     }
     
+    bare::Timer::usleep(100000);
     bare::Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
     while(1) { }
     return 0;
