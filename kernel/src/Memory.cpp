@@ -218,7 +218,7 @@ void Memory::init()
     }
 
     // Invalidate all memory
-    memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
+    bare::memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
 
     // Map the kernel memory (the first section) to the physical memory
     setMMUSectionDescriptors(FirstLevelTTB, 0x00000000, 0x00000000, 1, AP::UserNoAccess, 0, true, true);

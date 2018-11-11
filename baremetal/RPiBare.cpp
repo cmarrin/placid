@@ -36,49 +36,87 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare.h"
 
 #include "bare/Serial.h"
-#include "bare/FAT32.h"
-#include "bare/SDCard.h"
-#include "bare/Timer.h"
 
-static const char* KernelFileName = "kernel.bin";
+using namespace bare;
 
-void autoload()
-{
-    bare::Serial::printf("\n\nAutoloading '%s'...\n", KernelFileName);
-    
-    bare::SDCard sdCard;
-    bare::FAT32 fatFS(&sdCard, 0);
-    bare::Volume::Error e = fatFS.mount();
-    if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail(e));
-        return;
+extern "C" {
+
+    void disableIRQ()
+    {
+        __asm volatile (
+            "mrs r0,cpsr\n"
+            "orr r0,r0,#0x80\n"
+            "msr cpsr_c,r0\n"
+            "bx lr" : : : "r0"
+        );
     }
-    
-    bare::RawFile* fp = fatFS.open(KernelFileName);
-    if (!fp) {
-        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail(fp->error()));
-        return;
+
+    void enableIRQ()
+    {
+        __asm volatile (
+            "mrs r0,cpsr\n"
+            "bic r0,r0,#0x80\n"
+            "msr cpsr_c,r0\n"
+            "bx lr" : : : "r0"
+        );
     }
-    
-    uint8_t* addr = bare::kernelBase();
-    uint32_t size = fp->size();
-    
-    for (uint32_t block = 0; size != 0; ++block) {
-        char buf[512];
-        bare::Volume::Error result = fp->read(buf, block, 1);
-        if (result != bare::Volume::Error::OK) {
-            bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
-            return;
+
+    void WFE()
+    {
+        __asm volatile (
+            "wfe\n"
+            "bx lr"
+        );
+    }
+
+    uint8_t* kernelBase() { return reinterpret_cast<uint8_t*>(0x8000); }
+
+    uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor)
+    {
+        uint64_t answer = 0;
+
+        unsigned int i;
+        for (i = 0; i < 32; i++) {
+                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
+                        if (value >= divisor << (31 - i)) {
+                                value -= divisor << (31 - i);
+                                answer |= (uint64_t)(1 << (31 - i));
+                                if (value == 0) break;
+                        } 
+                }
         }
-        
-        uint32_t bytesToLoad = (size > 512) ? 512 : size;
-        for (uint32_t i = 0; i < bytesToLoad; i++) {
-            bare::PUT8(addr++, buf[i]);
-        }
-        size -= bytesToLoad;
+
+        answer |= (uint64_t)value << 32;
+        return answer;
     }
-    
-    bare::Serial::printf("Autoload complete, executing...\n");
-    bare::Timer::usleep(200000);
-    bare::BRANCHTO(bare::kernelBase());
+
+    unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor)
+    {
+        return (unsigned int)__aeabi_uidivmod(value, divisor);
+    }
+
+    int __aeabi_idiv(int value, int divisor)
+    {
+        bool sign = false;
+        if (value < 0) {
+            value = -value;
+            sign = !sign;
+        }
+        if (divisor < 0) {
+            divisor = -value;
+            sign = !sign;
+        }
+        int32_t result = static_cast<int32_t>(__aeabi_uidivmod(value, divisor));
+        if (sign) {
+            result = -result;
+        }
+        return result;
+    }
+
+    void __aeabi_idiv0()
+    {
+        Serial::printf("Divide by zero\n");
+        abort();
+    }
+
 }

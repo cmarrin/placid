@@ -38,8 +38,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "stackAddrs.h"
 
-.global _start
-_start:
+.global restart
+restart:
     // Vector table
     ldr pc,reset_handler
     ldr pc,undefined_handler

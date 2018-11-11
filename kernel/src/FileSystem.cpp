@@ -174,10 +174,10 @@ int32_t File::io(char* buf, uint32_t size, bool write)
         uint32_t amountToCopy = (sizeRemaining <= amountInBuffer) ? sizeRemaining : amountInBuffer;
         
         if (write) {
-            memcpy(_buffer + bufferOffset, buf, amountToCopy);
+            bare::memcpy(_buffer + bufferOffset, buf, amountToCopy);
             _bufferNeedsWriting = true;
         } else {
-            memcpy(buf, _buffer + bufferOffset, amountToCopy);
+            bare::memcpy(buf, _buffer + bufferOffset, amountToCopy);
         }
         
         _offset += amountToCopy;

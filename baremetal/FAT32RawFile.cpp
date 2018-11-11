@@ -84,7 +84,7 @@ Volume::Error FAT32RawFile::rename(const char* to)
     }
     
     FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(buf) + _directoryBlockIndex;
-    convertTo8dot3(entry->name, to);
+    FAT32::convertTo8dot3(entry->name, to);
     
     return _fat32->rawWrite(buf, _directoryBlock, 1);
 }

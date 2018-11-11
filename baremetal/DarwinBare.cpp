@@ -33,52 +33,40 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bare.h"
+#include "DarwinBare.h"
 
-#include "bare/Serial.h"
-#include "bare/FAT32.h"
-#include "bare/SDCard.h"
-#include "bare/Timer.h"
+#include <stdio.h>
+#include <sys/time.h>
 
-static const char* KernelFileName = "kernel.bin";
+using namespace bare;
 
-void autoload()
+// Setup a dummy area of "kernel space" to dump data to
+uint8_t _dummyKernel[8 * 1024 * 1024];
+
+extern "C" {
+
+uint8_t* kernelBase() { return _dummyKernel; }
+
+void PUT8(uint8_t* addr, uint8_t value)
 {
-    bare::Serial::printf("\n\nAutoloading '%s'...\n", KernelFileName);
-    
-    bare::SDCard sdCard;
-    bare::FAT32 fatFS(&sdCard, 0);
-    bare::Volume::Error e = fatFS.mount();
-    if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail(e));
-        return;
-    }
-    
-    bare::RawFile* fp = fatFS.open(KernelFileName);
-    if (!fp) {
-        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail(fp->error()));
-        return;
-    }
-    
-    uint8_t* addr = bare::kernelBase();
-    uint32_t size = fp->size();
-    
-    for (uint32_t block = 0; size != 0; ++block) {
-        char buf[512];
-        bare::Volume::Error result = fp->read(buf, block, 1);
-        if (result != bare::Volume::Error::OK) {
-            bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
-            return;
-        }
-        
-        uint32_t bytesToLoad = (size > 512) ? 512 : size;
-        for (uint32_t i = 0; i < bytesToLoad; i++) {
-            bare::PUT8(addr++, buf[i]);
-        }
-        size -= bytesToLoad;
-    }
-    
-    bare::Serial::printf("Autoload complete, executing...\n");
-    bare::Timer::usleep(200000);
-    bare::BRANCHTO(bare::kernelBase());
+    printf("PUT8:[0x%p] <= %#02x\n", addr, value);
+}
+
+void BRANCHTO(uint8_t* addr)
+{
+    printf("BRANCHTO: => 0x%p\n", addr);
+    while (1) ;
+}
+
+bool interruptsSupported()
+{
+    return false;
+}
+
+void restart()
+{
+    printf("RESTART\n");
+    while (1) ;
+}
+
 }

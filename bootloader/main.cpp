@@ -101,16 +101,16 @@ int main(int argc, const char * argv[])
         bare::Serial::read(c);
         if (c == ' ') {
             bare::Serial::printf("\n\nStart X/YMODEM upload when ready...\n\n");
-            uint32_t addr = ARMBASE;
+            uint8_t* addr = bare::kernelBase();
             bare::XYModem xyModem(
                 [](uint8_t& c) { bare::Serial::read(c); },
                 [](uint8_t c) { bare::Serial::write(c); },
                 []() -> bool { return bare::Serial::rxReady(); },
                 []() -> uint32_t { return static_cast<uint32_t>(bare::Timer::systemTime() / 1000); });
 
-            if (xyModem.receive([&addr](char byte) -> bool { PUT8(addr++, byte); return true; })) {
+            if (xyModem.receive([&addr](char byte) -> bool { bare::PUT8(addr++, byte); return true; })) {
                 bare::Timer::usleep(100000);
-                BRANCHTO(ARMBASE);
+                bare::BRANCHTO(bare::kernelBase());
                 break;
             }
         } else if (c < 0x7f) {

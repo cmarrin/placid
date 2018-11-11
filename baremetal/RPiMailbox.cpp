@@ -55,6 +55,9 @@ static volatile unsigned int *MAILBOX0WRITE = (unsigned int *) 0x2000b8a0;
 #define MAILBOX_FULL 0x80000000
 #define MAILBOX_EMPTY 0x40000000
 
+static inline void dmb() { __asm volatile ("mcr p15, #0, %[zero], c7, c10, #5" : : [zero] "r" (0) ); }
+static inline void flushcache() { __asm volatile ("mcr p15, #0, %[zero], c7, c14, #0" : : [zero] "r" (0) ); }
+
 // This code is from corn-mainline by Raspberry Alpha Omega
 
 static uint32_t readmailbox(uint32_t channel) {

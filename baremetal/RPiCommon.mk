@@ -33,22 +33,64 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-LIBS = ../baremetal/build/baremetal.a
-INCLUDES = -I../baremetal
-BUILDDIR = build
-PRODUCTDIR = bin
-PRODUCT = bootloader
-LOADER = loader
-SRCDIR = .
+PLATFORM ?= PLATFORM_RPI
 
-SRC =	bootloader.S \
-        autoload.cpp \
-        nanoalloc.cpp \
-        main.cpp
+TOOLCHAIN ?= arm-none-eabi
+AR = $(TOOLCHAIN)-ar
+AS = $(TOOLCHAIN)-as
+CC = $(TOOLCHAIN)-gcc
+CXX = $(TOOLCHAIN)-g++
+LD = $(TOOLCHAIN)-ld
+OBJDUMP = $(TOOLCHAIN)-objdump
+OBJCOPY = $(TOOLCHAIN)-objcopy
 
-all : checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
+ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
+CFLAGS = $(INCLUDES) -D$(PLATFORM) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 
-include ../baremetal/RPiCommon.mk
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+    CFLAGS += -DDEBUG -g
+else 
+    CFLAGS += -DNDEBUG -Os
+endif
 
-clean : cleandir
-	cd ../baremetal; make -f Makefile clean
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+
+PRODUCTDIR ?= $(BUILDDIR)
+
+OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
+DEP = $(OBJS:%.o=%.d)
+
+debug: CXXFLAGS += -DDEBUG -g
+debug: CCFLAGS += -DDEBUG -g
+debug: all
+
+-include $(DEP)
+
+cleandir :
+	rm -rf $(BUILDDIR)
+	rm -rf $(PRODUCTDIR)/$(PRODUCT).bin
+
+checkdirs: $(BUILDDIR)
+
+$(BUILDDIR):
+	@mkdir -p $@
+
+makelibs:
+	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
+
+$(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
+	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
+	$(OBJDUMP) -D $(BUILDDIR)/$(PRODUCT).elf > $(BUILDDIR)/$(PRODUCT).list
+	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O ihex $(BUILDDIR)/$(PRODUCT).hex
+	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
+	wc -c $(PRODUCTDIR)/$(PRODUCT).bin
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
+	$(CC) $(ASFLAGS) -c $< -o $@

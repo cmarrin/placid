@@ -162,7 +162,7 @@ bool FAT32DirectoryIterator::createEntry(const char* name, uint32_t size, Cluste
     FATDirEntry* entry = reinterpret_cast<FATDirEntry*>(_buf) + _entryIndex;
     
     memset(entry, 0, sizeof(FATDirEntry));
-    convertTo8dot3(entry->name, name);
+    FAT32::convertTo8dot3(entry->name, name);
     FAT32::uint32ToBuf(size, entry->size);
     FAT32::uint16ToBuf(baseCluster.value() >> 16, entry->firstClusterHi);
     FAT32::uint16ToBuf(baseCluster.value(), entry->firstClusterLo);

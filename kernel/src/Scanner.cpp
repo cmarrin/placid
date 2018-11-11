@@ -98,7 +98,7 @@ Token Scanner::scanString(char terminal)
                         return Token::String;
                     }
                     
-                    if (!isHex(c) && !isdigit(c)) {
+                    if (!bare::isHex(c) && !bare::isDigit(c)) {
                         c = '?';
                         break;
                     }
@@ -106,12 +106,12 @@ Token Scanner::scanString(char terminal)
                     uint32_t num = 0;
                     putback(c);
                     while ((c = get()) != C_EOF) {
-                        if (!isHex(c) && !isdigit(c)) {
+                        if (!bare::isHex(c) && !bare::isDigit(c)) {
                             break;
                         }
-                        if (isdigit(c)) {
+                        if (bare::isDigit(c)) {
                             num = (num << 4) | (c - '0');
-                        } else if (isUpper(c)) {
+                        } else if (bare::isUpper(c)) {
                             num = (num << 4) | ((c - 'A') + 0x0a);
                         } else {
                             num = (num << 4) | ((c - 'a') + 0x0a);
@@ -135,7 +135,7 @@ Token Scanner::scanString(char terminal)
                     break;
                 }
                 default: {
-                    if (!isOctal(c)) {
+                    if (!bare::isOctal(c)) {
                         c = '?';
                         break;
                     }
@@ -143,7 +143,7 @@ Token Scanner::scanString(char terminal)
                     uint32_t size = 0;
                     uint32_t num = c - '0';
                     while ((c = get()) != C_EOF) {
-                        if (!isOctal(c) || ++size >= 3) {
+                        if (!bare::isOctal(c) || ++size >= 3) {
                             break;
                         }
                         num = (num << 3) | (c - '0');
@@ -307,13 +307,13 @@ int32_t Scanner::scanDigits(int32_t& number, bool hex)
     int32_t numDigits = 0;
     
 	while ((c = get()) != C_EOF) {
-		if (isdigit(c)) {
+		if (bare::isDigit(c)) {
             number = number * radix;
             number += static_cast<int32_t>(c - '0');
-        } else if (hex && isLCHex(c)) {
+        } else if (hex && bare::isLCHex(c)) {
             number = number * radix;
             number += static_cast<int32_t>(c - 'a' + 10);
-        } else if (hex && isUCHex(c)) {
+        } else if (hex && bare::isUCHex(c)) {
             number = number * radix;
             number += static_cast<int32_t>(c - 'A' + 10);
         } else {
@@ -332,7 +332,7 @@ Token Scanner::scanNumber(TokenType& tokenValue)
         return Token::EndOfFile;
     }
     
-	if (!isdigit(c)) {
+	if (!bare::isDigit(c)) {
 		putback(c);
 		return Token::EndOfFile;
 	}
@@ -350,7 +350,7 @@ Token Scanner::scanNumber(TokenType& tokenValue)
             if ((c = get()) == C_EOF) {
                 return Token::EndOfFile;
             }
-            if (!isdigit(c)) {
+            if (!bare::isDigit(c)) {
                 putback(c);
                 return Token::Unknown;
             }
@@ -465,7 +465,7 @@ Token Scanner::getToken(TokenType& tokenValue, bool ignoreWhitespace)
 	Token token = Token::EndOfFile;
 	
 	while (token == Token::EndOfFile && (c = get()) != C_EOF) {
-        if (isspace(c)) {
+        if (bare::isSpace(c)) {
             if (ignoreWhitespace) {
                 continue;
             }

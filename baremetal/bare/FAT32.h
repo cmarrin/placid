@@ -135,6 +135,8 @@ using Cluster = Scalar<ClusterType, uint32_t>;
             buf[0] = static_cast<uint8_t>(value);
             buf[1] = static_cast<uint8_t>(value >> 8);
         }
+        
+        static void convertTo8dot3(char* name8dot3, const char* name);
 
     private:
         bool find(FileInfo&, const char* name);

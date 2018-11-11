@@ -438,3 +438,48 @@ bool FAT32::exists(const char* name)
     FileInfo dummy;
     return find(dummy, name);
 }
+
+void FAT32::convertTo8dot3(char* name8dot3, const char* name)
+{
+    // Find the dot
+    int dot = 0;
+    const char* p = name;
+    while (*p) {
+        if (*p == '.') {
+            dot = static_cast<int>(p - name);
+            break;
+        }
+        p++;
+        dot++;
+    }
+    
+    if (dot <= 8) {
+        // We have the simple case
+        int index = 0;
+        for (int i = 0; i < 8; ++i) {
+            name8dot3[i] = (index < dot) ? toUpper(name[index++]) : ' ';
+        }
+    } else {
+        // We need to add '~1'
+        for (int i = 0; i < 8; ++i) {
+            if (i < 6) {
+                name8dot3[i] = toUpper(name[i]);
+            } else if (i == 6) {
+                name8dot3[i] = '~';
+            } else {
+                name8dot3[i] = '1';
+            }
+        }
+    }
+
+    // Now add the extension
+    if (name[dot] == '.') {
+        dot++;
+    }
+    
+    for (int i = 8; i < 11; ++i) {
+        name8dot3[i] = name[dot] ? toUpper(name[dot++]) : ' ';
+    }
+    
+    name8dot3[11] = '\0';
+}

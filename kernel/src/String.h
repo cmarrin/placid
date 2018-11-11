@@ -60,7 +60,7 @@ namespace placid {
             }
             ensureCapacity(len + 1);
             if (len) {
-                memcpy(_data, s, len);
+                bare::memcpy(_data, s, len);
             }
             _size = len + 1;
             _data[_size - 1] = '\0';
@@ -88,7 +88,7 @@ namespace placid {
             _data = new char[_capacity];
             assert(_data);
             if (_data) {
-                memcpy(_data, other._data, _size);
+                bare::memcpy(_data, other._data, _size);
             } else {
                 _capacity = 0;
                 _size = 1;
@@ -124,7 +124,7 @@ namespace placid {
         {
             size_t len = strlen(s);
             ensureCapacity(_size + len);
-            memcpy(_data + _size - 1, s, len + 1);
+            bare::memcpy(_data + _size - 1, s, len + 1);
             _size += len;
             return *this;
         }
@@ -148,7 +148,7 @@ namespace placid {
             if (pos + len >= _size) {
                 len = _size - pos - 1;
             }
-            memmove(_data + pos, _data + pos + len, _size - pos - len);
+            bare::memmove(_data + pos, _data + pos + len, _size - pos - len);
             _size -= len;
             return *this;
         }
@@ -219,10 +219,10 @@ namespace placid {
             }
             size_t l = _size - 1;
             char* s = _data;
-            while (isspace(s[l - 1])) {
+            while (bare::isSpace(s[l - 1])) {
                 --l;
             }
-            while (*s && isspace(*s)) {
+            while (*s && bare::isSpace(*s)) {
                 ++s;
                 --l;
             }
@@ -271,7 +271,7 @@ namespace placid {
             assert(newData);
             if (_data) {
                 if (newData) {
-                    memcpy(newData, _data, _size);
+                    bare::memcpy(newData, _data, _size);
                 } else {
                     _capacity = 0;
                     _size = 1;

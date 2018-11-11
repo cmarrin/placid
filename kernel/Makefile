@@ -33,36 +33,13 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-TOOLCHAIN ?= arm-none-eabi
-AS = $(TOOLCHAIN)-as
-CC = $(TOOLCHAIN)-gcc
-CXX = $(TOOLCHAIN)-g++
-LD = $(TOOLCHAIN)-ld
-OBJDUMP = $(TOOLCHAIN)-objdump
-OBJCOPY = $(TOOLCHAIN)-objcopy
-
 LIBS = ../baremetal/build/baremetal.a
 INCLUDES = -I../baremetal
-
-ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
-
-DEBUG ?= 0
-ifeq ($(DEBUG), 1)
-	CFLAGS += -DDEBUG -g
-else 
-	CFLAGS += -DNDEBUG -Os
-endif
-
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
-LDFLAGS =
-LDLIBS =  -L/usr/local/opt/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/7.2.1 -lgcc
-LIB1FUNCSFLAGS = 	-O2 -g -Os -mcpu=arm1176jzf-s -march=armv6 -mfpu=vfp -w -DIN_GCC -DCROSS_DIRECTORY_STRUCTURE \
-					-W -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wold-style-definition \
-					-fno-inline -g  -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED -Dinhibit_libc  -DHAVE_CC_TLS -xassembler-with-cpp
-
-SRCDIR = src
 BUILDDIR = build
+PRODUCTDIR = $(BUILDDIR)
+PRODUCT = kernel
+LOADER = loadmap.ld
+SRCDIR = src
 
 SRC =	kernel.S \
         main.cpp \
@@ -74,38 +51,9 @@ SRC =	kernel.S \
 		Shell.cpp \
 		String.cpp \
 
-OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
-DEP = $(OBJS:%.o=%.d)
+all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 
-all: checkdirs $(BUILDDIR)/kernel.bin
+include ../baremetal/RPiCommon.mk
 
-clean:
-	rm -rf $(BUILDDIR)
+clean : cleandir
 	cd ../baremetal; make -f Makefile clean
-
-checkdirs: $(BUILDDIR)
-
--include $(DEP)
-
-$(BUILDDIR):
-	@mkdir -p $@
-
-makelibs:
-	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
-
-$(BUILDDIR)/kernel.bin: loadmap.ld $(OBJS) makelibs
-	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -T loadmap.ld -Map $(BUILDDIR)/bootloader.map -o $(BUILDDIR)/bootloader.elf
-	$(OBJDUMP) -D $(BUILDDIR)/bootloader.elf > $(BUILDDIR)/bootloader.list
-	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O ihex $(BUILDDIR)/bootloader.hex
-	$(OBJCOPY) --only-keep-debug $(BUILDDIR)/bootloader.elf $(BUILDDIR)/bootloader.sym
-	$(OBJCOPY) $(BUILDDIR)/bootloader.elf -O binary $(BUILDDIR)/kernel.bin
-	wc -c $(BUILDDIR)/kernel.bin
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
-	$(CC) $(ASFLAGS) -c $< -o $@

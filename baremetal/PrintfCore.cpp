@@ -175,7 +175,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     size += bare::Print::printString([&p](char c) { *p++ = c; }, static_cast<uint64_t>(value), base, cap);
     
     if (flags.zeroPad) {
-        int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(strlen(buf));
+        int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(buf));
         while (pad > 0) {
             printer('0');
             size++;

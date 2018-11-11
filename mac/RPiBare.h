@@ -33,52 +33,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bare.h"
+#pragma once
 
-#include "bare/Serial.h"
-#include "bare/FAT32.h"
-#include "bare/SDCard.h"
-#include "bare/Timer.h"
+#include "bare"
 
-static const char* KernelFileName = "kernel.bin";
+static constexpr uint32_t KernelBase = 0x8000;
 
-void autoload()
-{
-    bare::Serial::printf("\n\nAutoloading '%s'...\n", KernelFileName);
-    
-    bare::SDCard sdCard;
-    bare::FAT32 fatFS(&sdCard, 0);
-    bare::Volume::Error e = fatFS.mount();
-    if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", fatFS.errorDetail(e));
-        return;
-    }
-    
-    bare::RawFile* fp = fatFS.open(KernelFileName);
-    if (!fp) {
-        bare::Serial::printf("*** File open error:%s\n", fatFS.errorDetail(fp->error()));
-        return;
-    }
-    
-    uint8_t* addr = bare::kernelBase();
-    uint32_t size = fp->size();
-    
-    for (uint32_t block = 0; size != 0; ++block) {
-        char buf[512];
-        bare::Volume::Error result = fp->read(buf, block, 1);
-        if (result != bare::Volume::Error::OK) {
-            bare::Serial::printf("*** File read error:%d\n", static_cast<uint32_t>(result));
-            return;
-        }
-        
-        uint32_t bytesToLoad = (size > 512) ? 512 : size;
-        for (uint32_t i = 0; i < bytesToLoad; i++) {
-            bare::PUT8(addr++, buf[i]);
-        }
-        size -= bytesToLoad;
-    }
-    
-    bare::Serial::printf("Autoload complete, executing...\n");
-    bare::Timer::usleep(200000);
-    bare::BRANCHTO(bare::kernelBase());
-}
+typedef struct { uint64_t rem; uint64_t quot; } ulldiv_t;
+
+uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor);
+unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor);
+int __aeabi_idiv(int value, int divisor);
+ulldiv_t __aeabi_uldivmod(uint64_t value, uint64_t divisor);
+lldiv_t __aeabi_ldivmod(int64_t numerator, int64_t denominator);
