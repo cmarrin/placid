@@ -33,10 +33,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "Mailbox.h"
+#include "bare.h"
 
-#include "util.h"
-#include "Serial.h"
+#include "bare/Mailbox.h"
+
+#include "bare/Serial.h"
 
 using namespace bare;
 

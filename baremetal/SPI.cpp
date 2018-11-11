@@ -33,13 +33,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "SPI.h"
+#include "bare.h"
 
-#include "GPIO.h"
-#include "Timer.h"
+#include "bare/SPI.h"
+
+#include "bare/GPIO.h"
+#include "bare/Timer.h"
 
 //#define ENABLE_DEBUG_LOG
-#include "Log.h"
+#include "bare/Log.h"
 
 using namespace bare;
 

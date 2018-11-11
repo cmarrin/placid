@@ -33,9 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "FAT32DirectoryIterator.h"
+#include "bare.h"
 
-#include "util.h"
+#include "bare/FAT32DirectoryIterator.h"
 
 using namespace bare;
 

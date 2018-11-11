@@ -33,15 +33,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "bare.h"
+
 #include "BootShell.h"
 
+#include "bare/Print.h"
+#include "bare/Serial.h"
+#include "bare/SPI.h"
+#include "bare/Timer.h"
+#include "bare/XYModem.h"
 #include "Allocator.h"
 #include "FileSystem.h"
-#include "Print.h"
-#include "Serial.h"
-#include "SPI.h"
-#include "Timer.h"
-#include "XYModem.h"
 
 using namespace placid;
 

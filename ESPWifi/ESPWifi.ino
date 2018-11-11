@@ -41,8 +41,11 @@ POSSIBILITY OF SUCH DAMAGE.
 //      D8 - SCK
 //
 
-#include "Serial.h"
-#include "Timer.h"
+#include "bare.h"
+
+#include "bare/GPIO.h"
+#include "bare/Serial.h"
+#include "bare/Timer.h"
 
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <DNSServer.h>

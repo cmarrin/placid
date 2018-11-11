@@ -33,11 +33,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "FAT32RawFile.h"
+#include "bare.h"
 
-#include "FAT32DirectoryIterator.h"
-#include "Serial.h"
-#include "util.h"
+#include "bare/FAT32RawFile.h"
+
+#include "bare/FAT32DirectoryIterator.h"
+#include "bare/Serial.h"
 
 using namespace bare;
 

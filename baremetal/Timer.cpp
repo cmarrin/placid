@@ -33,11 +33,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "Timer.h"
+#include "bare.h"
 
-#include "InterruptManager.h"
-#include "Serial.h"
-#include "util.h"
+#include "bare/Timer.h"
+
+#include "bare/InterruptManager.h"
+#include "bare/Serial.h"
 
 #ifdef __APPLE__
 #include <unistd.h>

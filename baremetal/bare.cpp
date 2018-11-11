@@ -33,10 +33,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "util.h"
+#include "bare.h"
 
-#include "Serial.h"
-#include "Timer.h"
+#include "bare/Serial.h"
+#include "bare/Timer.h"
 
 using namespace bare;
 

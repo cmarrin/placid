@@ -35,8 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "FAT32.h"
-#include "SDCard.h"
+#include "bare/FAT32.h"
+#include "bare/SDCard.h"
 
 namespace placid {
 

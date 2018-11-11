@@ -33,11 +33,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "Serial.h"
-#include "FAT32.h"
-#include "SDCard.h"
-#include "Timer.h"
-#include "util.h"
+#include "bare.h"
+
+#include "bare/Serial.h"
+#include "bare/FAT32.h"
+#include "bare/SDCard.h"
+#include "bare/Timer.h"
 
 static const char* KernelFileName = "kernel.bin";
 

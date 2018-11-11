@@ -33,10 +33,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "bare.h"
+
 #include "Memory.h"
 
-#include "util.h"
-#include "Timer.h"
+#include "bare/Timer.h"
 #include <cstdlib>
 
 extern unsigned char __bss_start;

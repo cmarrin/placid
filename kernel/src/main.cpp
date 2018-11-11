@@ -33,18 +33,19 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "util.h"
+#include "bare.h"
+
+#include "bare/GPIO.h"
+#include "bare/Print.h"
+#include "bare/SDCard.h"
+#include "bare/Serial.h"
+#include "bare/SPI.h"
+#include "bare/Timer.h"
 #include "Allocator.h"
 #include "BootShell.h"
 #include "FileSystem.h"
-#include "GPIO.h"
 #include "Memory.h"
-#include "Print.h"
-#include "SDCard.h"
-#include "Serial.h"
-#include "SPI.h"
 #include "String.h"
-#include "Timer.h"
 #include <vector>
 
 using namespace placid;

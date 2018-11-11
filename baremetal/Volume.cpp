@@ -33,12 +33,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "Volume.h"
+#include "bare.h"
 
-#include "SDCard.h"
-#include "util.h"
-#include "Serial.h"
-#include "Timer.h"
+#include "bare/Volume.h"
+
+#include "bare/SDCard.h"
+#include "bare/Serial.h"
+#include "bare/Timer.h"
 
 using namespace bare;
 

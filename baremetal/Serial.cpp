@@ -33,13 +33,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "Serial.h"
+#include "bare.h"
 
-#include "util.h"
-#include "GPIO.h"
-#include "InterruptManager.h"
-#include "Print.h"
-#include "Timer.h"
+#include "bare/Serial.h"
+
+#include "bare/GPIO.h"
+#include "bare/InterruptManager.h"
+#include "bare/Print.h"
+#include "bare/Timer.h"
 
 #ifdef __APPLE__
 #include <iostream>

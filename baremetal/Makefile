@@ -23,7 +23,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 BUILDDIR = build
 
 SRC =	ldivmod.S \
-		util.cpp \
+		bare.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \

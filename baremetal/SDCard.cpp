@@ -40,13 +40,15 @@ POSSIBILITY OF SUCH DAMAGE.
 //  Copyright (C) 2018 bzt (bztsrc@github)
 
 
-#include "SDCard.h"
+#include "bare.h"
 
-#include "Serial.h"
-#include "Timer.h"
+#include "bare/SDCard.h"
+
+#include "bare/Serial.h"
+#include "bare/Timer.h"
 
 //#define ENABLE_DEBUG_LOG
-#include "Log.h"
+#include "bare/Log.h"
 
 using namespace bare;
 

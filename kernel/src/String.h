@@ -35,7 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "util.h"
+#include "bare.h"
+
 #include <cstdint>
 #include <cstring>
 #include <cassert>

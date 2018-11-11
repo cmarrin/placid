@@ -33,11 +33,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "bare.h"
+
 #include "Shell.h"
 
-#include "util.h"
-#include "Print.h"
-#include "Serial.h"
+#include "bare/Print.h"
+#include "bare/Serial.h"
 
 using namespace placid;
 

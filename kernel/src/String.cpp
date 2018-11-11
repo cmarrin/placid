@@ -33,9 +33,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
+#include "bare.h"
+
 #include "String.h"
 
-#include "Print.h"
+#include "bare/Print.h"
 #include "Scanner.h"
 
 using namespace placid;
