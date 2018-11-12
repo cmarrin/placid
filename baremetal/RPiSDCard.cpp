@@ -58,38 +58,6 @@ void SDCard::finishFail() const
     DEBUG_LOG("SDCard: EMMC init FAILED!\n");
 }
 
-#ifdef __APPLE__
-#include <stdio.h>
-
-static FILE* sdCardFP = nullptr;
-
-SDCard::SDCard()
-{
-    // FAT32.img is a file containing an image of a FAT32 filesystem. Use
-    // that to simulate an SD card
-    sdCardFP = fopen("FAT32.img", "r+");
-}
-
-Volume::Error SDCard::read(char* buf, Block blockAddr, uint32_t blocks)
-{
-    if (!sdCardFP) {
-        return Volume::Error::InternalError;
-    }
-    fseek(sdCardFP, blockAddr.value() * 512, SEEK_SET);
-    size_t size = fread(buf, 1, blocks * 512, sdCardFP);
-    return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
-}
-
-Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
-{
-    if (!sdCardFP) {
-        return Volume::Error::InternalError;
-    }
-    fseek(sdCardFP, blockAddr.value() * 512, SEEK_SET);
-    size_t size = fwrite(buf, 1, blocks * 512, sdCardFP);
-    return (size == blocks * 512) ? Volume::Error::OK : Volume::Error::Failed;
-}
-#else
 static constexpr uint32_t EMMCBase = 0x20300000;
 
 struct EMMC
@@ -720,5 +688,3 @@ Volume::Error SDCard::write(const char* buf, Block blockAddr, uint32_t blocks)
     
     return Volume::Error::OK;
 }
-
-#endif // __APPLE__

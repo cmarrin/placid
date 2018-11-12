@@ -37,103 +37,41 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Serial.h"
 
+#include "bare/GPIO.h"
+#include "bare/InterruptManager.h"
 #include "bare/Print.h"
 #include "bare/Timer.h"
 
+#include <iostream>
+
 using namespace bare;
 
-int32_t Serial::printf(const char* format, ...)
+volatile unsigned int Serial::rxhead = 0;
+volatile unsigned int Serial::rxtail = 0;
+volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
+
+void Serial::init()
 {
-    va_list va;
-    va_start(va, format);
-    
-    int32_t result = vprintf(format, va);
-    va_end(va);
-    return result;
+    //system("stty raw");
 }
 
-int32_t Serial::vprintf(const char* format, va_list va)
+Serial::Error Serial::read(uint8_t& c)
 {
-    return Print::printfCore([](char c) { Serial::write(c); }, format, va);
-}
-
-Serial::Error Serial::puts(const char* s, uint32_t size)
-{
-    if (size == 0) {
-        for (const char* p = s; *p != '\0'; ++p, ++size) ;
-    }
-    
-    while (*s != '\0' && size > 0) {
-        char c;
-        c = *s++;
-        size--;
-        
-        if (c != '\n' && c != '\r') {
-            if (static_cast<uint8_t>(c) < ' ' || static_cast<uint8_t>(c) > 0x7e) {
-                write('\\');
-                write(((c >> 6) & 0x03) + '0');
-                write(((c >> 3) & 0x07) + '0');
-                write((c & 0x07) + '0');
-                continue;
-            }
-        }
-
-        Error error = write(c);
-		if (error != Error::OK) {
-			return error;
-		}
-    }
-    
-    static bool firstTime = true;
-    if (firstTime) {
-        clearInput();
-        firstTime = false;
-    }
-
-	return Error::OK;
-}
-
-Serial::Error Serial::puts(double v)
-{
-    char buf[Print::MaxToStringBufferSize];
-    if(Print::toString(buf, v)) {
-        puts(buf);
-    }
+    c = getchar();
     return Error::OK;
 }
 
-Serial::Error Serial::puts(int32_t v)
+bool Serial::rxReady()
 {
-    char buf[Print::MaxToStringBufferSize];
-    if(Print::toString(buf, v)) {
-        puts(buf);
-    }
+    return true;
+}
+
+Serial::Error Serial::write(uint8_t c)
+{
+    std::cout.write(reinterpret_cast<const char*>(&c), 1);
     return Error::OK;
 }
 
-Serial::Error Serial::puts(uint32_t v)
+void Serial::handleInterrupt()
 {
-    char buf[Print::MaxToStringBufferSize];
-    if(Print::toString(buf, v)) {
-        puts(buf);
-    }
-    return Error::OK;
-}
-
-Serial::Error Serial::puts(int64_t v)
-{
-    char buf[Print::MaxToStringBufferSize];
-    if(Print::toString(buf, v)) {
-        puts(buf);
-    }
-    return Error::OK;
-}
-
-Serial::Error Serial::puts(uint64_t v)
-{
-    char buf[Print::MaxToStringBufferSize];
-    if(Print::toString(buf, v)) {
-        puts(buf);
-    }
-    return Error::OK;
 }

@@ -40,127 +40,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/InterruptManager.h"
 #include "bare/Serial.h"
 
-#ifdef __APPLE__
-#include <unistd.h>
-#include <sys/time.h>
-#endif
-
 using namespace bare;
-
-struct ARMTimer
-{
-	uint32_t load;
-	uint32_t value;
-	uint32_t control;
-	uint32_t clearIRQ;
-	uint32_t rawIRQ;
-	uint32_t maskedIRQ;
-	uint32_t reload;
-	uint32_t divider;
-	uint32_t freeRunningCounter;
-};
-
-struct SystemTimer
-{
-    uint32_t control;
-    uint32_t counter0;
-    uint32_t counter1;
-    uint32_t compare0;
-    uint32_t compare1;
-    uint32_t compare2;
-    uint32_t compare3;
-};
 
 TimerCallback* Timer::_cb = nullptr;
 int64_t Timer::_epochOffset = 0;
-
-static constexpr uint32_t ARMTimerBase = 0x2000B400;
-static constexpr uint32_t SystemTimerBase = 0x20003000;
-
-inline volatile ARMTimer& armTimer()
-{
-    return *(reinterpret_cast<volatile ARMTimer*>(ARMTimerBase));
-}
-
-inline volatile SystemTimer& systemTimer()
-{
-    return *(reinterpret_cast<volatile SystemTimer*>(SystemTimerBase));
-}
-
-volatile unsigned int icount;
-
-void  Timer::init()
-{
-#ifndef __APPLE__
-    // We want a 1MHz tick. System clock is 250MHz, so we divide by 250
-    // Set the prescaler (bits 16-23) to one less, or 0xf9
-    armTimer().control = 0x00F90000; // Set the prescaler, but keep the timer stopped
-    armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
-#endif
-}
-
-void Timer::handleInterrupt()
-{
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-	if (_cb) {
-		_cb->handleTimerEvent();
-	}
-	armTimer().clearIRQ = 0;
-}
-
-void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
-{
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-	_cb = cb;
-	
-#ifdef __APPLE__
-    // FIXME: implement
-    return;
-#else
-	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
-
-    disableIRQ();
-    InterruptManager::enableBasicIRQ(0, false);
-
-	// Reset Free running prescaler
-	armTimer().control = 0x003E0000;
-	
-	armTimer().load = us - 1;
-	armTimer().reload = us - 1;
-	
-    InterruptManager::enableBasicIRQ(0, true);
-	armTimer().clearIRQ = 0;
-	
-    icount=0;
-    enableIRQ();
-
-	// 32 bit counter, timer enabled, timer interrupt enabled
-	armTimer().control = 0x003E00A2;
-	armTimer().clearIRQ = 0;
-#endif
-}
 
 void Timer::usleep(uint32_t us)
 {
     int64_t t0 = Timer::systemTime();
     while(Timer::systemTime() < t0 + us) ;
-}
-
-int64_t Timer::systemTime()
-{
-#ifdef __APPLE__
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    return ((static_cast<int64_t>(time.tv_sec)) * 1000000) + (static_cast<int64_t>(time.tv_usec));
-#else
-    return (static_cast<int64_t>(systemTimer().counter1) << 32) | static_cast<int64_t>(systemTimer().counter0);
-#endif
 }
 
 void Timer::setCurrentTime(const RealTime& t)
