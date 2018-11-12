@@ -39,6 +39,25 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+extern unsigned char __bss_start;
+extern unsigned char _end;
+extern void (*__init_start) (void);
+extern void (*__init_end) (void);
+
+void bare::initSystem()
+{
+    for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
+    {
+        *pBSS = 0;
+    }
+
+    // call construtors of static objects
+    for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
+    {
+        (**pFunc) ();
+    }
+}
+
 extern "C" {
 
     void disableIRQ()

@@ -41,13 +41,12 @@ SRC =	ldivmod.S \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
-		GPIO.cpp \
-		InterruptManager.cpp \
 		Print.cpp \
 		PrintfCore.cpp \
 		RPiBare.cpp \
+		RPiGPIO.cpp \
+		RPiInterruptManager.cpp \
 		RPiMailbox.cpp \
-		SD.cpp \
 		SDCard.cpp \
 		Serial.cpp \
 		SPI.cpp \

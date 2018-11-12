@@ -44,6 +44,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/SDCard.h"
 
+#include "bare/GPIO.h"
 #include "bare/Serial.h"
 #include "bare/Timer.h"
 
@@ -63,7 +64,6 @@ void SDCard::finishFail() const
 static FILE* sdCardFP = nullptr;
 
 SDCard::SDCard()
-    : SD(0, 0, 0, 0, 0, 0, 0)
 {
     // FAT32.img is a file containing an image of a FAT32 filesystem. Use
     // that to simulate an SD card
@@ -221,7 +221,7 @@ bool SDCard::checkStatusWithTimeout(std::function<bool()> func, const char* erro
     }
 }
 
-SD::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
+SDCard::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
 {
     uint32_t d;
     uint32_t c= 41666666 / freq;
@@ -302,7 +302,7 @@ SD::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
     return Error::OK;
 }
 
-SD::Error SDCard::readStatus(uint32_t mask)
+SDCard::Error SDCard::readStatus(uint32_t mask)
 {
     bool result = checkStatusWithTimeout(
         [mask]{ return (emmc().status & mask && emmc().interrupt & INT_ERROR_MASK) == 0; },
@@ -314,7 +314,7 @@ SD::Error SDCard::readStatus(uint32_t mask)
     return Error::OK;
 }
 
-SD::Error SDCard::waitForInterrupt(uint32_t mask)
+SDCard::Error SDCard::waitForInterrupt(uint32_t mask)
 {
     uint32_t m = mask | INT_ERROR_MASK;
     bool result = checkStatusWithTimeout(
@@ -336,15 +336,15 @@ SD::Error SDCard::waitForInterrupt(uint32_t mask)
     return Error::OK;
 }
 
-SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg)
+SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg)
 {
     uint32_t response;
     return sendCommand(cmd, arg, response);
 }
 
-SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& response)
+SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& response)
 {
-    SD::Error error = Error::OK;
+    SDCard::Error error = Error::OK;
     uint32_t code = cmd.code;
 
     if(cmd.code & CMDFLAG_NEED_APP) {
@@ -411,7 +411,7 @@ SD::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& respon
     return Error::OK;
 }
 
-SD::Error SDCard::setSCRValues()
+SDCard::Error SDCard::setSCRValues()
 {    
     Error error = sendCommand(CMD_SEND_SCR(), 0);
     if (error != Error::OK) {
@@ -438,9 +438,29 @@ SD::Error SDCard::setSCRValues()
 }
 
 SDCard::SDCard()
-    : SD(GPIO_CD, GPIO_CLK, GPIO_CMD, GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3)
 {
     DEBUG_LOG("SDCard: Start init\n");
+
+    // Initialize GPIO for all the SD pins
+    GPIO::setFunction(GPIO_CD, GPIO::Function::Input);
+    GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
+    uint32_t reg = GPIO::reg(GPIO::Register::GPHEN1);
+    reg = reg | 1<<(47-32);
+    GPIO::reg(GPIO::Register::GPHEN1) = reg;
+
+    GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT2, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT1, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_DAT0, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_CMD, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3);
+    GPIO::setPull(GPIO_CLK, GPIO::Pull::Up);
+
     uint32_t hostVersion = (emmc().slotISRVersion & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
 
     // Reset the card.

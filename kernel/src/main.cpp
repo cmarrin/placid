@@ -86,6 +86,8 @@ static void showTime()
 
 int main()
 {
+    bare::initSystem();
+    
     Allocator::kernelAllocator().setUseAllocator(true);
     
     bare::Serial::init();

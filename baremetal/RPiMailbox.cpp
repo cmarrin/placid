@@ -41,16 +41,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-#ifdef __APPLE__
-static unsigned int _dummy = 0;
-unsigned int* MAILBOX0READ = &_dummy;
-unsigned int* MAILBOX0STATUS = &_dummy;
-unsigned int* MAILBOX0WRITE = &_dummy;
-#else
 static volatile unsigned int *MAILBOX0READ = (unsigned int *) 0x2000b880;
 static volatile unsigned int *MAILBOX0STATUS = (unsigned int *) 0x2000b898;
 static volatile unsigned int *MAILBOX0WRITE = (unsigned int *) 0x2000b8a0;
-#endif
 
 #define MAILBOX_FULL 0x80000000
 #define MAILBOX_EMPTY 0x40000000
@@ -138,14 +131,10 @@ Mailbox::Error Mailbox::getParameter(Param param, uint32_t* result, uint32_t siz
     uint32_t mail = readmailbox(8);
     dmb();
     
-#ifdef __APPLE__
-(void) mail;
-#else
     uint32_t* responseBuf = reinterpret_cast<uint32_t*>(mail);
     for (uint32_t i = 0; i < size; ++i) {
         result[i] = responseBuf[5 + i];
     }
-#endif
 
     return Error::OK;
 }

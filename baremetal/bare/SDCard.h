@@ -35,7 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "SD.h"
 #include "Volume.h"
 #include <stdint.h>
 #include <functional>
@@ -56,9 +55,11 @@ namespace bare {
     };
 
     // SD Card interface. Subclass of SD
-    class SDCard : public SD, public Volume::RawIO
+    class SDCard : public Volume::RawIO
     {
     public:
+        enum class Error { OK, Timeout, Error };
+
         SDCard();
         
         virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;

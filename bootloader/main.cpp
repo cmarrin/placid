@@ -46,25 +46,9 @@ static constexpr uint32_t AutoloadTimeout = 3;
 
 extern bool UseAllocator;
 
-extern unsigned char __bss_start;
-extern unsigned char _end;
-extern void (*__init_start) (void);
-extern void (*__init_end) (void);
-
 int main(int argc, const char * argv[])
 {
-#ifndef __APPLE__
-    for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
-    {
-        *pBSS = 0;
-    }
-
-    // call construtors of static objects
-    for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
-    {
-        (**pFunc) ();
-    }
-#endif
+    bare::initSystem();
     
     // This is only used on Mac. We are essentially overriding new and there
     // are system libraries on Mac which use new and we don't want them using our

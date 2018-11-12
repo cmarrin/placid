@@ -40,11 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/Timer.h"
 #include <cstdlib>
 
-extern unsigned char __bss_start;
-extern unsigned char _end;
-extern void (*__init_start) (void);
-extern void (*__init_end) (void);
-
 using namespace placid;
 
 #ifdef __APPLE__
@@ -206,17 +201,6 @@ void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t pad
 void Memory::init()
 {
 #ifndef __APPLE__
-    for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
-    {
-        *pBSS = 0;
-    }
-
-    // call construtors of static objects
-    for (void (**pFunc) (void) = &__init_start; pFunc < &__init_end; pFunc++)
-    {
-        (**pFunc) ();
-    }
-
     // Invalidate all memory
     bare::memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
 

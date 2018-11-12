@@ -56,6 +56,8 @@ static_assert(0, "Unsupported platform");
 
 namespace bare {
 
+    void initSystem();
+
     extern "C" {
         void disableIRQ(void);
         void enableIRQ(void);

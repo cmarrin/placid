@@ -33,22 +33,81 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bare.h"
 
-#include "Serial.h"
-#include <stdarg.h>
-#include <stdint.h>
+#include "bare/InterruptManager.h"
 
-namespace bare {
+#include "bare/Serial.h"
+#include "bare/Timer.h"
 
-    // Interface to SD devices. This includes SD cards and SDIO devices
-    // (like the WiFi chip on the RPi 3 and Zero W)
-    class SD
-    {
-    public:
-        enum class Error { OK, Timeout, Error };
-        
-        SD(uint32_t cd, uint32_t clk, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3_);
-    };
+using namespace bare;
 
+struct IRPT {
+    uint32_t BasicPending;
+    uint32_t IRQ1Pending; //_04;
+    uint32_t IRQ2Pending;
+    uint32_t FIQControl;
+    uint32_t IRQ1Enable;
+    uint32_t IRQ2Enable;
+    uint32_t BasicEnable;
+    uint32_t IRQ1Disable;
+    uint32_t IRQ2Disable;
+    uint32_t BasicDisable;
+};
+
+static constexpr uint32_t IRPTBase = 0x2000B200;
+
+inline volatile IRPT& irpt()
+{
+    return *(reinterpret_cast<volatile IRPT*>(IRPTBase));
 }
+
+extern "C" void handleIRQ()
+{
+    if (interruptsSupported()) {
+        Serial::handleInterrupt();
+	    Timer::handleInterrupt();
+    }
+}
+
+void InterruptManager::enableIRQ(uint32_t n, bool enable)
+{
+    if (!interruptsSupported()) {
+        return;
+    }
+    
+	uint32_t r = n / 32;
+	uint32_t off = n % 32;
+	
+	if (enable) {
+		if (r == 0) {
+			irpt().IRQ1Enable = 1 << off;
+		} else {
+			irpt().IRQ2Enable = 1 << off;
+		}
+	} else {
+		if (r == 0) {
+			irpt().IRQ1Disable = 1 << off;
+		} else {
+			irpt().IRQ2Disable = 1 << off;
+		}
+	}
+}
+
+void InterruptManager::enableBasicIRQ(uint32_t n, bool enable)
+{
+    if (!interruptsSupported()) {
+        return;
+    }
+    
+    if (n >= 32) {
+        return;
+    }
+    
+    if (enable) {
+        irpt().BasicEnable = 1 << n;
+    } else {
+        irpt().BasicDisable = 1 << n;
+    }
+}
+

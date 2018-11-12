@@ -15,20 +15,19 @@
 		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
 		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
 		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
-		492FF405215C5359003582FE /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF401215C5359003582FE /* InterruptManager.cpp */; };
 		492FF408215D479A003582FE /* FAT32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF406215D4799003582FE /* FAT32.cpp */; };
 		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
 		4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
 		4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
 		494FD5FB21960D4B005C2A6B /* PrintfCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD5F821960817005C2A6B /* PrintfCore.cpp */; };
 		494FD6062198ACFA005C2A6B /* DarwinBare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6052198ACFA005C2A6B /* DarwinBare.cpp */; };
+		494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* bare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* bare.cpp */; };
 		4962957C215AA53B0064B9C9 /* bare.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* bare.h */; };
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49657890216BFD7400B3F088 /* SDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788C2169805800B3F088 /* SDCard.cpp */; };
-		49657891216BFD8B00B3F088 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4965788921695F9700B3F088 /* SD.cpp */; };
 		49657892216BFDA200B3F088 /* Volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* Volume.cpp */; };
 		49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
 		496C3BB5217D0689004DBC22 /* nanoalloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */; };
@@ -37,7 +36,6 @@
 		496C3BC12187BDBA004DBC22 /* SPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BBE21876279004DBC22 /* SPI.cpp */; };
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
-		49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3EB215AF47A003582FE /* GPIO.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		497EE46121628A95000584CE /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D2D21514C050077ACEE /* Memory.cpp */; };
 		4987478B2191F68E00245E91 /* ESPWifi.ino in Sources */ = {isa = PBXBuildFile; fileRef = 4987478A2191F68E00245E91 /* ESPWifi.ino */; };
@@ -122,7 +120,7 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		492FF3EB215AF47A003582FE /* GPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPIO.cpp; path = ../baremetal/GPIO.cpp; sourceTree = "<group>"; };
+		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
 		492FF3F0215C4F72003582FE /* Mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mailbox.h; sourceTree = "<group>"; };
@@ -132,7 +130,7 @@
 		492FF3FE215C5359003582FE /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Timer.cpp; path = ../baremetal/Timer.cpp; sourceTree = "<group>"; };
 		492FF3FF215C5359003582FE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		492FF400215C5359003582FE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterruptManager.h; sourceTree = "<group>"; };
-		492FF401215C5359003582FE /* InterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../baremetal/InterruptManager.cpp; sourceTree = "<group>"; };
+		492FF401215C5359003582FE /* RPiInterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiInterruptManager.cpp; path = ../baremetal/RPiInterruptManager.cpp; sourceTree = "<group>"; };
 		492FF406215D4799003582FE /* FAT32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32.cpp; path = ../baremetal/FAT32.cpp; sourceTree = "<group>"; };
 		492FF407215D479A003582FE /* FAT32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAT32.h; sourceTree = "<group>"; };
 		492FF40A2160045C003582FE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../kernel/README.md; sourceTree = "<group>"; };
@@ -150,13 +148,12 @@
 		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPiBare.cpp; sourceTree = "<group>"; };
 		494FD6052198ACFA005C2A6B /* DarwinBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinBare.cpp; path = ../baremetal/DarwinBare.cpp; sourceTree = "<group>"; };
 		494FD6082198C722005C2A6B /* RPiCommon.mk */ = {isa = PBXFileReference; lastKnownFileType = text; name = RPiCommon.mk; path = ../baremetal/RPiCommon.mk; sourceTree = "<group>"; usesTabs = 1; };
+		494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGPIO.cpp; path = ../baremetal/DarwinGPIO.cpp; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* bare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bare.h; path = ../baremetal/bare.h; sourceTree = "<group>"; };
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		4965788921695F9700B3F088 /* SD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SD.cpp; path = ../baremetal/SD.cpp; sourceTree = "<group>"; };
-		4965788A21695F9700B3F088 /* SD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SD.h; sourceTree = "<group>"; };
 		4965788C2169805800B3F088 /* SDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SDCard.cpp; path = ../baremetal/SDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
@@ -303,7 +300,6 @@
 				492FF3F0215C4F72003582FE /* Mailbox.h */,
 				497EE459216138E2000584CE /* Print.h */,
 				494FD5F921960817005C2A6B /* PrintfCore.h */,
-				4965788A21695F9700B3F088 /* SD.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				496C3BBF21876279004DBC22 /* SPI.h */,
@@ -319,7 +315,10 @@
 			isa = PBXGroup;
 			children = (
 				494FD6052198ACFA005C2A6B /* DarwinBare.cpp */,
+				494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */,
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
+				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
+				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
 				492FF3F3215C4F72003582FE /* RPiMailbox.cpp */,
 			);
 			name = platform;
@@ -338,11 +337,8 @@
 				49731F74216E23AC00F9A79F /* FAT32.img */,
 				496C3BB9217E2368004DBC22 /* FAT32DirectoryIterator.cpp */,
 				496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */,
-				492FF3EB215AF47A003582FE /* GPIO.cpp */,
-				492FF401215C5359003582FE /* InterruptManager.cpp */,
 				497EE458216138E2000584CE /* Print.cpp */,
 				494FD5F821960817005C2A6B /* PrintfCore.cpp */,
-				4965788921695F9700B3F088 /* SD.cpp */,
 				4965788C2169805800B3F088 /* SDCard.cpp */,
 				492FF3F8215C528C003582FE /* Serial.cpp */,
 				496C3BBE21876279004DBC22 /* SPI.cpp */,
@@ -533,13 +529,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				496C3BC12187BDBA004DBC22 /* SPI.cpp in Sources */,
-				49657891216BFD8B00B3F088 /* SD.cpp in Sources */,
 				49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */,
-				49761133215C2F8D00783AA8 /* GPIO.cpp in Sources */,
+				494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */,
 				496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */,
 				494FD6062198ACFA005C2A6B /* DarwinBare.cpp in Sources */,
 				49657890216BFD7400B3F088 /* SDCard.cpp in Sources */,
-				492FF405215C5359003582FE /* InterruptManager.cpp in Sources */,
 				49657892216BFDA200B3F088 /* Volume.cpp in Sources */,
 				4962957A215AA53B0064B9C9 /* bare.cpp in Sources */,
 				496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */,

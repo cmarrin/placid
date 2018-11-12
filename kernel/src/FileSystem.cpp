@@ -37,6 +37,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "FileSystem.h"
 
+#include "bare/Serial.h"
+
 using namespace placid;
 
 FileSystem* FileSystem::_sharedFileSystem = nullptr;

@@ -33,12 +33,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "DarwinBare.h"
+#include "bare.h"
 
 #include <stdio.h>
 #include <sys/time.h>
 
 using namespace bare;
+
+void bare::initSystem() { }
 
 // Setup a dummy area of "kernel space" to dump data to
 uint8_t _dummyKernel[8 * 1024 * 1024];

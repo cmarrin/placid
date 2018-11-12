@@ -35,84 +35,71 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/InterruptManager.h"
+#include "bare/GPIO.h"
 
-#include "bare/Serial.h"
 #include "bare/Timer.h"
 
 using namespace bare;
 
-struct IRPT {
-    uint32_t BasicPending;
-    uint32_t IRQ1Pending; //_04;
-    uint32_t IRQ2Pending;
-    uint32_t FIQControl;
-    uint32_t IRQ1Enable;
-    uint32_t IRQ2Enable;
-    uint32_t BasicEnable;
-    uint32_t IRQ1Disable;
-    uint32_t IRQ2Disable;
-    uint32_t BasicDisable;
-};
+static constexpr uint32_t GPIOBase = 0x20200000;
+static constexpr uint32_t GPFSELOffset = 0;
+static constexpr uint32_t GPSETOffset = 0x1c;
+static constexpr uint32_t GPCLROffset = 0x28;
+static constexpr uint32_t GPLEVOffset = 0x34;
 
-static constexpr uint32_t IRPTBase = 0x2000B200;
-
-inline volatile IRPT& irpt()
+inline volatile uint32_t& rawReg(uint32_t r)
 {
-#ifdef __APPLE__
-    static IRPT _dummy = { IRPTBase };
-    return _dummy;
-#else
-    return *(reinterpret_cast<volatile IRPT*>(IRPTBase));
-#endif
+    return *(reinterpret_cast<volatile uint32_t*>(GPIOBase + r));
 }
 
-extern "C" void handleIRQ()
+void GPIO::setFunction(uint32_t pin, Function f)
 {
-    if (interruptsSupported()) {
-        Serial::handleInterrupt();
-	    Timer::handleInterrupt();
-    }
-}
-
-void InterruptManager::enableIRQ(uint32_t n, bool enable)
-{
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-	uint32_t r = n / 32;
-	uint32_t off = n % 32;
+	uint32_t r = pin / 10 * 4 + GPFSELOffset;
+	uint32_t off = (pin % 10) * 3;
 	
-	if (enable) {
-		if (r == 0) {
-			irpt().IRQ1Enable = 1 << off;
-		} else {
-			irpt().IRQ2Enable = 1 << off;
-		}
-	} else {
-		if (r == 0) {
-			irpt().IRQ1Disable = 1 << off;
-		} else {
-			irpt().IRQ2Disable = 1 << off;
-		}
-	}
+	uint32_t ra = rawReg(r);
+    ra &= ~(7 << off);
+    ra |= static_cast<uint32_t>(f) << off;
+    rawReg(r) = ra;
+    Timer::usleep(1);
 }
 
-void InterruptManager::enableBasicIRQ(uint32_t n, bool enable)
+void GPIO::setPin(uint32_t pin, bool on)
 {
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-    if (n >= 32) {
-        return;
-    }
-    
-    if (enable) {
-        irpt().BasicEnable = 1 << n;
-    } else {
-        irpt().BasicDisable = 1 << n;
-    }
+	uint32_t r = pin / 32 * 4;
+	uint32_t off = pin % 32;
+	rawReg(r + (on ? GPSETOffset : GPCLROffset)) = 1 << off;
 }
 
+bool GPIO::getPin(uint32_t pin)
+{
+	uint32_t r = pin / 32 * 4;
+	uint32_t off = pin % 32;
+	return (rawReg(r + GPLEVOffset) & (1 << off)) != 0;
+}
+
+void GPIO::setPull(uint32_t pin, Pull val)
+{
+    Register reg;
+    uint32_t enbit;
+    
+    if (pin < 32) {
+        enbit = 1 << pin;
+        reg = Register::GPPUDCLK0;
+    } else {
+        enbit = 1 << (pin - 32);
+        reg = Register::GPPUDCLK1;
+    }
+
+    GPIO::reg(Register::GPPUD) = static_cast<uint32_t>(val);
+    Timer::usleep(150);
+    GPIO::reg(reg) = enbit;
+    Timer::usleep(150);
+    GPIO::reg(Register::GPPUD) = 0;
+    GPIO::reg(reg) = 0;
+}
+
+volatile uint32_t& GPIO::reg(Register r)
+{
+	return rawReg(static_cast<uint32_t>(r));
+}
