@@ -35,33 +35,81 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "Memory.h"
+#include "bare/Memory.h"
 
 #include "bare/Timer.h"
 #include <cstdlib>
 
-using namespace placid;
+using namespace bare;
 
-#ifdef __APPLE__
-// Test kernel heap memory
-uint8_t _kernelHeapMemory[KernelHeapSize];
-#endif
+// Virtual memory management
+//
+// Sets up MMU, allocates kernal translation tables, sets up user process
+// memory and handles page faults.
+//
+// This class may not be instantiated until the virtual memory system
+// is setup. So the init() method is static.
+//
+// Kernal occupies the first 1 MB of physical memory, so it occupies the
+// first TTB. This first TTB has a second level translation table which
+// maps 256 4KB pages. These pages are used as follows:
+//
+//      0           0x0000 - 0x0800     reserved for system use (interrupt vectors, ATAGS, etc.)
+//                  0x0800 - 0x0c00     second level translation table.
+//                  0x0c00 = 0x1000     TBD
+//
+//      1           0x1000 - 0x2000     IRQ/FIQ stack (2)
+//      2           0x2000 - 0x3000     ABORT stack (2)
+//      3           0x3000 - 0x4000     SWI stack (2)
+//      4 - 7       0x4000 - 0x8000     first level translation table
+//      8 - ???     0x8000 - _end       kernel code, rodata and bss
+//      ??? - 255   _end   - 0x100000  heap at the bottom and the SVC stack at the top (2)
+//
+//      1) The interrupt stacks occupy one 4096 byte page. If a page fault occurs for any, a 
+//      kernel panic is generated
+//
+//      2) SVC stack and heap occupy whole pages (4096 bytes) if a page fault occurs in either and
+//      the adjacent page is allocated to the other, a kernel panic is generated
+//
+static constexpr uint32_t FirstLevelTTB = 0x4000;
+static constexpr uint32_t SecondLevelTTB = 0xc00;
 
-Memory::KernelHeap Memory::_kernelHeap;
+extern uint8_t _end;
+
+static void* KernelHeapStart = &_end;
+
+enum class TTType { Fault = 0, Page = 0b01, Section = 0b10 };
+
+enum class AP {
+    Control = 0,            // permission determined by control reg bits S and R
+    UserNoAccess = 1,
+    UserReadOnly = 2,
+    UserReadWrite = 3,
+};
+
+enum class Cacheable { No, Yes };
+enum class Bufferable { No, Yes };
+            
+template<uint32_t which> static void setTTB(uint32_t addr)
+{
+    static_assert(which < 2, "which variable must be 0 or 1");
+    
+    addr &= 0xffffc000;
+
+    __asm volatile (
+        "mcr p15,0,%1,c2,c0,%0\n"
+    :
+    : "I" (which), "r" (addr)
+    : "r0" );
+}
 
 inline volatile uint32_t& rawAddr(uint32_t r)
 {
-#ifdef __APPLE__
-    static uint32_t _dummy = 0;
-    return *(&_dummy);
-#else
     return *(reinterpret_cast<volatile uint32_t*>(r));
-#endif
 }
 
-void Memory::enableMMU()
+static void enableMMU()
 {
-#ifndef __APPLE__
     __asm volatile (
         "mrc p15,0,r0,c1,c0,0\n"
         "orr r0,r0,#0x05\n"
@@ -70,26 +118,22 @@ void Memory::enableMMU()
     :
     :
     : "r0" );
-#endif
 }
 
-void Memory::disableMMU()
-{
-#ifndef __APPLE__
-    __asm volatile (
-        "mrc p15,0,r2,c1,c0,0\n"
-        "bic r2,#0x1000\n"
-        "bic r2,#0x0005\n"
-        "mcr p15,0,r2,c1,c0,0\n"
-    :
-    : 
-    : "r2" );
-#endif
-}
+//static void disableMMU()
+//{
+//    __asm volatile (
+//        "mrc p15,0,r2,c1,c0,0\n"
+//        "bic r2,#0x1000\n"
+//        "bic r2,#0x0005\n"
+//        "mcr p15,0,r2,c1,c0,0\n"
+//    :
+//    : 
+//    : "r2" );
+//}
 
-void Memory::invalidateTLBs()
+static void invalidateTLBs()
 {
-#ifndef __APPLE__
     __asm volatile (
         "mov r0,#0\n"
         "mcr p15,0,r0,c8,c7,0\n"
@@ -97,12 +141,10 @@ void Memory::invalidateTLBs()
     :
     : 
     : "r0" );
-#endif
 }
 
-void Memory::invalidateCaches()
+static void invalidateCaches()
 {
-#ifndef __APPLE__
     __asm volatile (
         "mov r0,#0\n"
         "mcr p15,0,r0,c7,c7,0\n"
@@ -110,17 +152,14 @@ void Memory::invalidateCaches()
     :
     : 
     : "r0" );
-#endif
 }
 
-void Memory::setDomains(uint32_t domain)
+static void setDomains(uint32_t domain)
 {
-#ifndef __APPLE__
     __asm volatile (
         "mcr p15, 0, %0, c3, c0, 0\n"
     :
     : "r" (domain));
-#endif
 }
 
 // Translation table entries are as follows:
@@ -179,9 +218,8 @@ unsigned int mmu_section ( unsigned int vadd, unsigned int padd, unsigned int fl
     return(0);
 }
 
-void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap, uint8_t domain, bool cacheable, bool bufferable)
+static void setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t paddr, uint32_t num, AP ap, uint8_t domain, bool cacheable, bool bufferable)
 {
-#ifndef __APPLE__
     uint32_t vaBase = vaddr >> 20;
     uint32_t paBase = paddr >> 20;
     
@@ -195,12 +233,27 @@ void Memory::setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t pad
         section->section.accessPermission = static_cast<uint32_t>(ap);
         section->section.sectionTypeIdentifier = 2;
     }
-#endif
 }
 
-void Memory::init()
+Memory::Heap* Memory::_kernelHeap = nullptr;
+
+extern uint8_t _end;
+
+void* Memory::heapStart()
 {
-#ifndef __APPLE__
+    return KernelHeapStart;
+}
+
+size_t Memory::heapSize()
+{
+    return reinterpret_cast<uint8_t*>(bare::kernelBase()) - &_end;
+}
+
+void Memory::init(Heap* kernelHeap)
+{
+    _kernelHeap = kernelHeap;
+    _kernelHeap->_heapStart = KernelHeapStart;
+
     // Invalidate all memory
     bare::memset(reinterpret_cast<void*>(FirstLevelTTB), 0, sizeof(SectionPageTable) * 4096);
 
@@ -219,84 +272,4 @@ void Memory::init()
     
     enableMMU();
     invalidateTLBs();
-#endif
-}
-
-bool Memory::mapSegment(size_t size, void*& addr)
-{
-    return _kernelHeap.mapSegment(size, addr);
-}
-
-int32_t Memory::unmapSegment(void* addr, size_t size)
-{
-    return _kernelHeap.unmapSegment(addr, size);
-}
-
-bool Memory::KernelHeap::findFreeBits(uint32_t pages, uint32_t& startBit)
-{
-    if (pages == 0) {
-        return false;
-    }
-    
-    uint32_t firstBit = 0;
-    bool keepTrying = true;
-    for (firstBit = 0; firstBit < _pageBitmap.size(); ++firstBit) {
-        if (!_pageBitmap[firstBit]) {
-            // found a bit, see if there are enough
-            if (pages == 1) {
-                keepTrying = false;
-                break;
-            }
-            
-            keepTrying = false;
-            for (uint32_t n = 1; n < pages; ++n) {
-                if (_pageBitmap[firstBit + n]) {
-                    // not enough
-                    firstBit += n + 1;
-                    keepTrying = true;
-                    break;
-                }
-            }
-            if (!keepTrying) {
-                break;
-            }
-        }
-    }
-    if (keepTrying) {
-        return false;
-    }
-    startBit = firstBit;
-    return true;
-}
-
-void Memory::KernelHeap::setFreeBits(uint32_t startBit, uint32_t pages)
-{
-    for (uint32_t i = 0; i < pages; ++i) {
-        _pageBitmap[startBit + i] = true;
-    }
-}
-
-bool Memory::KernelHeap::mapSegment(size_t size, void*& addr)
-{
-    // Find a free area in the bitmap that is big enough
-    uint32_t pages = (static_cast<uint32_t>(size) + PageSize - 1) / PageSize;
-    uint32_t startBit;
-    if (!findFreeBits(pages, startBit)) {
-        return false;
-    }
-    
-    // Set the bits needed
-    setFreeBits(startBit, pages);
-    
-#ifdef __APPLE__
-    addr = _kernelHeapMemory + (startBit * PageSize);
-#else
-    addr = reinterpret_cast<void*>(KernelHeapStart + (startBit * PageSize));
-#endif
-    return true;
-}
-
-int32_t Memory::KernelHeap::unmapSegment(void* addr, size_t size)
-{
-    return -1;
 }

@@ -35,7 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "Memory.h"
 #include <cassert>
 
 namespace placid {
@@ -92,9 +91,6 @@ namespace placid {
         
         uint32_t size() const { return _size; }
         
-        // Used by Mac to avoid using this allocator for system allocations
-        void setUseAllocator(bool v) { _useAllocator = v; }
-
         static Allocator& kernelAllocator() { return _kernelAllocator; }
 
         static constexpr size_t MinAllocSize = 16 * sizeof(uintptr_t) / 4;
@@ -136,7 +132,6 @@ namespace placid {
         static Allocator _kernelAllocator;
         
         uint32_t _size = 0;
-        bool _useAllocator = false;
     };
     
 }

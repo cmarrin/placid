@@ -40,7 +40,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-void bare::initSystem() { }
+void bare::initSystem()
+{
+    SystemIsInited = true;
+}
 
 // Setup a dummy area of "kernel space" to dump data to
 uint8_t _dummyKernel[8 * 1024 * 1024];

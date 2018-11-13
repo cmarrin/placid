@@ -84,9 +84,7 @@ void Shell::sendComplete()
 
 bool Shell::received(uint8_t c)
 {
-#ifndef __APPLE__
     shellSend(reinterpret_cast<const char*>(&c), 1, true);
-#endif
 
 	if (c == '\r') {
 		return true;

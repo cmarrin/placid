@@ -40,6 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+bool bare::SystemIsInited = false;
+
 extern "C" {
 
     void abort()

@@ -33,16 +33,34 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bare.h"
 
-#include "bare"
+#include "Memory.h"
 
-static constexpr uint32_t KernelBase = 0x8000;
+#include "bare/Timer.h"
+#include <cstdlib>
 
-typedef struct { uint64_t rem; uint64_t quot; } ulldiv_t;
+using namespace bare;
 
-uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor);
-unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor);
-int __aeabi_idiv(int value, int divisor);
-ulldiv_t __aeabi_uldivmod(uint64_t value, uint64_t divisor);
-lldiv_t __aeabi_ldivmod(int64_t numerator, int64_t denominator);
+// Test kernel heap memory
+uint8_t _kernelHeapMemory[bare::Memory::DefaultKernelHeapSize];
+
+static constexpr uint32_t MinHeapSize = 0x1000;
+
+Memory::Heap* Memory::_kernelHeap = nullptr;
+
+void* Memory::heapStart()
+{
+    return _kernelHeapMemory;
+}
+
+size_t Memory::heapSize()
+{
+    return MinHeapSize;
+}
+
+void Memory::init(Heap* kernelHeap)
+{
+    _kernelHeap = kernelHeap;
+    _kernelHeap->_heapStart = _kernelHeapMemory;
+}

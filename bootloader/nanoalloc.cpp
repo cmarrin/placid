@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
+#include "bare/Memory.h"
 #include "bare/Serial.h"
 #include <cstdint>
 #include <cstdlib>
@@ -46,57 +47,23 @@ POSSIBILITY OF SUCH DAMAGE.
 
 //#define DEBUG_NANOALLOC
 
-static constexpr uint32_t MinHeapSize = 0x1000;
-
-#ifdef __APPLE__
-uint8_t _end[MinHeapSize];
-static uint8_t* HeapStart = _end;
-static uint8_t* HeapEnd = _end + MinHeapSize;
-#else
-extern uint8_t _end;
-static uint8_t* HeapStart = &_end;
-static uint8_t* HeapEnd = reinterpret_cast<uint8_t*>(0x8000);
-
-void* malloc(size_t size)
-{
-    bare::Serial::printf("Attempted to malloc %d bytes\n", size);
-    abort();
-    return nullptr;
-}
-
-void free(void*)
-{
-    bare::Serial::printf("Attempted to free\n");
-    abort();
-}
-#endif
-
-// This is only used on Mac. We are essentially overriding new here and there
-// are system libraries on Mac which use new and we don't want them using our
-// little block of heap. So we tell them to just allocate using malloc() and
-// then in main we will set this true and start using the nanoallocator.
-bool UseAllocator = false;
-
 static void* alloc(size_t size)
 {
-    if (!UseAllocator) {
+    if (!bare::SystemIsInited) {
         return malloc(size);
     }
     
     static uint32_t* HeapPtr = nullptr;
     if (!HeapPtr) {
-#ifdef DEBUG_NANOALLOC
-        if (HeapStart + MinHeapSize > HeapEnd) {
-            bare::Serial::printf("Nano Heap too small\n");
-            abort();
-        }
-#endif
-        (void) HeapEnd;
-        
-        HeapPtr = reinterpret_cast<uint32_t*>(HeapStart);
+        HeapPtr = reinterpret_cast<uint32_t*>(bare::Memory::heapStart());
     }
     uint32_t* r = HeapPtr;
     HeapPtr += (size + sizeof(uint32_t) - 1) / sizeof(uint32_t);
+    if (HeapPtr > reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(bare::Memory::heapStart()) + bare::Memory::heapSize())) {
+        bare::Serial::printf("Nano Heap ran out of memory\n");
+        return nullptr;
+    }
+    
 #ifdef DEBUG_NANOALLOC
     bare::Serial::printf("Alloc %d bytes at 0x%08x, new free start 0x%08x\n", size, 
                     static_cast<uint32_t>(reinterpret_cast<uint64_t>(r)), 
@@ -117,28 +84,28 @@ void *operator new[] (size_t size)
 
 void operator delete(void *p) noexcept
 {
-    if (!UseAllocator) {
+    if (!bare::SystemIsInited) {
         free(p);
     }
 }
 
 void operator delete [ ](void *p) noexcept
 {
-    if (!UseAllocator) {
+    if (!bare::SystemIsInited) {
         free(p);
     }
 }
 
 void operator delete(void *p, size_t size) noexcept
 {
-    if (!UseAllocator) {
+    if (!bare::SystemIsInited) {
         free(p);
     }
 }
 
 void operator delete [ ](void *p, size_t size) noexcept
 {
-    if (!UseAllocator) {
+    if (!bare::SystemIsInited) {
         free(p);
     }
 }

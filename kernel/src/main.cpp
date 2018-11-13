@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare.h"
 
 #include "bare/GPIO.h"
+#include "bare/Memory.h"
 #include "bare/Print.h"
 #include "bare/SDCard.h"
 #include "bare/Serial.h"
@@ -44,7 +45,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Allocator.h"
 #include "BootShell.h"
 #include "FileSystem.h"
-#include "Memory.h"
 #include "String.h"
 #include <vector>
 
@@ -88,8 +88,6 @@ int main()
 {
     bare::initSystem();
     
-    Allocator::kernelAllocator().setUseAllocator(true);
-    
     bare::Serial::init();
     bare::Timer::init();
     bare::SPI::init();
@@ -102,7 +100,8 @@ int main()
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
         
     timingTest("Memory perf without cache");
-    Memory::init();
+    bare::Memory::KernelHeap<bare::Memory::DefaultKernelHeapSize, bare::Memory::DefaultPageSize> kernelHeap;
+    bare::Memory::init(&kernelHeap);
     timingTest("Memory perf with cache");
     
     bare::Timer::setCurrentTime(bare::RealTime(2018, 10, 5, 10, 19));

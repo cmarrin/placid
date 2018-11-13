@@ -46,7 +46,6 @@ SRC =	kernel.S \
 		Allocator.cpp \
 		BootShell.cpp \
 		FileSystem.cpp \
-		Memory.cpp \
 		Scanner.cpp \
 		Shell.cpp \
 		String.cpp \

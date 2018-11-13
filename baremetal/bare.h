@@ -56,6 +56,7 @@ static_assert(0, "Unsupported platform");
 
 namespace bare {
 
+    extern bool SystemIsInited;
     void initSystem();
 
     extern "C" {

@@ -44,18 +44,10 @@ void autoload(void);
 
 static constexpr uint32_t AutoloadTimeout = 3;
 
-extern bool UseAllocator;
-
 int main(int argc, const char * argv[])
 {
     bare::initSystem();
     
-    // This is only used on Mac. We are essentially overriding new and there
-    // are system libraries on Mac which use new and we don't want them using our
-    // little block of heap. So we tell them to just allocate using malloc() and
-    // then we set this true and start using the nanoallocator.
-    UseAllocator = true;
-
     bare::Serial::init();
         
     bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");

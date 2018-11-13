@@ -54,7 +54,7 @@ else
     CFLAGS += -DNDEBUG -Os
 endif
 
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-threadsafe-statics
 
 PRODUCTDIR ?= $(BUILDDIR)
 

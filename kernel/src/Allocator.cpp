@@ -37,6 +37,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Allocator.h"
 
+#include "bare/Memory.h"
+
 //#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
 
@@ -58,11 +60,6 @@ static inline bool checkFreeList(Allocator::FreeChunk* list)
 }
 
 Allocator Allocator::_kernelAllocator;
-
-#ifndef __APPLE__
-extern "C" void free(void* p) { Allocator::kernelAllocator().free(p); }
-extern "C" void* malloc(size_t s) { void* m; return Allocator::kernelAllocator().alloc(s, m) ? m : nullptr; }
-#endif
 
 Allocator::Allocator()
 {
@@ -112,14 +109,12 @@ void Allocator::addToFreeList(void* mem, size_t size)
 
 bool Allocator::alloc(size_t size, void*& mem)
 {
-#ifdef __APPLE__
-    if (!_useAllocator) {
+    if (!bare::SystemIsInited) {
         mem = ::malloc(size);
         return mem;
     }
-#endif
 
-    DEBUG_LOG("Allocator::alloc: enter, size=%d, useAllocator=%s\n", static_cast<uint32_t>(size), _useAllocator ? "true" : "false");
+    DEBUG_LOG("Allocator::alloc: enter, size=%d, SystemIsInited=%s\n", static_cast<uint32_t>(size), bare::SystemIsInited ? "true" : "false");
     size = (size + sizeof(Chunk) + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
     
     // Try to find a block in the free list
@@ -148,7 +143,7 @@ bool Allocator::alloc(size_t size, void*& mem)
         // Allocate as much as needed, in multiples of BlockSize
         size_t sizeToAlloc = (size + BlockSize - 1) / BlockSize * BlockSize;
         void* newSegment;
-        if (!Memory::mapSegment(sizeToAlloc, newSegment)) {
+        if (!bare::Memory::mapSegment(sizeToAlloc, newSegment)) {
             ERROR_LOG("Allocator::alloc: failed to allocate segment of size %d\n", sizeToAlloc);
             return false;
         }
@@ -176,12 +171,10 @@ bool Allocator::alloc(size_t size, void*& mem)
 
 void Allocator::free(void *addr)
 {
-#ifdef __APPLE__
-    if (!_useAllocator) {
+    if (!bare::SystemIsInited) {
         ::free(addr);
         return;
     }
-#endif
 
     DEBUG_LOG("Allocator::free: enter, addr=0x%08p\n", addr);
     Chunk* chunk = reinterpret_cast<Chunk*>(addr) - 1;

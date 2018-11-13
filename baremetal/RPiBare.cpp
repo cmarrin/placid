@@ -56,9 +56,24 @@ void bare::initSystem()
     {
         (**pFunc) ();
     }
+
+    SystemIsInited = true;
 }
 
 extern "C" {
+
+    void* malloc(size_t size)
+    {
+        bare::Serial::printf("Attempted to malloc %d bytes\n", size);
+        abort();
+        return nullptr;
+    }
+
+    void free(void*)
+    {
+        bare::Serial::printf("Attempted to free\n");
+        abort();
+    }
 
     void disableIRQ()
     {
