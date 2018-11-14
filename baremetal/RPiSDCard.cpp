@@ -53,7 +53,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-void SDCard::finishFail() const
+static void finishFail()
 {
     DEBUG_LOG("SDCard: EMMC init FAILED!\n");
 }
@@ -173,7 +173,11 @@ constexpr uint32_t GPIO_DAT1 = 51;
 constexpr uint32_t GPIO_DAT2 = 52;
 constexpr uint32_t GPIO_DAT3 = 53;
 
-bool SDCard::checkStatusWithTimeout(std::function<bool()> func, const char* error, uint32_t count)
+static uint32_t _rca = 0;
+static uint32_t _scr[2] { 0, 0 };
+
+
+static bool checkStatusWithTimeout(std::function<bool()> func, const char* error, uint32_t count = 1000)
 {
     for (uint32_t i = 0; ; ++i) {
         if (func()) {
@@ -189,7 +193,7 @@ bool SDCard::checkStatusWithTimeout(std::function<bool()> func, const char* erro
     }
 }
 
-SDCard::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
+static SDCard::Error setClock(uint32_t freq, uint32_t hostVersion)
 {
     uint32_t d;
     uint32_t c= 41666666 / freq;
@@ -200,7 +204,7 @@ SDCard::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
     if (!checkStatusWithTimeout(
         []{ return (emmc().status & (SR_CMD_INHIBIT | SR_DAT_INHIBIT)) == 0; },
         "setClock timeout waiting for inhibit flag")) {
-        return Error::Error;
+        return SDCard::Error::Error;
     }
         
     emmc().control1 &= ~C1_CLK_EN;
@@ -264,25 +268,25 @@ SDCard::Error SDCard::setClock(uint32_t freq, uint32_t hostVersion)
     if (!checkStatusWithTimeout(
         []{ return (emmc().control1 & C1_CLK_STABLE) != 0; },
         "setClock failed to get stable clock")) {
-        return Error::Error;
+        return SDCard::Error::Error;
     }
     DEBUG_LOG("SDCard: setClock succeeded\n");
-    return Error::OK;
+    return SDCard::Error::OK;
 }
 
-SDCard::Error SDCard::readStatus(uint32_t mask)
+static SDCard::Error readStatus(uint32_t mask)
 {
     bool result = checkStatusWithTimeout(
         [mask]{ return (emmc().status & mask && emmc().interrupt & INT_ERROR_MASK) == 0; },
         nullptr, 500000);
         
     if (!result || emmc().interrupt & INT_ERROR_MASK) {
-        return Error::Error;
+        return SDCard::Error::Error;
     }
-    return Error::OK;
+    return SDCard::Error::OK;
 }
 
-SDCard::Error SDCard::waitForInterrupt(uint32_t mask)
+static SDCard::Error waitForInterrupt(uint32_t mask)
 {
     uint32_t m = mask | INT_ERROR_MASK;
     bool result = checkStatusWithTimeout(
@@ -293,32 +297,26 @@ SDCard::Error SDCard::waitForInterrupt(uint32_t mask)
     if (!result || (r & INT_CMD_TIMEOUT) || r & INT_DATA_TIMEOUT) {
         emmc().interrupt = r;
         ERROR_LOG("SDCard: ERROR waitForInterrupt timed out\n");
-        return Error::Timeout;
+        return SDCard::Error::Timeout;
     }
     if (r & INT_ERROR_MASK) {
         emmc().interrupt = r;
         ERROR_LOG("SDCard: ERROR waitForInterrupt error\n");
-        return Error::Error;
+        return SDCard::Error::Error;
     }
     emmc().interrupt = mask;
-    return Error::OK;
+    return SDCard::Error::OK;
 }
 
-SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg)
+static SDCard::Error sendCommand(const Command& cmd, uint32_t arg, uint32_t& response)
 {
-    uint32_t response;
-    return sendCommand(cmd, arg, response);
-}
-
-SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& response)
-{
-    SDCard::Error error = Error::OK;
+    SDCard::Error error = SDCard::Error::OK;
     uint32_t code = cmd.code;
 
     if(cmd.code & CMDFLAG_NEED_APP) {
         error = sendCommand(_rca ? CMD_APP_CMD_48() : CMD_APP_CMD(), _rca, response);
         
-        if(_rca && error != Error::OK) {
+        if(_rca && error != SDCard::Error::OK) {
             ERROR_LOG("ERROR: failed to send SD APP command\n");
             return error;
         }
@@ -326,9 +324,9 @@ SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& re
         code &= ~CMDFLAG_NEED_APP;
     }
     
-    if (readStatus(SR_CMD_INHIBIT) != Error::OK) {
+    if (readStatus(SR_CMD_INHIBIT) != SDCard::Error::OK) {
         ERROR_LOG("ERROR: EMMC busy\n");
-        return Error::Timeout;
+        return SDCard::Error::Timeout;
     }
     
 #ifdef DEBUG_SD
@@ -346,47 +344,53 @@ SDCard::Error SDCard::sendCommand(const Command& cmd, uint32_t arg, uint32_t& re
     }
     
     error = waitForInterrupt(INT_CMD_DONE);
-    if (error != Error::OK) {
+    if (error != SDCard::Error::OK) {
         ERROR_LOG("ERROR: failed to send EMMC command\n");
         return error;
     }
     
     uint32_t resp0 = emmc().response0;
     if (code == CMD_GO_IDLE() || code == CMD_APP_CMD()) {
-        return Error::OK; 
+        return SDCard::Error::OK; 
     } else if (code == (CMD_APP_CMD() | CMDFLAG_RSPNS_48)) {
         response = resp0 & SR_APP_CMD;
-        return Error::OK;
+        return SDCard::Error::OK;
     } else if (code == CMD_SEND_OP_COND()) {
         response = resp0;
-        return Error::OK;
+        return SDCard::Error::OK;
     } else if (code == CMD_SEND_IF_COND()) {
-        return (resp0 == arg) ? Error::OK : Error::Error;
+        return (resp0 == arg) ? SDCard::Error::OK : SDCard::Error::Error;
     } else if (code == CMD_ALL_SEND_CID()) {
         resp0 |= emmc().response3;
         resp0 |= emmc().response2;
         resp0 |= emmc().response1;
         response = resp0;
-        return Error::OK;
+        return SDCard::Error::OK;
     } else if (code == CMD_SEND_REL_ADDR()) {
         // FIXME:should do better error handling
         //sd_err = (((resp0 & 0x1fff)) | ((resp0 & 0x2000) << 6) | ((resp0 & 0x4000) << 8) | ((resp0 & 0x8000) << 8)) & CMDFLAG_ERRORS_MASK;
         response = resp0 & CMDFLAG_RCA_MASK;
-        return Error::Error;
+        return SDCard::Error::Error;
     }
     
     response = resp0 & CMDFLAG_ERRORS_MASK;
-    return Error::OK;
+    return SDCard::Error::OK;
 }
 
-SDCard::Error SDCard::setSCRValues()
+static SDCard::Error sendCommand(const Command& cmd, uint32_t arg)
+{
+    uint32_t response;
+    return sendCommand(cmd, arg, response);
+}
+
+static SDCard::Error setSCRValues()
 {    
-    Error error = sendCommand(CMD_SEND_SCR(), 0);
-    if (error != Error::OK) {
+    SDCard::Error error = sendCommand(CMD_SEND_SCR(), 0);
+    if (error != SDCard::Error::OK) {
         return error;
     }
     error = waitForInterrupt(INT_READ_RDY);
-    if (error != Error::OK) {
+    if (error != SDCard::Error::OK) {
         return error;
     }
     
@@ -400,9 +404,9 @@ SDCard::Error SDCard::setSCRValues()
     }
     if (index != 2) {
         ERROR_LOG("SDCard: ERROR getSCRValues SR_READ_AVAILABLE never true\n");
-        return Error::Error;
+        return SDCard::Error::Error;
     }
-    return Error::OK;
+    return SDCard::Error::OK;
 }
 
 SDCard::SDCard()

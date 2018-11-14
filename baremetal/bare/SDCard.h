@@ -64,19 +64,6 @@ namespace bare {
         
         virtual Volume::Error read(char* buf, Block blockAddr, uint32_t blocks) override;
         virtual Volume::Error write(const char* buf, Block blockAddr, uint32_t blocks) override;
-
-    private:
-        bool checkStatusWithTimeout(std::function<bool()>, const char* error, uint32_t count = 1000);
-        Error setClock(uint32_t freq, uint32_t hostVersion);
-        Error sendCommand(const Command&, uint32_t arg);
-        Error sendCommand(const Command&, uint32_t arg, uint32_t& response);
-        Error readStatus(uint32_t mask);
-        Error waitForInterrupt(uint32_t mask);
-        Error setSCRValues();
-        void finishFail() const;
-        
-        uint32_t _rca = 0;
-        uint32_t _scr[2] { 0, 0 };
     };
 
 }
