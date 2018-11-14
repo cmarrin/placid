@@ -160,6 +160,7 @@ bool XYModem::receive(ReceiveFunction func)
     char filename[MaxFilenameLength + 1];
     int32_t size = -1;
     bool firstBlock = true;
+    bool ymodem = false;
     
     uint32_t packetSize = 128;
     
@@ -168,10 +169,10 @@ bool XYModem::receive(ReceiveFunction func)
     while(1)
     {
         int64_t curTime = _systemTime();
-        if ((curTime - startTime) >= 4000)
+        if ((curTime - startTime) >= 1000)
         {
             _writeFunc(NAK);
-            startTime += 4000;
+            startTime += 1000;
         }
         
         if (!_rxReadyFunc()) {
@@ -190,16 +191,15 @@ bool XYModem::receive(ReceiveFunction func)
         
         if (state == 0) {
             if (xstring[state] == EOT || xstring[state] == 0x1b) {
+                _writeFunc(NAK);
                 _writeFunc(ACK);
                 
                 // If this is ymodem, it's going to want to send more stuff.
                 // It's a batch format and they're going to want to send 
                 // and end file packet. CANcel all that
-                _writeFunc(CAN);
-                _writeFunc(CAN);
-                _writeFunc(CAN);
-                _writeFunc(CAN);
-                _writeFunc(CAN);
+                if (ymodem) {
+                    _writeFunc(CAN);
+                }
 
 #ifdef CAPTURE_DATA
                 showXModemData();
@@ -220,6 +220,9 @@ bool XYModem::receive(ReceiveFunction func)
             break;
         case 1:
             // Block 0 holds the filename and size
+            if (xstring[state] == 0 && firstBlock) {
+                ymodem = true;
+            }
             if (xstring[state] == block || (xstring[state] == 0 && firstBlock)) {
                 crc += xstring[state];
                 state++;
