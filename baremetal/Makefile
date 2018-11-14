@@ -52,6 +52,7 @@ SRC =	ldivmod.S \
 		RPiGPIO.cpp \
 		RPiInterruptManager.cpp \
 		RPiMemory.cpp \
+		RPiMemoryMin.cpp \
 		RPiSDCard.cpp \
 		RPiSerial.cpp \
 		RPiSPI.cpp \

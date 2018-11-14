@@ -163,6 +163,7 @@
 		494FD626219B8091005C2A6B /* Float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Float.h; sourceTree = "<group>"; };
 		494FD628219B9E28005C2A6B /* idivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = idivmod.S; path = ../baremetal/idivmod.S; sourceTree = "<group>"; };
 		494FD62A219BA09C005C2A6B /* uidivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = uidivmod.S; path = ../baremetal/uidivmod.S; sourceTree = "<group>"; };
+		494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemoryMin.cpp; path = ../baremetal/RPiMemoryMin.cpp; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -339,6 +340,7 @@
 				492FF3F3215C4F72003582FE /* RPiMailbox.cpp */,
 				492FF3F0215C4F72003582FE /* RPiMailbox.h */,
 				494FD61E2199E64F005C2A6B /* RPiMemory.cpp */,
+				494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */,
 				4965788C2169805800B3F088 /* RPiSDCard.cpp */,
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
 				494FD6162199D2E2005C2A6B /* RPiSPI.cpp */,

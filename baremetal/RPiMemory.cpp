@@ -237,18 +237,6 @@ static void setMMUSectionDescriptors(uint32_t ttb, uint32_t vaddr, uint32_t padd
 
 Memory::Heap* Memory::_kernelHeap = nullptr;
 
-extern uint8_t _end;
-
-void* Memory::heapStart()
-{
-    return KernelHeapStart;
-}
-
-size_t Memory::heapSize()
-{
-    return reinterpret_cast<uint8_t*>(bare::kernelBase()) - &_end;
-}
-
 void Memory::init(Heap* kernelHeap)
 {
     _kernelHeap = kernelHeap;
