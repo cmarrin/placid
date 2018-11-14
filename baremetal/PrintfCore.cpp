@@ -190,7 +190,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     return size;
 }
 
-static int32_t outFloat(bare::Print::Printer printer, double value, int32_t width, int32_t precision, Flags flags, bare::Print::Capital cap, FloatType type)
+static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width, int32_t precision, Flags flags, bare::Print::Capital cap, FloatType type)
 {
     // FIXME: Handle flags.leftJustify
     // FIXME: Handle flags.plus
@@ -283,7 +283,7 @@ int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list v
             case 'g': cap = Print::Capital::No; type = FloatType::Shortest; break;
             case 'G': cap = Print::Capital::Yes; type = FloatType::Shortest; break;
             }
-            size += outFloat(printer, va_arg(va, double), width, precision, flags, cap, type);
+            size += outFloat(printer, Float(static_cast<Float::value_type>(va_arg(va, Float::arg_type))), width, precision, flags, cap, type);
             break;
         }
         case 'c':

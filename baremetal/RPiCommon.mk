@@ -45,7 +45,7 @@ OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
 ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -D$(PLATFORM) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+CFLAGS = $(INCLUDES) -D$(PLATFORM) -DFLOATTYPE=$(FLOATTYPE) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
@@ -58,8 +58,8 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-threadsafe-statics
 
 PRODUCTDIR ?= $(BUILDDIR)
 
-OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(SRC))))
-DEP = $(OBJS:%.o=%.d)
+OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix -$(FLOATTYPE).o, $(basename $(SRC))))
+DEP = $(OBJS:%.o=%-$(FLOATTYPE).d)
 
 debug: CXXFLAGS += -DDEBUG -g
 debug: CCFLAGS += -DDEBUG -g
@@ -77,7 +77,7 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG)
+	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
@@ -86,11 +86,11 @@ $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
 	wc -c $(PRODUCTDIR)/$(PRODUCT).bin
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.cpp Makefile
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.S Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.S Makefile
 	$(CC) $(ASFLAGS) -c $< -o $@

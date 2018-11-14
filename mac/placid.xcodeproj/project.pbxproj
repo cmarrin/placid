@@ -160,6 +160,9 @@
 		494FD61E2199E64F005C2A6B /* RPiMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemory.cpp; path = ../baremetal/RPiMemory.cpp; sourceTree = "<group>"; };
 		494FD61F2199E64F005C2A6B /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
 		494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinMemory.cpp; path = ../baremetal/DarwinMemory.cpp; sourceTree = "<group>"; };
+		494FD626219B8091005C2A6B /* Float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Float.h; sourceTree = "<group>"; };
+		494FD628219B9E28005C2A6B /* idivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = idivmod.S; path = ../baremetal/idivmod.S; sourceTree = "<group>"; };
+		494FD62A219BA09C005C2A6B /* uidivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = uidivmod.S; path = ../baremetal/uidivmod.S; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -302,6 +305,7 @@
 				492FF407215D479A003582FE /* FAT32.h */,
 				496C3BBA217E2368004DBC22 /* FAT32DirectoryIterator.h */,
 				496C3BB7217E225B004DBC22 /* FAT32RawFile.h */,
+				494FD626219B8091005C2A6B /* Float.h */,
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
 				496C3BC221891FC2004DBC22 /* Log.h */,
@@ -362,7 +366,9 @@
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
 				49731F78216E914500F9A79F /* XYModem.cpp */,
+				494FD628219B9E28005C2A6B /* idivmod.S */,
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
+				494FD62A219BA09C005C2A6B /* uidivmod.S */,
 			);
 			name = baremetal;
 			sourceTree = "<group>";
@@ -661,6 +667,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DFLOATTYPE=FloatDouble";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -712,6 +719,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "-DFLOATTYPE=FloatDouble";
 				SDKROOT = macosx;
 			};
 			name = Release;

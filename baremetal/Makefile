@@ -33,10 +33,15 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
+FLOATTYPE ?= Float64
+
 BUILDDIR = build
 SRCDIR = .
+ARCHIVE = baremetal-$(FLOATTYPE).a
 
 SRC =	ldivmod.S \
+		idivmod.S \
+		uidivmod.S \
 		bare.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
@@ -57,11 +62,11 @@ SRC =	ldivmod.S \
 		Volume.cpp \
 		XYModem.cpp \
 
-all : checkdirs $(BUILDDIR)/baremetal.a
+all : checkdirs $(BUILDDIR)/$(ARCHIVE)
 
 include RPiCommon.mk
 
 clean : cleandir
 
-$(BUILDDIR)/baremetal.a : $(OBJS)
+$(BUILDDIR)/$(ARCHIVE) : $(OBJS)
 	$(AR) rcs -o $@ $(OBJS)

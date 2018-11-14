@@ -44,6 +44,9 @@ extern unsigned char _end;
 extern void (*__init_start) (void);
 extern void (*__init_end) (void);
 
+extern "C" uint64_t __aeabi_idivmod(int value, int divisor);
+extern "C" uint64_t __aeabi_uidivmod(int value, int divisor);
+
 void bare::initSystem()
 {
     for (unsigned char *pBSS = &__bss_start; pBSS < &_end; pBSS++)
@@ -105,46 +108,9 @@ extern "C" {
 
     uint8_t* kernelBase() { return reinterpret_cast<uint8_t*>(0x8000); }
 
-    uint64_t __aeabi_uidivmod(unsigned int value, unsigned int divisor)
-    {
-        uint64_t answer = 0;
-
-        unsigned int i;
-        for (i = 0; i < 32; i++) {
-                if ((divisor << (31 - i)) >> (31 - i) == divisor) {
-                        if (value >= divisor << (31 - i)) {
-                                value -= divisor << (31 - i);
-                                answer |= (uint64_t)(1 << (31 - i));
-                                if (value == 0) break;
-                        } 
-                }
-        }
-
-        answer |= (uint64_t)value << 32;
-        return answer;
-    }
-
-    unsigned int __aeabi_uidiv(unsigned int value, unsigned int divisor)
-    {
-        return (unsigned int)__aeabi_uidivmod(value, divisor);
-    }
-
     int __aeabi_idiv(int value, int divisor)
     {
-        bool sign = false;
-        if (value < 0) {
-            value = -value;
-            sign = !sign;
-        }
-        if (divisor < 0) {
-            divisor = -value;
-            sign = !sign;
-        }
-        int32_t result = static_cast<int32_t>(__aeabi_uidivmod(value, divisor));
-        if (sign) {
-            result = -result;
-        }
-        return result;
+        return (int)__aeabi_idivmod(value, divisor);
     }
 
     void __aeabi_idiv0()

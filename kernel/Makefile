@@ -33,7 +33,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-LIBS = ../baremetal/build/baremetal.a
+FLOATTYPE = FloatDouble
+
+LIBS = ../baremetal/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
 PRODUCTDIR = $(BUILDDIR)

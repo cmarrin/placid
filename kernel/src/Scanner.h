@@ -151,7 +151,7 @@ namespace placid {
     class Scanner  {
     public:
         typedef struct {
-            double		number;
+            bare::Float	number;
             uint32_t    integer;
             const char* str;
         } TokenType;

@@ -42,57 +42,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-//static constexpr uint16_t MaxDecimalDigits = 6;
-
-// Decompose a double into an exponent and an integer mantissa.
-// The mantissa is between 0.1 and 1 and multiplied by 100,000,000
-// to fit in an int32_t. So the maximum number of digits that can
-// be displayed is 9.
-
-static void decompose(double v, int32_t& mantissa, int32_t& exponent, int32_t precision)
-{
-    // Get number to between 0.1 and 1
-    // This is obviously slow if the number is very small or very large.
-    // It could be sped up by going by multiple orders of magnitude at
-    // a time when possible
-    bool sign = false;
-    if (v < 0) {
-        sign = true;
-        v = -v;
-    }
-    exponent = 0;
-    while (v < 0.1) {
-        v *= 10;
-        exponent--;
-    }
-    while (v > 1) {
-        v /= 10;
-        exponent++;
-    }
-    mantissa = static_cast<int32_t>(v * 1e9 + 0.5);
- 
-    // Round mantissa according to the number of digits to display
-    if (precision > 0) {
-        uint16_t digits = precision + ((exponent > 0) ? exponent : 0);
-        if (digits < 9) {
-            digits = 8 - digits;
-            while (digits--) {
-                mantissa /= 10;
-            }
-            mantissa += 5;
-            mantissa /= 10;
-        }
-    }
-    
-    if (sign) {
-        mantissa = -mantissa;
-    }
-}
-
-static char* mantissaToString(uint32_t mantissa, char* buf, size_t size, int32_t dp)
+static char* mantissaToString(Float::decompose_type mantissa, char* buf, size_t size, int32_t dp)
 {
     int32_t numDigits = 1;
-    for (uint32_t pow10 = 10; mantissa > pow10; pow10 *= 10, numDigits++) ;
+    for (Float::decompose_type pow10 = 10; mantissa > pow10; pow10 *= 10, numDigits++) ;
     
     int32_t digitsToRight = numDigits - dp;
     
@@ -118,7 +71,7 @@ static char* mantissaToString(uint32_t mantissa, char* buf, size_t size, int32_t
     return p;
 }
 
-static uint32_t mantissaToString(uint32_t mantissa, bare::Print::Printer printer, int32_t dp)
+static uint32_t mantissaToString(Float::decompose_type mantissa, bare::Print::Printer printer, int32_t dp)
 {
     char buf[bare::Print::MaxToStringBufferSize];
     char* p = mantissaToString(mantissa, buf, bare::Print::MaxToStringBufferSize, dp);
@@ -165,18 +118,20 @@ int32_t Print::printfCore(Printer printer, const char *format, va_list va)
     return PrintfCore::format(printer, format, va);
 }
 
-uint32_t Print::printString(Printer printer, double v, int32_t precision, Capital cap)
+uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital cap)
 {
-    if (v == 0) {
+    if (v == Float()) {
         printer('0');
         printer('\0');
         return 1;
     }
     
     uint32_t size = 0;
-    int32_t mantissa;
-    int32_t exponent;
-    decompose(v, mantissa, exponent, precision);
+    Float::decompose_type mantissa;
+    int16_t exponent;
+    v.decompose(mantissa, exponent);
+    
+    // FIXME: Round using precision
     
     if (mantissa < 0) {
         printer('-');

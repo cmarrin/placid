@@ -93,7 +93,7 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
 	return Error::OK;
 }
 
-Serial::Error Serial::puts(double v)
+Serial::Error Serial::puts(Float v)
 {
     char buf[Print::MaxToStringBufferSize];
     if(Print::toString(buf, v)) {

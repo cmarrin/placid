@@ -60,24 +60,22 @@ namespace bare {
 
         static int32_t printfCore(Printer, const char *format, va_list);
 
-        static uint32_t printString(Printer, double v, int32_t precision = -1, Capital = Capital::No);
+        static uint32_t printString(Printer, Float v, int32_t precision = -1, Capital = Capital::No);
         static uint32_t printString(Printer, uint64_t v, uint8_t base = 10, Capital = Capital::No);
         
         static uint32_t printString(Printer printer, int32_t v) { emitSign(printer, v); return printString(printer, static_cast<uint32_t>(v)); }
         static uint32_t printString(Printer printer, uint32_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint64_t>(v), base, cap); }
         static uint32_t printString(Printer printer, int64_t v) { emitSign(printer, v); return printString(printer, static_cast<uint64_t>(v)); }
-        static uint32_t printString(Printer printer, float v) { return printString(printer, static_cast<double>(v)); }
         static uint32_t printString(Printer printer, int8_t v) { return printString(printer, static_cast<int32_t>(v)); }
         static uint32_t printString(Printer printer, uint8_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint32_t>(v), base, cap); }
         static uint32_t printString(Printer printer, int16_t v) { return printString(printer, static_cast<int32_t>(v)); }
         static uint32_t printString(Printer printer, uint16_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint32_t>(v), base, cap); }
 
-        static uint32_t toString(char* buf, double v) { return printString([&buf](char c) { *buf++ = c; }, v); }
+        static uint32_t toString(char* buf, Float v) { return printString([&buf](char c) { *buf++ = c; }, v); }
         static uint32_t toString(char* buf, int32_t v) { return printString([&buf](char c) { *buf++ = c; }, v); }
         static uint32_t toString(char* buf, uint32_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString([&buf](char c) { *buf++ = c; }, v, base, cap); }
         static uint32_t toString(char* buf, int64_t v) { return printString([&buf](char c) { *buf++ = c; }, v); }
         static uint32_t toString(char* buf, uint64_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString([&buf](char c) { *buf++ = c; }, v, base, cap); }
-        static uint32_t toString(char* buf, float v) { return toString(buf, static_cast<double>(v)); }
         static uint32_t toString(char* buf, int8_t v) { return toString(buf, static_cast<int32_t>(v)); }
         static uint32_t toString(char* buf, uint8_t v, uint8_t base = 10, Capital cap = Capital::No) { return toString(buf, static_cast<uint32_t>(v), base, cap); }
         static uint32_t toString(char* buf, int16_t v) { return toString(buf, static_cast<int32_t>(v)); }

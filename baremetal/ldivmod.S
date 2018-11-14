@@ -20,7 +20,6 @@
 
 	.syntax unified
 	.text
-	.thumb
 
 
 
@@ -30,7 +29,6 @@
 @ Divide r1:r0 by r3:r2 and return the quotient in r1:r0 and the remainder in
 @ r3:r2 (all signed)
 @
-	.thumb_func
         .global __aeabi_ldivmod
 __aeabi_ldivmod:
 
@@ -92,7 +90,6 @@ __aeabi_ldivmod:
 @
 @ libgcc wrapper: just an alias for __aeabi_uldivmod(), the remainder is ignored
 @
-	.thumb_func
         .global __udivdi3
 __udivdi3:
 
@@ -104,7 +101,6 @@ __udivdi3:
 @ Divide r1:r0 by r3:r2 and return the quotient in r1:r0 and the remainder
 @ in r3:r2 (all unsigned)
 @
-	.thumb_func
         .global __aeabi_uldivmod
 __aeabi_uldivmod:
 

@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "bare/Float.h"
 #include <cstdint>
 #include <cstddef>
 #include <cstdarg>
@@ -55,6 +56,8 @@ static_assert(0, "Unsupported platform");
 #endif
 
 namespace bare {
+
+    using Float = FLOATTYPE;
 
     extern bool SystemIsInited;
     void initSystem();
