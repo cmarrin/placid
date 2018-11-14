@@ -124,7 +124,7 @@
 		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
-		492FF3F0215C4F72003582FE /* Mailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mailbox.h; sourceTree = "<group>"; };
+		492FF3F0215C4F72003582FE /* RPiMailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPiMailbox.h; sourceTree = "<group>"; };
 		492FF3F1215C4F72003582FE /* Volume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Volume.cpp; path = ../baremetal/Volume.cpp; sourceTree = "<group>"; };
 		492FF3F3215C4F72003582FE /* RPiMailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMailbox.cpp; path = ../baremetal/RPiMailbox.cpp; sourceTree = "<group>"; };
 		492FF3F8215C528C003582FE /* RPiSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSerial.cpp; path = ../baremetal/RPiSerial.cpp; sourceTree = "<group>"; };
@@ -309,7 +309,6 @@
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
 				496C3BC221891FC2004DBC22 /* Log.h */,
-				492FF3F0215C4F72003582FE /* Mailbox.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
 				497EE459216138E2000584CE /* Print.h */,
 				494FD5F921960817005C2A6B /* PrintfCore.h */,
@@ -338,6 +337,7 @@
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
 				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
 				492FF3F3215C4F72003582FE /* RPiMailbox.cpp */,
+				492FF3F0215C4F72003582FE /* RPiMailbox.h */,
 				494FD61E2199E64F005C2A6B /* RPiMemory.cpp */,
 				4965788C2169805800B3F088 /* RPiSDCard.cpp */,
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,

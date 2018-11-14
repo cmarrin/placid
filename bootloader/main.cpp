@@ -35,7 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/Mailbox.h"
 #include "bare/Serial.h"
 #include "bare/Timer.h"
 #include "bare/XYModem.h"
