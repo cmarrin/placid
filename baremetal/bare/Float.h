@@ -66,46 +66,50 @@ template<typename RawType, typename DecomposeType, typename ArgType, int32_t Bin
 class _Float
 {
 private:
-    static constexpr int32_t exp(int32_t v, int32_t n) { return n ? exp(v * 10, n - 1) : v; }
+    static constexpr int32_t exp(int32_t v, int32_t base, int32_t n) { return n ? exp(v * base, base, n - 1) : v; }
 
 public:
+    using value_type = RawType;
+    using decompose_type = DecomposeType;
+    using arg_type = ArgType;
+    
     class Raw
     {
         friend class _Float;
 
     private:
-        RawType _raw;
+        value_type _raw;
     };
     
-    typedef RawType value_type;
-    typedef DecomposeType decompose_type;
-    typedef ArgType arg_type;
-    
-    static constexpr int32_t BinaryExponent = BinExp;
+     static constexpr int32_t BinaryExponent = BinExp;
+    static constexpr value_type BinaryMultiplier = exp(1, 2, BinExp);
     static constexpr value_type BinaryMask = (1L << BinaryExponent) - 1;
     static constexpr int32_t DecimalExponent = DecExp;
-    static constexpr value_type DecimalMultiplier = exp(1, DecExp);
-    static constexpr uint8_t MaxDigits = (sizeof(RawType) <= 32) ? 8 : 12;
+    static constexpr value_type DecimalMultiplier = exp(1, 10, DecExp);
+    static constexpr uint8_t MaxDigits = (sizeof(value_type) <= 32) ? 8 : 12;
     
     _Float() { _value._raw = 0; }
     explicit _Float(Raw value) { _value._raw = value._raw; }
     _Float(const _Float& value) { _value._raw = value._value._raw; }
     _Float(_Float& value) { _value._raw = value._value._raw; }
-    explicit _Float(RawType value) { _value._raw = value; }
-    explicit _Float(bool value) { _value._raw = value ? (static_cast<RawType>(1) << BinaryExponent) : 0; }
+    explicit _Float(bool value) { _value._raw = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
+    
+    explicit _Float(int32_t value) { _value._raw = static_cast<value_type>(value) * BinaryMultiplier; }
 
-    _Float(RawType i, int32_t e)
+    static _Float argToFloat(arg_type value) { _Float floatValue; floatValue._value._raw = static_cast<value_type>(value); return floatValue; }
+
+    _Float(value_type i, int32_t e)
     {
         if (i == 0) {
             _value._raw = 0;
             return;
         }
         if (e == 0) {
-            _value._raw = static_cast<RawType>(static_cast<int64_t>(i) << BinaryExponent);
+            _value._raw = static_cast<value_type>(static_cast<value_type>(i) * BinaryMultiplier);
             return;
         }
         
-        int64_t num = static_cast<int64_t>(i) << BinaryExponent;
+        value_type num = static_cast<value_type>(i) * BinaryMultiplier;
         int32_t sign = (num < 0) ? -1 : 1;
         num *= sign;
         
@@ -134,15 +138,15 @@ public:
             return;
         }
         
-        _value._raw = sign * static_cast<RawType>(num);
+        _value._raw = sign * static_cast<value_type>(num);
     }
     
-    RawType raw() const { return _value._raw; 
+    value_type raw() const { return _value._raw; 
     }
     static _Float make(uint64_t v)
     {
         Raw r;
-        r._raw = *(reinterpret_cast<RawType*>(&v));
+        r._raw = *(reinterpret_cast<value_type*>(&v));
         return r;
     }
     operator Raw() const { return _value; }
@@ -159,7 +163,7 @@ public:
     {
         _Float r;
         int64_t result = static_cast<uint64_t>(_value._raw) * other._value._raw >> BinaryExponent;
-        r._value._raw = static_cast<RawType>(result);
+        r._value._raw = static_cast<value_type>(result);
         return r;
     }
     _Float operator/(const _Float& other) const
@@ -170,7 +174,7 @@ public:
         }
         _Float r;
         int64_t result = (static_cast<int64_t>(_value._raw) << BinaryExponent) / other._value._raw;
-        r._value._raw = static_cast<RawType>(result);
+        r._value._raw = static_cast<value_type>(result);
         return r;
     }
 

@@ -283,7 +283,7 @@ int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list v
             case 'g': cap = Print::Capital::No; type = FloatType::Shortest; break;
             case 'G': cap = Print::Capital::Yes; type = FloatType::Shortest; break;
             }
-            size += outFloat(printer, Float(static_cast<Float::value_type>(va_arg(va, Float::arg_type))), width, precision, flags, cap, type);
+            size += outFloat(printer, Float::argToFloat(static_cast<Float::value_type>(va_arg(va, Float::arg_type))), width, precision, flags, cap, type);
             break;
         }
         case 'c':
