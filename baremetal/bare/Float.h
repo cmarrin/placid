@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <cmath>
+#include <cstdarg>
 #include <cstdint>
 #include <limits>
 
@@ -88,7 +89,13 @@ public:
     explicit _Float(bool value) { _value = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
     explicit _Float(int32_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
 
-    static _Float argToFloat(arg_type value) { _Float floatValue; floatValue._value = static_cast<value_type>(value); return floatValue; }
+    // Converts arg_type to Float. Used for va_arg
+    static _Float argToFloat(va_list va)
+    {
+        _Float floatValue;
+        floatValue._value = static_cast<value_type>(va_arg(va, arg_type));
+        return floatValue;
+    }
 
     _Float(value_type i, int32_t e)
     {
