@@ -56,7 +56,7 @@ namespace bare {
 	// This is a static class and cannot be instantiated
 	//
 
-	class Serial {
+	class Serial {        
 	public:
 		enum class Error { OK, Timeout, NoData, NotReady, Fail };
 		
@@ -78,7 +78,7 @@ namespace bare {
         
         static void clearInput() { rxhead = rxtail = 0; }
 
-		static void handleInterrupt();
+        static void handleInterrupt();
 
 	private:
 		Serial() { }

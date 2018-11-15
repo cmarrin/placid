@@ -93,11 +93,11 @@ namespace bare {
         static RealTime currentTime();
         static void setCurrentTime(const RealTime&);            
 
+        static void handleInterrupt();
+
 	private:
         static void updateTimers();
         
-        static void handleInterrupt();
-
         Timer* _next = nullptr;
         uint32_t _timeout = 0;
         bool _repeat = false;
