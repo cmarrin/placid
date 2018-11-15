@@ -669,7 +669,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DFLOATTYPE=FloatDouble";
+				OTHER_CFLAGS = "-DFLOATTYPE=Float64";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -721,7 +721,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "-DFLOATTYPE=FloatDouble";
+				OTHER_CFLAGS = "-DFLOATTYPE=Float64";
 				SDKROOT = macosx;
 			};
 			name = Release;
