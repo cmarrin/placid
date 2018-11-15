@@ -47,22 +47,17 @@ using namespace bare;
 
 void  Timer::init()
 {
+    // FIXME:: Implement
 }
 
 void Timer::handleInterrupt()
 {
+    // FIXME:: Implement
 }
 
-void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
+void Timer::updateTimers()
 {
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-	_cb = cb;
-	
-    // FIXME: implement
-    return;
+    // FIXME:: Implement
 }
 
 int64_t Timer::systemTime()

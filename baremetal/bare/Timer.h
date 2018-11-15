@@ -74,34 +74,36 @@ namespace bare {
     private:
         int64_t _time = 0;
     };
-	
-	class TimerCallback {
-	public:
-		virtual void handleTimerEvent() = 0;
-	};
-
+    
 	class Timer {
-	public:
+	public:        
+        Timer() { }
+        virtual ~Timer() { }
+        
+        virtual void handleTimerEvent() = 0;
+        
         static void init();
-        
-		// FIXME: repeat is currently not implemented 
-		static void start(TimerCallback*, float seconds, bool repeat);
-  
+
+        // FIXME: repeat is currently not implemented 
+        static void start(Timer*, uint32_t us, bool repeat);
+        static void stop(Timer*);
+
         static void usleep(uint32_t us);
-        
         static int64_t systemTime();
         static RealTime currentTime();
         static void setCurrentTime(const RealTime&);            
-		
-		static void handleInterrupt();
 
 	private:
-		Timer() { }
-		Timer(Timer&) { }
-		Timer& operator=(Timer& other) { return other; }
+        static void updateTimers();
+        
+        static void handleInterrupt();
 
-		static TimerCallback* _cb;
+        Timer* _next = nullptr;
+        uint32_t _timeout = 0;
+        bool _repeat = false;
+
         static int64_t _epochOffset;
+        static Timer* _head;
 	};
 	
 }

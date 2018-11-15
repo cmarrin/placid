@@ -51,9 +51,9 @@ POSSIBILITY OF SUCH DAMAGE.
 using namespace placid;
 
 static constexpr uint32_t ActivityLED = 47;
-static constexpr float blinkRate = 0.5;
+static constexpr uint32_t blinkRate = 500000;
 
-class LEDBlinker : public bare::TimerCallback
+class LEDBlinker : public bare::Timer
 {
 public:
 	virtual void handleTimerEvent()

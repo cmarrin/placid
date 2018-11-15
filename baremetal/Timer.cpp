@@ -42,8 +42,27 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-TimerCallback* Timer::_cb = nullptr;
+Timer* Timer::_head = nullptr;
 int64_t Timer::_epochOffset = 0;
+
+void Timer::start(Timer* timer, uint32_t us, bool repeat)
+{
+    if (!interruptsSupported()) {
+        return;
+    }
+    
+    timer->_next = _head;
+    timer->_timeout = us;
+    timer->_repeat = repeat;
+    _head = timer;
+    
+    updateTimers();
+}
+
+void Timer::stop(Timer*)
+{
+    // FIXME: Implement
+}
 
 void Timer::usleep(uint32_t us)
 {

@@ -87,44 +87,42 @@ void  Timer::init()
     armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
 }
 
+void Timer::updateTimers()
+{
+    // FIXME: For now we only support a single timer at the head of the list
+    if (!_head) {
+        return;
+    }
+    
+    disableIRQ();
+    InterruptManager::enableBasicIRQ(0, false);
+
+    // Reset Free running prescaler
+    armTimer().control = 0x003E0000;
+    
+    armTimer().load = _head->_timeout - 1;
+    armTimer().reload = _head->_timeout - 1;
+    
+    InterruptManager::enableBasicIRQ(0, true);
+    armTimer().clearIRQ = 0;
+    
+    enableIRQ();
+
+    // 32 bit counter, timer enabled, timer interrupt enabled
+    armTimer().control = 0x003E00A2;
+    armTimer().clearIRQ = 0;
+}
+
 void Timer::handleInterrupt()
 {
     if (!interruptsSupported()) {
         return;
     }
     
-	if (_cb) {
-		_cb->handleTimerEvent();
+    for (Timer* timer = _head; timer; timer = timer->_next) {
+        timer->handleTimerEvent();
 	}
-	armTimer().clearIRQ = 0;
-}
-
-void Timer::start(TimerCallback* cb, float seconds, bool /*repeat*/)
-{
-    if (!interruptsSupported()) {
-        return;
-    }
     
-	_cb = cb;
-	
-	uint32_t us = static_cast<uint32_t>(seconds * 1000000);
-
-    disableIRQ();
-    InterruptManager::enableBasicIRQ(0, false);
-
-	// Reset Free running prescaler
-	armTimer().control = 0x003E0000;
-	
-	armTimer().load = us - 1;
-	armTimer().reload = us - 1;
-	
-    InterruptManager::enableBasicIRQ(0, true);
-	armTimer().clearIRQ = 0;
-	
-    enableIRQ();
-
-	// 32 bit counter, timer enabled, timer interrupt enabled
-	armTimer().control = 0x003E00A2;
 	armTimer().clearIRQ = 0;
 }
 
