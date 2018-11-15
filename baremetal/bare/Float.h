@@ -73,39 +73,31 @@ public:
     using decompose_type = DecomposeType;
     using arg_type = ArgType;
     
-    class Raw
-    {
-        friend class _Float;
-
-    private:
-        value_type _raw;
-    };
-    
-     static constexpr int32_t BinaryExponent = BinExp;
+    static constexpr int32_t BinaryExponent = BinExp;
     static constexpr value_type BinaryMultiplier = exp(1, 2, BinExp);
     static constexpr value_type BinaryMask = (1L << BinaryExponent) - 1;
     static constexpr int32_t DecimalExponent = DecExp;
     static constexpr value_type DecimalMultiplier = exp(1, 10, DecExp);
     static constexpr uint8_t MaxDigits = (sizeof(value_type) <= 32) ? 8 : 12;
     
-    _Float() { _value._raw = 0; }
-    explicit _Float(Raw value) { _value._raw = value._raw; }
-    _Float(const _Float& value) { _value._raw = value._value._raw; }
-    _Float(_Float& value) { _value._raw = value._value._raw; }
-    explicit _Float(bool value) { _value._raw = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
+    // Constructors
+    //
+    _Float() { _value = 0; }
+    _Float(const _Float& value) { _value = value._value; }
     
-    explicit _Float(int32_t value) { _value._raw = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(bool value) { _value = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
+    explicit _Float(int32_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
 
-    static _Float argToFloat(arg_type value) { _Float floatValue; floatValue._value._raw = static_cast<value_type>(value); return floatValue; }
+    static _Float argToFloat(arg_type value) { _Float floatValue; floatValue._value = static_cast<value_type>(value); return floatValue; }
 
     _Float(value_type i, int32_t e)
     {
         if (i == 0) {
-            _value._raw = 0;
+            _value = 0;
             return;
         }
         if (e == 0) {
-            _value._raw = static_cast<value_type>(static_cast<value_type>(i) * BinaryMultiplier);
+            _value = static_cast<value_type>(static_cast<value_type>(i) * BinaryMultiplier);
             return;
         }
         
@@ -116,7 +108,7 @@ public:
         while (e > 0) {
             if (num > std::numeric_limits<value_type>::max()) {
                 // FIXME: Number is over range, handle that
-                _value._raw = 0;
+                _value = 0;
                 return;
             }
             --e;
@@ -125,7 +117,7 @@ public:
         while (e < 0) {
             if (num == 0) {
                 // FIXME: Number is under range, handle that
-                _value._raw = 0;
+                _value = 0;
                 return;
             }
             ++e;
@@ -134,47 +126,37 @@ public:
         
         if (num > std::numeric_limits<value_type>::max()) {
             // FIXME: Number is under range, handle that
-            _value._raw = 0;
+            _value = 0;
             return;
         }
         
-        _value._raw = sign * static_cast<value_type>(num);
+        _value = sign * static_cast<value_type>(num);
     }
     
-    value_type raw() const { return _value._raw; 
-    }
-    static _Float make(uint64_t v)
-    {
-        Raw r;
-        r._raw = *(reinterpret_cast<value_type*>(&v));
-        return r;
-    }
-    operator Raw() const { return _value; }
-    
-    operator bool() const { return _value._raw != 0; }
+    operator bool() const { return _value != 0; }
 
-    const _Float& operator=(const _Float& other) { _value._raw = other._value._raw; return *this; }
-    _Float& operator=(_Float& other) { _value._raw = other._value._raw; return *this; }
+    const _Float& operator=(const _Float& other) { _value = other._value; return *this; }
+    _Float& operator=(_Float& other) { _value = other._value; return *this; }
     
-    _Float operator+(const _Float& other) const { _Float r; r._value._raw = _value._raw + other._value._raw; return r; }
-    _Float operator-(const _Float& other) const { _Float r; r._value._raw = _value._raw - other._value._raw; return r; }
+    _Float operator+(const _Float& other) const { _Float r; r._value = _value + other._value; return r; }
+    _Float operator-(const _Float& other) const { _Float r; r._value = _value - other._value; return r; }
 
     _Float operator*(const _Float& other) const
     {
         _Float r;
-        int64_t result = static_cast<uint64_t>(_value._raw) * other._value._raw >> BinaryExponent;
-        r._value._raw = static_cast<value_type>(result);
+        int64_t result = static_cast<uint64_t>(_value) * other._value >> BinaryExponent;
+        r._value = static_cast<value_type>(result);
         return r;
     }
     _Float operator/(const _Float& other) const
     {
         // FIXME: Have some sort of error on divide by 0
-        if (other._value._raw == 0) {
+        if (other._value == 0) {
             return _Float();
         }
         _Float r;
-        int64_t result = (static_cast<int64_t>(_value._raw) << BinaryExponent) / other._value._raw;
-        r._value._raw = static_cast<value_type>(result);
+        int64_t result = (static_cast<int64_t>(_value) << BinaryExponent) / other._value;
+        r._value = static_cast<value_type>(result);
         return r;
     }
 
@@ -186,13 +168,13 @@ public:
     _Float operator/=(const _Float& other) { *this = *this / other; return *this; }
     _Float operator%=(const _Float& other) { *this = *this % other; return *this; }
     
-    _Float floor() const { _Float r; r._value._raw = _value._raw >> BinaryExponent << BinaryExponent; return r; }
-    operator int32_t() const { return static_cast<int32_t>(_value._raw >> BinaryExponent); }
-    operator int64_t() const { return static_cast<int64_t>(_value._raw >> BinaryExponent); }
+    _Float floor() const { _Float r; r._value = _value >> BinaryExponent << BinaryExponent; return r; }
+    operator int32_t() const { return static_cast<int32_t>(_value >> BinaryExponent); }
+    operator int64_t() const { return static_cast<int64_t>(_value >> BinaryExponent); }
 
     void decompose(decompose_type& mantissa, int16_t& exponent) const
     {        
-        if (_value._raw == 0) {
+        if (_value == 0) {
             mantissa = 0;
             exponent = 0;
             return;
@@ -200,7 +182,7 @@ public:
         _Float integerFloat = floor();
         decompose_type integerPart = static_cast<decompose_type>(integerFloat);
         _Float fractionPart = *this - integerFloat;
-        decompose_type value = static_cast<decompose_type>(fractionPart._value._raw) * DecimalMultiplier;
+        decompose_type value = static_cast<decompose_type>(fractionPart._value) * DecimalMultiplier;
         mantissa = ((value >> (BinaryExponent - 1)) + 1) >> 1;
         mantissa += integerPart * DecimalMultiplier;
         exponent = -DecimalExponent;
@@ -208,19 +190,26 @@ public:
 
     _Float operator%(const _Float& other) { return *this - other * (*this / other).floor(); }
     
-    bool operator==(const _Float& other) const { return _value._raw == other._value._raw; }
-    bool operator!=(const _Float& other) const { return _value._raw != other._value._raw; }
-    bool operator<(const _Float& other) const { return _value._raw < other._value._raw; }
-    bool operator<=(const _Float& other) const { return _value._raw <= other._value._raw; }
-    bool operator>(const _Float& other) const { return _value._raw > other._value._raw; }
-    bool operator>=(const _Float& other) const { return _value._raw >= other._value._raw; }
+    bool operator==(const _Float& other) const { return _value == other._value; }
+    bool operator!=(const _Float& other) const { return _value != other._value; }
+    bool operator<(const _Float& other) const { return _value < other._value; }
+    bool operator<=(const _Float& other) const { return _value <= other._value; }
+    bool operator>(const _Float& other) const { return _value > other._value; }
+    bool operator>=(const _Float& other) const { return _value >= other._value; }
 
-    _Float operator-() const { _Float r; r._value._raw = -_value._raw; return r; }
+    _Float operator-() const { _Float r; r._value = -_value; return r; }
 
 private:    
-    Raw _value;
+    value_type _value;
 };
 
+// Specializations
+//
+// Float and Double specialize several functions to deal with the fact that they are
+// true floating point and not fixed point. Functions specialized are:
+//
+
+// float specializations
 template<>
 inline _Float<float, int32_t, double>::_Float(value_type i, int32_t e)
 {
@@ -233,23 +222,23 @@ inline _Float<float, int32_t, double>::_Float(value_type i, int32_t e)
         ++e;
         num /= 10;
     }
-    _value._raw = num;
+    _value = num;
 }
 
 template<>
-inline _Float<float, int32_t, double>::_Float(bool value) { _value._raw = value ? 1 : 0; }
+inline _Float<float, int32_t, double>::_Float(bool value) { _value = value ? 1 : 0; }
 
 template<>
 inline void _Float<float, int32_t, double>::decompose(int32_t& mantissa, int16_t& exponent) const
 {
     // FIXME: Implement correctly for fractions
-    if (_value._raw == 0) {
+    if (_value == 0) {
         mantissa = 0;
         exponent = 0;
         return;
     }
-    int32_t sign = (_value._raw < 0) ? -1 : 1;
-    double value = _value._raw * sign;
+    int32_t sign = (_value < 0) ? -1 : 1;
+    double value = _value * sign;
     int32_t exp = 0;
     while (value >= 1) {
         value /= 10;
@@ -267,7 +256,7 @@ template<>
 inline _Float<float, int32_t, double> _Float<float, int32_t, double>::operator*(const _Float& other) const
 {
     _Float r;
-    r._value._raw = _value._raw * other._value._raw;
+    r._value = _value * other._value;
     return r;
 }
 
@@ -275,7 +264,7 @@ template<>
 inline _Float<float, int32_t, double> _Float<float, int32_t, double>::operator/(const _Float& other) const
 {
     _Float r;
-    r._value._raw = _value._raw / other._value._raw;
+    r._value = _value / other._value;
     return r;
 }
 
@@ -283,10 +272,11 @@ template<>
 inline _Float<float, int32_t, double> _Float<float, int32_t, double>::floor() const
 {
     _Float r;
-    r._value._raw = static_cast<float>(static_cast<int32_t>(_value._raw));
+    r._value = static_cast<float>(static_cast<int32_t>(_value));
     return r;
 }
 
+// double specializations
 template<>
 inline _Float<double, int64_t, double>::_Float(value_type i, int32_t e)
 {
@@ -299,23 +289,23 @@ inline _Float<double, int64_t, double>::_Float(value_type i, int32_t e)
         ++e;
         num /= 10;
     }
-    _value._raw = num;
+    _value = num;
 }
 
 template<>
-inline _Float<double, int32_t, double>::_Float(bool value) { _value._raw = value ? 1 : 0; }
+inline _Float<double, int32_t, double>::_Float(bool value) { _value = value ? 1 : 0; }
 
 template<>
 inline void _Float<double, int64_t, double>::decompose(int64_t& mantissa, int16_t& exponent) const
 {
     // FIXME: Implement correctly for fractions
-    if (_value._raw == 0) {
+    if (_value == 0) {
         mantissa = 0;
         exponent = 0;
         return;
     }
-    int32_t sign = (_value._raw < 0) ? -1 : 1;
-    double value = _value._raw * sign;
+    int32_t sign = (_value < 0) ? -1 : 1;
+    double value = _value * sign;
     int32_t exp = 0;
     while (value >= 1) {
         value /= 10;
@@ -333,7 +323,7 @@ template<>
 inline _Float<double, int64_t, double> _Float<double, int64_t, double>::operator*(const _Float& other) const
 {
     _Float r;
-    r._value._raw = _value._raw * other._value._raw;
+    r._value = _value * other._value;
     return r;
 }
 
@@ -341,7 +331,7 @@ template<>
 inline _Float<double, int64_t, double> _Float<double, int64_t, double>::operator/(const _Float& other) const
 {
     _Float r;
-    r._value._raw = _value._raw / other._value._raw;
+    r._value = _value / other._value;
     return r;
 }
 
@@ -349,25 +339,26 @@ template<>
 inline _Float<double, int64_t, double> _Float<double, int64_t, double>::floor() const
 {
     _Float r;
-    r._value._raw = static_cast<double>(static_cast<int64_t>(_value._raw));
+    r._value = static_cast<double>(static_cast<int64_t>(_value));
     return r;
 }
 
+// int64_t specializations
 template<>
 inline _Float<int64_t, int64_t, int64_t, 30, 7> _Float<int64_t, int64_t, int64_t, 30, 7>::operator*(const _Float& other) const
 {
-    if (_value._raw > -std::numeric_limits<int32_t>::max() && _value._raw < std::numeric_limits<int32_t>::max() &&
-        other._value._raw > -std::numeric_limits<int32_t>::max() && other._value._raw < std::numeric_limits<int32_t>::max()) {
+    if (_value > -std::numeric_limits<int32_t>::max() && _value < std::numeric_limits<int32_t>::max() &&
+        other._value > -std::numeric_limits<int32_t>::max() && other._value < std::numeric_limits<int32_t>::max()) {
         _Float r;
-        int64_t result = static_cast<uint64_t>(_value._raw) * other._value._raw >> BinaryExponent;
-        r._value._raw = static_cast<int64_t>(result);
+        int64_t result = static_cast<uint64_t>(_value) * other._value >> BinaryExponent;
+        r._value = static_cast<int64_t>(result);
         return r;
     }
     // Do it the slow way
-    bool signA = _value._raw < 0;
-    bool signB = other._value._raw < 0;
-    uint64_t a = static_cast<uint64_t>(_value._raw);
-    uint64_t b = static_cast<uint64_t>(other._value._raw);
+    bool signA = _value < 0;
+    bool signB = other._value < 0;
+    uint64_t a = static_cast<uint64_t>(_value);
+    uint64_t b = static_cast<uint64_t>(other._value);
     if (signA) {
         a = -a;
     }
@@ -384,28 +375,28 @@ inline _Float<int64_t, int64_t, int64_t, 30, 7> _Float<int64_t, int64_t, int64_t
         b = -b;
     }
     _Float r;
-    r._value._raw = b;
+    r._value = b;
     return r;
 }
 
 template<>
 inline _Float<int64_t, int64_t, int64_t, 30, 7> _Float<int64_t, int64_t, int64_t, 30, 7>::operator/(const _Float& other) const
 {
-    if (_value._raw > -std::numeric_limits<int32_t>::max() && _value._raw < std::numeric_limits<int32_t>::max()) {
-        if (other._value._raw == 0) {
+    if (_value > -std::numeric_limits<int32_t>::max() && _value < std::numeric_limits<int32_t>::max()) {
+        if (other._value == 0) {
             return _Float();
         }
         _Float r;
-        int64_t result = (static_cast<int64_t>(_value._raw) << BinaryExponent) / other._value._raw;
-        r._value._raw = result;
+        int64_t result = (static_cast<int64_t>(_value) << BinaryExponent) / other._value;
+        r._value = result;
         return r;
     }
 
     // do *this * 1 / other
     _Float inv;
-    inv._value._raw = (1LL << 62) / other._value._raw;
+    inv._value = (1LL << 62) / other._value;
     _Float r = inv * *this;
-    r._value._raw = ((r._value._raw >> (62 - (30 * 2) - 1)) + 1) >> 1;
+    r._value = ((r._value >> (62 - (30 * 2) - 1)) + 1) >> 1;
     return r;
 }
 
