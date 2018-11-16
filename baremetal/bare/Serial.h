@@ -85,7 +85,7 @@ namespace bare {
 		Serial(Serial&) { }
 		Serial& operator=(Serial& other) { return other; }
 		
-		static constexpr uint32_t RXBUFMASK = 0xFFF;
+		static constexpr uint32_t RXBUFMASK = 0xFF;
 		static volatile unsigned int rxhead;
 		static volatile unsigned int rxtail;
 		static volatile unsigned char rxbuffer[RXBUFMASK + 1];

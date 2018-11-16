@@ -42,42 +42,42 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-static char* mantissaToString(Float::decompose_type mantissa, char* buf, size_t size, int32_t dp)
+static uint32_t mantissaToString(const char* mantissa, char* buf, int32_t digitsToLeft)
 {
-    int32_t numDigits = 1;
-    for (Float::decompose_type pow10 = 10; mantissa > pow10; pow10 *= 10, numDigits++) ;
+    const char* p = buf;
+    char* trailingNonZeroDigit = nullptr;
     
-    int32_t digitsToRight = numDigits - dp;
-    
-    char* p = buf + size;
-    *--p = '\0';
-    
-    bool trailing = true;
-    while (mantissa || digitsToRight > 0) {
-        if (digitsToRight-- == 0) {
-            *--p = '.';
+    while (*mantissa) {
+        if (digitsToLeft-- == 0) {
+            *buf++ = '.';
         }
-        
-        uint8_t digit = mantissa % 10;
-        
-        // Remove trailing zeroes
-        if (digitsToRight <= 0 || digit != 0 || !trailing) {
-            *--p = digit + '0';
-            trailing = false;
+    
+        if (*mantissa == '0' && digitsToLeft <= 0) {
+            if (!trailingNonZeroDigit) {
+                trailingNonZeroDigit = buf;
+            }
+        } else {
+            trailingNonZeroDigit = nullptr;
         }
+        *buf++ = *mantissa;
         
-        mantissa /= 10;
+        ++mantissa;
     }
-    return p;
+    
+    if (trailingNonZeroDigit) {
+        buf = trailingNonZeroDigit;
+    }
+    *buf = '\0';
+    
+    return static_cast<uint32_t>(buf - p);
 }
 
-static uint32_t mantissaToString(Float::decompose_type mantissa, bare::Print::Printer printer, int32_t dp)
+static uint32_t mantissaToString(const char* mantissa, bare::Print::Printer printer, int32_t digitsToLeft)
 {
     char buf[bare::Print::MaxToStringBufferSize];
-    char* p = mantissaToString(mantissa, buf, bare::Print::MaxToStringBufferSize, dp);
-    uint32_t size = static_cast<uint32_t>(p - buf);
-    while (*p) {
-        printer(*p++);
+    uint32_t size = mantissaToString(mantissa, buf, digitsToLeft);
+    for (char* p = buf; *p; ++p) {
+        printer(*p);
     }
     return size;
 }
@@ -127,39 +127,38 @@ uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital
     }
     
     uint32_t size = 0;
-    Float::decompose_type mantissa;
-    int16_t exponent;
-    v.decompose(mantissa, exponent);
-    
+    int16_t exponent;    
+    char buf[20];
+    v.toString(buf, exponent);
+
     // FIXME: Round using precision
     
-    if (mantissa < 0) {
+    if (v < Float()) {
         printer('-');
         size++;
-        mantissa = -mantissa;
     }
         
-    if (exponent >= -3 && exponent <= 5) {
+    int32_t numDigits = static_cast<int32_t>(strlen(buf));
+
+    // Compute n as exponent if form is 1.xxxe<n>
+    int16_t n = numDigits - 1 + exponent;
+    
+    if (n >= -4 && n <= 6) {
         // no exponent
-        return mantissaToString(mantissa, printer, exponent) + size;
+        return mantissaToString(buf, printer, n + 1) + size;
     }
     
-    size += mantissaToString(mantissa, printer, 1);
+    size += mantissaToString(buf, printer, 1);
     printer((cap == bare::Print::Capital::Yes) ? 'E' : 'e');
     size++;
 
-    // Assume exp is no more than 3 digits. To move
-    // it to the upper 3 digits of an int32_t we
-    // multiply by 1000000 and indicate that there
-    // are 3 digits
-    exponent--;
-    if (exponent < 0) {
+    if (n < 0) {
         printer('-');
         size++;
-        exponent = -exponent;
+        n = -n;
     }
     
-    size += intToString(exponent, printer);
+    size += intToString(n, printer);
     printer('\0');
     return size;
 }

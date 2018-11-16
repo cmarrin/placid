@@ -33,7 +33,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-FLOATTYPE = FloatDouble
+FLOATTYPE = Float64
 
 LIBS = ../baremetal/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal

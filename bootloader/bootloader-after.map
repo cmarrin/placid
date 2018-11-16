@@ -1,0 +1,546 @@
+Archive member included to satisfy reference by file (symbol)
+
+../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o)
+                              build/main-Float32.o (__aeabi_ldivmod)
+../baremetal/build/baremetal-Float32.a(uidivmod-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o) (__aeabi_uidivmod)
+../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+                              build/nanoalloc-Float32.o (bare::SystemIsInited)
+../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                              build/autoload-Float32.o (bare::FAT32::mount())
+../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o) (bare::FAT32DirectoryIterator::rawNext(bool))
+../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o) (bare::FAT32RawFile::logicalToPhysicalBlock(bare::Scalar<bare::BlockType, unsigned long>, bare::Scalar<bare::BlockType, unsigned long>&))
+../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+                              build/main-Float32.o (bare::initSystem())
+../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+                              build/nanoalloc-Float32.o (bare::Memory::heapStart())
+../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+                              build/autoload-Float32.o (bare::SDCard::SDCard())
+../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+                              build/main-Float32.o (bare::Serial::init())
+../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+                              build/main-Float32.o (bare::Timer::init())
+../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o) (bare::Serial::vprintf(char const*, std::__va_list))
+../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+                              build/autoload-Float32.o (bare::Timer::usleep(unsigned long))
+../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o) (bare::Volume::errorDetail(bare::Volume::Error) const)
+../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+                              build/main-Float32.o (bare::XYModem::receive(std::function<bool (char)>))
+../baremetal/build/baremetal-Float32.a(idivmod-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o) (__aeabi_idivmod)
+../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(Serial-Float32.o) (bare::Print::printfCore(std::function<void (char)>, char const*, std::__va_list))
+../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(Print-Float32.o) (bare::PrintfCore::format(std::function<void (char)>, char const*, std::__va_list))
+../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o) (bare::GPIO::setFunction(unsigned long, bare::GPIO::Function))
+../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)
+                              ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o) (bare::InterruptManager::enableIRQ(unsigned long, bool))
+
+Discarded input sections
+
+ .group         0x0000000000000000        0x8 build/main-Float32.o
+ .group         0x0000000000000000        0xc build/main-Float32.o
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .group         0x0000000000000000       0x14 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .group         0x0000000000000000       0x14 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .text._ZN4bare22FAT32DirectoryIteratorD2Ev
+                0x0000000000000000       0x34 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .text._ZN4bare22FAT32DirectoryIteratorD0Ev
+                0x0000000000000000       0x20 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .group         0x0000000000000000       0x10 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .text._ZNSt14_Function_baseD2Ev
+                0x0000000000000000       0x28 ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .text._ZNSt14_Function_baseD2Ev
+                0x0000000000000000       0x28 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .text._ZNSt14_Function_baseD2Ev
+                0x0000000000000000       0x28 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .text._ZNSt8functionIFvcEEC2ERKS1_
+                0x0000000000000000       0x40 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .text._ZNKSt8functionIFvcEEclEc
+                0x0000000000000000       0x2c ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .group         0x0000000000000000        0x8 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .group         0x0000000000000000        0xc ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .text._ZNSt14_Function_baseD2Ev
+                0x0000000000000000       0x28 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .text._ZNSt8functionIFvcEEC2ERKS1_
+                0x0000000000000000       0x40 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .text._ZNKSt8functionIFvcEEclEc
+                0x0000000000000000       0x2c ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x0000000000000800 0x0000000000006800
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD build/bootloader-Float32.o
+LOAD build/autoload-Float32.o
+LOAD build/nanoalloc-Float32.o
+LOAD build/main-Float32.o
+LOAD ../baremetal/build/baremetal-Float32.a
+
+.text           0x0000000000000800     0x462c
+ *(.text*)
+ .text          0x0000000000000800       0x20 build/bootloader-Float32.o
+                0x000000000000080c                PUT8
+                0x0000000000000814                BRANCHTO
+                0x0000000000000818                interruptsSupported
+ .text          0x0000000000000820      0x160 build/autoload-Float32.o
+                0x0000000000000820                autoload()
+ .text          0x0000000000000980       0xc4 build/nanoalloc-Float32.o
+                0x0000000000000a04                operator new(unsigned int)
+                0x0000000000000a08                operator new[](unsigned int)
+                0x0000000000000a0c                operator delete(void*)
+                0x0000000000000a24                operator delete[](void*)
+                0x0000000000000a28                operator delete(void*, unsigned int)
+                0x0000000000000a40                operator delete[](void*, unsigned int)
+ .text          0x0000000000000a44       0xb0 build/main-Float32.o
+ .text._ZNSt14_Function_baseD2Ev
+                0x0000000000000af4       0x28 build/main-Float32.o
+                0x0000000000000af4                std::_Function_base::~_Function_base()
+                0x0000000000000af4                std::_Function_base::~_Function_base()
+ .text._ZN4bare7XYModemD2Ev
+                0x0000000000000b1c       0x30 build/main-Float32.o
+                0x0000000000000b1c                bare::XYModem::~XYModem()
+                0x0000000000000b1c                bare::XYModem::~XYModem()
+ *fill*         0x0000000000000b4c        0x4 
+ .text.startup  0x0000000000000b50      0x2c4 build/main-Float32.o
+                0x0000000000000b50                main
+ .text          0x0000000000000e14      0x1d4 ../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o)
+                0x0000000000000e14                __aeabi_ldivmod
+                0x0000000000000ebc                __aeabi_uldivmod
+                0x0000000000000ebc                __udivdi3
+ .text          0x0000000000000fe8       0x60 ../baremetal/build/baremetal-Float32.a(uidivmod-Float32.o)
+                0x0000000000000fe8                __udivsi3
+                0x0000000000000fe8                __aeabi_uidiv
+                0x0000000000000fe8                __aeabi_uidivmod
+ .text          0x0000000000001048      0x1d8 ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+                0x0000000000001048                abort
+                0x0000000000001068                __assert_func
+                0x000000000000108c                __cxa_pure_virtual
+                0x00000000000010a0                memset
+                0x00000000000010c0                memcpy
+                0x00000000000010e4                memmove
+                0x0000000000001124                memcmp
+                0x0000000000001178                strlen
+                0x000000000000119c                strcpy
+                0x00000000000011b8                strcmp
+                0x00000000000011e0                std::__throw_bad_function_call()
+                0x00000000000011f4                std::__throw_length_error(char const*)
+                0x000000000000120c                std::__throw_bad_alloc()
+ .text          0x0000000000001220      0x8f8 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x0000000000001220                bare::FAT32::directoryIterator(char const*)
+                0x000000000000124c                bare::FAT32::rawRead(char*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+                0x0000000000001418                bare::FAT32::mount()
+                0x0000000000001458                bare::FAT32::rawWrite(char const*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+                0x0000000000001474                bare::FAT32::writeFATBlock()
+                0x0000000000001500                bare::FAT32::readFATBlock(unsigned long)
+                0x0000000000001580                bare::FAT32::nextClusterFATEntry(bare::Scalar<bare::ClusterType, unsigned long>, bare::Scalar<bare::ClusterType, unsigned long>&)
+                0x00000000000015e8                bare::FAT32::allocateCluster(bare::Scalar<bare::ClusterType, unsigned long>)
+                0x000000000000170c                bare::FAT32::create(char const*)
+                0x000000000000178c                bare::FAT32::freeClusters(bare::Scalar<bare::ClusterType, unsigned long>)
+                0x0000000000001820                bare::FAT32::convertTo8dot3(char*, char const*)
+                0x0000000000001924                bare::FAT32::find(bare::FAT32::FileInfo&, char const*)
+                0x00000000000019b4                bare::FAT32::open(char const*)
+                0x0000000000001a30                bare::FAT32::exists(char const*)
+                0x0000000000001a60                bare::FAT32::remove(char const*)
+                0x0000000000001b00                bare::FAT32::errorDetail(bare::Volume::Error) const
+ .text._ZNK4bare5FAT3212sizeInBlocksEv
+                0x0000000000001b18        0x8 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x0000000000001b18                bare::FAT32::sizeInBlocks() const
+ .text._ZN4bare5FAT3211bufToUInt32EPh
+                0x0000000000001b20       0x24 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x0000000000001b20                bare::FAT32::bufToUInt32(unsigned char*)
+ .text._ZN4bare22FAT32DirectoryIteratorD2Ev
+                0x0000000000001b44       0x34 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x0000000000001b44                bare::FAT32DirectoryIterator::~FAT32DirectoryIterator()
+                0x0000000000001b44                bare::FAT32DirectoryIterator::~FAT32DirectoryIterator()
+ .text._ZN4bare22FAT32DirectoryIteratorD0Ev
+                0x0000000000001b78       0x20 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x0000000000001b78                bare::FAT32DirectoryIterator::~FAT32DirectoryIterator()
+ .text          0x0000000000001b98      0x3e4 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                0x0000000000001b98                bare::FAT32DirectoryIterator::getFileInfo()
+                0x0000000000001cdc                bare::FAT32DirectoryIterator::rawNext(bool)
+                0x0000000000001dd4                bare::FAT32DirectoryIterator::next()
+                0x0000000000001e08                bare::FAT32DirectoryIterator::FAT32DirectoryIterator(bare::FAT32*, char const*)
+                0x0000000000001e08                bare::FAT32DirectoryIterator::FAT32DirectoryIterator(bare::FAT32*, char const*)
+                0x0000000000001ea4                bare::FAT32DirectoryIterator::createEntry(char const*, unsigned long, bare::Scalar<bare::ClusterType, unsigned long>)
+                0x0000000000001f40                bare::FAT32DirectoryIterator::deleteEntry()
+ .text._ZNK4bare22FAT32DirectoryIterator4nameEv
+                0x0000000000001f7c       0x18 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                0x0000000000001f7c                bare::FAT32DirectoryIterator::name() const
+ .text._ZNK4bare22FAT32DirectoryIterator4sizeEv
+                0x0000000000001f94       0x14 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                0x0000000000001f94                bare::FAT32DirectoryIterator::size() const
+ .text._ZNK4bare22FAT32DirectoryIteratorcvbEv
+                0x0000000000001fa8        0x8 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                0x0000000000001fa8                bare::FAT32DirectoryIterator::operator bool() const
+ .text          0x0000000000001fb0      0x2f8 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+                0x0000000000002008                bare::FAT32RawFile::rename(char const*)
+                0x00000000000020d4                bare::FAT32RawFile::updateSize()
+                0x00000000000020fc                bare::FAT32RawFile::insertCluster()
+                0x000000000000212c                bare::FAT32RawFile::logicalToPhysicalBlock(bare::Scalar<bare::BlockType, unsigned long>, bare::Scalar<bare::BlockType, unsigned long>&)
+                0x0000000000002214                bare::FAT32RawFile::read(char*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+                0x0000000000002260                bare::FAT32RawFile::write(char const*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+ .text._ZN4bare12FAT32RawFileD2Ev
+                0x00000000000022a8        0x4 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+                0x00000000000022a8                bare::FAT32RawFile::~FAT32RawFile()
+                0x00000000000022a8                bare::FAT32RawFile::~FAT32RawFile()
+ .text._ZN4bare12FAT32RawFileD0Ev
+                0x00000000000022ac       0x18 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+                0x00000000000022ac                bare::FAT32RawFile::~FAT32RawFile()
+ .text          0x00000000000022c4       0xe4 ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+                0x00000000000022c4                bare::initSystem()
+                0x0000000000002320                malloc
+                0x0000000000002338                free
+                0x000000000000234c                disableIRQ
+                0x0000000000002360                enableIRQ
+                0x0000000000002374                WFE
+                0x0000000000002380                kernelBase
+                0x0000000000002388                __aeabi_idiv
+                0x0000000000002394                __aeabi_idiv0
+ .text          0x00000000000023a8       0x24 ../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+                0x00000000000023a8                bare::Memory::heapStart()
+                0x00000000000023b4                bare::Memory::heapSize()
+ .text          0x00000000000023cc      0xd00 ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+                0x000000000000296c                bare::SDCard::read(char*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+                0x0000000000002b38                bare::SDCard::write(char const*, bare::Scalar<bare::BlockType, unsigned long>, unsigned long)
+                0x0000000000002d10                bare::SDCard::SDCard()
+                0x0000000000002d10                bare::SDCard::SDCard()
+ .text          0x00000000000030cc      0x230 ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+                0x00000000000030cc                bare::Serial::init()
+                0x00000000000031c0                bare::Serial::rxReady()
+                0x0000000000003200                bare::Serial::read(unsigned char&)
+                0x000000000000327c                bare::Serial::write(unsigned char)
+                0x000000000000329c                bare::Serial::handleInterrupt()
+ .text          0x00000000000032fc      0x108 ../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+                0x00000000000032fc                bare::Timer::init()
+                0x0000000000003318                bare::Timer::updateTimers()
+                0x0000000000003390                bare::Timer::handleInterrupt()
+                0x00000000000033dc                bare::Timer::systemTime()
+ .text          0x0000000000003404      0x470 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x000000000000341c                bare::Serial::vprintf(char const*, std::__va_list)
+                0x0000000000003460                bare::Serial::printf(char const*, ...)
+                0x0000000000003488                bare::Serial::puts(char const*, unsigned long)
+                0x000000000000355c                bare::Serial::puts(bare::_Float<long, long, long, 10l, 3l>)
+                0x00000000000035d4                bare::Serial::puts(unsigned long long)
+                0x000000000000364c                bare::Serial::puts(unsigned long)
+                0x00000000000036dc                bare::Serial::puts(long)
+                0x00000000000037ac                bare::Serial::puts(long long)
+ .text._ZNSt17_Function_handlerIFvcEZN4bare5Print8toStringEPcNS1_6_FloatIlllLl10ELl3EEEEUlcE_E9_M_invokeERKSt9_Any_dataOc
+                0x0000000000003874       0x1c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003874                std::_Function_handler<void (char), bare::Print::toString(char*, bare::_Float<long, long, long, 10l, 3l>)::{lambda(char)#1}>::_M_invoke(std::_Any_data const&, char&&)
+ .text._ZNSt14_Function_base13_Base_managerIZN4bare5Print8toStringEPcNS1_6_FloatIlllLl10ELl3EEEEUlcE_E10_M_managerERSt9_Any_dataRKS8_St18_Manager_operation
+                0x0000000000003890       0x20 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003890                std::_Function_base::_Base_manager<bare::Print::toString(char*, bare::_Float<long, long, long, 10l, 3l>)::{lambda(char)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<bare::Print::toString(char*, bare::_Float<long, long, long, 10l, 3l>)::{lambda(char)#1}> const&, std::_Manager_operation)
+ .text._ZNSt17_Function_handlerIFvcEZN4bare5Print8toStringEPclEUlcE_E9_M_invokeERKSt9_Any_dataOc
+                0x00000000000038b0       0x1c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x00000000000038b0                std::_Function_handler<void (char), bare::Print::toString(char*, long)::{lambda(char)#1}>::_M_invoke(std::_Any_data const&, char&&)
+ .text._ZNSt14_Function_base13_Base_managerIZN4bare5Print8toStringEPclEUlcE_E10_M_managerERSt9_Any_dataRKS6_St18_Manager_operation
+                0x00000000000038cc       0x20 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x00000000000038cc                std::_Function_base::_Base_manager<bare::Print::toString(char*, long)::{lambda(char)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<bare::Print::toString(char*, long)::{lambda(char)#1}> const&, std::_Manager_operation)
+ .text._ZNSt17_Function_handlerIFvcEZN4bare5Print8toStringEPcmhNS2_7CapitalEEUlcE_E9_M_invokeERKSt9_Any_dataOc
+                0x00000000000038ec       0x1c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x00000000000038ec                std::_Function_handler<void (char), bare::Print::toString(char*, unsigned long, unsigned char, bare::Print::Capital)::{lambda(char)#1}>::_M_invoke(std::_Any_data const&, char&&)
+ .text._ZNSt14_Function_base13_Base_managerIZN4bare5Print8toStringEPcmhNS2_7CapitalEEUlcE_E10_M_managerERSt9_Any_dataRKS7_St18_Manager_operation
+                0x0000000000003908       0x20 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003908                std::_Function_base::_Base_manager<bare::Print::toString(char*, unsigned long, unsigned char, bare::Print::Capital)::{lambda(char)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<bare::Print::toString(char*, unsigned long, unsigned char, bare::Print::Capital)::{lambda(char)#1}> const&, std::_Manager_operation)
+ .text._ZNSt17_Function_handlerIFvcEZN4bare5Print8toStringEPcxEUlcE_E9_M_invokeERKSt9_Any_dataOc
+                0x0000000000003928       0x1c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003928                std::_Function_handler<void (char), bare::Print::toString(char*, long long)::{lambda(char)#1}>::_M_invoke(std::_Any_data const&, char&&)
+ .text._ZNSt14_Function_base13_Base_managerIZN4bare5Print8toStringEPcxEUlcE_E10_M_managerERSt9_Any_dataRKS6_St18_Manager_operation
+                0x0000000000003944       0x20 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003944                std::_Function_base::_Base_manager<bare::Print::toString(char*, long long)::{lambda(char)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<bare::Print::toString(char*, long long)::{lambda(char)#1}> const&, std::_Manager_operation)
+ .text._ZNSt17_Function_handlerIFvcEZN4bare5Print8toStringEPcyhNS2_7CapitalEEUlcE_E9_M_invokeERKSt9_Any_dataOc
+                0x0000000000003964       0x1c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003964                std::_Function_handler<void (char), bare::Print::toString(char*, unsigned long long, unsigned char, bare::Print::Capital)::{lambda(char)#1}>::_M_invoke(std::_Any_data const&, char&&)
+ .text._ZNSt14_Function_base13_Base_managerIZN4bare5Print8toStringEPcyhNS2_7CapitalEEUlcE_E10_M_managerERSt9_Any_dataRKS7_St18_Manager_operation
+                0x0000000000003980       0x20 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x0000000000003980                std::_Function_base::_Base_manager<bare::Print::toString(char*, unsigned long long, unsigned char, bare::Print::Capital)::{lambda(char)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<bare::Print::toString(char*, unsigned long long, unsigned char, bare::Print::Capital)::{lambda(char)#1}> const&, std::_Manager_operation)
+ .text._ZNSt8functionIFvcEEC2ERKS1_
+                0x00000000000039a0       0x40 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x00000000000039a0                std::function<void (char)>::function(std::function<void (char)> const&)
+                0x00000000000039a0                std::function<void (char)>::function(std::function<void (char)> const&)
+ .text._ZNKSt8functionIFvcEEclEc
+                0x00000000000039e0       0x2c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+                0x00000000000039e0                std::function<void (char)>::operator()(char) const
+ *fill*         0x0000000000003a0c        0x4 
+ .text          0x0000000000003a10      0x310 ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+                0x0000000000003b0c                bare::Timer::start(bare::Timer*, unsigned long, bool)
+                0x0000000000003b48                bare::Timer::stop(bare::Timer*)
+                0x0000000000003b4c                bare::Timer::usleep(unsigned long)
+                0x0000000000003b74                bare::Timer::setCurrentTime(bare::RealTime const&)
+                0x0000000000003ba0                bare::Timer::currentTime()
+                0x0000000000003bcc                bare::RealTime::RealTime(long, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned long)
+                0x0000000000003bcc                bare::RealTime::RealTime(long, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned long)
+                0x0000000000003c74                bare::RealTime::day() const
+                0x0000000000003c9c                bare::RealTime::month() const
+                0x0000000000003cc4                bare::RealTime::year() const
+                0x0000000000003cec                bare::RealTime::dayOfWeek() const
+ .text          0x0000000000003d20       0x1c ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+                0x0000000000003d20                bare::Volume::errorDetail(bare::Volume::Error) const
+ .text          0x0000000000003d3c      0x34c ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+                0x0000000000003d3c                bare::XYModem::receive(std::function<bool (char)>)
+ .text._ZNKSt8functionIFmvEEclEv
+                0x0000000000004088       0x1c ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+                0x0000000000004088                std::function<unsigned long ()>::operator()() const
+ .text._ZNKSt8functionIFvhEEclEh
+                0x00000000000040a4       0x2c ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+                0x00000000000040a4                std::function<void (unsigned char)>::operator()(unsigned char) const
+ .text          0x00000000000040d0       0x58 ../baremetal/build/baremetal-Float32.a(idivmod-Float32.o)
+                0x00000000000040d0                __aeabi_idivmod
+ .text          0x0000000000004128      0x484 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+                0x0000000000004188                bare::Print::vsnprintf(char*, unsigned int, char const*, std::__va_list)
+                0x00000000000041e4                bare::Print::snprintf(char*, unsigned int, char const*, ...)
+                0x000000000000420c                bare::Print::printfCore(std::function<void (char)>, char const*, std::__va_list)
+                0x0000000000004310                bare::Print::printString(std::function<void (char)>, unsigned long long, unsigned char, bare::Print::Capital)
+                0x00000000000043bc                bare::Print::printString(std::function<void (char)>, bare::_Float<long, long, long, 10l, 3l>, long, bare::Print::Capital)
+ .text          0x00000000000045ac      0x6b8 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+                0x00000000000047e8                bare::PrintfCore::format(std::function<void (char)>, char const*, std::__va_list)
+ .text          0x0000000000004c64      0x110 ../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+                0x0000000000004c64                bare::GPIO::setFunction(unsigned long, bare::GPIO::Function)
+                0x0000000000004cb8                bare::GPIO::setPin(unsigned long, bool)
+                0x0000000000004ce8                bare::GPIO::getPin(unsigned long)
+                0x0000000000004d10                bare::GPIO::setPull(unsigned long, bare::GPIO::Pull)
+                0x0000000000004d68                bare::GPIO::reg(bare::GPIO::Register)
+ .text          0x0000000000004d74       0xb8 ../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)
+                0x0000000000004d74                handleIRQ
+                0x0000000000004d90                bare::InterruptManager::enableIRQ(unsigned long, bool)
+                0x0000000000004de8                bare::InterruptManager::enableBasicIRQ(unsigned long, bool)
+
+.glue_7         0x0000000000004e2c        0x0
+ .glue_7        0x0000000000004e2c        0x0 linker stubs
+
+.glue_7t        0x0000000000004e2c        0x0
+ .glue_7t       0x0000000000004e2c        0x0 linker stubs
+
+.vfp11_veneer   0x0000000000004e2c        0x0
+ .vfp11_veneer  0x0000000000004e2c        0x0 linker stubs
+
+.v4_bx          0x0000000000004e2c        0x0
+ .v4_bx         0x0000000000004e2c        0x0 linker stubs
+
+.iplt           0x0000000000004e2c        0x0
+ .iplt          0x0000000000004e2c        0x0 build/bootloader-Float32.o
+
+.rodata         0x0000000000004e2c      0x80b
+ *(.rodata*)
+ .rodata.str1.1
+                0x0000000000004e2c       0x72 build/autoload-Float32.o
+ .rodata.str1.1
+                0x0000000000004e9e       0x1d build/nanoalloc-Float32.o
+ .rodata.str1.1
+                0x0000000000004ebb      0x109 build/main-Float32.o
+ .rodata.str1.1
+                0x0000000000004fc4       0x97 ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+ *fill*         0x000000000000505b        0x1 
+ .rodata        0x000000000000505c       0x28 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                0x000000000000505c                vtable for bare::FAT32
+ .rodata.str1.1
+                0x0000000000005084        0x2 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+                                          0x6 (size before relaxing)
+ *fill*         0x0000000000005086        0x2 
+ .rodata        0x0000000000005088       0x20 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                0x0000000000005088                vtable for bare::FAT32DirectoryIterator
+ .rodata._ZNK4bare22FAT32DirectoryIterator4nameEv.str1.1
+                0x00000000000050a8        0x2 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+                                          0x1 (size before relaxing)
+ .rodata        0x00000000000050a8       0x24 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+                0x00000000000050a8                vtable for bare::FAT32RawFile
+ .rodata.str1.1
+                0x00000000000050cc       0xc5 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .rodata.str1.1
+                0x0000000000005191       0x41 ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+ *fill*         0x00000000000051d2        0x2 
+ .rodata        0x00000000000051d4       0x10 ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+                0x00000000000051d4                vtable for bare::SDCard
+ .rodata.str1.1
+                0x00000000000051e4      0x33a ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .rodata        0x000000000000551e       0x18 ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+ *fill*         0x0000000000005536        0x2 
+ .rodata        0x0000000000005538       0x58 ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+                0x0000000000005568                vtable for bare::Volume
+ .rodata.str1.1
+                0x0000000000005590       0xa7 ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+
+.rel.dyn        0x0000000000005638        0x0
+ .rel.iplt      0x0000000000005638        0x0 build/bootloader-Float32.o
+
+.init_array     0x0000000000005637        0x0
+                0x0000000000005637                __init_start = .
+ *(.init_array*)
+                0x0000000000005637                __init_end = .
+
+.data           0x0000000000005637        0x1
+ *(.data*)
+ .data          0x0000000000005637        0x0 build/bootloader-Float32.o
+ .data          0x0000000000005637        0x0 build/autoload-Float32.o
+ .data          0x0000000000005637        0x0 build/nanoalloc-Float32.o
+ .data          0x0000000000005637        0x0 build/main-Float32.o
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(uidivmod-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+ .data          0x0000000000005637        0x0 ../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+ .data          0x0000000000005637        0x1 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(idivmod-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+ .data          0x0000000000005638        0x0 ../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)
+
+.igot.plt       0x0000000000005638        0x0
+ .igot.plt      0x0000000000005638        0x0 build/bootloader-Float32.o
+
+.bss            0x0000000000005638      0x130
+                0x0000000000005638                __bss_start = .
+ *(.bss*)
+ .bss           0x0000000000005638        0x0 build/bootloader-Float32.o
+ .bss           0x0000000000005638        0x0 build/autoload-Float32.o
+ .bss           0x0000000000005638        0x4 build/nanoalloc-Float32.o
+ .bss           0x000000000000563c        0x0 build/main-Float32.o
+ .bss           0x000000000000563c        0x0 ../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o)
+ .bss           0x000000000000563c        0x0 ../baremetal/build/baremetal-Float32.a(uidivmod-Float32.o)
+ .bss           0x000000000000563c        0x1 ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+                0x000000000000563c                bare::SystemIsInited
+ .bss           0x000000000000563d        0x0 ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .bss           0x000000000000563d        0x0 ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .bss           0x000000000000563d        0x0 ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .bss           0x000000000000563d        0x0 ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+ .bss           0x000000000000563d        0x0 ../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+ *fill*         0x000000000000563d        0x3 
+ .bss           0x0000000000005640        0xc ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .bss           0x000000000000564c      0x108 ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+                0x000000000000564c                bare::Serial::rxtail
+                0x0000000000005650                bare::Serial::rxhead
+                0x0000000000005654                bare::Serial::rxbuffer
+ .bss           0x0000000000005754        0x0 ../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+ .bss           0x0000000000005754        0x0 ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ *fill*         0x0000000000005754        0x4 
+ .bss           0x0000000000005758       0x10 ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+                0x0000000000005758                bare::Timer::_head
+                0x0000000000005760                bare::Timer::_epochOffset
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(idivmod-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+ .bss           0x0000000000005768        0x0 ../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)
+ *(COMMON)
+                0x0000000000005768                _end = .
+OUTPUT(build/bootloader.elf elf32-littlearm)
+
+.ARM.attributes
+                0x0000000000000000       0x38
+ .ARM.attributes
+                0x0000000000000000       0x28 build/bootloader-Float32.o
+ .ARM.attributes
+                0x0000000000000028       0x3c build/autoload-Float32.o
+ .ARM.attributes
+                0x0000000000000064       0x3c build/nanoalloc-Float32.o
+ .ARM.attributes
+                0x00000000000000a0       0x3c build/main-Float32.o
+ .ARM.attributes
+                0x00000000000000dc       0x28 ../baremetal/build/baremetal-Float32.a(ldivmod-Float32.o)
+ .ARM.attributes
+                0x0000000000000104       0x28 ../baremetal/build/baremetal-Float32.a(uidivmod-Float32.o)
+ .ARM.attributes
+                0x000000000000012c       0x3c ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+ .ARM.attributes
+                0x0000000000000168       0x3c ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .ARM.attributes
+                0x00000000000001a4       0x3c ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .ARM.attributes
+                0x00000000000001e0       0x3c ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .ARM.attributes
+                0x000000000000021c       0x3c ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+ .ARM.attributes
+                0x0000000000000258       0x3c ../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+ .ARM.attributes
+                0x0000000000000294       0x3c ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .ARM.attributes
+                0x00000000000002d0       0x3c ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+ .ARM.attributes
+                0x000000000000030c       0x3c ../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+ .ARM.attributes
+                0x0000000000000348       0x3c ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .ARM.attributes
+                0x0000000000000384       0x3c ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+ .ARM.attributes
+                0x00000000000003c0       0x3c ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+ .ARM.attributes
+                0x00000000000003fc       0x3c ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .ARM.attributes
+                0x0000000000000438       0x28 ../baremetal/build/baremetal-Float32.a(idivmod-Float32.o)
+ .ARM.attributes
+                0x0000000000000460       0x3c ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .ARM.attributes
+                0x000000000000049c       0x3c ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .ARM.attributes
+                0x00000000000004d8       0x3c ../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+ .ARM.attributes
+                0x0000000000000514       0x3c ../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)
+
+.comment        0x0000000000000000       0x7e
+ .comment       0x0000000000000000       0x7e build/autoload-Float32.o
+                                         0x7f (size before relaxing)
+ .comment       0x000000000000007e       0x7f build/nanoalloc-Float32.o
+ .comment       0x000000000000007e       0x7f build/main-Float32.o
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(bare-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(FAT32-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(FAT32DirectoryIterator-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(FAT32RawFile-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiBare-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiMemoryMin-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiSDCard-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiSerial-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiTimer-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(Serial-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(Timer-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(Volume-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(XYModem-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(Print-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(PrintfCore-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiGPIO-Float32.o)
+ .comment       0x000000000000007e       0x7f ../baremetal/build/baremetal-Float32.a(RPiInterruptManager-Float32.o)

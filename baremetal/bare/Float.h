@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "fpconv.h"
+#include <utility>
 #include <cmath>
 #include <cstdarg>
 #include <cstdint>
@@ -66,20 +68,22 @@ inline void mult64to128(uint64_t op1, uint64_t op2, uint64_t& hi, uint64_t& lo)
 template<typename RawType, typename DecomposeType, typename ArgType, int32_t BinExp = 0, int32_t DecExp = 0>
 class _Float
 {
-private:
-    static constexpr int32_t exp(int32_t v, int32_t base, int32_t n) { return n ? exp(v * base, base, n - 1) : v; }
-
 public:
     using value_type = RawType;
     using decompose_type = DecomposeType;
     using arg_type = ArgType;
     
-    static constexpr int32_t BinaryExponent = BinExp;
-    static constexpr value_type BinaryMultiplier = exp(1, 2, BinExp);
-    static constexpr value_type BinaryMask = (1L << BinaryExponent) - 1;
-    static constexpr int32_t DecimalExponent = DecExp;
-    static constexpr value_type DecimalMultiplier = exp(1, 10, DecExp);
-    static constexpr uint8_t MaxDigits = (sizeof(value_type) <= 32) ? 8 : 12;
+private:
+    static constexpr decompose_type exp(decompose_type v, decompose_type base, decompose_type n) { return n ? exp(v * base, base, n - 1) : v; }
+
+public:
+    static constexpr decompose_type BinaryExponent = BinExp;
+    static constexpr decompose_type MaxIntegerBits = sizeof(value_type) * 8 - BinaryExponent;
+    static constexpr decompose_type BinaryMultiplier = exp(1, 2, BinaryExponent);
+    static constexpr decompose_type BinaryMask = (1L << BinaryExponent) - 1;
+    static constexpr decompose_type DecimalExponent = DecExp;
+    static constexpr decompose_type DecimalMultiplier = exp(1, 10, DecimalExponent);
+    static constexpr decompose_type MaxDigits = (sizeof(value_type) <= 32) ? 8 : 12;
     
     // Constructors
     //
@@ -89,7 +93,49 @@ public:
     explicit _Float(bool value) { _value = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
     explicit _Float(int32_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
 
-    // Converts arg_type to Float. Used for va_arg
+    _Float(double d)
+    {
+        union {
+            double number;
+            uint64_t integer;
+            struct
+            {
+                uint64_t frac : 52;
+                int16_t exp : 11;
+                bool sign : 1;
+            };
+        } value;
+        
+        value.number = d;
+        value.exp -= 1023;
+        
+        if (value.exp < -BinaryExponent || value.exp > MaxIntegerBits) {
+            _value = 0;
+            return;
+        }
+        
+        uint64_t frac = value.frac;
+        frac |= 0x10000000000000;
+        
+        int32_t shift = 52 - value.exp - BinaryExponent;
+        if (shift < 0) {
+            frac <<= -shift;
+        } else if (shift > 0) {
+            frac >>= shift - 1;
+            frac += 1;
+            frac >>= 1;
+        }
+
+        _value = static_cast<value_type>(frac);
+        if (value.sign) {
+            _value = -_value;
+        }
+    }
+    
+    // Convert Float to arg_type for passing to printf
+    arg_type toArg() const { return static_cast<arg_type>(_value); }
+    
+    // Get the next arg from the va_list and convert it to a Float
     static _Float argToFloat(va_list va)
     {
         _Float floatValue;
@@ -97,49 +143,6 @@ public:
         return floatValue;
     }
 
-    _Float(value_type i, int32_t e)
-    {
-        if (i == 0) {
-            _value = 0;
-            return;
-        }
-        if (e == 0) {
-            _value = static_cast<value_type>(static_cast<value_type>(i) * BinaryMultiplier);
-            return;
-        }
-        
-        value_type num = static_cast<value_type>(i) * BinaryMultiplier;
-        int32_t sign = (num < 0) ? -1 : 1;
-        num *= sign;
-        
-        while (e > 0) {
-            if (num > std::numeric_limits<value_type>::max()) {
-                // FIXME: Number is over range, handle that
-                _value = 0;
-                return;
-            }
-            --e;
-            num *= 10;
-        }
-        while (e < 0) {
-            if (num == 0) {
-                // FIXME: Number is under range, handle that
-                _value = 0;
-                return;
-            }
-            ++e;
-            num /= 10;
-        }
-        
-        if (num > std::numeric_limits<value_type>::max()) {
-            // FIXME: Number is under range, handle that
-            _value = 0;
-            return;
-        }
-        
-        _value = sign * static_cast<value_type>(num);
-    }
-    
     operator bool() const { return _value != 0; }
 
     const _Float& operator=(const _Float& other) { _value = other._value; return *this; }
@@ -179,20 +182,28 @@ public:
     operator int32_t() const { return static_cast<int32_t>(_value >> BinaryExponent); }
     operator int64_t() const { return static_cast<int64_t>(_value >> BinaryExponent); }
 
-    void decompose(decompose_type& mantissa, int16_t& exponent) const
-    {        
-        if (_value == 0) {
-            mantissa = 0;
-            exponent = 0;
-            return;
-        }
-        _Float integerFloat = floor();
-        decompose_type integerPart = static_cast<decompose_type>(integerFloat);
-        _Float fractionPart = *this - integerFloat;
-        decompose_type value = static_cast<decompose_type>(fractionPart._value) * DecimalMultiplier;
-        mantissa = ((value >> (BinaryExponent - 1)) + 1) >> 1;
-        mantissa += integerPart * DecimalMultiplier;
+    // Returned string is numeric with exp determining how many digits from the right end to place the decimal point
+    void toString(char* buf, int16_t& exponent) const
+    {
+        // Convert to base 10
+        value_type intPart = _value / BinaryMultiplier;
+        value_type fracPart = _value % BinaryMultiplier;
+        
+        value_type value = intPart * DecimalMultiplier;
+        value += ((fracPart * DecimalMultiplier) + (DecimalMultiplier / 2)) / BinaryMultiplier;
         exponent = -DecimalExponent;
+        
+        // Generate the string backwards then reverse it
+        int16_t i = 0;
+        for ( ; value || i < -exponent; ++i) {
+            value_type digit = value % 10;
+            buf[i] = digit + '0';
+            value /= 10;
+        }
+        for (int16_t j = 0; j < i / 2; ++j) {
+            std::swap(buf[j], buf[i - j - 1]);
+        }
+        buf[i] = '\0';
     }
 
     _Float operator%(const _Float& other) { return *this - other * (*this / other).floor(); }
@@ -217,46 +228,18 @@ private:
 //
 
 // float specializations
-template<>
-inline _Float<float, int32_t, double>::_Float(value_type i, int32_t e)
-{
-    float num = static_cast<float>(i);
-    while (e > 0) {
-        --e;
-        num *= 10;
-    }
-    while (e < 0) {
-        ++e;
-        num /= 10;
-    }
-    _value = num;
-}
 
 template<>
 inline _Float<float, int32_t, double>::_Float(bool value) { _value = value ? 1 : 0; }
 
 template<>
-inline void _Float<float, int32_t, double>::decompose(int32_t& mantissa, int16_t& exponent) const
+inline _Float<float, int32_t, double>::_Float(double d) { _value = static_cast<value_type>(d); }
+
+template<>
+inline void _Float<float, int32_t, double>::toString(char* buf, int16_t& exponent) const
 {
-    // FIXME: Implement correctly for fractions
-    if (_value == 0) {
-        mantissa = 0;
-        exponent = 0;
-        return;
-    }
-    int32_t sign = (_value < 0) ? -1 : 1;
-    double value = _value * sign;
-    int32_t exp = 0;
-    while (value >= 1) {
-        value /= 10;
-        exp++;
-    }
-    while (value < 0.1) {
-        value *= 10;
-        exp--;
-    }
-    mantissa = static_cast<int32_t>(sign * value * 1000000000);
-    exponent = exp - 9;
+    int size = fpconv_dtoa(_value, buf, exponent);
+    buf[size] = '\0';
 }
 
 template<>
@@ -284,46 +267,18 @@ inline _Float<float, int32_t, double> _Float<float, int32_t, double>::floor() co
 }
 
 // double specializations
-template<>
-inline _Float<double, int64_t, double>::_Float(value_type i, int32_t e)
-{
-    double num = static_cast<double>(i);
-    while (e > 0) {
-        --e;
-        num *= 10;
-    }
-    while (e < 0) {
-        ++e;
-        num /= 10;
-    }
-    _value = num;
-}
 
 template<>
-inline _Float<double, int32_t, double>::_Float(bool value) { _value = value ? 1 : 0; }
+inline _Float<double, int64_t, double>::_Float(bool value) { _value = value ? 1 : 0; }
 
 template<>
-inline void _Float<double, int64_t, double>::decompose(int64_t& mantissa, int16_t& exponent) const
+inline _Float<double, int64_t, double>::_Float(double d) { _value = d; }
+
+template<>
+inline void _Float<double, int64_t, double>::toString(char* buf, int16_t& exponent) const
 {
-    // FIXME: Implement correctly for fractions
-    if (_value == 0) {
-        mantissa = 0;
-        exponent = 0;
-        return;
-    }
-    int32_t sign = (_value < 0) ? -1 : 1;
-    double value = _value * sign;
-    int32_t exp = 0;
-    while (value >= 1) {
-        value /= 10;
-        exp++;
-    }
-    while (value < 0.1) {
-        value *= 10;
-        exp--;
-    }
-    mantissa = static_cast<int32_t>(sign * value * 1000000000);
-    exponent = exp - 9;
+    int size = fpconv_dtoa(_value, buf, exponent);
+    buf[size] = '\0';
 }
 
 template<>
@@ -407,7 +362,7 @@ inline _Float<int64_t, int64_t, int64_t, 30, 7> _Float<int64_t, int64_t, int64_t
     return r;
 }
 
-// Float32     - +/- 2e6 with 2 decimal digits of precision
+// Float32     - +/- 2e6 with 3 decimal digits of precision
 // Float64     - +/- 8e9 with 8 decimal digits of precision
 // FloatFloat  - IEEE single precision floating point
 // FloatDouble - IEEE double precision floating point
@@ -416,7 +371,7 @@ inline _Float<int64_t, int64_t, int64_t, 30, 7> _Float<int64_t, int64_t, int64_t
 // the LSB is the type, so we lose a bit. That leaves us with 5e-8
 // precision. That safely gives us 8 decimal digits of precision.
 using Float64 = _Float<int64_t, int64_t, int64_t, 30, 7>;
-using Float32 = _Float<int32_t, int32_t, int32_t, 10, 2>;
+using Float32 = _Float<int32_t, int32_t, int32_t, 10, 3>;
 using FloatFloat = _Float<float, int32_t, double>;
 using FloatDouble = _Float<double, int64_t, double>;
 
