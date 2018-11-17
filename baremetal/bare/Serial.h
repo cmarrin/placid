@@ -70,11 +70,6 @@ namespace bare {
         static bool rxReady();
 		static Error write(uint8_t);
 		static Error puts(const char*, uint32_t size = 0);
-        static Error puts(bare::Float);
-        static Error puts(int32_t);
-        static Error puts(uint32_t);
-        static Error puts(int64_t);
-        static Error puts(uint64_t);
         
         static void clearInput() { rxhead = rxtail = 0; }
 

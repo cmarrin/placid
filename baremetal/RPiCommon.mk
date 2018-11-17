@@ -45,7 +45,7 @@ OBJDUMP = $(TOOLCHAIN)-objdump
 OBJCOPY = $(TOOLCHAIN)-objcopy
 
 ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -D$(PLATFORM) -DFLOATTYPE=$(FLOATTYPE) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+CFLAGS = $(INCLUDES) -D$(PLATFORM) -D$(FLOATTYPE) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)

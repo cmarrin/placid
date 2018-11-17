@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "fpconv.h"
-#include "powers.h"
+#include "bare/fpconv.h"
+#include "bare/powers.h"
 
 #define fracmask  0x000FFFFFFFFFFFFFU
 #define expmask   0x7FF0000000000000U

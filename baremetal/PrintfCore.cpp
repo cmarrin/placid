@@ -199,7 +199,11 @@ static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width
     // FIXME: Handle flags.zeroPad
     // FIXME: Handle width
     // FIXME: Handle precision
+#if FLOATTYPE == FloatNone
+    return 0;
+#else
     return bare::Print::printString(printer, value, precision, cap);
+#endif
 }
 
 static int32_t outString(bare::Print::Printer printer, const char* s, int32_t width, int32_t precision, Flags flags)

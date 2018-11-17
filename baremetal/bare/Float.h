@@ -374,5 +374,6 @@ using Float64 = _Float<int64_t, int64_t, int64_t, 30, 7>;
 using Float32 = _Float<int32_t, int32_t, int32_t, 10, 3>;
 using FloatFloat = _Float<float, int32_t, double>;
 using FloatDouble = _Float<double, int64_t, double>;
+using FloatNone = _Float<int, int, int>;
 
 }

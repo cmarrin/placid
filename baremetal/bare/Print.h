@@ -86,6 +86,7 @@ namespace bare {
         Print(Print&) { }
         Print& operator=(Print& other) { return other; }
         
+        static uint32_t intToString(uint64_t value, bare::Print::Printer printer, uint8_t base = 10, bare::Print::Capital cap = bare::Print::Capital::No);
         template<typename T> static void emitSign(Printer printer, T& v)
         {
             if (v < 0) {

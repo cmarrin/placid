@@ -29,6 +29,7 @@
 		494FD6212199E64F005C2A6B /* Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 494FD61F2199E64F005C2A6B /* Memory.h */; };
 		494FD6232199E6D1005C2A6B /* DarwinMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */; };
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
+		494FD635219F8951005C2A6B /* PrintFloat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD634219F8951005C2A6B /* PrintFloat.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* bare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* bare.cpp */; };
 		4962957C215AA53B0064B9C9 /* bare.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* bare.h */; };
@@ -168,6 +169,7 @@
 		494FD62E219F7E13005C2A6B /* fpconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fpconv.h; sourceTree = "<group>"; };
 		494FD62F219F7E13005C2A6B /* powers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = powers.h; sourceTree = "<group>"; };
 		494FD630219F7E13005C2A6B /* fpconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fpconv.cpp; path = ../baremetal/fpconv.cpp; sourceTree = "<group>"; };
+		494FD634219F8951005C2A6B /* PrintFloat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintFloat.cpp; path = ../baremetal/PrintFloat.cpp; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 				496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */,
 				497EE458216138E2000584CE /* Print.cpp */,
 				494FD5F821960817005C2A6B /* PrintfCore.cpp */,
+				494FD634219F8951005C2A6B /* PrintFloat.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
@@ -564,6 +567,7 @@
 				494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */,
 				494FD60E2199CF22005C2A6B /* DarwinSDCard.cpp in Sources */,
 				496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */,
+				494FD635219F8951005C2A6B /* PrintFloat.cpp in Sources */,
 				494FD6062198ACFA005C2A6B /* DarwinBare.cpp in Sources */,
 				494FD6232199E6D1005C2A6B /* DarwinMemory.cpp in Sources */,
 				49657892216BFDA200B3F088 /* Volume.cpp in Sources */,
@@ -677,7 +681,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DFLOATTYPE=Float32";
+				OTHER_CFLAGS = "-DFLOATNONE";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -729,7 +733,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "-DFLOATTYPE=Float32";
+				OTHER_CFLAGS = "-DFLOATNONE";
 				SDKROOT = macosx;
 			};
 			name = Release;

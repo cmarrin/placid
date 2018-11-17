@@ -33,7 +33,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-FLOATTYPE ?= Float64
+FLOATTYPE ?= FLOAT32
 
 BUILDDIR = build
 SRCDIR = .
@@ -43,11 +43,13 @@ SRC =	ldivmod.S \
 		idivmod.S \
 		uidivmod.S \
 		bare.cpp \
+		fpconv.cpp \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
 		Print.cpp \
 		PrintfCore.cpp \
+		PrintFloat.cpp \
 		RPiBare.cpp \
 		RPiGPIO.cpp \
 		RPiInterruptManager.cpp \

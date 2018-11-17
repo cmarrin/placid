@@ -57,7 +57,17 @@ static_assert(0, "Unsupported platform");
 
 namespace bare {
 
-    using Float = FLOATTYPE;
+#if defined(FLOAT32)
+    using Float = Float32;
+#elif defined(FLOAT64)
+    using Float = Float64;
+#elif defined(FLOATFLOAT)
+    using Float = FloatDouble;
+#elif defined(FLOATNONE)
+    using Float = FloatNone;
+#else
+    #error must define one of FLOAT32, FLOAT64, FLOATFLOAT, or FLOATNONE
+#endif
 
     extern bool SystemIsInited;
     void initSystem();
