@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Print.h"
 
-#include "bare/PrintfCore.h"
 #include <cassert>
 
 using namespace bare;
@@ -122,7 +121,7 @@ uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital
         n = -n;
     }
     
-    size += intToString(n, printer);
+    size += printString(printer, n);
     printer('\0');
     return size;
 }

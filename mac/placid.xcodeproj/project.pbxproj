@@ -145,7 +145,6 @@
 		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../../kernel/src/Scanner.h; sourceTree = "<group>"; };
 		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
 		494FD5F821960817005C2A6B /* PrintfCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PrintfCore.cpp; path = ../baremetal/PrintfCore.cpp; sourceTree = "<group>"; };
-		494FD5F921960817005C2A6B /* PrintfCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrintfCore.h; sourceTree = "<group>"; };
 		494FD5FC219615FE005C2A6B /* XYModem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYModem.h; sourceTree = "<group>"; };
 		494FD6002197A44F005C2A6B /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPiBare.cpp; sourceTree = "<group>"; };
@@ -320,7 +319,6 @@
 				496C3BC221891FC2004DBC22 /* Log.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
 				497EE459216138E2000584CE /* Print.h */,
-				494FD5F921960817005C2A6B /* PrintfCore.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				496C3BBF21876279004DBC22 /* SPI.h */,
@@ -681,7 +679,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DFLOATNONE";
+				OTHER_CFLAGS = "-DFLOATFLOAT";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -733,7 +731,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "-DFLOATNONE";
+				OTHER_CFLAGS = "-DFLOATFLOAT";
 				SDKROOT = macosx;
 			};
 			name = Release;

@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Print.h"
 
-#include "bare/PrintfCore.h"
 #include <cassert>
 
 using namespace bare;
@@ -62,21 +61,16 @@ static char* intToString(uint64_t value, char* buf, size_t size, uint8_t base = 
     return p;
 }
 
-uint32_t Print::intToString(uint64_t value, bare::Print::Printer printer, uint8_t base, bare::Print::Capital cap)
-{
-    char buf[bare::Print::MaxToStringBufferSize];
-    char* p = ::intToString(value, buf, bare::Print::MaxToStringBufferSize, base, cap);
-    uint32_t size = static_cast<uint32_t>(p - buf);
-    while (*p) {
-        printer(*p++);
-    }
-    return size;
-}
-
-int32_t Print::printfCore(Printer printer, const char *format, va_list va)
-{
-    return PrintfCore::format(printer, format, va);
-}
+//uint32_t Print::intToString(uint64_t value, bare::Print::Printer printer, uint8_t base, bare::Print::Capital cap)
+//{
+//    char buf[bare::Print::MaxToStringBufferSize];
+//    char* p = ::intToString(value, buf, bare::Print::MaxToStringBufferSize, base, cap);
+//    uint32_t size = static_cast<uint32_t>(p - buf);
+//    while (*p) {
+//        printer(*p++);
+//    }
+//    return size;
+//}
 
 uint32_t Print::printString(Printer printer, uint64_t v, uint8_t base, Capital cap)
 {
@@ -89,24 +83,4 @@ uint32_t Print::printString(Printer printer, uint64_t v, uint8_t base, Capital c
     }
     printer('\0');
     return size;
-}
-
-int32_t Print::vsnprintf(char* buffer, size_t count, const char* format, va_list va)
-{
-    return PrintfCore::format([&buffer, &count](char c)
-    {
-        if (count > 0) {
-            *buffer++ = c;
-            --count;
-        }
-    }, format, va);
-}
-
-int32_t Print::snprintf(char* buffer, size_t count, const char* format, ...)
-{
-    va_list va;
-    va_start(va, format);
-    int32_t result = vsnprintf(buffer, count, format, va);
-    va_end(va);
-    return result;
 }

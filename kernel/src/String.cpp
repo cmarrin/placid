@@ -53,6 +53,6 @@ String& String::printf(const char* format, ...)
 
 String& String::vprintf(const char* format, va_list va)
 {
-    bare::Print::printfCore([this](char c) { *this += c; }, format, va);
+    bare::Print::vformat([this](char c) { *this += c; }, format, va);
     return *this;
 }

@@ -55,10 +55,16 @@ namespace bare {
         static constexpr uint32_t MaxStringSize = 256;
         static constexpr uint32_t MaxIntegerBufferSize = 24; // Big enough for a 64 bit integer in octal
 
-        static int32_t snprintf(char *str, size_t n, const char *format, ...);
-        static int32_t vsnprintf(char *str, size_t n, const char *format, va_list);
-
-        static int32_t printfCore(Printer, const char *format, va_list);
+        static int32_t format(Printer printer, const char* fmt, ...)
+        {
+            va_list va;
+            va_start(va, fmt);
+            int32_t result = vformat(printer, fmt, va);
+            va_end(va);
+            return result;
+        }
+        
+        static int32_t vformat(Printer, const char *format, va_list);
 
         static uint32_t printString(Printer, Float v, int32_t precision = -1, Capital = Capital::No);
         static uint32_t printString(Printer, uint64_t v, uint8_t base = 10, Capital = Capital::No);
@@ -86,7 +92,7 @@ namespace bare {
         Print(Print&) { }
         Print& operator=(Print& other) { return other; }
         
-        static uint32_t intToString(uint64_t value, bare::Print::Printer printer, uint8_t base = 10, bare::Print::Capital cap = bare::Print::Capital::No);
+        //static uint32_t intToString(uint64_t value, bare::Print::Printer printer, uint8_t base = 10, bare::Print::Capital cap = bare::Print::Capital::No);
         template<typename T> static void emitSign(Printer printer, T& v)
         {
             if (v < 0) {

@@ -35,12 +35,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/PrintfCore.h"
+#include "bare/Print.h"
 
 #include <cassert>
 
 using namespace bare;
 
+enum class Signed { Yes, No };
+enum class FloatType { Float, Exp, Shortest };
+ 
 enum class Flag {
     leftJustify = 0x01,
     plus = 0x02,
@@ -52,9 +55,6 @@ enum class Flag {
 static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
 static inline void setFlag(uint8_t flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
 
-enum class Signed { Yes, No };
-enum class FloatType { Float, Exp, Shortest };
- 
 static void handleFlags(const char*& format, uint8_t& flags)
 {
     while (1) {
@@ -70,27 +70,22 @@ static void handleFlags(const char*& format, uint8_t& flags)
     }
 }
 
-static int32_t parseNumber(const char*& format)
-{
-    int32_t n = 0;
-    bool first = true;
-    while (1) {
-        if (*format < '0' || *format > '9') {
-            return first ? -1 : n;
-        }
-        n = n * 10 + *format++ - '0';
-        first = false;
-    }
-}
-
-static uint32_t handleWidth(const char*& format, va_list va)
+static int32_t handleWidth(const char*& format, va_list va)
 {
     if (*format == '*') {
         ++format;
         return va_arg(va, int);
     }
 
-    return parseNumber(format);
+    int32_t n = -1;
+    while (1) {
+        if (*format < '0' || *format > '9') {
+            return n;
+        } else if (n < 0) {
+            n = 0;
+        }
+        n = n * 10 + *format++ - '0';
+    }
 }
 
 enum class Length { None, H, HH, L, LL, J, Z, T };
@@ -98,33 +93,20 @@ enum class Length { None, H, HH, L, LL, J, Z, T };
 static Length handleLength(const char*& format)
 {
     Length length = Length::None;
-    switch (*format) {
-    case 'h':
-        if (*++format == 'h') {
-            ++format;
-            length = Length::HH;
-        } else {
-            length = Length::H;
-        }
-        break;
-    case 'l':
-        if (*++format == 'l') {
-            ++format;
-            length = Length::LL;
-        } else {
-            length = Length::L;
-        }
-        break;
-    case 'j':
+    if (*format == 'h') {
+        ++format;
+        length = (*++format == 'h') ? Length::HH : Length::H;
+    } else if (*format == 'l') {
+        ++format;
+        length = (*++format == 'l') ? Length::LL : Length::L;
+    } else if (*format == 'j') {
         length = Length::J;
-        break;
-    case 'z':
+    } else if (*format == 'z') {
         length = Length::Z;
-        break;
-    case 't':
+    } else if (*format == 't') {
         length = Length::T;
-        break;
-    default: return length;
+    } else {
+        return length;
     }
     ++format;
     return length;
@@ -188,6 +170,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     return size;
 }
 
+#if !defined(FLOATNONE)
 static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width, int32_t precision, uint8_t flags, bare::Print::Capital cap, FloatType type)
 {
     // FIXME: Handle flags.leftJustify
@@ -197,13 +180,9 @@ static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width
     // FIXME: Handle flags.zeroPad
     // FIXME: Handle width
     // FIXME: Handle precision
-
-#if defined(FLOATNONE)
-    return 0;
-#else
     return bare::Print::printString(printer, value, precision, cap);
-#endif
 }
+#endif
 
 static int32_t outString(bare::Print::Printer printer, const char* s, int32_t width, int32_t precision, uint8_t flags)
 {
@@ -225,7 +204,7 @@ static int32_t outString(bare::Print::Printer printer, const char* s, int32_t wi
 //     'L' length - long double
 //     'l' length for 'c' and 's' specifiers - wide characters
  
-int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list va)
+int32_t Print::vformat(Print::Printer printer, const char *format, va_list va)
 {
     assert(format);
     
@@ -268,6 +247,7 @@ int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list v
         case 'X':
             size += outInteger(printer, getInteger(length, va), Signed::No, width, precision, flags, 16, (*format == 'X') ? Print::Capital::Yes : Print::Capital::No);
             break;
+#if !defined(FLOATNONE)
         case 'f':
         case 'F':
         case 'e':
@@ -288,6 +268,7 @@ int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list v
             size += outFloat(printer, Float::argToFloat(va), width, precision, flags, cap, type);
             break;
         }
+#endif
         case 'c':
             printer(static_cast<char>(va_arg(va, int)));
             size++;

@@ -93,7 +93,9 @@ static String timeString()
     
     bare::RealTime currentTime = bare::Timer::currentTime();
     char buf[50];
-    bare::Print::snprintf(buf, 49, "%s %d/%d/%d %d:%02d:%02d", 
+    char* p = buf;
+    uint32_t count = 49;
+    bare::Print::format([&p, &count](char c) { if (count--) *p++ = c; }, "%s %d/%d/%d %d:%02d:%02d",
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year(),
         currentTime.hours(), currentTime.minutes(), currentTime.seconds());
