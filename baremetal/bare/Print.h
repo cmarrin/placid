@@ -40,6 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <cstdint>
 #include <functional>
 
+extern int  emb_snprintf(char *s, size_t n, const char *fmt, ...);
+
 namespace bare {
     
     // Print - Formatted printer

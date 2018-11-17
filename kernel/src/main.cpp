@@ -92,6 +92,9 @@ int main()
     bare::Timer::init();
     bare::SPI::init();
     
+    char buffer[256];
+    emb_snprintf(buffer, 255, "This is %s: num=%d\n", "a test", 1234);
+    
     bare::Float f = 1234.56;
     bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
 

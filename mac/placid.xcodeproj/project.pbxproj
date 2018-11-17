@@ -29,6 +29,7 @@
 		494FD6232199E6D1005C2A6B /* DarwinMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */; };
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
 		494FD635219F8951005C2A6B /* PrintFloat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD634219F8951005C2A6B /* PrintFloat.cpp */; };
+		494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* bare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* bare.cpp */; };
 		4962957C215AA53B0064B9C9 /* bare.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* bare.h */; };
@@ -167,6 +168,7 @@
 		494FD62F219F7E13005C2A6B /* powers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = powers.h; sourceTree = "<group>"; };
 		494FD630219F7E13005C2A6B /* fpconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fpconv.cpp; path = ../baremetal/fpconv.cpp; sourceTree = "<group>"; };
 		494FD634219F8951005C2A6B /* PrintFloat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintFloat.cpp; path = ../baremetal/PrintFloat.cpp; sourceTree = "<group>"; };
+		494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "printf-emb_tiny.cpp"; path = "../baremetal/printf-emb_tiny.cpp"; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				494FD5FE2197A044005C2A6B /* bare */,
 				49629576215AA53B0064B9C9 /* bare.cpp */,
 				49629578215AA53B0064B9C9 /* bare.h */,
+				494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */,
 				494FD630219F7E13005C2A6B /* fpconv.cpp */,
 				492FF406215D4799003582FE /* FAT32.cpp */,
 				49731F74216E23AC00F9A79F /* FAT32.img */,
@@ -569,6 +572,7 @@
 				4962957A215AA53B0064B9C9 /* bare.cpp in Sources */,
 				496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */,
 				494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */,
+				494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */,
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,

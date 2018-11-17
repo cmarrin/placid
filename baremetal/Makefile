@@ -44,6 +44,7 @@ SRC =	ldivmod.S \
 		uidivmod.S \
 		bare.cpp \
 		fpconv.cpp \
+		printf-emb_tiny.c \
 		FAT32.cpp \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
