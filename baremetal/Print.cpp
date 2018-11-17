@@ -41,6 +41,92 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+enum class Signed { Yes, No };
+enum class FloatType { Float, Exp, Shortest };
+ 
+enum class Flag {
+    leftJustify = 0x01,
+    plus = 0x02,
+    space = 0x04,
+    alt = 0x08,
+    zeroPad = 0x10,
+};
+
+static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
+static inline void setFlag(uint8_t flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
+
+static void handleFlags(const char*& format, uint8_t& flags)
+{
+    while (1) {
+        switch (*format) {
+        case '-': setFlag(flags, Flag::leftJustify); break;
+        case '+': setFlag(flags, Flag::plus); break;
+        case ' ': setFlag(flags, Flag::space); break;
+        case '#': setFlag(flags, Flag::alt); break;
+        case '0': setFlag(flags, Flag::zeroPad); break;
+        default: return;
+        }
+        ++format;
+    }
+}
+
+static int32_t handleWidth(const char*& format, va_list va)
+{
+    if (*format == '*') {
+        ++format;
+        return va_arg(va, int);
+    }
+
+    int32_t n = -1;
+    while (1) {
+        if (*format < '0' || *format > '9') {
+            return n;
+        } else if (n < 0) {
+            n = 0;
+        }
+        n = n * 10 + *format++ - '0';
+    }
+}
+
+enum class Length { None, H, HH, L, LL, J, Z, T };
+
+static Length handleLength(const char*& format)
+{
+    Length length = Length::None;
+    if (*format == 'h') {
+        ++format;
+        length = (*++format == 'h') ? Length::HH : Length::H;
+    } else if (*format == 'l') {
+        ++format;
+        length = (*++format == 'l') ? Length::LL : Length::L;
+    } else if (*format == 'j') {
+        length = Length::J;
+    } else if (*format == 'z') {
+        length = Length::Z;
+    } else if (*format == 't') {
+        length = Length::T;
+    } else {
+        return length;
+    }
+    ++format;
+    return length;
+}
+
+static uintmax_t getInteger(Length length, va_list va)
+{
+    switch(length) {
+    case Length::None: return static_cast<uintmax_t>(va_arg(va, int));
+    case Length::H: return static_cast<uintmax_t>(va_arg(va, int)) & 0xffff;
+    case Length::HH: return static_cast<uintmax_t>(va_arg(va, int)) & 0xff;
+    case Length::L: return static_cast<uintmax_t>(va_arg(va, long int));
+    case Length::LL: return static_cast<uintmax_t>(va_arg(va, long long int));
+    case Length::J: return static_cast<uintmax_t>(va_arg(va, intmax_t));
+    case Length::Z: return static_cast<uintmax_t>(va_arg(va, size_t));
+    case Length::T: return static_cast<uintmax_t>(va_arg(va, ptrdiff_t));
+    }
+    return 0;
+}
+
 static char* intToString(uint64_t value, char* buf, size_t size, uint8_t base = 10, bare::Print::Capital cap = bare::Print::Capital::No)
 {
     if (value == 0) {
@@ -61,16 +147,168 @@ static char* intToString(uint64_t value, char* buf, size_t size, uint8_t base = 
     return p;
 }
 
-//uint32_t Print::intToString(uint64_t value, bare::Print::Printer printer, uint8_t base, bare::Print::Capital cap)
-//{
-//    char buf[bare::Print::MaxToStringBufferSize];
-//    char* p = ::intToString(value, buf, bare::Print::MaxToStringBufferSize, base, cap);
-//    uint32_t size = static_cast<uint32_t>(p - buf);
-//    while (*p) {
-//        printer(*p++);
-//    }
-//    return size;
-//}
+static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed sign, int32_t width, int32_t precision, uint8_t flags, uint8_t base, bare::Print::Capital cap)
+{
+    uint32_t size = 0;
+    if (sign == Signed::Yes) {
+        if (value < 0) {
+            value = -value;
+            printer('-');
+            size = 1;
+            width--;
+        }
+    }
+    
+    if (isFlag(flags, Flag::alt) && base != 10) {
+        printer('0');
+        size++;
+        width--;
+        if (base == 16) {
+            printer((cap == bare::Print::Capital::Yes) ? 'X' : 'x');
+            size++;
+            width--;
+        }
+    }
+    
+    char buf[bare::Print::MaxIntegerBufferSize];
+    char* p = intToString(static_cast<uint64_t>(value), buf, bare::Print::MaxIntegerBufferSize, base, cap);
+    size += static_cast<uint32_t>(p - buf);
+
+    if (isFlag(flags, Flag::zeroPad)) {
+        int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(buf));
+        while (pad > 0) {
+            printer('0');
+            size++;
+            pad--;
+        }
+    }
+    
+    for (const char* p = buf; *p; ++p) {
+        printer(*p);
+    }
+
+    return size;
+}
+
+#if !defined(FLOATNONE)
+static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width, int32_t precision, uint8_t flags, bare::Print::Capital cap, FloatType type)
+{
+    // FIXME: Handle flags.leftJustify
+    // FIXME: Handle flags.plus
+    // FIXME: Handle flags.space
+    // FIXME: Handle flags.alt
+    // FIXME: Handle flags.zeroPad
+    // FIXME: Handle width
+    // FIXME: Handle precision
+    return bare::Print::printString(printer, value, precision, cap);
+}
+#endif
+
+static int32_t outString(bare::Print::Printer printer, const char* s, int32_t width, int32_t precision, uint8_t flags)
+{
+    // FIXME: Handle flags.leftJustify
+    // FIXME: Handle width
+    // FIXME: Handle precision
+    int32_t size = 0;
+    while (*s) {
+        printer(*s++);
+        ++size;
+    }
+    return size;
+}
+
+// Unsupported features:
+//
+//     'n' specifier - returns number of characters written so far
+//     'a', 'A' specifiers - prints hex floats
+//     'L' length - long double
+//     'l' length for 'c' and 's' specifiers - wide characters
+ 
+int32_t Print::vformat(Print::Printer printer, const char *format, va_list va)
+{
+    assert(format);
+    
+    uint8_t flags = 0;
+        
+    int32_t size = 0;
+    
+    while (*format) {
+        if (*format != '%') {
+            printer(*format++);
+            size++;
+            continue;
+        }
+        
+        format++;
+        
+        // We have a format, do the optional part
+        handleFlags(format, flags);
+        int32_t width = handleWidth(format, va);
+        int32_t precision = -1;
+        if (*format == '.') {
+            precision = handleWidth(++format, va);
+        }
+        Length length = handleLength(format);
+        
+        // Handle the specifier
+        switch (*format)
+        {
+        case 'd':
+        case 'i':
+            size += outInteger(printer, getInteger(length, va), Signed::Yes, width, precision, flags, 10, Print::Capital::No);
+            break;
+        case 'u':
+            size += outInteger(printer, getInteger(length, va), Signed::No, width, precision, flags, 10, Print::Capital::No);
+            break;
+        case 'o':
+            size += outInteger(printer, getInteger(length, va), Signed::No, width, precision, flags, 8, Print::Capital::No);
+            break;
+        case 'x':
+        case 'X':
+            size += outInteger(printer, getInteger(length, va), Signed::No, width, precision, flags, 16, (*format == 'X') ? Print::Capital::Yes : Print::Capital::No);
+            break;
+#if !defined(FLOATNONE)
+        case 'f':
+        case 'F':
+        case 'e':
+        case 'E':
+        case 'g':
+        case 'G': {
+            Print::Capital cap = Print::Capital::No;
+            FloatType type = FloatType::Shortest;
+            switch(*format)
+            {
+            case 'f': cap = Print::Capital::No; type = FloatType::Float; break;
+            case 'F': cap = Print::Capital::Yes; type = FloatType::Float; break;
+            case 'e': cap = Print::Capital::No; type = FloatType::Exp; break;
+            case 'E': cap = Print::Capital::Yes; type = FloatType::Exp; break;
+            case 'g': cap = Print::Capital::No; type = FloatType::Shortest; break;
+            case 'G': cap = Print::Capital::Yes; type = FloatType::Shortest; break;
+            }
+            size += outFloat(printer, Float::argToFloat(va), width, precision, flags, cap, type);
+            break;
+        }
+#endif
+        case 'c':
+            printer(static_cast<char>(va_arg(va, int)));
+            size++;
+            break;
+        case 's':
+            size += outString(printer, va_arg(va, const char*), width, precision, flags);
+            break;
+        case 'p':
+            size += outInteger(printer, reinterpret_cast<int64_t>(va_arg(va, void*)), Signed::No, width, precision, flags, 16, Print::Capital::No);
+            break;
+        default:
+            printer(*format++);
+            size++;
+            break;
+        }
+        ++format;
+    }
+    
+    return size;
+}
 
 uint32_t Print::printString(Printer printer, uint64_t v, uint8_t base, Capital cap)
 {

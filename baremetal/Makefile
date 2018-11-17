@@ -48,7 +48,6 @@ SRC =	ldivmod.S \
 		FAT32DirectoryIterator.cpp \
 		FAT32RawFile.cpp \
 		Print.cpp \
-		PrintfCore.cpp \
 		PrintFloat.cpp \
 		RPiBare.cpp \
 		RPiGPIO.cpp \

@@ -121,7 +121,7 @@ uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital
         n = -n;
     }
     
-    size += printString(printer, n);
+    size += printString(printer, static_cast<uint64_t>(n));
     printer('\0');
     return size;
 }

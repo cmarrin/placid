@@ -18,7 +18,6 @@
 		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
 		4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
 		4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
-		494FD5FB21960D4B005C2A6B /* PrintfCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD5F821960817005C2A6B /* PrintfCore.cpp */; };
 		494FD6062198ACFA005C2A6B /* DarwinBare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6052198ACFA005C2A6B /* DarwinBare.cpp */; };
 		494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */; };
 		494FD60E2199CF22005C2A6B /* DarwinSDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */; };
@@ -144,7 +143,6 @@
 		4932ACF721689A5500BDAABB /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../../kernel/src/Scanner.cpp; sourceTree = "<group>"; };
 		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../../kernel/src/Scanner.h; sourceTree = "<group>"; };
 		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
-		494FD5F821960817005C2A6B /* PrintfCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PrintfCore.cpp; path = ../baremetal/PrintfCore.cpp; sourceTree = "<group>"; };
 		494FD5FC219615FE005C2A6B /* XYModem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYModem.h; sourceTree = "<group>"; };
 		494FD6002197A44F005C2A6B /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPiBare.cpp; sourceTree = "<group>"; };
@@ -370,7 +368,6 @@
 				496C3BB9217E2368004DBC22 /* FAT32DirectoryIterator.cpp */,
 				496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */,
 				497EE458216138E2000584CE /* Print.cpp */,
-				494FD5F821960817005C2A6B /* PrintfCore.cpp */,
 				494FD634219F8951005C2A6B /* PrintFloat.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
@@ -573,7 +570,6 @@
 				496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */,
 				494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
-				494FD5FB21960D4B005C2A6B /* PrintfCore.cpp in Sources */,
 				494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */,
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
