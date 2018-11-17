@@ -41,31 +41,29 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-union Flags
-{
-    struct
-    {
-        bool leftJustify : 1;
-        bool plus : 1;
-        bool space : 1;
-        bool alt : 1;
-        bool zeroPad : 1;
-    };
-    uint8_t value;
+enum class Flag {
+    leftJustify = 0x01,
+    plus = 0x02,
+    space = 0x04,
+    alt = 0x08,
+    zeroPad = 0x10,
 };
+
+static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
+static inline void setFlag(uint8_t flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
 
 enum class Signed { Yes, No };
 enum class FloatType { Float, Exp, Shortest };
  
-static void handleFlags(const char*& format, Flags& flags)
+static void handleFlags(const char*& format, uint8_t& flags)
 {
     while (1) {
         switch (*format) {
-        case '-': flags.leftJustify = true; break;
-        case '+': flags.plus = true; break;
-        case ' ': flags.space = true; break;
-        case '#': flags.alt = true; break;
-        case '0': flags.zeroPad = true; break;
+        case '-': setFlag(flags, Flag::leftJustify); break;
+        case '+': setFlag(flags, Flag::plus); break;
+        case ' ': setFlag(flags, Flag::space); break;
+        case '#': setFlag(flags, Flag::alt); break;
+        case '0': setFlag(flags, Flag::zeroPad); break;
         default: return;
         }
         ++format;
@@ -147,7 +145,7 @@ static uintmax_t getInteger(Length length, va_list va)
     return 0;
 }
 
-static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed sign, int32_t width, int32_t precision, Flags flags, uint8_t base, bare::Print::Capital cap)
+static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed sign, int32_t width, int32_t precision, uint8_t flags, uint8_t base, bare::Print::Capital cap)
 {
     uint32_t size = 0;
     if (sign == Signed::Yes) {
@@ -159,7 +157,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
         }
     }
     
-    if (flags.alt && base != 10) {
+    if (isFlag(flags, Flag::alt) && base != 10) {
         printer('0');
         size++;
         width--;
@@ -174,7 +172,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     char* p = buf;
     size += bare::Print::printString([&p](char c) { *p++ = c; }, static_cast<uint64_t>(value), base, cap);
     
-    if (flags.zeroPad) {
+    if (isFlag(flags, Flag::zeroPad)) {
         int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(buf));
         while (pad > 0) {
             printer('0');
@@ -190,7 +188,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     return size;
 }
 
-static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width, int32_t precision, Flags flags, bare::Print::Capital cap, FloatType type)
+static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width, int32_t precision, uint8_t flags, bare::Print::Capital cap, FloatType type)
 {
     // FIXME: Handle flags.leftJustify
     // FIXME: Handle flags.plus
@@ -199,14 +197,15 @@ static int32_t outFloat(bare::Print::Printer printer, Float value, int32_t width
     // FIXME: Handle flags.zeroPad
     // FIXME: Handle width
     // FIXME: Handle precision
-#if FLOATTYPE == FloatNone
+
+#if defined(FLOATNONE)
     return 0;
 #else
     return bare::Print::printString(printer, value, precision, cap);
 #endif
 }
 
-static int32_t outString(bare::Print::Printer printer, const char* s, int32_t width, int32_t precision, Flags flags)
+static int32_t outString(bare::Print::Printer printer, const char* s, int32_t width, int32_t precision, uint8_t flags)
 {
     // FIXME: Handle flags.leftJustify
     // FIXME: Handle width
@@ -230,8 +229,7 @@ int32_t PrintfCore::format(Print::Printer printer, const char *format, va_list v
 {
     assert(format);
     
-    Flags flags;
-    flags.value = 0;
+    uint8_t flags = 0;
         
     int32_t size = 0;
     
