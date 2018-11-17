@@ -196,9 +196,21 @@ bool XYModem::receive(ReceiveFunction func)
                 
                 // If this is ymodem, it's going to want to send more stuff.
                 // It's a batch format and they're going to want to send 
-                // and end file packet. CANcel all that
+                // and end file packet. CANcel all that.
+                //
+                // Maybe it's just Serial.app, but after you cancel, it's 
+                // still looking for more characters. Send it a bunch until
+                // it's satisfied.
                 if (ymodem) {
                     _writeFunc(CAN);
+                    _writeFunc(CAN);
+                    for (int i = 0; i < 650; ++i) {
+                        _writeFunc('.');
+                    }
+                    _writeFunc('\r');
+                    _writeFunc('\n');
+                    _writeFunc('\r');
+                    _writeFunc('\n');
                 }
 
 #ifdef CAPTURE_DATA

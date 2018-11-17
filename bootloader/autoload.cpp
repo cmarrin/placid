@@ -78,7 +78,5 @@ void autoload()
         size -= bytesToLoad;
     }
     
-    bare::Serial::printf("Autoload complete, executing...\n");
-    bare::Timer::usleep(200000);
     bare::BRANCHTO(bare::kernelBase());
 }
