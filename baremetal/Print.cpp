@@ -53,7 +53,7 @@ enum class Flag {
 };
 
 static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
-static inline void setFlag(uint8_t flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
+static inline void setFlag(uint8_t& flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
 
 static void handleFlags(const char*& format, uint8_t& flags)
 {
@@ -175,7 +175,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
     size += static_cast<uint32_t>(p - buf);
 
     if (isFlag(flags, Flag::zeroPad)) {
-        int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(buf));
+        int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(p));
         while (pad > 0) {
             printer('0');
             size++;
@@ -183,7 +183,7 @@ static int32_t outInteger(bare::Print::Printer printer, uintmax_t value, Signed 
         }
     }
     
-    for (const char* p = buf; *p; ++p) {
+    for ( ; *p; ++p) {
         printer(*p);
     }
 
