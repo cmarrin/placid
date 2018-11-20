@@ -77,7 +77,10 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal; make -f Makefile DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
+	cd ../baremetal; make -f RPiMakefile DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
+	
+cleanlibs:
+	cd ../baremetal; make -f RPiMakefile clean
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
@@ -86,11 +89,11 @@ $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
 	wc -c $(PRODUCTDIR)/$(PRODUCT).bin
 
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c RPiMakefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.cpp Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.cpp RPiMakefile
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.S Makefile
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.S RPiMakefile
 	$(CC) $(ASFLAGS) -c $< -o $@

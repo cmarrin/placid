@@ -56,5 +56,4 @@ all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 
 include ../baremetal/RPiCommon.mk
 
-clean : cleandir
-	cd ../baremetal; make -f Makefile clean
+clean : cleandir cleanlibs

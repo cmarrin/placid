@@ -173,7 +173,7 @@
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* bare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bare.h; path = ../baremetal/bare.h; sourceTree = "<group>"; };
-		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		4962958F215AAF8F0064B9C9 /* RPiMakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = RPiMakefile; path = ../baremetal/RPiMakefile; sourceTree = "<group>"; usesTabs = 1; };
 		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
@@ -333,6 +333,16 @@
 		494FD602219883D3005C2A6B /* platform */ = {
 			isa = PBXGroup;
 			children = (
+				494FD63A21A4BA4C005C2A6B /* Darwin */,
+				494FD63C21A4BA77005C2A6B /* ESP8266 */,
+				494FD63B21A4BA64005C2A6B /* RPi */,
+			);
+			name = platform;
+			sourceTree = "<group>";
+		};
+		494FD63A21A4BA4C005C2A6B /* Darwin */ = {
+			isa = PBXGroup;
+			children = (
 				494FD6052198ACFA005C2A6B /* DarwinBare.cpp */,
 				494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */,
 				494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */,
@@ -340,6 +350,15 @@
 				494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */,
 				494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */,
 				494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */,
+			);
+			name = Darwin;
+			sourceTree = "<group>";
+		};
+		494FD63B21A4BA64005C2A6B /* RPi */ = {
+			isa = PBXGroup;
+			children = (
+				494FD6082198C722005C2A6B /* RPiCommon.mk */,
+				4962958F215AAF8F0064B9C9 /* RPiMakefile */,
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
 				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
@@ -352,14 +371,19 @@
 				494FD6162199D2E2005C2A6B /* RPiSPI.cpp */,
 				494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */,
 			);
-			name = platform;
+			name = RPi;
+			sourceTree = "<group>";
+		};
+		494FD63C21A4BA77005C2A6B /* ESP8266 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ESP8266;
 			sourceTree = "<group>";
 		};
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
-				494FD6082198C722005C2A6B /* RPiCommon.mk */,
-				4962958F215AAF8F0064B9C9 /* Makefile */,
 				494FD602219883D3005C2A6B /* platform */,
 				494FD5FE2197A044005C2A6B /* bare */,
 				49629576215AA53B0064B9C9 /* bare.cpp */,
