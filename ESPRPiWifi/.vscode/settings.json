@@ -1,6 +1,0 @@
-{
-    "terminal.integrated.env.osx": {
-        "PATH": "/Users/cmarrin/.platformio/penv/bin:/Users/cmarrin/.platformio/penv:/Users/cmarrin/.cargo/bin:/opt/local/bin:/opt/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/sbin:~/esp-open-sdk/esptool:~/esp-open-sdk/xtensa-lx106-elf/bin:~/Applications/f-engrave:/usr/local/avrtools/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Applications/Wireshark.app/Contents/MacOS",
-        "PLATFORMIO_CALLER": "vscode"
-    }
-}
