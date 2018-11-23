@@ -35,11 +35,12 @@
 
 FLOATTYPE = FLOATFLOAT
 
-LIBS = ../baremetal/RPi/build/baremetal-$(FLOATTYPE).a
+PLATFORMDIR = RPi
+
+LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
 PRODUCTDIR = $(BUILDDIR)
-PLATFORMDIR = RPi
 PRODUCT = kernel
 LOADER = loadmap.ld
 SRCDIR = src

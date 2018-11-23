@@ -35,8 +35,9 @@
 
 FLOATTYPE = FLOAT32
 
-SKETCH = ESPWifi.ino
-LIBS = 
+PLATFORMDIR = ESP
+
+LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
 
 CHIP = esp8266
 BOARD = d1_mini
@@ -51,3 +52,30 @@ VERBOSE = 1
 
 include ../baremetal/makeEspArduino.mk
 
+
+
+
+
+
+
+INCLUDES = -I../baremetal
+BUILDDIR = build
+PRODUCTDIR = $(BUILDDIR)
+PRODUCT = kernel
+LOADER = loadmap.ld
+SRCDIR = src
+
+SRC =    kernel.S \
+        main.cpp \
+        Allocator.cpp \
+        BootShell.cpp \
+        FileSystem.cpp \
+        Scanner.cpp \
+        Shell.cpp \
+        String.cpp \
+
+all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
+
+include ../baremetal/Common.mk
+
+clean : cleandir cleanlibs

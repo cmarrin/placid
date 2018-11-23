@@ -35,11 +35,12 @@
 
 FLOATTYPE = FLOATNONE
 
-LIBS = ../baremetal/RPi/build/baremetal-$(FLOATTYPE).a
+PLATFORMDIR = RPi
+
+LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
 PRODUCTDIR = bin
-PLATFORMDIR = RPi
 PRODUCT = bootloader
 LOADER = loader
 SRCDIR = .
