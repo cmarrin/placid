@@ -39,6 +39,7 @@ LIBS = ../baremetal/RPi/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
 PRODUCTDIR = $(BUILDDIR)
+PLATFORMDIR = RPi
 PRODUCT = kernel
 LOADER = loadmap.ld
 SRCDIR = src
@@ -54,6 +55,6 @@ SRC =	kernel.S \
 
 all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 
-include ../baremetal/RPi/RPiCommon.mk
+include ../baremetal/Common.mk
 
 clean : cleandir cleanlibs

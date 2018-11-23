@@ -37,6 +37,7 @@ FLOATTYPE ?= FLOAT32
 
 BUILDDIR = build
 SRCDIR = .
+PLATFORMDIR = RPi
 INCLUDES = -I..
 ARCHIVE = baremetal-$(FLOATTYPE).a
 
@@ -67,7 +68,7 @@ SRC =	ldivmod.S \
 
 all : checkdirs $(BUILDDIR)/$(ARCHIVE)
 
-include RPiCommon.mk
+include ../Common.mk
 
 clean : cleandir
 

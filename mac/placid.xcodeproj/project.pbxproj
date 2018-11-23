@@ -147,7 +147,7 @@
 		494FD6002197A44F005C2A6B /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPi/RPiBare.cpp; sourceTree = "<group>"; };
 		494FD6052198ACFA005C2A6B /* DarwinBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinBare.cpp; path = ../baremetal/Darwin/DarwinBare.cpp; sourceTree = "<group>"; };
-		494FD6082198C722005C2A6B /* RPiCommon.mk */ = {isa = PBXFileReference; lastKnownFileType = text; name = RPiCommon.mk; path = ../baremetal/RPi/RPiCommon.mk; sourceTree = "<group>"; usesTabs = 1; };
+		494FD6082198C722005C2A6B /* Common.mk */ = {isa = PBXFileReference; lastKnownFileType = text; name = Common.mk; path = ../baremetal/Common.mk; sourceTree = "<group>"; usesTabs = 1; };
 		494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGPIO.cpp; path = ../baremetal/Darwin/DarwinGPIO.cpp; sourceTree = "<group>"; };
 		494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSDCard.cpp; path = ../baremetal/Darwin/DarwinSDCard.cpp; sourceTree = "<group>"; };
 		494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSerial.cpp; path = ../baremetal/Darwin/DarwinSerial.cpp; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* bare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bare.h; path = ../baremetal/bare.h; sourceTree = "<group>"; };
-		4962958F215AAF8F0064B9C9 /* RPiMakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = RPiMakefile; path = ../baremetal/RPi/RPiMakefile; sourceTree = "<group>"; usesTabs = 1; };
+		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/RPi/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPi/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
@@ -354,8 +354,7 @@
 		494FD63B21A4BA64005C2A6B /* RPi */ = {
 			isa = PBXGroup;
 			children = (
-				494FD6082198C722005C2A6B /* RPiCommon.mk */,
-				4962958F215AAF8F0064B9C9 /* RPiMakefile */,
+				4962958F215AAF8F0064B9C9 /* Makefile */,
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
 				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
@@ -385,6 +384,7 @@
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
 			isa = PBXGroup;
 			children = (
+				494FD6082198C722005C2A6B /* Common.mk */,
 				494FD602219883D3005C2A6B /* platform */,
 				494FD5FE2197A044005C2A6B /* bare */,
 				49629576215AA53B0064B9C9 /* bare.cpp */,

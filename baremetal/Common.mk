@@ -34,15 +34,16 @@
 # -------------------------------------------------------------------------
 
 PLATFORM ?= PLATFORM_RPI
+PLATFORMDIR ?= RPi
 
-TOOLCHAIN ?= arm-none-eabi
-AR = $(TOOLCHAIN)-ar
-AS = $(TOOLCHAIN)-as
-CC = $(TOOLCHAIN)-gcc
-CXX = $(TOOLCHAIN)-g++
-LD = $(TOOLCHAIN)-ld
-OBJDUMP = $(TOOLCHAIN)-objdump
-OBJCOPY = $(TOOLCHAIN)-objcopy
+TOOLCHAIN ?= arm-none-eabi-
+AR = $(TOOLCHAIN)ar
+AS = $(TOOLCHAIN)as
+CC = $(TOOLCHAIN)gcc
+CXX = $(TOOLCHAIN)g++
+LD = $(TOOLCHAIN)ld
+OBJDUMP = $(TOOLCHAIN)objdump
+OBJCOPY = $(TOOLCHAIN)objcopy
 
 ASFLAGS = -mcpu=arm1176jzf-s -mfpu=vfp
 CFLAGS = $(INCLUDES) -D$(PLATFORM) -D$(FLOATTYPE) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
@@ -77,10 +78,10 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal/RPi; make -f RPiMakefile DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
+	cd ../baremetal/$(PLATFORMDIR); make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
 	
 cleanlibs:
-	cd ../baremetal/RPi; make -f RPiMakefile clean
+	cd ../baremetal/$(PLATFORMDIR); make clean
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
