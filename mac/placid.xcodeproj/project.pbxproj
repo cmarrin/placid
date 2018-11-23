@@ -43,7 +43,6 @@
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
-		4987478B2191F68E00245E91 /* ESPWifi.ino in Sources */ = {isa = PBXBuildFile; fileRef = 4987478A2191F68E00245E91 /* ESPWifi.ino */; };
 		49931A0F2168AFA700257E42 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49931A0E2168AFA700257E42 /* String.cpp */; };
 /* End PBXBuildFile section */
 
@@ -192,8 +191,6 @@
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
-		4987478A2191F68E00245E91 /* ESPWifi.ino */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; path = ESPWifi.ino; sourceTree = "<group>"; };
-		498872D821963F0900D00CBB /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		49931A0E2168AFA700257E42 /* String.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -289,7 +286,6 @@
 				49629575215AA4EB0064B9C9 /* baremetal */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
-				498747892191F68E00245E91 /* ESPWifi */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 				49629588215AAA760064B9C9 /* Frameworks */,
 			);
@@ -414,16 +410,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		498747892191F68E00245E91 /* ESPWifi */ = {
-			isa = PBXGroup;
-			children = (
-				498872D821963F0900D00CBB /* Makefile */,
-				4987478A2191F68E00245E91 /* ESPWifi.ino */,
-			);
-			name = ESPWifi;
-			path = ../ESPWifi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -613,7 +599,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4987478B2191F68E00245E91 /* ESPWifi.ino in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
