@@ -37,19 +37,12 @@ FLOATTYPE ?= FLOAT32
 
 BUILDDIR = build
 SRCDIR = .
+INCLUDES = -I..
 ARCHIVE = baremetal-$(FLOATTYPE).a
 
 SRC =	ldivmod.S \
 		idivmod.S \
 		uidivmod.S \
-		bare.cpp \
-		fpconv.cpp \
-		printf-emb_tiny.c \
-		FAT32.cpp \
-		FAT32DirectoryIterator.cpp \
-		FAT32RawFile.cpp \
-		Print.cpp \
-		PrintFloat.cpp \
 		RPiBare.cpp \
 		RPiGPIO.cpp \
 		RPiInterruptManager.cpp \
@@ -59,10 +52,18 @@ SRC =	ldivmod.S \
 		RPiSerial.cpp \
 		RPiSPI.cpp \
 		RPiTimer.cpp \
-		Serial.cpp \
-		Timer.cpp \
-		Volume.cpp \
-		XYModem.cpp \
+		../bare.cpp \
+		../fpconv.cpp \
+		../printf-emb_tiny.c \
+		../FAT32.cpp \
+		../FAT32DirectoryIterator.cpp \
+		../FAT32RawFile.cpp \
+		../Print.cpp \
+		../PrintFloat.cpp \
+		../Serial.cpp \
+		../Timer.cpp \
+		../Volume.cpp \
+		../XYModem.cpp \
 
 all : checkdirs $(BUILDDIR)/$(ARCHIVE)
 

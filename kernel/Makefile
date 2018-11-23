@@ -35,7 +35,7 @@
 
 FLOATTYPE = FLOATFLOAT
 
-LIBS = ../baremetal/build/baremetal-$(FLOATTYPE).a
+LIBS = ../baremetal/RPi/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
 PRODUCTDIR = $(BUILDDIR)
@@ -54,6 +54,6 @@ SRC =	kernel.S \
 
 all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 
-include ../baremetal/RPiCommon.mk
+include ../baremetal/RPi/RPiCommon.mk
 
 clean : cleandir cleanlibs

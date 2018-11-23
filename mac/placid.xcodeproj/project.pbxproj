@@ -122,59 +122,59 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPiGPIO.cpp; sourceTree = "<group>"; };
+		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPi/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
-		492FF3F0215C4F72003582FE /* RPiMailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPiMailbox.h; sourceTree = "<group>"; };
+		492FF3F0215C4F72003582FE /* RPiMailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RPiMailbox.h; path = ../baremetal/RPi/RPiMailbox.h; sourceTree = "<group>"; };
 		492FF3F1215C4F72003582FE /* Volume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Volume.cpp; path = ../baremetal/Volume.cpp; sourceTree = "<group>"; };
-		492FF3F3215C4F72003582FE /* RPiMailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMailbox.cpp; path = ../baremetal/RPiMailbox.cpp; sourceTree = "<group>"; };
-		492FF3F8215C528C003582FE /* RPiSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSerial.cpp; path = ../baremetal/RPiSerial.cpp; sourceTree = "<group>"; };
+		492FF3F3215C4F72003582FE /* RPiMailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMailbox.cpp; path = ../baremetal/RPi/RPiMailbox.cpp; sourceTree = "<group>"; };
+		492FF3F8215C528C003582FE /* RPiSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSerial.cpp; path = ../baremetal/RPi/RPiSerial.cpp; sourceTree = "<group>"; };
 		492FF3FE215C5359003582FE /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Timer.cpp; path = ../baremetal/Timer.cpp; sourceTree = "<group>"; };
 		492FF3FF215C5359003582FE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		492FF400215C5359003582FE /* InterruptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterruptManager.h; sourceTree = "<group>"; };
-		492FF401215C5359003582FE /* RPiInterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiInterruptManager.cpp; path = ../baremetal/RPiInterruptManager.cpp; sourceTree = "<group>"; };
+		492FF401215C5359003582FE /* RPiInterruptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiInterruptManager.cpp; path = ../baremetal/RPi/RPiInterruptManager.cpp; sourceTree = "<group>"; };
 		492FF406215D4799003582FE /* FAT32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32.cpp; path = ../baremetal/FAT32.cpp; sourceTree = "<group>"; };
 		492FF407215D479A003582FE /* FAT32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAT32.h; sourceTree = "<group>"; };
 		492FF40A2160045C003582FE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../kernel/README.md; sourceTree = "<group>"; };
 		4932ACEE2166770800BDAABB /* stackAddrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stackAddrs.h; path = ../../kernel/src/stackAddrs.h; sourceTree = "<group>"; };
 		4932ACF02167156E00BDAABB /* Allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Allocator.cpp; path = ../../kernel/src/Allocator.cpp; sourceTree = "<group>"; };
 		4932ACF12167156E00BDAABB /* Allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Allocator.h; path = ../../kernel/src/Allocator.h; sourceTree = "<group>"; };
-		4932ACF521681EF200BDAABB /* ldivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = ldivmod.S; path = ../baremetal/ldivmod.S; sourceTree = "<group>"; };
+		4932ACF521681EF200BDAABB /* ldivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = ldivmod.S; path = ../baremetal/RPi/ldivmod.S; sourceTree = "<group>"; };
 		4932ACF721689A5500BDAABB /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../../kernel/src/Scanner.cpp; sourceTree = "<group>"; };
 		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../../kernel/src/Scanner.h; sourceTree = "<group>"; };
 		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../../kernel/src/MStream.h; sourceTree = "<group>"; };
 		494FD5FC219615FE005C2A6B /* XYModem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYModem.h; sourceTree = "<group>"; };
 		494FD6002197A44F005C2A6B /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
-		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPiBare.cpp; sourceTree = "<group>"; };
-		494FD6052198ACFA005C2A6B /* DarwinBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinBare.cpp; path = ../baremetal/DarwinBare.cpp; sourceTree = "<group>"; };
-		494FD6082198C722005C2A6B /* RPiCommon.mk */ = {isa = PBXFileReference; lastKnownFileType = text; name = RPiCommon.mk; path = ../baremetal/RPiCommon.mk; sourceTree = "<group>"; usesTabs = 1; };
-		494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGPIO.cpp; path = ../baremetal/DarwinGPIO.cpp; sourceTree = "<group>"; };
-		494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSDCard.cpp; path = ../baremetal/DarwinSDCard.cpp; sourceTree = "<group>"; };
-		494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSerial.cpp; path = ../baremetal/DarwinSerial.cpp; sourceTree = "<group>"; };
+		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPi/RPiBare.cpp; sourceTree = "<group>"; };
+		494FD6052198ACFA005C2A6B /* DarwinBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinBare.cpp; path = ../baremetal/Darwin/DarwinBare.cpp; sourceTree = "<group>"; };
+		494FD6082198C722005C2A6B /* RPiCommon.mk */ = {isa = PBXFileReference; lastKnownFileType = text; name = RPiCommon.mk; path = ../baremetal/RPi/RPiCommon.mk; sourceTree = "<group>"; usesTabs = 1; };
+		494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGPIO.cpp; path = ../baremetal/Darwin/DarwinGPIO.cpp; sourceTree = "<group>"; };
+		494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSDCard.cpp; path = ../baremetal/Darwin/DarwinSDCard.cpp; sourceTree = "<group>"; };
+		494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSerial.cpp; path = ../baremetal/Darwin/DarwinSerial.cpp; sourceTree = "<group>"; };
 		494FD6112199D070005C2A6B /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../baremetal/Serial.cpp; sourceTree = "<group>"; };
-		494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSPI.cpp; path = ../baremetal/DarwinSPI.cpp; sourceTree = "<group>"; };
-		494FD6162199D2E2005C2A6B /* RPiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSPI.cpp; path = ../baremetal/RPiSPI.cpp; sourceTree = "<group>"; };
-		494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinTimer.cpp; path = ../baremetal/DarwinTimer.cpp; sourceTree = "<group>"; };
-		494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiTimer.cpp; path = ../baremetal/RPiTimer.cpp; sourceTree = "<group>"; };
-		494FD61E2199E64F005C2A6B /* RPiMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemory.cpp; path = ../baremetal/RPiMemory.cpp; sourceTree = "<group>"; };
+		494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSPI.cpp; path = ../baremetal/Darwin/DarwinSPI.cpp; sourceTree = "<group>"; };
+		494FD6162199D2E2005C2A6B /* RPiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSPI.cpp; path = ../baremetal/RPi/RPiSPI.cpp; sourceTree = "<group>"; };
+		494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinTimer.cpp; path = ../baremetal/Darwin/DarwinTimer.cpp; sourceTree = "<group>"; };
+		494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiTimer.cpp; path = ../baremetal/RPi/RPiTimer.cpp; sourceTree = "<group>"; };
+		494FD61E2199E64F005C2A6B /* RPiMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemory.cpp; path = ../baremetal/RPi/RPiMemory.cpp; sourceTree = "<group>"; };
 		494FD61F2199E64F005C2A6B /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
-		494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinMemory.cpp; path = ../baremetal/DarwinMemory.cpp; sourceTree = "<group>"; };
+		494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinMemory.cpp; path = ../baremetal/Darwin/DarwinMemory.cpp; sourceTree = "<group>"; };
 		494FD626219B8091005C2A6B /* Float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Float.h; sourceTree = "<group>"; };
-		494FD628219B9E28005C2A6B /* idivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = idivmod.S; path = ../baremetal/idivmod.S; sourceTree = "<group>"; };
-		494FD62A219BA09C005C2A6B /* uidivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = uidivmod.S; path = ../baremetal/uidivmod.S; sourceTree = "<group>"; };
-		494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemoryMin.cpp; path = ../baremetal/RPiMemoryMin.cpp; sourceTree = "<group>"; };
+		494FD628219B9E28005C2A6B /* idivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = idivmod.S; path = ../baremetal/RPi/idivmod.S; sourceTree = "<group>"; };
+		494FD62A219BA09C005C2A6B /* uidivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = uidivmod.S; path = ../baremetal/RPi/uidivmod.S; sourceTree = "<group>"; };
+		494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemoryMin.cpp; path = ../baremetal/RPi/RPiMemoryMin.cpp; sourceTree = "<group>"; };
 		494FD62E219F7E13005C2A6B /* fpconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fpconv.h; sourceTree = "<group>"; };
 		494FD62F219F7E13005C2A6B /* powers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = powers.h; sourceTree = "<group>"; };
 		494FD630219F7E13005C2A6B /* fpconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fpconv.cpp; path = ../baremetal/fpconv.cpp; sourceTree = "<group>"; };
 		494FD634219F8951005C2A6B /* PrintFloat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintFloat.cpp; path = ../baremetal/PrintFloat.cpp; sourceTree = "<group>"; };
 		494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "printf-emb_tiny.cpp"; path = "../baremetal/printf-emb_tiny.cpp"; sourceTree = "<group>"; };
-		494FD63E21A4CDB6005C2A6B /* makeEspArduino.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makeEspArduino.mk; path = ../baremetal/makeEspArduino.mk; sourceTree = "<group>"; };
+		494FD63F21A86F21005C2A6B /* makeEspArduino.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makeEspArduino.mk; path = ../baremetal/ESP/makeEspArduino.mk; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* bare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bare.h; path = ../baremetal/bare.h; sourceTree = "<group>"; };
-		4962958F215AAF8F0064B9C9 /* RPiMakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = RPiMakefile; path = ../baremetal/RPiMakefile; sourceTree = "<group>"; usesTabs = 1; };
-		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPiSDCard.cpp; sourceTree = "<group>"; };
+		4962958F215AAF8F0064B9C9 /* RPiMakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = RPiMakefile; path = ../baremetal/RPi/RPiMakefile; sourceTree = "<group>"; usesTabs = 1; };
+		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPi/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
 		49657898216D1E2D00B3F088 /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
@@ -367,6 +367,9 @@
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
 				494FD6162199D2E2005C2A6B /* RPiSPI.cpp */,
 				494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */,
+				494FD628219B9E28005C2A6B /* idivmod.S */,
+				4932ACF521681EF200BDAABB /* ldivmod.S */,
+				494FD62A219BA09C005C2A6B /* uidivmod.S */,
 			);
 			name = RPi;
 			sourceTree = "<group>";
@@ -374,7 +377,7 @@
 		494FD63C21A4BA77005C2A6B /* ESP */ = {
 			isa = PBXGroup;
 			children = (
-				494FD63E21A4CDB6005C2A6B /* makeEspArduino.mk */,
+				494FD63F21A86F21005C2A6B /* makeEspArduino.mk */,
 			);
 			name = ESP;
 			sourceTree = "<group>";
@@ -398,9 +401,6 @@
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
 				49731F78216E914500F9A79F /* XYModem.cpp */,
-				494FD628219B9E28005C2A6B /* idivmod.S */,
-				4932ACF521681EF200BDAABB /* ldivmod.S */,
-				494FD62A219BA09C005C2A6B /* uidivmod.S */,
 			);
 			name = baremetal;
 			sourceTree = "<group>";
@@ -622,7 +622,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -631,7 +631,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -687,6 +687,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -740,6 +741,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DFLOATFLOAT";
@@ -751,7 +753,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -762,7 +764,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -774,6 +776,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -784,6 +787,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -793,6 +797,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -804,6 +809,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
