@@ -35,40 +35,46 @@
 
 FLOATTYPE ?= FLOAT32
 
-BUILDDIR = build
 SRCDIR = .
-PLATFORMDIR = RPi
-INCLUDES = -I..
+INCLUDES = -I.. -I.
 ARCHIVE = baremetal-$(FLOATTYPE).a
 
-SRC =	ldivmod.S \
-		idivmod.S \
-		uidivmod.S \
-		RPiBare.cpp \
-		RPiGPIO.cpp \
-		RPiInterruptManager.cpp \
-		RPiMemory.cpp \
-		RPiMemoryMin.cpp \
-		RPiSDCard.cpp \
-		RPiSerial.cpp \
-		RPiSPI.cpp \
-		RPiTimer.cpp \
-		../bare.cpp \
-		../fpconv.cpp \
-		../printf-emb_tiny.c \
-		../FAT32.cpp \
-		../FAT32DirectoryIterator.cpp \
-		../FAT32RawFile.cpp \
-		../Print.cpp \
-		../PrintFloat.cpp \
-		../Serial.cpp \
-		../Timer.cpp \
-		../Volume.cpp \
-		../XYModem.cpp \
+PLATFORMSRC = \
+	RPi/ldivmod.S \
+	RPi/idivmod.S \
+	RPi/uidivmod.S \
+	RPi/RPiBare.cpp \
+	RPi/RPiGPIO.cpp \
+	RPi/RPiInterruptManager.cpp \
+	RPi/RPiMemory.cpp \
+	RPi/RPiMemoryMin.cpp \
+	RPi/RPiSDCard.cpp \
+	RPi/RPiSerial.cpp \
+	RPi/RPiSPI.cpp \
+	RPi/RPiTimer.cpp \
+	
+SRC = \
+	bare.cpp \
+	fpconv.cpp \
+	printf-emb_tiny.c \
+	FAT32.cpp \
+	FAT32DirectoryIterator.cpp \
+	FAT32RawFile.cpp \
+	Print.cpp \
+	PrintFloat.cpp \
+	Serial.cpp \
+	Timer.cpp \
+	Volume.cpp \
+	XYModem.cpp \
+
+include Common.mk
 
 all : checkdirs $(BUILDDIR)/$(ARCHIVE)
 
-include ../Common.mk
+check:
+	echo "BUILDDIR="$(BUILDDIR)
+	echo "ARCHIVE="$(ARCHIVE)
+	echo "OBJS="$(OBJS)
 
 clean : cleandir
 

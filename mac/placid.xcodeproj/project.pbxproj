@@ -30,8 +30,7 @@
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
 		494FD635219F8951005C2A6B /* PrintFloat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD634219F8951005C2A6B /* PrintFloat.cpp */; };
 		494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */; };
-		494FD64221A89642005C2A6B /* ESPRPiWifi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64121A89642005C2A6B /* ESPRPiWifi.cpp */; };
-		494FD64421A896DE005C2A6B /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64321A896DE005C2A6B /* Makefile */; };
+		494FD64621A8C52B005C2A6B /* ESPRPiWifi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64121A89642005C2A6B /* ESPRPiWifi.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* bare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* bare.cpp */; };
 		4962957C215AA53B0064B9C9 /* bare.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* bare.h */; };
@@ -177,7 +176,7 @@
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
 		49629578215AA53B0064B9C9 /* bare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bare.h; path = ../baremetal/bare.h; sourceTree = "<group>"; };
-		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/RPi/Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPi/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
@@ -359,7 +358,6 @@
 		494FD63B21A4BA64005C2A6B /* RPi */ = {
 			isa = PBXGroup;
 			children = (
-				4962958F215AAF8F0064B9C9 /* Makefile */,
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
 				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
@@ -399,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				494FD6082198C722005C2A6B /* Common.mk */,
+				4962958F215AAF8F0064B9C9 /* Makefile */,
 				494FD602219883D3005C2A6B /* platform */,
 				494FD5FE2197A044005C2A6B /* bare */,
 				49629576215AA53B0064B9C9 /* bare.cpp */,
@@ -573,11 +572,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				494FD64421A896DE005C2A6B /* Makefile in Sources */,
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49931A0F2168AFA700257E42 /* String.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
-				494FD64221A89642005C2A6B /* ESPRPiWifi.cpp in Sources */,
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
@@ -615,6 +612,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				494FD64621A8C52B005C2A6B /* ESPRPiWifi.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

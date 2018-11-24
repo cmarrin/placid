@@ -35,8 +35,9 @@
 
 PLATFORM ?= PLATFORM_RPI
 PLATFORMDIR ?= RPi
-
+BUILDDIR ?= $(PLATFORMDIR)/build
 TOOLCHAIN ?= arm-none-eabi-
+
 AR = $(TOOLCHAIN)ar
 AS = $(TOOLCHAIN)as
 CC = $(TOOLCHAIN)gcc
@@ -59,7 +60,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-threadsafe-statics
 
 PRODUCTDIR ?= $(BUILDDIR)
 
-OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix -$(FLOATTYPE).o, $(basename $(notdir $(SRC)))))
+OBJS := $(addprefix $(BUILDDIR)/, $(addsuffix -$(FLOATTYPE).o, $(basename $(notdir $(SRC) $(PLATFORMSRC)))))
 DEP = $(OBJS:%.o=%.d)
 
 debug: CXXFLAGS += -DDEBUG -g
@@ -78,10 +79,10 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal/$(PLATFORMDIR); make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE)
+	cd ../baremetal; make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE) PLATFORMDIR=$(PLATFORMDIR)
 	
 cleanlibs:
-	cd ../baremetal/$(PLATFORMDIR); make clean
+	cd ../baremetal; make clean
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
@@ -90,17 +91,20 @@ $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
 	wc -c $(PRODUCTDIR)/$(PRODUCT).bin
 
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/../%.cpp
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/../%.c
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.S
+	$(CC) $(ASFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.S
 	$(CC) $(ASFLAGS) -c $< -o $@
