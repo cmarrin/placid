@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <cstdint>
 #include <vector>
-#include "String.h"
+#include "bare/String.h"
 
 namespace placid {
 	
@@ -56,7 +56,7 @@ namespace placid {
 		virtual const char* helpString() const = 0;
         virtual const char* promptString() const = 0;
 	    virtual void shellSend(const char* data, uint32_t size = 0, bool raw = false) = 0;
-		virtual bool executeShellCommand(const std::vector<String>&) = 0;
+		virtual bool executeShellCommand(const std::vector<bare::String>&) = 0;
 
 	protected:
         enum class MessageType { Info, Error };
@@ -65,7 +65,7 @@ namespace placid {
 	    void sendComplete();
 
 	private:
-	    bool executeCommand(const std::vector<String>&);
+	    bool executeCommand(const std::vector<bare::String>&);
 
 	    State _state = State::Connect;
 		

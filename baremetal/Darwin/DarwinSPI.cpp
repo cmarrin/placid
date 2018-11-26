@@ -56,3 +56,11 @@ int32_t SPI::read()
 {
     return -1;
 }
+
+void SPI::waitForSlaveRxReady()
+{
+}
+
+void SPI::waitForSlaveTxReady()
+{
+}

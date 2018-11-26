@@ -52,7 +52,6 @@ SRC =	kernel.S \
 		FileSystem.cpp \
 		Scanner.cpp \
 		Shell.cpp \
-		String.cpp \
 
 all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 

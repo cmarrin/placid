@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "String.h"
+#include "bare/String.h"
 #include <cstdint>
 
 namespace placid {
@@ -126,7 +126,7 @@ namespace placid {
     class StringStream : public Stream {
     public:
         StringStream() { }
-        StringStream(const String& s) : _string(s) { }
+        StringStream(const bare::String& s) : _string(s) { }
         StringStream(const char* s) : _string(s) { }
         
         virtual ~StringStream() { }
@@ -153,7 +153,7 @@ namespace placid {
         virtual void flush() override { }
         
     private:
-        String _string;
+        bare::String _string;
         mutable uint32_t _index = 0;
     };
 

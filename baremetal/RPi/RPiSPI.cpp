@@ -151,20 +151,13 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
 
 void SPI::write(uint32_t c)
 {
-    spi().CS = 0xb0;
-    while (1) {
-        if (spi().CS & (1 << 18)) {
-            break;
-        }
-    }
+    spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
+    waitForSlaveTxReady();
     
     spi().FIFO = c & 0xff;
     
-    while(1) {
-        if (spi().CS & (1 << 16)) {
-            break;
-        }
-    }
+    while((spi().CS & SPI0::DONE) == 0) ;
+    
     spi().CS = 0;
 }
 
@@ -172,20 +165,23 @@ int32_t SPI::read()
 {
     char c = 0;
     
-    spi().CS = 0xb0;
-    while (1) {
-        if (spi().CS & (1 << 18)) {
-            break;
-        }
-    }
+    spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
+    waitForSlaveRxReady();
     
     spi().FIFO = c & 0xff;
     
-    while(1) {
-        if (spi().CS & (1 << 16)) {
-            break;
-        }
-    }
+    while((spi().CS & SPI0::DONE) == 0) ;
+
     spi().CS = 0;
     return c;
+}
+
+void SPI::waitForSlaveRxReady()
+{
+    while ((spi().CS & SPI0::RXD) == 0) ;
+}
+
+void SPI::waitForSlaveTxReady()
+{
+    while ((spi().CS & SPI0::TXD) == 0) ;
 }

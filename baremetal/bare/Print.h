@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "bare.h"
+
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
@@ -89,6 +91,8 @@ namespace bare {
         static uint32_t toString(char* buf, int16_t v) { return toString(buf, static_cast<int32_t>(v)); }
         static uint32_t toString(char* buf, uint16_t v, uint8_t base = 10, Capital cap = Capital::No) { return toString(buf, static_cast<uint32_t>(v), base, cap); }
 
+        static bool toNumber(const char*& s, uint32_t& n);
+        
     private:
         Print() { }
         Print(Print&) { }

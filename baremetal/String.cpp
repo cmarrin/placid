@@ -33,16 +33,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bare.h"
-
-#include "String.h"
+#include "bare/String.h"
 
 #include "bare/Print.h"
-#include "Scanner.h"
 
-using namespace placid;
+using namespace bare;
 
-String::operator uint32_t() { return stringToUInt32(c_str()); }
+String::operator uint32_t()
+{
+    uint32_t n;
+    const char* p = c_str();
+    return Print::toNumber(p, n) ? n : 0;
+}
 
 String& String::printf(const char* format, ...)
 {

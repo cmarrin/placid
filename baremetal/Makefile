@@ -63,8 +63,11 @@ SRC = \
 	Print.cpp \
 	PrintFloat.cpp \
 	Serial.cpp \
+	String.cpp \
 	Timer.cpp \
 	Volume.cpp \
+	WiFiSpi.cpp \
+	WiFiSpiDriver.cpp \
 	XYModem.cpp \
 
 include Common.mk

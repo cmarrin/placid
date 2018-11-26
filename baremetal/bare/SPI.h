@@ -55,6 +55,9 @@ namespace bare {
         
         static void write(uint32_t c);
         static int32_t read();
+        
+        static void waitForSlaveRxReady();
+        static void waitForSlaveTxReady();
 
     private:
     };

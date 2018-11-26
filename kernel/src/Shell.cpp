@@ -76,7 +76,7 @@ void Shell::sendComplete()
 	    
 		case State::ShowHelp:
     	_state = State::NeedPrompt;
-		showMessage(MessageType::Info, (String("Commands:\n    '?' : this help message\n\n") + helpString()).c_str());
+		showMessage(MessageType::Info, (bare::String("Commands:\n    '?' : this help message\n\n") + helpString()).c_str());
 		sendComplete();
         break;
     }
@@ -106,7 +106,7 @@ bool Shell::received(uint8_t c)
 		return true;
 	}
 	
-    std::vector<String> array = String(_buffer, _bufferIndex).trim().split(" ", true);
+    std::vector<bare::String> array = bare::String(_buffer, _bufferIndex).trim().split(" ", true);
    
     bool returnValue = executeCommand(array);
 	_bufferIndex = 0;
@@ -114,7 +114,7 @@ bool Shell::received(uint8_t c)
 	return returnValue;
 }
 
-bool Shell::executeCommand(const std::vector<String>& array)
+bool Shell::executeCommand(const std::vector<bare::String>& array)
 {
 	_state = State::NeedPrompt;
 	
@@ -139,7 +139,7 @@ void Shell::showMessage(MessageType type, const char* msg, ...)
     va_list args;
     va_start(args, msg);
     
-    String string;
+    bare::String string;
     string.vprintf(msg, args);    
     shellSend(string.c_str());
 

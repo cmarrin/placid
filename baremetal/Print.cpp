@@ -41,6 +41,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+bool Print::toNumber(const char*& s, uint32_t& n)
+{
+    n = 0;
+    bool haveNumber = false;
+    while (1) {
+        if (*s < '0' || *s > '9') {
+            return haveNumber;
+        }
+        n = n * 10 + *s++ - '0';
+        haveNumber = true;
+    }
+}
+
 enum class Signed { Yes, No };
 enum class FloatType { Float, Exp, Shortest };
  
@@ -76,16 +89,9 @@ static int32_t handleWidth(const char*& format, va_list va)
         ++format;
         return va_arg(va, int);
     }
-
-    int32_t n = -1;
-    while (1) {
-        if (*format < '0' || *format > '9') {
-            return n;
-        } else if (n < 0) {
-            n = 0;
-        }
-        n = n * 10 + *format++ - '0';
-    }
+    
+    uint32_t n;
+    return Print::toNumber(format, n) ? static_cast<int32_t>(n) : -1;
 }
 
 enum class Length { None, H, HH, L, LL, J, Z, T };

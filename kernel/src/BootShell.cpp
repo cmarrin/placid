@@ -87,7 +87,7 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
      }   
 }
 
-static String timeString()
+static bare::String timeString()
 {
     static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
@@ -99,10 +99,10 @@ static String timeString()
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year(),
         currentTime.hours(), currentTime.minutes(), currentTime.seconds());
-    return String(buf);
+    return bare::String(buf);
 }
 
-bool BootShell::executeShellCommand(const std::vector<String>& array)
+bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
 {
     if (array[0] == "ls") {
         bare::DirectoryIterator* it = FileSystem::sharedFileSystem()->directoryIterator("/");
@@ -203,8 +203,8 @@ bool BootShell::executeShellCommand(const std::vector<String>& array)
             //      date "+%Y/%m/%d %T"
             //
             //      e.g., 2018/10/05 23:57:39
-            std::vector<String> dateArray = array[1].split("/");
-            std::vector<String> timeArray = array[2].split(":");
+            std::vector<bare::String> dateArray = array[1].split("/");
+            std::vector<bare::String> timeArray = array[2].split(":");
             bare::RealTime t(
                     static_cast<uint32_t>(dateArray[0]),
                     static_cast<uint32_t>(dateArray[1]),

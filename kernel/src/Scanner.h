@@ -208,7 +208,7 @@ namespace placid {
         bool scanFloat(int32_t& mantissa, int32_t& exp);
         
         mutable uint8_t _lastChar;
-        String _tokenString;
+        bare::String _tokenString;
         Stream* _istream;
         mutable uint32_t _lineno;
 

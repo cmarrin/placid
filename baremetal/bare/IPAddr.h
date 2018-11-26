@@ -35,21 +35,50 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "Shell.h"
+#include "bare/String.h"
 
-namespace placid {
-	
-	// BootShell - Shell with boot commands
-	//
-	// Subclass of Shell
+namespace bare {
 
-	class BootShell : public Shell {
-	public:
-		virtual const char* welcomeString() const override;
-		virtual const char* helpString() const override;
-        virtual const char* promptString() const override;
-	    virtual void shellSend(const char* data, uint32_t size = 0, bool raw = false) override;
-		virtual bool executeShellCommand(const std::vector<bare::String>&) override;
-	};
-	
+    class IPAddr {
+    public:
+        IPAddr() { memset(_addr, 0, sizeof(_addr)); }
+        
+        IPAddr(uint32_t addr)
+        {
+            _addr[0] = static_cast<uint8_t>(addr);
+            _addr[1] = static_cast<uint8_t>(addr >> 8);
+            _addr[2] = static_cast<uint8_t>(addr >> 16);
+            _addr[3] = static_cast<uint8_t>(addr >> 24);
+        }
+        
+        IPAddr(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
+        {
+            _addr[0] = a;
+            _addr[1] = b;
+            _addr[2] = c;
+            _addr[3] = d;
+        }
+        
+        IPAddr(const String& ipString);
+        
+        operator uint32_t() const
+        {
+            return  static_cast<uint32_t>(_addr[0]) | 
+                    (static_cast<uint32_t>(_addr[1]) << 8) |
+                    (static_cast<uint32_t>(_addr[2]) << 16) |
+                    (static_cast<uint32_t>(_addr[3]) << 24);
+        }
+    
+        operator bool() const { return _addr[0] != 0 || _addr[1] != 0 || _addr[2] != 0 || _addr[3] != 0; }
+        uint8_t& operator[](size_t i) { assert(i < 4); return _addr[i]; }
+        const uint8_t& operator[](size_t i) const { assert(i < 4); return _addr[i]; }
+        
+        static IPAddr myIPAddr();
+        static void lookupHostName(const char* name, std::function<void (const char* name, IPAddr)>);
+        
+    private:    
+        uint8_t _addr[4];
+};
+
 }
+
