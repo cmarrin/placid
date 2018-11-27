@@ -41,7 +41,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/SDCard.h"
 #include "bare/Serial.h"
 #include "bare/Timer.h"
-#include "bare/WiFiSpi.h"
 #include "Allocator.h"
 #include "BootShell.h"
 #include "FileSystem.h"
@@ -90,33 +89,6 @@ int main()
     
     bare::Serial::init();
     bare::Timer::init();
-    
-    // Test WiFiSpi
-    bare::SPI spi;
-    bare::WiFiSpi wifi(&spi);
-    
-    wifi.init();
-
-    // check for the presence of the ESP module:
-    if (wifi.status() == bare::WiFiSpi::Status::NoShield) {
-        bare::Serial::printf("WiFi module not present");
-    } else {
-        bare::String fv = wifi.firmwareVersion();
-        if (fv != "0.1.2") {
-            bare::Serial::printf("Please upgrade the firmware");
-        } else {
-            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
-            while (status != bare::WiFiSpi::Status::Connected) {
-                bare::Serial::printf("Wifi status: %d\n", status);
-                bare::Timer::usleep(1000000);
-                status = wifi.status();
-            }
-
-            // you're connected now, so print out the data:
-            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
-        }
-    }
-    
     char buffer[256];
     emb_snprintf(buffer, 255, "This is %s: num=%d, %d\n", "a test", 1234, 0);
     bare::Serial::printf("%s", buffer);
