@@ -23,11 +23,16 @@
 #include "bare/SPI.h"
 #include <cstdint>
 
+#define ENABLE_DEBUG_LOG
+#include "bare/Log.h"
+
 namespace bare {
 
     class WiFiSpiDriver
     {
       public:
+        static constexpr uint32_t ResponseTimeout = 3000000;
+        
         enum class Command {
             SET_NET              = 0x10,
             SET_PASSPHRASE       = 0x11,
@@ -86,7 +91,6 @@ namespace bare {
         {
             uint8_t length;
             char* value;
-            
         };
         
         WiFiSpiDriver(SPI* spi) : _spi(spi) { }
@@ -99,22 +103,22 @@ namespace bare {
 
         void sendBuffer(const uint8_t* param, uint16_t param_len);
 
-        uint8_t waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len);
-        uint8_t waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len);
-        int8_t waitResponseParams(Command cmd, uint8_t numParam, Param* params);
+        bool waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len);
+        bool waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len);
+        bool waitResponseParams(Command cmd, uint8_t numParam, Param* params);
         
     private:
-#ifndef _NDEBUG
         void showCheckError(const char* err, uint8_t expected, uint8_t got);
-#else
-        void showCheckError(const char* err, uint8_t expected, uint8_t got) { }
-#endif
         
         bool readAndCheckByte(uint8_t expected, const char* err)
         {
-            uint8_t value = _spi->read();
-            if (value != expected) {
-                showCheckError(err, expected, value);
+            int32_t value = _spi->transferByte(0, ResponseTimeout);
+            if (value < 0) {
+                ERROR_LOG("Timeout on %s cmd:expected %#02x\n", err, expected);
+                return false;
+            }
+            else if (static_cast<uint8_t>(value) != expected) {
+                ERROR_LOG("Mismatch on %s:expexted %#02x, got %#02x\n", err, expected, value);
                 return false;
             }
             return true;

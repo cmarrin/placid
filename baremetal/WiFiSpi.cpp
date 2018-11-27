@@ -65,7 +65,7 @@ String WiFiSpi::getStringCmd(WiFiSpiDriver::Command cmd, uint8_t length)
 
     char* buf = new char[length + 1];
     if (!_driver.waitResponseCmd(cmd, 1, reinterpret_cast<uint8_t*>(buf), length)) {
-        ERROR_LOG("error waitResponse");
+        return "***ERROR***";
     }
     buf[length] = '\0';
     String s(buf);
@@ -80,7 +80,7 @@ WiFiSpi::Status WiFiSpi::getStatusCmd(WiFiSpiDriver::Command cmd)
     uint8_t value;
     uint8_t length = sizeof(value);
     if (!_driver.waitResponseCmd(cmd, 1, &value, length)) {
-        ERROR_LOG("error waitResponse");
+        return WiFiSpi::Status::Failure;
     }
     return static_cast<Status>(value);
 }
@@ -256,7 +256,7 @@ int8_t WiFiSpi::scanNetworks()
 //    int8_t _data = -1;
 //    uint8_t _dataLen = sizeof(_data);
 //    if (!waitResponseCmd(Command::START_SCAN_NETWORKS, 1, reinterpret_cast<uint8_t *>(&_data), &_dataLen)) {
-//        ERROR_LOG("error waitResponse");
+//        return -1;
 //    }
 //
 //    if (_data == WIFI_SCAN_FAILED) {

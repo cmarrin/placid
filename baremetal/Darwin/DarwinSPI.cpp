@@ -48,22 +48,13 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
     return -1;
 }
 
-void SPI::write(uint32_t c)
-{
-}
-
-int32_t SPI::read()
-{
-    return -1;
-}
-
 void SPI::startTransfer()
 {
 }
 
-uint8_t SPI::transferByte(uint8_t b)
+int32_t SPI::transferByte(uint8_t b, uint32_t usTimeout)
 {
-    return 0;
+    return -1;
 }
 
 void SPI::endTransfer()

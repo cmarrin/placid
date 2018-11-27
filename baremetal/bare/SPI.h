@@ -54,11 +54,8 @@ namespace bare {
         static int32_t readWrite(char* readBuf, const char* writeBuf, size_t);
         
         static void startTransfer();
-        uint8_t transferByte(uint8_t b = 0);
+        int32_t transferByte(uint8_t b, uint32_t usTimeout);
         static void endTransfer();
-        
-        static void write(uint32_t c);
-        static int32_t read();
 
     private:
     };

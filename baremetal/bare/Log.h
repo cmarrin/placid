@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 static inline void ERROR_LOG(const char* format, ...)
 {
+    bare::Serial::printf("ERROR: ");
     va_list va;
     va_start(va, format);
     bare::Serial::vprintf(format, va);
@@ -47,6 +48,7 @@ static inline void ERROR_LOG(const char* format, ...)
 #ifdef ENABLE_DEBUG_LOG
 static inline void DEBUG_LOG(const char* format, ...)
 {
+    bare::Serial::printf("log  : ");
     va_list va;
     va_start(va, format);
     bare::Serial::vprintf(format, va);

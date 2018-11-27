@@ -151,31 +151,44 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
 
 void SPI::startTransfer()
 {
+    DEBUG_LOG("SPI:startTransfer\n");
     spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
 }
 
-uint8_t SPI::transferByte(uint8_t b)
+static inline bool waitWithTimeout(uint32_t csBit, uint32_t usTimeout)
 {
-    while ((spi().CS & SPI0::TXD) == 0) ;
+    int64_t endTime = Timer::systemTime() + usTimeout;
+    for (int i = 0; ; ++i) {
+        if ((spi().CS & csBit) != 0) {
+            return true;
+        }
+        if (i >= 100) {
+            if (Timer::systemTime() > endTime) {
+                return false;
+            }
+            i = 0;
+        }
+    }
+}
+
+int32_t SPI::transferByte(uint8_t b, uint32_t usTimeout)
+{
+    DEBUG_LOG("SPI:transferByte sent %#02x\n", b);
+    if (!waitWithTimeout(SPI0::TXD, usTimeout)) {
+        return -1;
+    }
     spi().FIFO = b;
-    while ((spi().CS & SPI0::RXD) == 0) ;
-    return spi().FIFO;
+    if (!waitWithTimeout(SPI0::RXD, usTimeout)) {
+        return -1;
+    }
+    b = spi().FIFO;
+    DEBUG_LOG("SPI:transferByte received %#02x\n", b);
+    return b;
 }
 
 void SPI::endTransfer()
 {
     while((spi().CS & SPI0::DONE) == 0) ;
     spi().CS = 0;
-}
-
-void SPI::write(uint32_t c)
-{
-    while ((spi().CS & SPI0::TXD) == 0) ;
-    spi().FIFO = c & 0xff;
-}
-
-int32_t SPI::read()
-{
-    while ((spi().CS & SPI0::RXD) == 0) ;
-    return spi().FIFO;
+    DEBUG_LOG("SPI:endTransfer\n");
 }

@@ -56,12 +56,15 @@ static void testSPI()
     wifi.init();
 
     // check for the presence of the ESP module:
-    if (wifi.status() == bare::WiFiSpi::Status::NoShield) {
+    bare::WiFiSpi::Status status = wifi.status();
+    if (status == bare::WiFiSpi::Status::NoShield) {
         bare::Serial::printf("WiFi module not present");
     } else {
+        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
+        
         bare::String fv = wifi.firmwareVersion();
         if (fv != "0.1.2") {
-            bare::Serial::printf("Please upgrade the firmware");
+            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
         } else {
             bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
             while (status != bare::WiFiSpi::Status::Connected) {
