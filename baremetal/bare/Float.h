@@ -136,10 +136,10 @@ public:
     arg_type toArg() const { return static_cast<arg_type>(_value); }
     
     // Get the next arg from the va_list and convert it to a Float
-    static _Float argToFloat(va_list va)
+    static _Float fromArg(arg_type arg)
     {
         _Float floatValue;
-        floatValue._value = static_cast<value_type>(va_arg(va, arg_type));
+        floatValue._value = static_cast<value_type>(arg);
         return floatValue;
     }
 

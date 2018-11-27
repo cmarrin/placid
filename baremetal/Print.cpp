@@ -65,6 +65,11 @@ enum class Flag {
     zeroPad = 0x10,
 };
 
+// va_list can be either an array or a struct. This makes it impossible to pass by reference
+// in a cross-platform way. Wrap it in a struct and pass that by reference so it works in
+// all platforms
+struct VA_LIST { va_list value; };
+
 static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
 static inline void setFlag(uint8_t& flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
 
@@ -83,11 +88,11 @@ static void handleFlags(const char*& format, uint8_t& flags)
     }
 }
 
-static int32_t handleWidth(const char*& format, va_list va)
+static int32_t handleWidth(const char*& format, VA_LIST& va)
 {
     if (*format == '*') {
         ++format;
-        return va_arg(va, int);
+        return va_arg(va.value, int);
     }
     
     uint32_t n;
@@ -118,17 +123,17 @@ static Length handleLength(const char*& format)
     return length;
 }
 
-static uintmax_t getInteger(Length length, va_list va)
+static uintmax_t getInteger(Length length, VA_LIST& va)
 {
     switch(length) {
-    case Length::None: return static_cast<uintmax_t>(va_arg(va, int));
-    case Length::H: return static_cast<uintmax_t>(va_arg(va, int)) & 0xffff;
-    case Length::HH: return static_cast<uintmax_t>(va_arg(va, int)) & 0xff;
-    case Length::L: return static_cast<uintmax_t>(va_arg(va, long int));
-    case Length::LL: return static_cast<uintmax_t>(va_arg(va, long long int));
-    case Length::J: return static_cast<uintmax_t>(va_arg(va, intmax_t));
-    case Length::Z: return static_cast<uintmax_t>(va_arg(va, size_t));
-    case Length::T: return static_cast<uintmax_t>(va_arg(va, ptrdiff_t));
+    case Length::None: return static_cast<uintmax_t>(va_arg(va.value, int));
+    case Length::H: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xffff;
+    case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xff;
+    case Length::L: return static_cast<uintmax_t>(va_arg(va.value, long int));
+    case Length::LL: return static_cast<uintmax_t>(va_arg(va.value, long long int));
+    case Length::J: return static_cast<uintmax_t>(va_arg(va.value, intmax_t));
+    case Length::Z: return static_cast<uintmax_t>(va_arg(va.value, size_t));
+    case Length::T: return static_cast<uintmax_t>(va_arg(va.value, ptrdiff_t));
     }
     return 0;
 }
@@ -230,9 +235,12 @@ static int32_t outString(bare::Print::Printer printer, const char* s, int32_t wi
 //     'L' length - long double
 //     'l' length for 'c' and 's' specifiers - wide characters
  
-int32_t Print::vformat(Print::Printer printer, const char *format, va_list va)
+int32_t Print::vformat(Print::Printer printer, const char *format, va_list vaIn)
 {
     assert(format);
+    
+    VA_LIST va;
+    va_copy(va.value, vaIn);
     
     uint8_t flags = 0;
         
@@ -291,19 +299,20 @@ int32_t Print::vformat(Print::Printer printer, const char *format, va_list va)
             case 'g': cap = Print::Capital::No; type = FloatType::Shortest; break;
             case 'G': cap = Print::Capital::Yes; type = FloatType::Shortest; break;
             }
-            size += outFloat(printer, Float::argToFloat(va), width, precision, flags, cap, type);
+
+            size += outFloat(printer, Float::fromArg(va_arg(va.value, Float::arg_type)), width, precision, flags, cap, type);
             break;
         }
 #endif
         case 'c':
-            printer(static_cast<char>(va_arg(va, int)));
+            printer(static_cast<char>(va_arg(va.value, int)));
             size++;
             break;
         case 's':
-            size += outString(printer, va_arg(va, const char*), width, precision, flags);
+            size += outString(printer, va_arg(va.value, const char*), width, precision, flags);
             break;
         case 'p':
-            size += outInteger(printer, reinterpret_cast<int64_t>(va_arg(va, void*)), Signed::No, width, precision, flags, 16, Print::Capital::No);
+            size += outInteger(printer, reinterpret_cast<int64_t>(va_arg(va.value, void*)), Signed::No, width, precision, flags, 16, Print::Capital::No);
             break;
         default:
             printer(*format++);

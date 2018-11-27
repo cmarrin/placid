@@ -118,7 +118,10 @@ int main()
     }
     
     char buffer[256];
-    emb_snprintf(buffer, 255, "This is %s: num=%d\n", "a test", 1234);
+    emb_snprintf(buffer, 255, "This is %s: num=%d, %d\n", "a test", 1234, 0);
+    bare::Serial::printf("%s", buffer);
+    bare::Serial::printf("This is %s: num=%d, %d\n", "a test", 1234, 0);
+
     
     bare::Float f = 1234.56;
     bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
