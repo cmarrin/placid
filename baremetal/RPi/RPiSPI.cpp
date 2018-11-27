@@ -40,7 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/GPIO.h"
 #include "bare/Timer.h"
 
-//#define ENABLE_DEBUG_LOG
+#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
 
 using namespace bare;
@@ -149,39 +149,33 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
     return (int) size;
 }
 
-void SPI::write(uint32_t c)
+void SPI::startTransfer()
 {
     spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
-    waitForSlaveTxReady();
-    
-    spi().FIFO = c & 0xff;
-    
+}
+
+uint8_t SPI::transferByte(uint8_t b)
+{
+    while ((spi().CS & SPI0::TXD) == 0) ;
+    spi().FIFO = b;
+    while ((spi().CS & SPI0::RXD) == 0) ;
+    return spi().FIFO;
+}
+
+void SPI::endTransfer()
+{
     while((spi().CS & SPI0::DONE) == 0) ;
-    
     spi().CS = 0;
+}
+
+void SPI::write(uint32_t c)
+{
+    while ((spi().CS & SPI0::TXD) == 0) ;
+    spi().FIFO = c & 0xff;
 }
 
 int32_t SPI::read()
 {
-    char c = 0;
-    
-    spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
-    waitForSlaveRxReady();
-    
-    spi().FIFO = c & 0xff;
-    
-    while((spi().CS & SPI0::DONE) == 0) ;
-
-    spi().CS = 0;
-    return c;
-}
-
-void SPI::waitForSlaveRxReady()
-{
     while ((spi().CS & SPI0::RXD) == 0) ;
-}
-
-void SPI::waitForSlaveTxReady()
-{
-    while ((spi().CS & SPI0::TXD) == 0) ;
+    return spi().FIFO;
 }

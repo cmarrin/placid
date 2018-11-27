@@ -20,6 +20,9 @@
 
 #include "bare/WiFiSpiDriver.h"
 
+#define ENABLE_DEBUG_LOG
+#include "bare/Log.h"
+
 using namespace bare;
 
 static constexpr uint8_t REPLY_FLAG = 1 << 7;
@@ -33,10 +36,7 @@ void WiFiSpiDriver::showCheckError(const char* err, uint8_t expected, uint8_t go
 }
 #endif
 
-static inline uint8_t addReply(WiFiSpiDriver::Command cmd)
-{
-    return static_cast<uint8_t>(cmd) | REPLY_FLAG;
-}
+static inline uint8_t setReply(WiFiSpiDriver::Command cmd) { return static_cast<uint8_t>(cmd) | REPLY_FLAG; }
 
 /* 
     Sends a command to ESP. If numParam == 0 ends the command otherwise keeps it open.
@@ -50,29 +50,22 @@ static inline uint8_t addReply(WiFiSpiDriver::Command cmd)
 */
 void WiFiSpiDriver::sendCmd(Command cmd, uint8_t numParam)
 {
-    _spi->waitForSlaveRxReady();
+    DEBUG_LOG("numParam=%d\n", numParam);
+    DEBUG_LOG("sendCmd(%#02x, %d)\n", static_cast<uint32_t>(cmd), numParam);
     
-    // Send Spi START CMD
-    _spi->write(static_cast<uint8_t>(Command::START));
-
-    // Send Spi C + cmd
-    _spi->write(addReply(cmd));
-
-    // Send Spi numParam
-    _spi->write(numParam);
-
-    // If numParam == 0 send END CMD and flush
-    if (numParam == 0)
+    _spi->startTransfer();
+    _spi->transferByte(static_cast<uint8_t>(Command::START));
+    _spi->transferByte(static_cast<uint8_t>(cmd));
+    _spi->transferByte(numParam);
+    if (numParam == 0) {
         endCmd();
+    }
 }
 
-/*
-   Ends a command and flushes the buffer
- */
 void WiFiSpiDriver::endCmd()
 {
-    _spi->write(static_cast<uint8_t>(Command::END));
-    //_spi->flush(MESSAGE_FINISHED);
+    _spi->transferByte(static_cast<uint8_t>(Command::END));
+    _spi->endTransfer();
 }
 
 /*
@@ -83,11 +76,12 @@ void WiFiSpiDriver::endCmd()
 void WiFiSpiDriver::sendParam(const uint8_t* param, uint8_t param_len)
 {
     // Send paramLen
-    _spi->write(param_len);
+    _spi->transferByte(param_len);
 
     // Send param data
-    for (int i=0; i<param_len; ++i)
-        _spi->write(param[i]);
+    for (int i=0; i<param_len; ++i) {
+        _spi->transferByte(param[i]);
+    }
 }
 
 /*
@@ -97,10 +91,10 @@ void WiFiSpiDriver::sendParam(const uint8_t* param, uint8_t param_len)
 void WiFiSpiDriver::sendParam(uint8_t param)
 {
     // Send paramLen
-    _spi->write(1);
+    _spi->transferByte(1);
 
     // Send param data
-    _spi->write(param );
+    _spi->transferByte(param );
 }
 
 
@@ -111,12 +105,13 @@ void WiFiSpiDriver::sendParam(uint8_t param)
 void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
 {
     // Send paramLen
-    _spi->write(param_len & 0xff);
-    _spi->write(param_len >> 8);
+    _spi->transferByte(param_len & 0xff);
+    _spi->transferByte(param_len >> 8);
 
     // Send param data
-    for (uint16_t i=0;  i<param_len;  ++i)
-        _spi->write(param[i]);
+    for (uint16_t i=0;  i<param_len;  ++i) {
+        _spi->transferByte(param[i]);
+    }
 }
 
 /*
@@ -128,21 +123,20 @@ void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
  */
 uint8_t WiFiSpiDriver::waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len)
 {
-    _spi->waitForSlaveTxReady();
     readAndCheckByte(Command::START, "Start");
-    readAndCheckByte(addReply(cmd), "Cmd");
+    readAndCheckByte(setReply(cmd), "Cmd");
     readAndCheckByte(numParam, "Param");
 
     if (numParam == 1)
     {
         // Reads the length of the first parameter
-        uint8_t len = _spi->read();
+        uint8_t len = _spi->transferByte();
 
         // Reads the parameter, checks buffer overrun
         for (uint8_t ii=0; ii<len; ++ii)
         {
             if (ii < param_len)
-                param[ii] = _spi->read();
+                param[ii] = _spi->transferByte();
         }
 
         // Sets the actual length of the parameter
@@ -167,29 +161,28 @@ uint8_t WiFiSpiDriver::waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* p
  */
 uint8_t WiFiSpiDriver::waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len)
 {
-    _spi->waitForSlaveTxReady();
     readAndCheckByte(Command::START, "Start");
-    readAndCheckByte(addReply(cmd), "Cmd");
+    readAndCheckByte(setReply(cmd), "Cmd");
     readAndCheckByte(numParam, "Param");
 
     if (numParam == 1)
     {
-        // Reads the length of the first parameter
-        uint16_t len = _spi->read() << 8;
-        len |= _spi->read();
-        // Reads the parameter, checks buffer overrun
-        for (uint16_t ii=0; ii<len; ++ii)
-        {
-            if (ii < param_len)
-                param[ii] = _spi->read();
+        uint16_t len = static_cast<uint16_t>(_spi->transferByte()) << 8;
+        len |= static_cast<uint16_t>(_spi->transferByte());
+        
+        for (uint16_t ii=0; ii<len; ++ii) {
+            if (ii < param_len) {
+                param[ii] = _spi->transferByte();
+            }
         }
 
-        // Sets the actual length of the parameter
-        if (len < param_len)
+        if (len < param_len) {
             param_len = len;
+        }
     }
-    else if (numParam != 0)
-        return 0;  // Bad number of parameters
+    else if (numParam != 0) {
+        return 0;
+    }
   
     readAndCheckByte(Command::END, "End");
 
@@ -201,23 +194,19 @@ uint8_t WiFiSpiDriver::waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t*
  */
 int8_t WiFiSpiDriver::waitResponseParams(Command cmd, uint8_t numParam, Param* params)
 {
-    _spi->waitForSlaveTxReady();
     readAndCheckByte(Command::START, "Start");
-    readAndCheckByte(addReply(cmd), "Cmd");
+    readAndCheckByte(setReply(cmd), "Cmd");
     readAndCheckByte(numParam, "Param");
 
-    if (numParam > 0)
-    {
-        for (uint8_t i=0;  i<numParam;  ++i)
-        {
+    if (numParam > 0) {
+        for (uint8_t i=0;  i<numParam;  ++i) {
             // Reads the length of the first parameter
-            uint8_t len = _spi->read();
+            uint8_t len = _spi->transferByte();
 
             // Reads the parameter, checks buffer overrun
-            for (uint8_t ii=0; ii<len; ++ii)
-            {
+            for (uint8_t ii=0; ii<len; ++ii) {
                 if (ii < params[i].length)
-                    params[i].value[ii] = _spi->read();
+                    params[i].value[ii] = _spi->transferByte();
             }
 
             // Sets the actual length of the parameter

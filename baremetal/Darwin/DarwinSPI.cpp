@@ -57,10 +57,15 @@ int32_t SPI::read()
     return -1;
 }
 
-void SPI::waitForSlaveRxReady()
+void SPI::startTransfer()
 {
 }
 
-void SPI::waitForSlaveTxReady()
+uint8_t SPI::transferByte(uint8_t b)
+{
+    return 0;
+}
+
+void SPI::endTransfer()
 {
 }

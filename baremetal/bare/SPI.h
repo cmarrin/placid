@@ -53,11 +53,12 @@ namespace bare {
         static int32_t read(char* buf, size_t size) { return readWrite(buf, nullptr, size); }
         static int32_t readWrite(char* readBuf, const char* writeBuf, size_t);
         
+        static void startTransfer();
+        uint8_t transferByte(uint8_t b = 0);
+        static void endTransfer();
+        
         static void write(uint32_t c);
         static int32_t read();
-        
-        static void waitForSlaveRxReady();
-        static void waitForSlaveTxReady();
 
     private:
     };
