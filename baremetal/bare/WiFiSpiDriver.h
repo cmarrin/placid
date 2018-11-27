@@ -91,7 +91,7 @@ namespace bare {
         
         WiFiSpiDriver(SPI* spi) : _spi(spi) { }
 
-        void sendCmd(Command cmd, uint8_t numParam);
+        void sendCmd(Command cmd, uint8_t numParam = 0);
         void endCmd();
 
         void sendParam(const uint8_t* param, uint8_t param_len);

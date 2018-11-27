@@ -61,7 +61,7 @@ uint8_t WiFiSpi::getSocket()
 
 String WiFiSpi::getStringCmd(WiFiSpiDriver::Command cmd, uint8_t length)
 {
-    _driver.sendCmd(cmd, 0);
+    _driver.sendCmd(cmd);
 
     char* buf = new char[length + 1];
     if (!_driver.waitResponseCmd(cmd, 1, reinterpret_cast<uint8_t*>(buf), length)) {
@@ -75,7 +75,7 @@ String WiFiSpi::getStringCmd(WiFiSpiDriver::Command cmd, uint8_t length)
 
 WiFiSpi::Status WiFiSpi::getStatusCmd(WiFiSpiDriver::Command cmd)
 {
-    _driver.sendCmd(cmd, 0);
+    _driver.sendCmd(cmd);
 
     uint8_t value;
     uint8_t length = sizeof(value);
@@ -251,7 +251,7 @@ int8_t WiFiSpi::scanNetworks()
 //    uint8_t attempts = 10;
 //    int8_t numOfNetworks = 0;
 //
-//    sendCmd(Command::START_SCAN_NETWORKS, 0);
+//    sendCmd(Command::START_SCAN_NETWORKS);
 //    
 //    int8_t _data = -1;
 //    uint8_t _dataLen = sizeof(_data);
