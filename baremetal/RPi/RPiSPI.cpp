@@ -64,8 +64,8 @@ struct SPI0 {
     static constexpr uint32_t CSPOL        = 1 << 6;
     static constexpr uint32_t CLEAR_RX     = 1 << 5;
     static constexpr uint32_t CLEAR_TX     = 1 << 4;
-    static constexpr uint32_t CPOLShift    = 3;
-    static constexpr uint32_t CPHAShift    = 2;
+    static constexpr uint32_t CPOL         = 1 << 3;
+    static constexpr uint32_t CPHA         = 1 << 2;
     static constexpr uint32_t WhichCS      = 1 << 0;
     static constexpr uint32_t WhichCSShift = 0;
     
@@ -94,13 +94,18 @@ void SPI::init()
     GPIO::setFunction(10, GPIO::Function::Alt0);
     GPIO::setFunction(11, GPIO::Function::Alt0);
     
-    spi().CS = 0x30; // Clear FIFOs
+    spi().CS = SPI0::CLEAR_RX | SPI0::CLEAR_TX;
     spi().CLK = 0; // 250MHz / 65536 = 3814.7Hz (slowest possible transfer rate)
     
-    bool polarity = false;
-    bool phase = false;
-    Timer::usleep(1000); 
-    spi().CS = (polarity ? (1 << SPI0::CPOLShift) : 0) | (phase ? (1 << SPI0::CPHAShift) : 0);
+    bool csPolarity = true;
+    bool clockPolarity = false;
+    bool clockPhase = false;
+    Timer::usleep(1000);
+    uint32_t cs = clockPolarity ? SPI0::CPOL : 0;
+    cs |= clockPhase ? SPI0::CPHA : 0;
+    cs |= csPolarity ? SPI0::CSPOL : 0;
+    cs |= csPolarity ? SPI0::CSPOL0 : 0;
+    spi().CS = cs;
     
     // FIXME: Wait a bit for things to settle. Not sure if we need this
     Timer::usleep(1000); 
@@ -152,7 +157,7 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
 void SPI::startTransfer()
 {
     DEBUG_LOG("SPI:startTransfer\n");
-    spi().CS = SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
+    spi().CS = spi().CS | SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
 }
 
 static inline bool waitWithTimeout(uint32_t csBit, uint32_t usTimeout)
@@ -189,6 +194,6 @@ int32_t SPI::transferByte(uint8_t b, uint32_t usTimeout)
 void SPI::endTransfer()
 {
     while((spi().CS & SPI0::DONE) == 0) ;
-    spi().CS = 0;
+    spi().CS = spi().CS & ~SPI0::TA & ~SPI0::CLEAR_RX & ~SPI0::CLEAR_TX;
     DEBUG_LOG("SPI:endTransfer\n");
 }
