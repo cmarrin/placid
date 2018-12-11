@@ -33,47 +33,31 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bare.h"
 
-#include <stdint.h>
+#include "bare/Graphics.h"
 
-namespace bare {
+using namespace bare;
 
-    class Mailbox
-    {
-    public:
-        enum class Error {
-            OK,
-            SizeTooLarge,
-        };
-        
-        enum class Channel {
-            Power = 0x0,
-            FB = 0x1,
-            VirtualUART = 0x2,
-            VCHIQ = 0x3,
-            LEDs = 0x4,
-            Buttons = 0x5,
-            Touch = 0x6,
-            Counter = 0x7,
-            Tags = 0x8,
-            GPU = 0x9,
-        };
+bool Graphics::init()
+{
+    if (mailbox_tag_message(0, 9,
+        MAILBOX_TAG_SET_CLOCK_RATE, 8, 8, CLK_V3D_ID, 250000000,    // Set V3D clock to 250Mhz
+        MAILBOX_TAG_ENABLE_QPU, 4, 4, 1))                            // Enable the QPU untis
+    {                                                                // Message was successful
+        if (v3d[V3D_IDENT0] == 0x02443356) return true;                // We can read V3D ID number.
+    }
+    return false;                                                    // Initialize failed
+}
 
-        enum class Command {
-            FirmwareRev = 0x00000001,   // uint32_t rev
-            BoardModel = 0x00010001,    // uint32_t model
-            BoardRev = 0x00010002,      // uint32_t boardRev
-            MACAddress = 0x00010003,    // uint8_t addr[6]
-            BoardSerialNo = 0x00010004, // uint32_t ser[2]
-            ARMMemory = 0x00010005,     // uint32_t base, uint32_t size
-            VCMemory = 0x00010006,      // uint32_t base, uint32_t size
-            DMAChannelMask = 0x00060001,// uint32_t mask
-        };
-        
-        static Error getParameter(Param, uint32_t* result, uint32_t size);
-        static Error tagMessage(uint32_t* responseBuf, uint8_t size, ...);
-        static void printBoardParams();
-    };
+void Graphics::initScene(uint32_t width, uint32_t height)
+{
+}
+     
+void Graphics::addTestScene()
+{
+}
 
+void Graphics::render()
+{
 }

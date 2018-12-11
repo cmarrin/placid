@@ -38,42 +38,23 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdint.h>
 
 namespace bare {
+    
+    // Graphics - Interface to graphics subsystem
+    //
+    // This code was inspired bu the work here:
+    //
+    //        https://github.com/LdB-ECM/Raspberry-Pi
+    //
+    // This is a static class and cannot be instantiated
+    //
 
-    class Mailbox
-    {
+    class Graphics {
     public:
-        enum class Error {
-            OK,
-            SizeTooLarge,
-        };
+        static bool init();
+        static void clear(uint32_t color);
         
-        enum class Channel {
-            Power = 0x0,
-            FB = 0x1,
-            VirtualUART = 0x2,
-            VCHIQ = 0x3,
-            LEDs = 0x4,
-            Buttons = 0x5,
-            Touch = 0x6,
-            Counter = 0x7,
-            Tags = 0x8,
-            GPU = 0x9,
-        };
-
-        enum class Command {
-            FirmwareRev = 0x00000001,   // uint32_t rev
-            BoardModel = 0x00010001,    // uint32_t model
-            BoardRev = 0x00010002,      // uint32_t boardRev
-            MACAddress = 0x00010003,    // uint8_t addr[6]
-            BoardSerialNo = 0x00010004, // uint32_t ser[2]
-            ARMMemory = 0x00010005,     // uint32_t base, uint32_t size
-            VCMemory = 0x00010006,      // uint32_t base, uint32_t size
-            DMAChannelMask = 0x00060001,// uint32_t mask
-        };
-        
-        static Error getParameter(Param, uint32_t* result, uint32_t size);
-        static Error tagMessage(uint32_t* responseBuf, uint8_t size, ...);
-        static void printBoardParams();
+        static void drawTriangle();
+        static void render();
     };
-
+    
 }

@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "BootShell.h"
 
+#include "bare/Graphics.h"
 #include "bare/Print.h"
 #include "bare/Serial.h"
 #include "bare/WiFiSpi.h"
@@ -79,12 +80,13 @@ static void testSPI()
     }
 }
 
-//        char spibuf[256];
-//        for (int i = 0; i < 10; ++i) {
-//            bare::SPI::readWrite(spibuf, "\x01\x02\x03\x04" "abc", 7);
-//            bare::Serial::printf("    SPI received: '%s'\n", spibuf);
-//            bare::Timer::usleep(1000000);
-//        }
+static void testDraw()
+{
+    bare::Graphics::init();
+    bare::Graphics::clear(0xff00ff00);
+    bare::Graphics::drawTriangle();
+    bare::Graphics::render();
+}
 
 const char* BootShell::welcomeString() const
 {
@@ -263,11 +265,18 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
         showMessage(MessageType::Info, "Program stopped\n");
     } else if (array[0] == "debug") {
         showMessage(MessageType::Info, "Debug true\n");
-    } else if (array[0] == "spi") {
-        bare::Serial::printf("SPI test\n");
-        testSPI();
-    } else {
-        return false;
+    } else if (array[0] == "test") {
+        if (array.size() < 2) {
+            showMessage(MessageType::Error, "need a test command\n");
+        } else if (array[1] == "spi") {
+            bare::Serial::printf("SPI test\n");
+            testSPI();
+        } else if (array[1] == "draw") {
+            bare::Serial::printf("GPU Drawing test\n");
+            testDraw();
+        } else {
+            showMessage(MessageType::Error, "invalid test command\n");
+        }
     }
     return true;
 }

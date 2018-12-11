@@ -46,6 +46,14 @@
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
+		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
+		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
+		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
+		49BC3FFE21BEE04800D62847 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFD21BEE04800D62847 /* CoreFoundation.framework */; };
+		49BC400021BEE06900D62847 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFF21BEE06900D62847 /* CoreGraphics.framework */; };
+		49BC400221BEE07E00D62847 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400121BEE07E00D62847 /* CoreVideo.framework */; };
+		49BC400421BEE0B800D62847 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400321BEE0B800D62847 /* IOKit.framework */; };
+		49BC400621BEE0D900D62847 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400521BEE0D900D62847 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +207,16 @@
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
+		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
+		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
+		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
+		49BC3FF921BDC82200D62847 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		49BC3FFB21BDC84D00D62847 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		49BC3FFD21BEE04800D62847 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		49BC3FFF21BEE06900D62847 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		49BC400121BEE07E00D62847 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		49BC400321BEE0B800D62847 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		49BC400521BEE0D900D62847 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +232,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49BC400621BEE0D900D62847 /* AppKit.framework in Frameworks */,
+				49BC400421BEE0B800D62847 /* IOKit.framework in Frameworks */,
+				49BC400221BEE07E00D62847 /* CoreVideo.framework in Frameworks */,
+				49BC400021BEE06900D62847 /* CoreGraphics.framework in Frameworks */,
+				49BC3FFE21BEE04800D62847 /* CoreFoundation.framework in Frameworks */,
+				49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */,
+				49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */,
 				4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,6 +343,7 @@
 				496C3BB7217E225B004DBC22 /* FAT32RawFile.h */,
 				494FD626219B8091005C2A6B /* Float.h */,
 				492FF3EC215AF47B003582FE /* GPIO.h */,
+				49BC3FF421BB0AEE00D62847 /* Graphics.h */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
 				494FD64921AB3596005C2A6B /* IPAddr.h */,
 				496C3BC221891FC2004DBC22 /* Log.h */,
@@ -351,6 +377,7 @@
 			children = (
 				494FD6052198ACFA005C2A6B /* DarwinBare.cpp */,
 				494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */,
+				49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */,
 				494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */,
 				494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */,
 				494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */,
@@ -365,6 +392,7 @@
 			children = (
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
+				49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */,
 				492FF401215C5359003582FE /* RPiInterruptManager.cpp */,
 				492FF3F3215C4F72003582FE /* RPiMailbox.cpp */,
 				492FF3F0215C4F72003582FE /* RPiMailbox.h */,
@@ -420,6 +448,13 @@
 		49629588215AAA760064B9C9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49BC400521BEE0D900D62847 /* AppKit.framework */,
+				49BC400321BEE0B800D62847 /* IOKit.framework */,
+				49BC400121BEE07E00D62847 /* CoreVideo.framework */,
+				49BC3FFF21BEE06900D62847 /* CoreGraphics.framework */,
+				49BC3FFD21BEE04800D62847 /* CoreFoundation.framework */,
+				49BC3FFB21BDC84D00D62847 /* GLUT.framework */,
+				49BC3FF921BDC82200D62847 /* OpenGL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -542,6 +577,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 492C7413214B2A2F009A4DA4;
 			productRefGroup = 492C741D214B2A2F009A4DA4 /* Products */;
@@ -600,6 +636,7 @@
 				494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */,
+				49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */,
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
@@ -701,11 +738,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../baremetal",
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DFLOATFLOAT";
+				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -755,10 +797,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../baremetal";
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../baremetal",
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DFLOATFLOAT";
+				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -769,7 +816,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				OTHER_LDFLAGS = "-lncurses";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lncurses",
+					"-lSDL",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -779,8 +830,13 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = "$(inherited)";
+				"LD_MAP_FILE_PATH[arch=*]" = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				OTHER_LDFLAGS = "-lncurses";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lncurses",
+					"-lSDL",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

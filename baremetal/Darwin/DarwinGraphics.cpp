@@ -33,47 +33,69 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bare.h"
 
-#include <stdint.h>
+#include "bare/Graphics.h"
+#include "bare/Serial.h"
+#include <OpenGL/gl.h>
+#include <SDL/SDL.h>
 
-namespace bare {
+using namespace bare;
 
-    class Mailbox
-    {
-    public:
-        enum class Error {
-            OK,
-            SizeTooLarge,
-        };
+static constexpr uint32_t DisplayWidth = 640;
+static constexpr uint32_t DisplayHeight = 480;
+
+static void setupSDL() 
+{
+    const SDL_VideoInfo* video;
+
+    if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+        fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
+        exit(1);
+    }
         
-        enum class Channel {
-            Power = 0x0,
-            FB = 0x1,
-            VirtualUART = 0x2,
-            VCHIQ = 0x3,
-            LEDs = 0x4,
-            Buttons = 0x5,
-            Touch = 0x6,
-            Counter = 0x7,
-            Tags = 0x8,
-            GPU = 0x9,
-        };
+    /* Quit SDL properly on exit */
+    atexit(SDL_Quit);
 
-        enum class Command {
-            FirmwareRev = 0x00000001,   // uint32_t rev
-            BoardModel = 0x00010001,    // uint32_t model
-            BoardRev = 0x00010002,      // uint32_t boardRev
-            MACAddress = 0x00010003,    // uint8_t addr[6]
-            BoardSerialNo = 0x00010004, // uint32_t ser[2]
-            ARMMemory = 0x00010005,     // uint32_t base, uint32_t size
-            VCMemory = 0x00010006,      // uint32_t base, uint32_t size
-            DMAChannelMask = 0x00060001,// uint32_t mask
-        };
-        
-        static Error getParameter(Param, uint32_t* result, uint32_t size);
-        static Error tagMessage(uint32_t* responseBuf, uint8_t size, ...);
-        static void printBoardParams();
-    };
+    /* Get the current video information */
+    video = SDL_GetVideoInfo( );
+    if( video == NULL ) {
+        fprintf(stderr, "Couldn't get video information: %s\n", SDL_GetError());
+        exit(1);
+    }
 
+    /* Set the minimum requirements for the OpenGL window */
+    SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
+    SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
+    SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+    /* Note the SDL_DOUBLEBUF flag is not required to enable double 
+     * buffering when setting an OpenGL video mode. 
+     * Double buffering is enabled or disabled using the 
+     * SDL_GL_DOUBLEBUFFER attribute.
+     */
+    if( SDL_SetVideoMode( DisplayWidth, DisplayHeight, video->vfmt->BitsPerPixel, SDL_OPENGL ) == 0 ) {
+        fprintf(stderr, "Couldn't set video mode: %s\n", SDL_GetError());
+        exit(1);
+    }
+}
+
+bool Graphics::init()
+{
+    setupSDL();
+    return true;
+}
+
+void Graphics::clear(uint32_t color)
+{
+}
+     
+void Graphics::drawTriangle()
+{
+}
+
+void Graphics::render()
+{
 }
