@@ -114,7 +114,9 @@ bool Allocator::alloc(size_t size, void*& mem)
         return mem;
     }
 
-    DEBUG_LOG("Allocator::alloc: enter, size=%d, SystemIsInited=%s\n", static_cast<uint32_t>(size), bare::SystemIsInited ? "true" : "false");
+    _mutex.lock();
+    
+    DEBUG_LOG("Allocator::alloc: enter, size=%d\n", static_cast<uint32_t>(size));
     size = (size + sizeof(Chunk) + MinAllocSize - 1) / MinAllocSize * MinAllocSize;
     
     // Try to find a block in the free list
@@ -145,6 +147,7 @@ bool Allocator::alloc(size_t size, void*& mem)
         void* newSegment;
         if (!bare::Memory::mapSegment(sizeToAlloc, newSegment)) {
             ERROR_LOG("Allocator::alloc: failed to allocate segment of size %d\n", sizeToAlloc);
+            _mutex.unlock();
             return false;
         }
         
@@ -165,7 +168,8 @@ bool Allocator::alloc(size_t size, void*& mem)
     
     // return the part of the block past the header
     mem = reinterpret_cast<Chunk*>(entry) + 1;
-    DEBUG_LOG("Allocator::alloc: exit with allocated memory\n");
+    DEBUG_LOG("Allocator::alloc: exit with allocated memory. Heap size=%d\n", _size);
+    _mutex.unlock();
     return true;
 }
 
@@ -176,13 +180,17 @@ void Allocator::free(void *addr)
         return;
     }
 
+    _mutex.lock();
+
     DEBUG_LOG("Allocator::free: enter, addr=0x%08p\n", addr);
     Chunk* chunk = reinterpret_cast<Chunk*>(addr) - 1;
     addToFreeList(chunk, chunk->size());
     _size -= chunk->size();
     DEBUG_LOG("Allocator::free: exit, size=%d\n", chunk->size());
+    _mutex.unlock();
 }
 
+#ifndef __APPLE__
 void *operator new(size_t size)
 {
     void* mem;
@@ -215,3 +223,5 @@ void operator delete [ ](void *p, size_t size) noexcept
 {
     Allocator::kernelAllocator().free(p);
 }
+#endif
+

@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <cassert>
+#include "bare/Mutex.h"
 
 namespace placid {
 
@@ -132,6 +133,8 @@ namespace placid {
         static Allocator _kernelAllocator;
         
         uint32_t _size = 0;
+        
+        bare::Mutex _mutex;
     };
     
 }

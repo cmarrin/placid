@@ -33,22 +33,31 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#pragma once
+#include "bare.h"
 
-namespace bare {
+#include "bare/Mutex.h"
 
-    class Mutex
-    {
-    public:
-        Mutex();
-        ~Mutex();
-        
-        void lock();
-        bool try_lock();
-        void unlock();
-    
-    private:
-        void* _mutex = nullptr;
-    };
-    
+#include <mutex>
+
+using namespace bare;
+
+Mutex::Mutex()
+{
+}
+
+Mutex::~Mutex()
+{
+}
+
+void Mutex::lock()
+{
+}
+
+void Mutex::unlock()
+{
+}
+
+bool Mutex::try_lock()
+{
+    return true;
 }

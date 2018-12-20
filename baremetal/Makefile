@@ -48,6 +48,7 @@ PLATFORMSRC = \
 	RPi/RPiInterruptManager.cpp \
 	RPi/RPiMemory.cpp \
 	RPi/RPiMemoryMin.cpp \
+	RPi/RPiMutex.cpp \
 	RPi/RPiSDCard.cpp \
 	RPi/RPiSerial.cpp \
 	RPi/RPiSPI.cpp \
