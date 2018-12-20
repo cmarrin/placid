@@ -43,7 +43,7 @@ void autoload(void);
 
 static constexpr uint32_t AutoloadTimeout = 3;
 
-int main(int argc, const char * argv[])
+int main()
 {
     bare::initSystem();
     

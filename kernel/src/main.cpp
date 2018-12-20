@@ -83,7 +83,10 @@ static void showTime()
         currentTime.month(), currentTime.day(), currentTime.year());
 }
 
-int main()
+BootShell shell;
+bare::Memory::KernelHeap<bare::Memory::DefaultKernelHeapSize, bare::Memory::DefaultPageSize> kernelHeap;
+
+extern "C" void init()
 {
     bare::initSystem();
     
@@ -104,110 +107,127 @@ int main()
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
         
     timingTest("Memory perf without cache");
-    bare::Memory::KernelHeap<bare::Memory::DefaultKernelHeapSize, bare::Memory::DefaultPageSize> kernelHeap;
     bare::Memory::init(&kernelHeap);
     timingTest("Memory perf with cache");
     
     bare::Timer::setCurrentTime(bare::RealTime(2018, 10, 5, 10, 19));
     showTime();
     
-    // Test file read
-    bare::Serial::printf("File read test...\n");
-    File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read, FileSystem::OpenOption::Update);
-    if (!fp->valid()) {
-        bare::Serial::printf("File read open error for '%s': %s\n", "sample.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-    } else {
-        char buf[26];
-        fp->seek(511, File::SeekWhence::Set);
-        int32_t size = fp->read(buf, 25);
-        buf[25] = '\0';
-        if (size < 0) {
-            bare::Serial::printf("File read error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-        } else {
-            bare::Serial::printf("File read:'%s'\n", buf);
-        }
-    }
+    // Make sure file system is mounted
+    bare::Volume::Error fsError = FileSystem::sharedFileSystem()->error();
     
-    // Test update
-    bare::Serial::printf("File update test...\n");
-    fp->seek(518, File::SeekWhence::Set);
-    int32_t size = fp->write("0123456789", 10);
-    if (size < 0) {
-        bare::Serial::printf("File update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+    if (fsError != bare::Volume::Error::OK) {
+        bare::Serial::printf("File system not mounted: %s\n", FileSystem::sharedFileSystem()->errorDetail(fsError));
+        bare::Serial::printf("    Skipping file system tests\n");
     } else {
-        fp->seek(-17, File::SeekWhence::Cur);
-        char buf[26];
-        int32_t size = fp->read(buf, 25);
-        buf[25] = '\0';
-        if (size < 0) {
-            bare::Serial::printf("Reading back after update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        // Test file read
+        bare::Serial::printf("File read test...\n");
+        File* fp = FileSystem::sharedFileSystem()->open("sample.txt", FileSystem::OpenMode::Read, FileSystem::OpenOption::Update);
+        if (!fp->valid()) {
+            bare::Serial::printf("File read open error for '%s': %s\n", "sample.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
-            bare::Serial::printf("After update read:'%s'\n", buf);
+            char buf[26];
+            fp->seek(511, File::SeekWhence::Set);
+            int32_t size = fp->read(buf, 25);
+            buf[25] = '\0';
+            if (size < 0) {
+                bare::Serial::printf("File read error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            } else {
+                bare::Serial::printf("File read:'%s'\n", buf);
+            }
         }
-    }
-    
-    // Repair the file
-    bare::Serial::printf("File repair test...\n");
-    fp->seek(518, File::SeekWhence::Set);
-    size = fp->write("altogether", 10);
-    if (size < 0) {
-        bare::Serial::printf("File repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-    } else {
-        fp->seek(-17, File::SeekWhence::Cur);
-        char buf[26];
-        int32_t size = fp->read(buf, 25);
-        buf[25] = '\0';
+        
+        // Test update
+        bare::Serial::printf("File update test...\n");
+        fp->seek(518, File::SeekWhence::Set);
+        int32_t size = fp->write("0123456789", 10);
         if (size < 0) {
-            bare::Serial::printf("Reading back after repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            bare::Serial::printf("File update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
-            bare::Serial::printf("After repair read:'%s'\n", buf);
+            fp->seek(-17, File::SeekWhence::Cur);
+            char buf[26];
+            int32_t size = fp->read(buf, 25);
+            buf[25] = '\0';
+            if (size < 0) {
+                bare::Serial::printf("Reading back after update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            } else {
+                bare::Serial::printf("After update read:'%s'\n", buf);
+            }
         }
-    }
+        
+        // Repair the file
+        bare::Serial::printf("File repair test...\n");
+        fp->seek(518, File::SeekWhence::Set);
+        size = fp->write("altogether", 10);
+        if (size < 0) {
+            bare::Serial::printf("File repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        } else {
+            fp->seek(-17, File::SeekWhence::Cur);
+            char buf[26];
+            int32_t size = fp->read(buf, 25);
+            buf[25] = '\0';
+            if (size < 0) {
+                bare::Serial::printf("Reading back after repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            } else {
+                bare::Serial::printf("After repair read:'%s'\n", buf);
+            }
+        }
 
-    delete fp;
-    fp = nullptr;
-    
-    // Test file write
-    bare::Serial::printf("File write test...\n");
-    FileSystem::sharedFileSystem()->remove("test.txt");
-    
-    fp = FileSystem::sharedFileSystem()->open("test.txt", FileSystem::OpenMode::Write);
-    if (!fp->valid()) {
-        bare::Serial::printf("File write open error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-    } else {
-        int32_t size = fp->write("The quick brown fox", 19);
-        if (size < 0) {
-            bare::Serial::printf("File write error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        delete fp;
+        fp = nullptr;
+        
+        // Test file write
+        bare::Serial::printf("File write test...\n");
+        FileSystem::sharedFileSystem()->remove("test.txt");
+        
+        fp = FileSystem::sharedFileSystem()->open("test.txt", FileSystem::OpenMode::Write);
+        if (!fp->valid()) {
+            bare::Serial::printf("File write open error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
-            bare::Serial::printf("File write successful\n");
+            int32_t size = fp->write("The quick brown fox", 19);
+            if (size < 0) {
+                bare::Serial::printf("File write error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+            } else {
+                bare::Serial::printf("File write successful\n");
+            }
         }
+        
+        if (fp->close() != bare::Volume::Error::OK) {
+            bare::Serial::printf("File write close error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        }
+        
+        delete fp;
+        fp = nullptr;
+        
+        FileSystem::sharedFileSystem()->remove("test.txt");
     }
     
-    if (fp->close() != bare::Volume::Error::OK) {
-        bare::Serial::printf("File write close error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-    }
-    
-    delete fp;
-    fp = nullptr;
-    
-    FileSystem::sharedFileSystem()->remove("test.txt");
-
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
     LEDBlinker blinker;
     bare::Timer::start(&blinker, blinkRate, true);
     
-	BootShell shell;
 	shell.connected();
+}
 
-	while (1) {
+extern "C" void inputString(const char* s)
+{
+    while (s && *s) {
+        shell.received(*s++);
+    }
+}
+
+#ifndef __APPLE__
+int main()
+{
+    init();
+    while (1) {
         uint8_t c;
         if (bare::Serial::read(c) != bare::Serial::Error::OK) {
             bare::Serial::puts("*** Serial Read Error\n");
         } else {
             shell.received(c);
         }
-	}
- 
-    return 0;
+    }
 }
+#endif
