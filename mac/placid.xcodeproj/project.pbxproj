@@ -30,7 +30,6 @@
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
 		494FD635219F8951005C2A6B /* PrintFloat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD634219F8951005C2A6B /* PrintFloat.cpp */; };
 		494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */; };
-		494FD64C21AB36E4005C2A6B /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64B21AB36E4005C2A6B /* String.cpp */; };
 		494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64D21AB4338005C2A6B /* WiFiSpi.cpp */; };
 		494FD65321AC5A4A005C2A6B /* WiFiSpiDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD65021AC5991005C2A6B /* WiFiSpiDriver.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
@@ -54,6 +53,23 @@
 		49BC400221BEE07E00D62847 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400121BEE07E00D62847 /* CoreVideo.framework */; };
 		49BC400421BEE0B800D62847 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400321BEE0B800D62847 /* IOKit.framework */; };
 		49BC400621BEE0D900D62847 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC400521BEE0D900D62847 /* AppKit.framework */; };
+		49BC402F21C05ED600D62847 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC402E21C05ED600D62847 /* AppDelegate.m */; };
+		49BC403221C05ED600D62847 /* Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403121C05ED600D62847 /* Renderer.m */; };
+		49BC403521C05ED600D62847 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403421C05ED600D62847 /* GameViewController.m */; };
+		49BC403721C05ED600D62847 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403621C05ED600D62847 /* Shaders.metal */; };
+		49BC403A21C05ED700D62847 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403921C05ED700D62847 /* Assets.xcassets */; };
+		49BC403D21C05ED700D62847 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403B21C05ED700D62847 /* Main.storyboard */; };
+		49BC404021C05ED700D62847 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403F21C05ED700D62847 /* main.m */; };
+		49BC404521C06D6D00D62847 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
+		49BC404621C06D8300D62847 /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
+		49BC404721C06D8600D62847 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
+		49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
+		49BC404921C06D9000D62847 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
+		49BC404A21C06D9500D62847 /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
+		49BC404B21C08B7A00D62847 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
+		49BC404C21C08BD700D62847 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64B21AB36E4005C2A6B /* String.cpp */; };
+		49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC404E21C19BA000D62847 /* DarwinMutex.cpp */; };
+		49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC405121C19CCA00D62847 /* RPiMutex.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -217,6 +233,23 @@
 		49BC400121BEE07E00D62847 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		49BC400321BEE0B800D62847 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		49BC400521BEE0D900D62847 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		49BC402B21C05ED600D62847 /* drawtest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = drawtest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		49BC402D21C05ED600D62847 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		49BC402E21C05ED600D62847 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		49BC403021C05ED600D62847 /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		49BC403121C05ED600D62847 /* Renderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Renderer.m; sourceTree = "<group>"; };
+		49BC403321C05ED600D62847 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		49BC403421C05ED600D62847 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		49BC403621C05ED600D62847 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		49BC403821C05ED600D62847 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		49BC403921C05ED700D62847 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		49BC403C21C05ED700D62847 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		49BC403E21C05ED700D62847 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		49BC403F21C05ED700D62847 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		49BC404121C05ED700D62847 /* drawtest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = drawtest.entitlements; sourceTree = "<group>"; };
+		49BC404D21C1976D00D62847 /* Mutex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
+		49BC404E21C19BA000D62847 /* DarwinMutex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinMutex.cpp; path = ../baremetal/Darwin/DarwinMutex.cpp; sourceTree = "<group>"; };
+		49BC405121C19CCA00D62847 /* RPiMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMutex.cpp; path = ../baremetal/RPi/RPiMutex.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +287,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49BC402821C05ED600D62847 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49BC404B21C08B7A00D62847 /* libbaremetal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +358,7 @@
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
 				494FD64021A89616005C2A6B /* ESPRPiWifi */,
+				49BC402C21C05ED600D62847 /* drawtest */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 				49629588215AAA760064B9C9 /* Frameworks */,
 			);
@@ -329,6 +371,7 @@
 				49166D6D2153F0FE0077ACEE /* bltest */,
 				49629571215AA4DF0064B9C9 /* libbaremetal.a */,
 				498747882191F68E00245E91 /* ESPWifi */,
+				49BC402B21C05ED600D62847 /* drawtest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -348,6 +391,7 @@
 				494FD64921AB3596005C2A6B /* IPAddr.h */,
 				496C3BC221891FC2004DBC22 /* Log.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
+				49BC404D21C1976D00D62847 /* Mutex.h */,
 				497EE459216138E2000584CE /* Print.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
@@ -379,6 +423,7 @@
 				494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */,
 				49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */,
 				494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */,
+				49BC404E21C19BA000D62847 /* DarwinMutex.cpp */,
 				494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */,
 				494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */,
 				494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */,
@@ -398,6 +443,7 @@
 				492FF3F0215C4F72003582FE /* RPiMailbox.h */,
 				494FD61E2199E64F005C2A6B /* RPiMemory.cpp */,
 				494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */,
+				49BC405121C19CCA00D62847 /* RPiMutex.cpp */,
 				4965788C2169805800B3F088 /* RPiSDCard.cpp */,
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
 				494FD6162199D2E2005C2A6B /* RPiSPI.cpp */,
@@ -457,6 +503,26 @@
 				49BC3FF921BDC82200D62847 /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		49BC402C21C05ED600D62847 /* drawtest */ = {
+			isa = PBXGroup;
+			children = (
+				49BC402D21C05ED600D62847 /* AppDelegate.h */,
+				49BC402E21C05ED600D62847 /* AppDelegate.m */,
+				49BC403021C05ED600D62847 /* Renderer.h */,
+				49BC403121C05ED600D62847 /* Renderer.m */,
+				49BC403321C05ED600D62847 /* GameViewController.h */,
+				49BC403421C05ED600D62847 /* GameViewController.m */,
+				49BC403621C05ED600D62847 /* Shaders.metal */,
+				49BC403821C05ED600D62847 /* ShaderTypes.h */,
+				49BC403921C05ED700D62847 /* Assets.xcassets */,
+				49BC403B21C05ED700D62847 /* Main.storyboard */,
+				49BC403E21C05ED700D62847 /* Info.plist */,
+				49BC403F21C05ED700D62847 /* main.m */,
+				49BC404121C05ED700D62847 /* drawtest.entitlements */,
+			);
+			path = drawtest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -548,6 +614,23 @@
 			productReference = 498747882191F68E00245E91 /* ESPWifi */;
 			productType = "com.apple.product-type.tool";
 		};
+		49BC402A21C05ED600D62847 /* drawtest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49BC404421C05ED700D62847 /* Build configuration list for PBXNativeTarget "drawtest" */;
+			buildPhases = (
+				49BC402721C05ED600D62847 /* Sources */,
+				49BC402821C05ED600D62847 /* Frameworks */,
+				49BC402921C05ED600D62847 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = drawtest;
+			productName = drawtest;
+			productReference = 49BC402B21C05ED600D62847 /* drawtest.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -569,6 +652,9 @@
 					498747872191F68E00245E91 = {
 						CreatedOnToolsVersion = 10.0;
 					};
+					49BC402A21C05ED600D62847 = {
+						CreatedOnToolsVersion = 10.1;
+					};
 				};
 			};
 			buildConfigurationList = 492C7417214B2A2F009A4DA4 /* Build configuration list for PBXProject "placid" */;
@@ -588,9 +674,22 @@
 				49166D6C2153F0FE0077ACEE /* bltest */,
 				49629570215AA4DF0064B9C9 /* baremetal */,
 				498747872191F68E00245E91 /* ESPWifi */,
+				49BC402A21C05ED600D62847 /* drawtest */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		49BC402921C05ED600D62847 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49BC403A21C05ED700D62847 /* Assets.xcassets in Resources */,
+				49BC403D21C05ED700D62847 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		49166D692153F0FE0077ACEE /* Sources */ = {
@@ -609,10 +708,10 @@
 			files = (
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
-				494FD64C21AB36E4005C2A6B /* String.cpp in Sources */,
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
+				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
 				4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -637,9 +736,11 @@
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */,
 				49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */,
+				49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */,
 				497EE45B2161442D000584CE /* Print.cpp in Sources */,
 				494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
+				49BC404C21C08BD700D62847 /* String.cpp in Sources */,
 				494FD6132199D17F005C2A6B /* DarwinSerial.cpp in Sources */,
 				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
 				494FD61D2199D571005C2A6B /* DarwinSPI.cpp in Sources */,
@@ -650,6 +751,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49BC402721C05ED600D62847 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49BC404021C05ED700D62847 /* main.m in Sources */,
+				49BC403721C05ED600D62847 /* Shaders.metal in Sources */,
+				49BC404721C06D8600D62847 /* BootShell.cpp in Sources */,
+				49BC404521C06D6D00D62847 /* main.cpp in Sources */,
+				49BC404921C06D9000D62847 /* Scanner.cpp in Sources */,
+				49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */,
+				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
+				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
+				49BC404621C06D8300D62847 /* Allocator.cpp in Sources */,
+				49BC402F21C05ED600D62847 /* AppDelegate.m in Sources */,
+				49BC404A21C06D9500D62847 /* Shell.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,6 +786,17 @@
 			targetProxy = 49629586215AA9F20064B9C9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		49BC403B21C05ED700D62847 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				49BC403C21C05ED700D62847 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		49166D722153F0FE0077ACEE /* Debug */ = {
@@ -886,6 +1016,43 @@
 			};
 			name = Release;
 		};
+		49BC404221C05ED700D62847 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = drawtest/drawtest.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = drawtest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.marrin.drawtest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		49BC404321C05ED700D62847 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = drawtest/drawtest.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = drawtest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.marrin.drawtest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -930,6 +1097,15 @@
 			buildConfigurations = (
 				4987478C2191F68E00245E91 /* Debug */,
 				4987478D2191F68E00245E91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49BC404421C05ED700D62847 /* Build configuration list for PBXNativeTarget "drawtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49BC404221C05ED700D62847 /* Debug */,
+				49BC404321C05ED700D62847 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
