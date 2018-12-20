@@ -46,6 +46,7 @@ PLATFORMSRC = \
 	RPi/RPiBare.cpp \
 	RPi/RPiGPIO.cpp \
 	RPi/RPiInterruptManager.cpp \
+	RPi/RPiMailbox.cpp \
 	RPi/RPiMemory.cpp \
 	RPi/RPiMemoryMin.cpp \
 	RPi/RPiMutex.cpp \
