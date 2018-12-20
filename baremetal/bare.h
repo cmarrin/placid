@@ -69,8 +69,8 @@ namespace bare {
     #error must define one of FLOAT32, FLOAT64, FLOATFLOAT, or FLOATNONE
 #endif
 
-    extern bool SystemIsInited;
     void initSystem();
+    bool useAllocator();
 
     extern "C" {
         void disableIRQ(void);

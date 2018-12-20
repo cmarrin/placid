@@ -40,9 +40,16 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+static bool inited = false;
+
 void bare::initSystem()
 {
-    SystemIsInited = true;
+    inited = true;
+}
+
+bool bare::useAllocator()
+{
+    return inited;
 }
 
 // Setup a dummy area of "kernel space" to dump data to

@@ -49,7 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 static void* alloc(size_t size)
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         return malloc(size);
     }
     
@@ -84,28 +84,28 @@ void *operator new[] (size_t size)
 
 void operator delete(void *p) noexcept
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         free(p);
     }
 }
 
 void operator delete [ ](void *p) noexcept
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         free(p);
     }
 }
 
 void operator delete(void *p, size_t size) noexcept
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         free(p);
     }
 }
 
 void operator delete [ ](void *p, size_t size) noexcept
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         free(p);
     }
 }

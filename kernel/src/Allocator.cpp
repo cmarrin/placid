@@ -109,7 +109,7 @@ void Allocator::addToFreeList(void* mem, size_t size)
 
 bool Allocator::alloc(size_t size, void*& mem)
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         mem = ::malloc(size);
         return mem;
     }
@@ -171,7 +171,7 @@ bool Allocator::alloc(size_t size, void*& mem)
 
 void Allocator::free(void *addr)
 {
-    if (!bare::SystemIsInited) {
+    if (!bare::useAllocator()) {
         ::free(addr);
         return;
     }

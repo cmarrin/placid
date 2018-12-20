@@ -40,8 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-bool bare::SystemIsInited = false;
-
 extern "C" {
 
     void* __dso_handle __attribute__ ((__weak__));

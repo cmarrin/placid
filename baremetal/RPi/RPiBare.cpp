@@ -59,8 +59,11 @@ void bare::initSystem()
     {
         (**pFunc) ();
     }
+}
 
-    SystemIsInited = true;
+bool bare::useAllocator()
+{
+    return true;
 }
 
 extern "C" {
