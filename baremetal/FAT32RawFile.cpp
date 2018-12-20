@@ -95,7 +95,8 @@ Volume::Error FAT32RawFile::insertCluster()
         return Volume::Error::InternalError;
     }
     
-    return (_fat32->allocateCluster(_lastPhysicalCluster) == 0) ? Volume::Error::PlatformSpecificError : Volume::Error::OK;
+    _fat32->allocateCluster(_lastPhysicalCluster);
+    return error();
 }
 
 Volume::Error FAT32RawFile::updateSize()
@@ -128,6 +129,10 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Block logicalBlock, Block& ph
     //      3) Cluster number is higher that the last but not consecutive - search the FAT from this point
     //      4) Cluster number is lower or we don't have a last entry - search from the start of the FAT
     //
+    if (_fat32->blocksPerCluster() == 0) {
+        return static_cast<Volume::Error>(FAT32::Error::UnsupportedBlockSize);
+    }
+    
     Cluster currentLogicalCluster = (logicalBlock / Block(_fat32->blocksPerCluster())).value();
     Block currentLogicalClusterBlock = logicalBlock % Block(_fat32->blocksPerCluster());
     

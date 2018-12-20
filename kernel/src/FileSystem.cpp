@@ -58,7 +58,6 @@ FileSystem::FileSystem()
     // partition 0 of the SD card
     bare::Volume::Error e = _fatFS.mount();
     if (e != bare::Volume::Error::OK) {
-        bare::Serial::printf("*** error mounting:%s\n", _fatFS.errorDetail(e));
         return;
     }
 }
@@ -70,6 +69,10 @@ bare::DirectoryIterator* FileSystem::directoryIterator(const char* path)
 
 File* FileSystem::open(const char* name, OpenMode mode, OpenOption option)
 {
+    if (error() != bare::Volume::Error::OK) {
+        return nullptr;
+    }
+    
     File* fp = new File;
     fp->_error = bare::Volume::Error::OK;
     fp->_rawFile = _fatFS.open(name);

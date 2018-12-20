@@ -361,10 +361,6 @@ DirectoryIterator* FAT32::directoryIterator(const char* path)
 
 const char* FAT32::errorDetail(Volume::Error error) const
 {
-    if (error != Volume::Error::PlatformSpecificError) {
-        return Volume::errorDetail(error);
-    }
-    
     switch(static_cast<FAT32::Error>(error)) {
     case Error::UnsupportedType:        return "unsupported type";
     case Error::UnsupportedPartition:   return "unsupported partition";
@@ -382,12 +378,16 @@ const char* FAT32::errorDetail(Volume::Error error) const
     case Error::WrongSizeRead:          return "wrong size read";
     case Error::WrongSizeWrite:         return "wrong size write";
     case Error::Incomplete:             return "incomplete";
-    default:                            return "***";
+    default:                            return Volume::errorDetail(error);
     }
 }
 
 RawFile* FAT32::open(const char* name)
 {
+    if (error() != Volume::Error::OK) {
+        return nullptr;
+    }
+    
     FileInfo fileInfo;
     if (!find(fileInfo, name)) {
         return nullptr;

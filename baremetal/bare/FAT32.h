@@ -86,10 +86,17 @@ using Cluster = Scalar<ClusterType, uint32_t>;
         virtual bool exists(const char* name) override;
         virtual const char* errorDetail(Volume::Error) const override;
         virtual DirectoryIterator* directoryIterator(const char* path) override;
+        virtual Volume::Error error() const override
+        {
+            Volume::Error error = static_cast<Volume::Error>(_error);
+            if (error == Volume::Error::OK) {
+                return _mounted ? Volume::Error::OK : Volume::Error::NotMounted;
+            }
+            return error;
+        }
 
         Volume::Error rawRead(char* buf, Block block, uint32_t blocks);    
         Volume::Error rawWrite(const char* buf, Block block, uint32_t blocks);    
-        bool mounted() { return _mounted; }
         
         Cluster rootDirectoryStartCluster() const { return _rootDirectoryStartCluster; }
         uint32_t blocksPerCluster() { return _blocksPerCluster; }

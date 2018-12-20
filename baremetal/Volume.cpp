@@ -55,7 +55,6 @@ const char* Volume::errorDetail(Error error) const
     case Error::ReadOnly: return "read only";
     case Error::WriteOnly: return "write only";
     case Error::EndOfFile: return "end of file";
-    case Error::PlatformSpecificError: return "platform specific error";
     case Error::UnsupportedDevice: return "unsupported device";
     case Error::NotImplemented: return "not implemented";
     default: return "*****";

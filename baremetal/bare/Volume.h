@@ -86,6 +86,7 @@ namespace bare {
     public:
         enum class Error {
             OK = 0,
+            NotMounted,
             CreationFailure,
             Failed,
             FileExists,
@@ -95,7 +96,6 @@ namespace bare {
             InternalError,
             EndOfFile,
             NotImplemented,
-            PlatformSpecificError,
             UnsupportedDevice, 
         };
         
@@ -113,9 +113,9 @@ namespace bare {
         virtual bool exists(const char* name) = 0;
         virtual const char* errorDetail(Error) const;
         virtual DirectoryIterator* directoryIterator(const char* path) = 0;
+        virtual Error error() const = 0;
 
         Volume() { }
-        
     };
 
     class RawFile {

@@ -76,6 +76,7 @@ namespace placid {
         bare::Volume::Error remove(const char* name);
 
         const char* errorDetail(bare::Volume::Error error) const { return _fatFS.errorDetail(error); }
+        bare::Volume::Error error() const { return _fatFS.error(); }
         
         static FileSystem* sharedFileSystem();
         
