@@ -44,6 +44,10 @@ bool bare::SystemIsInited = false;
 
 extern "C" {
 
+    void* __dso_handle __attribute__ ((__weak__));
+    int __aeabi_atexit(void *, void(*)(void *), void *) {
+        return 1;
+    }
     void abort()
     {
         Serial::printf("***********ABORTING**********\n");
