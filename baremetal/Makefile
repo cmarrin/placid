@@ -45,6 +45,7 @@ PLATFORMSRC = \
 	RPi/uidivmod.S \
 	RPi/RPiBare.cpp \
 	RPi/RPiGPIO.cpp \
+	RPi/RPiGraphics.cpp \
 	RPi/RPiInterruptManager.cpp \
 	RPi/RPiMailbox.cpp \
 	RPi/RPiMemory.cpp \

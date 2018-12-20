@@ -36,25 +36,43 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare.h"
 
 #include "bare/Graphics.h"
+#include "RPiMailbox.h"
 
 using namespace bare;
 
-bool Graphics::init()
+static constexpr uint32_t V3DBase = 0x20c00000;
+
+struct V3D
 {
-    if (mailbox_tag_message(0, 9,
-        MAILBOX_TAG_SET_CLOCK_RATE, 8, 8, CLK_V3D_ID, 250000000,    // Set V3D clock to 250Mhz
-        MAILBOX_TAG_ENABLE_QPU, 4, 4, 1))                            // Enable the QPU untis
-    {                                                                // Message was successful
-        if (v3d[V3D_IDENT0] == 0x02443356) return true;                // We can read V3D ID number.
-    }
-    return false;                                                    // Initialize failed
+    uint32_t ident0;
+    uint32_t ident1;
+    uint32_t ident2;
+};
+
+inline volatile V3D& v3d()
+{
+    return *(reinterpret_cast<volatile V3D*>(V3DBase));
 }
 
-void Graphics::initScene(uint32_t width, uint32_t height)
+bool Graphics::init()
+{
+    // Set V3D clock to 250Mhz and Enable the QPU units
+    if (Mailbox::tagMessage(0, 9,
+        Mailbox::Command::SetClockRate, 8, 8, Mailbox::ClockId::V3D, 250000000,
+        Mailbox::Command::EnableQPU, 4, 4, 1) == Mailbox::Error::OK)
+    {
+        if (v3d().ident0 == 0x02443356) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Graphics::clear(uint32_t color)
 {
 }
      
-void Graphics::addTestScene()
+void Graphics::drawTriangle()
 {
 }
 

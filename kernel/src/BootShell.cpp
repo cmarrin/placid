@@ -82,7 +82,10 @@ static void testSPI()
 
 static void testDraw()
 {
-    bare::Graphics::init();
+    if (!bare::Graphics::init()) {
+        bare::Serial::printf("Graphics failed to init\n");
+        return;
+    }
     bare::Graphics::clear(0xff00ff00);
     bare::Graphics::drawTriangle();
     bare::Graphics::render();

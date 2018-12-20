@@ -38,53 +38,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/Graphics.h"
 #include "bare/Serial.h"
 #include <OpenGL/gl.h>
-#include <SDL/SDL.h>
 
 using namespace bare;
 
-static constexpr uint32_t DisplayWidth = 640;
-static constexpr uint32_t DisplayHeight = 480;
-
-static void setupSDL() 
-{
-    const SDL_VideoInfo* video;
-
-    if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-        fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-        exit(1);
-    }
-        
-    /* Quit SDL properly on exit */
-    atexit(SDL_Quit);
-
-    /* Get the current video information */
-    video = SDL_GetVideoInfo( );
-    if( video == NULL ) {
-        fprintf(stderr, "Couldn't get video information: %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    /* Set the minimum requirements for the OpenGL window */
-    SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
-    SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
-    SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-    /* Note the SDL_DOUBLEBUF flag is not required to enable double 
-     * buffering when setting an OpenGL video mode. 
-     * Double buffering is enabled or disabled using the 
-     * SDL_GL_DOUBLEBUFFER attribute.
-     */
-    if( SDL_SetVideoMode( DisplayWidth, DisplayHeight, video->vfmt->BitsPerPixel, SDL_OPENGL ) == 0 ) {
-        fprintf(stderr, "Couldn't set video mode: %s\n", SDL_GetError());
-        exit(1);
-    }
-}
-
 bool Graphics::init()
 {
-    setupSDL();
     return true;
 }
 
