@@ -47,7 +47,11 @@ namespace bare {
 
     class SPI {
     public:
-        static void init();
+        enum class ClockEdge { Rising, Falling };
+        enum class ClockPolarity { ActiveHigh, ActiveLow };
+        enum class EnablePolarity { ActiveLow, ActiveHigh };
+        
+        static void init(EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
         
         static int32_t write(const char* buf, size_t size) { return readWrite(nullptr, buf, size); }
         static int32_t read(char* buf, size_t size) { return readWrite(buf, nullptr, size); }

@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-void SPI::init()
+void SPI::init(EnablePolarity, ClockEdge, ClockPolarity)
 {
 }
 

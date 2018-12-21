@@ -85,7 +85,7 @@ inline volatile SPI0& spi()
     return *(reinterpret_cast<volatile SPI0*>(SPI0Base));
 }
 
-void SPI::init()
+void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity clockPol)
 {
     DEBUG_LOG("SPI:Initializing\n");
 
@@ -97,9 +97,9 @@ void SPI::init()
     spi().CS = SPI0::CLEAR_RX | SPI0::CLEAR_TX;
     spi().CLK = 0; // 250MHz / 65536 = 3814.7Hz (slowest possible transfer rate)
     
-    bool csPolarity = true;
-    bool clockPolarity = false;
-    bool clockPhase = false;
+    bool csPolarity = enablePol == EnablePolarity::ActiveHigh;
+    bool clockPolarity = clockPol == ClockPolarity::ActiveLow;
+    bool clockPhase = clockEdge == ClockEdge::Falling;
     Timer::usleep(1000);
     uint32_t cs = clockPolarity ? SPI0::CPOL : 0;
     cs |= clockPhase ? SPI0::CPHA : 0;
