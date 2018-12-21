@@ -46,6 +46,7 @@ LOADER = loadmap.ld
 SRCDIR = src
 
 SRC =	kernel.S \
+        init.cpp \
         main.cpp \
 		Allocator.cpp \
 		BootShell.cpp \
