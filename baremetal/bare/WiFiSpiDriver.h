@@ -103,9 +103,9 @@ namespace bare {
 
         void sendBuffer(const uint8_t* param, uint16_t param_len);
 
-        bool waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len);
-        bool waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len);
-        bool waitResponseParams(Command cmd, uint8_t numParam, Param* params);
+        bool waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len);
+        bool waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len);
+        bool waitResponse(Command cmd, uint8_t numParam, Param* params);
         
     private:
         void showCheckError(const char* err, uint8_t expected, uint8_t got);

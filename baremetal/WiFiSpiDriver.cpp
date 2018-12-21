@@ -116,9 +116,9 @@ void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
     param  ... pointer to space for the first parameter
     param_len ... max length of the first parameter, returns actual length
  */
-bool WiFiSpiDriver::waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len)
+bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint8_t& param_len)
 {
-    DEBUG_LOG("WiFiSpi:waitResponseCmd(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
+    DEBUG_LOG("WiFiSpi:waitResponse(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
 
     if (!readAndCheckByte(Command::START, "Start")) return false;
     if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
@@ -156,9 +156,9 @@ bool WiFiSpiDriver::waitResponseCmd(Command cmd, uint8_t numParam, uint8_t* para
     param  ... pointer to space for the first parameter
     param_len ... max length of the first parameter (16 bit integer), returns actual length
  */
-bool WiFiSpiDriver::waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len)
+bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len)
 {
-    DEBUG_LOG("WiFiSpi:waitResponseCmd16(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
+    DEBUG_LOG("WiFiSpi:waitResponse[16](cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
 
     if (!readAndCheckByte(Command::START, "Start")) return false;
     if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
@@ -204,9 +204,9 @@ bool WiFiSpiDriver::waitResponseCmd16(Command cmd, uint8_t numParam, uint8_t* pa
 /*
     Reads a response from the ESP. Decodes parameters and puts them into a return structure
  */
-bool WiFiSpiDriver::waitResponseParams(Command cmd, uint8_t numParam, Param* params)
+bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
 {
-    DEBUG_LOG("WiFiSpi:waitResponseParams(cmd=%#02x, num=%d)\n", cmd, numParam);
+    DEBUG_LOG("WiFiSpi:waitResponse[Params](cmd=%#02x, num=%d)\n", cmd, numParam);
 
     if (!readAndCheckByte(Command::START, "Start")) return false;
     if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
