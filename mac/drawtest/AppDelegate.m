@@ -16,13 +16,16 @@
 @implementation AppDelegate
 
 void init(void);
-void inputString(const char*);
+void inputChar(uint8_t);
 
 - (void)handleKeyEvent:(NSNotification *) notification
 {
     NSData* data = notification.userInfo[NSFileHandleNotificationDataItem];
     NSString* s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    inputString([s UTF8String]);
+    
+    for (const char* str = [s UTF8String]; *str; ++str) {
+        inputChar((uint8_t) *str);
+    }
     [[NSFileHandle fileHandleWithStandardInput] readInBackgroundAndNotify];
 }
 

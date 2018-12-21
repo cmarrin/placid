@@ -45,6 +45,8 @@
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
+		4992122521CD955900AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122421CD955900AA7656 /* init.cpp */; };
+		4992122621CD959900AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122421CD955900AA7656 /* init.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -60,7 +62,6 @@
 		49BC403A21C05ED700D62847 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403921C05ED700D62847 /* Assets.xcassets */; };
 		49BC403D21C05ED700D62847 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403B21C05ED700D62847 /* Main.storyboard */; };
 		49BC404021C05ED700D62847 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403F21C05ED700D62847 /* main.m */; };
-		49BC404521C06D6D00D62847 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49BC404621C06D8300D62847 /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
 		49BC404721C06D8600D62847 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
 		49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
@@ -334,6 +335,7 @@
 				49166D3121514C050077ACEE /* kernel.S */,
 				49166D3721514C050077ACEE /* lib1funcs.asm */,
 				4932ACEE2166770800BDAABB /* stackAddrs.h */,
+				4992122421CD955900AA7656 /* init.cpp */,
 				49166D3E21514C050077ACEE /* main.cpp */,
 				4932ACF02167156E00BDAABB /* Allocator.cpp */,
 				4932ACF12167156E00BDAABB /* Allocator.h */,
@@ -711,6 +713,7 @@
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
+				4992122521CD955900AA7656 /* init.cpp in Sources */,
 				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
 				4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */,
 			);
@@ -761,8 +764,8 @@
 				49BC404021C05ED700D62847 /* main.m in Sources */,
 				49BC403721C05ED600D62847 /* Shaders.metal in Sources */,
 				49BC404721C06D8600D62847 /* BootShell.cpp in Sources */,
-				49BC404521C06D6D00D62847 /* main.cpp in Sources */,
 				49BC404921C06D9000D62847 /* Scanner.cpp in Sources */,
+				4992122621CD959900AA7656 /* init.cpp in Sources */,
 				49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */,
 				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
@@ -947,10 +950,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-lncurses",
-					"-lSDL",
-				);
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -963,10 +963,7 @@
 				"LD_MAP_FILE_PATH[arch=*]" = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-lncurses",
-					"-lSDL",
-				);
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
