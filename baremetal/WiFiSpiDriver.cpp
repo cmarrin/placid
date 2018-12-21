@@ -120,33 +120,34 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
 {
     DEBUG_LOG("WiFiSpi:waitResponse(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
 
-    if (!readAndCheckByte(Command::START, "Start")) return false;
-    if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
-    if (!readAndCheckByte(numParam, "Param")) return false;
+    bool result = false;
+    _spi->startTransfer();
 
-    if (numParam == 1)
-    {
-        int32_t len = _spi->transferByte(0, ResponseTimeout);
-        if (len < 0) {
-            return false;
-        }
-
-        for (uint8_t ii=0; ii<len; ++ii)
+    if (readAndCheckByte(Command::START, "Start") &&
+            readAndCheckByte(setReply(cmd), "Cmd") &&
+            readAndCheckByte(numParam, "Param")) {    
+        if (numParam == 1)
         {
-            if (ii < param_len) {
-                param[ii] = _spi->transferByte(0, ResponseTimeout);
+            int32_t len = _spi->transferByte(0, ResponseTimeout);
+            if (len >= 0) {
+                for (uint8_t ii=0; ii<len; ++ii)
+                {
+                    if (ii < param_len) {
+                        param[ii] = _spi->transferByte(0, ResponseTimeout);
+                    }
+                }
+
+                if (len < param_len) {
+                    param_len = len;
+                }
             }
         }
-
-        if (len < param_len) {
-            param_len = len;
+        else if (numParam == 0) {    
+            result = readAndCheckByte(Command::END, "End");
         }
     }
-    else if (numParam != 0) {
-        return false;
-    }
-    
-    return readAndCheckByte(Command::END, "End");
+    _spi->endTransfer();
+    return result;
 }
 
 /*
@@ -160,9 +161,17 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
 {
     DEBUG_LOG("WiFiSpi:waitResponse[16](cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
 
-    if (!readAndCheckByte(Command::START, "Start")) return false;
-    if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
-    if (!readAndCheckByte(numParam, "Param")) return false;
+    if (!readAndCheckByte(Command::START, "Start")) {
+        return false;
+    }
+    
+    if (!readAndCheckByte(setReply(cmd), "Cmd")) {
+        return false;
+    }
+    
+    if (!readAndCheckByte(numParam, "Param")) {
+        return false;
+    }
 
     if (numParam == 1)
     {
@@ -208,9 +217,17 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
 {
     DEBUG_LOG("WiFiSpi:waitResponse[Params](cmd=%#02x, num=%d)\n", cmd, numParam);
 
-    if (!readAndCheckByte(Command::START, "Start")) return false;
-    if (!readAndCheckByte(setReply(cmd), "Cmd")) return false;
-    if (!readAndCheckByte(numParam, "Param")) return false;
+    if (!readAndCheckByte(Command::START, "Start")) {
+        return false;
+    }
+    
+    if (!readAndCheckByte(setReply(cmd), "Cmd")) {
+        return false;
+    }
+    
+    if (!readAndCheckByte(numParam, "Param")) {
+        return false;
+    }
 
     if (numParam > 0) {
         for (uint8_t i=0;  i < numParam;  ++i) {
