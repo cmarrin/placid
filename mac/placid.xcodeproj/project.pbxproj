@@ -45,8 +45,9 @@
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
-		4992122521CD955900AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122421CD955900AA7656 /* init.cpp */; };
-		4992122621CD959900AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122421CD955900AA7656 /* init.cpp */; };
+		4992122521CD955900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		4992122621CD959900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		4992122821CDA4A700AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122721CDA4A700AA7656 /* init.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -224,6 +225,7 @@
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
+		4992122721CDA4A700AA7656 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -335,7 +337,7 @@
 				49166D3121514C050077ACEE /* kernel.S */,
 				49166D3721514C050077ACEE /* lib1funcs.asm */,
 				4932ACEE2166770800BDAABB /* stackAddrs.h */,
-				4992122421CD955900AA7656 /* init.cpp */,
+				4992122721CDA4A700AA7656 /* init.cpp */,
 				49166D3E21514C050077ACEE /* main.cpp */,
 				4932ACF02167156E00BDAABB /* Allocator.cpp */,
 				4932ACF12167156E00BDAABB /* Allocator.h */,
@@ -710,10 +712,11 @@
 			files = (
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
+				4992122821CDA4A700AA7656 /* init.cpp in Sources */,
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
 				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
-				4992122521CD955900AA7656 /* init.cpp in Sources */,
+				4992122521CD955900AA7656 /* (null) in Sources */,
 				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
 				4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */,
 			);
@@ -765,7 +768,7 @@
 				49BC403721C05ED600D62847 /* Shaders.metal in Sources */,
 				49BC404721C06D8600D62847 /* BootShell.cpp in Sources */,
 				49BC404921C06D9000D62847 /* Scanner.cpp in Sources */,
-				4992122621CD959900AA7656 /* init.cpp in Sources */,
+				4992122621CD959900AA7656 /* (null) in Sources */,
 				49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */,
 				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
