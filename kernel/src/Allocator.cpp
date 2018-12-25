@@ -107,8 +107,11 @@ void Allocator::addToFreeList(void* mem, size_t size)
     assert(checkFreeList(_freeList));
 }
 
-bool Allocator::alloc(size_t size, void*& mem)
+bool Allocator::alloc(size_t size, void*& mem, size_t align)
 {
+    // FIXME: Obey align. If zero align on any boundary, otherwise on passed align value
+    // (must be power of 2)
+    
     if (!bare::useAllocator()) {
         mem = ::malloc(size);
         return mem;

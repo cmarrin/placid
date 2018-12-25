@@ -87,7 +87,7 @@ namespace placid {
     public:
         Allocator();
         
-        bool alloc(size_t size, void*&);
+        bool alloc(size_t size, void*&, size_t align = 0);
         void free(void *);
         
         uint32_t size() const { return _size; }

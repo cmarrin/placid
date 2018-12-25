@@ -226,6 +226,9 @@
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
 		4992122721CDA4A700AA7656 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
+		4992122921CDA4D900AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoaderConfig.h; sourceTree = "<group>"; };
+		4992122A21CDA4D900AA7656 /* ELFLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoader.h; sourceTree = "<group>"; };
+		4992122B21CDA4D900AA7656 /* ELFLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ELFLoader.cpp; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -343,6 +346,9 @@
 				4932ACF12167156E00BDAABB /* Allocator.h */,
 				49166D3221514C050077ACEE /* BootShell.cpp */,
 				49166D3F21514C050077ACEE /* BootShell.h */,
+				4992122B21CDA4D900AA7656 /* ELFLoader.cpp */,
+				4992122A21CDA4D900AA7656 /* ELFLoader.h */,
+				4992122921CDA4D900AA7656 /* ELFLoaderConfig.h */,
 				49657897216D1E2D00B3F088 /* FileSystem.cpp */,
 				49657898216D1E2D00B3F088 /* FileSystem.h */,
 				4932ACFA2168A8C600BDAABB /* MStream.h */,

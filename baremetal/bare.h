@@ -71,6 +71,8 @@ namespace bare {
 
     void initSystem();
     bool useAllocator();
+    
+    void* aligned_alloc(size_t align, size_t size);
 
     extern "C" {
         void disableIRQ(void);
