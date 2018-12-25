@@ -99,16 +99,16 @@ namespace placid {
         
         bare::Volume::Error close() { return flush(); }
       
-        int32_t read(char* buf, uint32_t size);
-        int32_t write(const char* buf, uint32_t size);
+        size_t read(char* buf, size_t size);
+        size_t write(const char* buf, size_t size);
         
         uint32_t size() const { return _rawFile->size(); }
         
         bare::Volume::Error rename(const char* to) { return _rawFile->rename(to); }
     
-        bool seek(int32_t offset, SeekWhence);
-        int32_t tell() const { return _offset; }
-        bool eof() const { return _offset >= _rawFile->size(); }
+        bool seek(off_t offset, SeekWhence);
+        off_t tell() const { return _offset; }
+        bool eof() const { return _offset >= static_cast<off_t>(_rawFile->size()); }
         
         bare::Volume::Error flush();
     
@@ -116,10 +116,10 @@ namespace placid {
         bare::Volume::Error error() const { return _error; }
 
     private:
-        bool prepareBuffer(uint32_t offset);
-        int32_t io(char* buf, uint32_t size, bool write);
+        bool prepareBuffer(off_t offset);
+        size_t io(char* buf, size_t size, bool write);
 
-        uint32_t _offset = 0;
+        off_t _offset = 0;
         bare::Volume::Error _error = bare::Volume::Error::OK;
         bare::RawFile* _rawFile;
         bool _bufferValid = false;

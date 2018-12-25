@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "FileSystem.h"
 
 #include "bare/Serial.h"
+#include <sys/types.h>
 
 using namespace placid;
 
@@ -118,7 +119,7 @@ bare::Volume::Error FileSystem::remove(const char* name)
     return _fatFS.remove(name);
 }
 
-bool File::prepareBuffer(uint32_t offset)
+bool File::prepareBuffer(off_t offset)
 {
     if (offset / bare::BlockSize == _bufferAddr) {
         return true;
@@ -136,14 +137,14 @@ bool File::prepareBuffer(uint32_t offset)
     return true;
 }
 
-int32_t File::io(char* buf, uint32_t size, bool write)
+size_t File::io(char* buf, size_t size, bool write)
 {
     if (!prepareBuffer(_offset)) {
-        return -1;
+        return 0;
     }
     
-    uint32_t sizeRemaining = size;
-    uint32_t bufferAddr = _offset / bare::BlockSize;
+    size_t sizeRemaining = size;
+    uint32_t bufferAddr = static_cast<uint32_t>(_offset / bare::BlockSize);
     uint32_t bufferOffset = _offset % bare::BlockSize;
     
     if (write && !_bufferValid) {
@@ -151,7 +152,7 @@ int32_t File::io(char* buf, uint32_t size, bool write)
         // going to change
         _error = _rawFile->read(_buffer, bufferAddr, 1);
         if (_error != bare::Volume::Error::OK) {
-            return -1;
+            return 0;
         }
         
         _bufferValid = true;
@@ -165,7 +166,7 @@ int32_t File::io(char* buf, uint32_t size, bool write)
                 _rawFile->read(_buffer, bufferAddr, 1);
             
             if (error != bare::Volume::Error::OK) {
-                return -1;
+                return 0;
             }
             
             _bufferValid = true;
@@ -175,8 +176,8 @@ int32_t File::io(char* buf, uint32_t size, bool write)
             }
         }
         
-        uint32_t amountInBuffer = bare::BlockSize - bufferOffset;
-        uint32_t amountToCopy = (sizeRemaining <= amountInBuffer) ? sizeRemaining : amountInBuffer;
+        size_t amountInBuffer = bare::BlockSize - bufferOffset;
+        size_t amountToCopy = (sizeRemaining <= amountInBuffer) ? sizeRemaining : amountInBuffer;
         
         if (write) {
             bare::memcpy(_buffer + bufferOffset, buf, amountToCopy);
@@ -201,7 +202,7 @@ int32_t File::io(char* buf, uint32_t size, bool write)
     }
 }
 
-int32_t File::read(char* buf, uint32_t size)
+size_t File::read(char* buf, size_t size)
 {
     if (!_canRead) {
         _error = bare::Volume::Error::WriteOnly;
@@ -211,7 +212,7 @@ int32_t File::read(char* buf, uint32_t size)
 }
 
 
-int32_t File::write(const char* buf, uint32_t size)
+size_t File::write(const char* buf, size_t size)
 {
     if (!_canWrite) {
         _error = bare::Volume::Error::ReadOnly;
@@ -219,13 +220,14 @@ int32_t File::write(const char* buf, uint32_t size)
     }
     
     if (_offset + size > _rawFile->size()) {
-        _rawFile->setSize(_offset + size);
+        // FIXME: support > 32 bit size
+        _rawFile->setSize(static_cast<uint32_t>(_offset + size));
         _needsSizeUpate = true;
     }
     return io(const_cast<char*>(buf), size, true);
 }
 
-bool File::seek(int32_t offset, SeekWhence whence)
+bool File::seek(off_t offset, SeekWhence whence)
 {
     if (whence == SeekWhence::Cur) {
         offset += _offset;

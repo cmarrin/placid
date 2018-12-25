@@ -128,7 +128,7 @@ extern "C" void init()
         } else {
             char buf[26];
             fp->seek(511, File::SeekWhence::Set);
-            int32_t size = fp->read(buf, 25);
+            size_t size = fp->read(buf, 25);
             buf[25] = '\0';
             if (size < 0) {
                 bare::Serial::printf("File read error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
@@ -140,13 +140,13 @@ extern "C" void init()
         // Test update
         bare::Serial::printf("File update test...\n");
         fp->seek(518, File::SeekWhence::Set);
-        int32_t size = fp->write("0123456789", 10);
+        size_t size = fp->write("0123456789", 10);
         if (size < 0) {
             bare::Serial::printf("File update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
             fp->seek(-17, File::SeekWhence::Cur);
             char buf[26];
-            int32_t size = fp->read(buf, 25);
+            size_t size = fp->read(buf, 25);
             buf[25] = '\0';
             if (size < 0) {
                 bare::Serial::printf("Reading back after update error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
@@ -164,7 +164,7 @@ extern "C" void init()
         } else {
             fp->seek(-17, File::SeekWhence::Cur);
             char buf[26];
-            int32_t size = fp->read(buf, 25);
+            size_t size = fp->read(buf, 25);
             buf[25] = '\0';
             if (size < 0) {
                 bare::Serial::printf("Reading back after repair error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
@@ -184,7 +184,7 @@ extern "C" void init()
         if (!fp->valid()) {
             bare::Serial::printf("File write open error for '%s': %s\n", "test.txt", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         } else {
-            int32_t size = fp->write("The quick brown fox", 19);
+            size_t size = fp->write("The quick brown fox", 19);
             if (size < 0) {
                 bare::Serial::printf("File write error: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
             } else {
