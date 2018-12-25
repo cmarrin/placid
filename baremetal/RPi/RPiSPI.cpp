@@ -89,7 +89,8 @@ void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity cloc
 {
     DEBUG_LOG("SPI:Initializing\n");
 
-    GPIO::setFunction(8, GPIO::Function::Alt0);
+    // Make sure CS is set as an input. Only switch it to its Alt0 mode when sending 
+    GPIO::setFunction(8, GPIO::Function::Input);
     GPIO::setFunction(9, GPIO::Function::Alt0);
     GPIO::setFunction(10, GPIO::Function::Alt0);
     GPIO::setFunction(11, GPIO::Function::Alt0);
@@ -157,6 +158,7 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
 void SPI::startTransfer()
 {
     DEBUG_LOG("SPI:startTransfer\n");
+    GPIO::setFunction(8, GPIO::Function::Alt0);
     spi().CS = spi().CS | SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
 }
 
@@ -195,5 +197,6 @@ void SPI::endTransfer()
 {
     while((spi().CS & SPI0::DONE) == 0) ;
     spi().CS = spi().CS & ~SPI0::TA & ~SPI0::CLEAR_RX & ~SPI0::CLEAR_TX;
+    GPIO::setFunction(8, GPIO::Function::Input);
     DEBUG_LOG("SPI:endTransfer\n");
 }
