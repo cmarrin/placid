@@ -47,18 +47,19 @@ namespace bare {
 
     class SPI {
     public:
+        // Special values for transferByte(). AnyByte is send by Darwin to indicate that the returned byte
+        // can be anyting you want. ErrorByte means the read had an error
+        static constexpr uint32_t AnyByte = 256;
+        static constexpr uint32_t ErrorByte = 257;
+        
         enum class ClockEdge { Rising, Falling };
         enum class ClockPolarity { ActiveHigh, ActiveLow };
         enum class EnablePolarity { ActiveLow, ActiveHigh };
         
         static void init(EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
         
-        static int32_t write(const char* buf, size_t size) { return readWrite(nullptr, buf, size); }
-        static int32_t read(char* buf, size_t size) { return readWrite(buf, nullptr, size); }
-        static int32_t readWrite(char* readBuf, const char* writeBuf, size_t);
-        
         static void startTransfer();
-        int32_t transferByte(uint8_t b, uint32_t usTimeout);
+        uint32_t transferByte(uint8_t b);
         static void endTransfer();
 
     private:

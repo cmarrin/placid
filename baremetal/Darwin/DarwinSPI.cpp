@@ -37,26 +37,36 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/SPI.h"
 
+#include "bare/Serial.h"
+
 using namespace bare;
+
+static void showSim(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    Serial::printf("[SPI Sim]===> ");
+    Serial::vprintf(format, args);
+    va_end(args);
+}
 
 void SPI::init(EnablePolarity, ClockEdge, ClockPolarity)
 {
-}
-
-int32_t SPI::readWrite(char* readBuf, const char* writeBuf, size_t size)
-{
-    return -1;
+    showSim("init\n");
 }
 
 void SPI::startTransfer()
 {
+    showSim("startTransfer\n");
 }
 
-int32_t SPI::transferByte(uint8_t b, uint32_t usTimeout)
+uint32_t SPI::transferByte(uint8_t b)
 {
-    return -1;
+    showSim("transferByte(0x%02x)\n", b);
+    return AnyByte;
 }
 
 void SPI::endTransfer()
 {
+    showSim("endTransfer\n");
 }

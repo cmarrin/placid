@@ -42,7 +42,7 @@
 
 #include <cstdint>
 #include "bare/IPAddr.h"
-#include "bare/WiFiSpiDriver.h"
+#include "WiFiSpiDriver.h"
 
 namespace bare {
 

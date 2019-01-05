@@ -64,7 +64,7 @@ String WiFiSpi::getStringCmd(WiFiSpiDriver::Command cmd, uint8_t length)
     _driver.sendCmd(cmd);
 
     char* buf = new char[length + 1];
-    if (!_driver.waitResponse(cmd, 1, reinterpret_cast<uint8_t*>(buf), length)) {
+    if (!_driver.waitResponse(cmd, reinterpret_cast<uint8_t*>(buf), length)) {
         return "***ERROR***";
     }
     buf[length] = '\0';
@@ -78,8 +78,7 @@ WiFiSpi::Status WiFiSpi::getStatusCmd(WiFiSpiDriver::Command cmd)
     _driver.sendCmd(cmd);
 
     uint8_t value;
-    uint8_t length = sizeof(value);
-    if (!_driver.waitResponse(cmd, 1, &value, length)) {
+    if (!_driver.waitResponse(cmd, value)) {
         return WiFiSpi::Status::Failure;
     }
     return static_cast<Status>(value);
