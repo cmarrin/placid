@@ -44,6 +44,7 @@
 		496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */; };
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
+		497E4DEC21E02F6E0061779D /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122721CDA4A700AA7656 /* init.cpp */; };
 		497EE45B2161442D000584CE /* Print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Print.cpp */; };
 		4992122521CD955900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4992122621CD959900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -775,6 +776,7 @@
 				49BC404721C06D8600D62847 /* BootShell.cpp in Sources */,
 				49BC404921C06D9000D62847 /* Scanner.cpp in Sources */,
 				4992122621CD959900AA7656 /* (null) in Sources */,
+				497E4DEC21E02F6E0061779D /* init.cpp in Sources */,
 				49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */,
 				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
