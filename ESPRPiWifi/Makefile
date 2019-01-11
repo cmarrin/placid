@@ -37,7 +37,8 @@ FLOATTYPE = FLOAT32
 
 PLATFORMDIR = ESP
 
-LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
+EXTRA_LIBS = ../baremetal
+EXCLUDE_DIRS = ../baremetal/RPi ../baremetal/Darwin
 
 CHIP = esp8266
 BOARD = d1_mini
@@ -46,36 +47,8 @@ BUILD_DIR = build
 UPLOAD_PORT = /dev/cu.wchusbserial2430
 UPLOAD_SPEED = 921600
 BUILD_THREADS = 1
-BUILD_EXTRA_FLAGS = -std=c++11
+BUILD_EXTRA_FLAGS = -D$(FLOATTYPE)
 
-VERBOSE = 1
+VERBOSE ?= 1
 
-include ../baremetal/makeEspArduino.mk
-
-
-
-
-
-
-
-INCLUDES = -I../baremetal
-BUILDDIR = build
-PRODUCTDIR = $(BUILDDIR)
-PRODUCT = kernel
-LOADER = loadmap.ld
-SRCDIR = src
-
-SRC =    kernel.S \
-        main.cpp \
-        Allocator.cpp \
-        BootShell.cpp \
-        FileSystem.cpp \
-        Scanner.cpp \
-        Shell.cpp \
-        String.cpp \
-
-all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
-
-include ../baremetal/Common.mk
-
-clean : cleandir cleanlibs
+include ../baremetal/ESP/makeEspArduino.mk

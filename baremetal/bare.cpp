@@ -40,6 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
+#ifdef PLATFORM_RPI
+
 extern "C" {
 
     void* __dso_handle __attribute__ ((__weak__));
@@ -187,3 +189,5 @@ namespace std {
         abort();
     }
 }
+
+#endif

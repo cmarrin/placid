@@ -35,18 +35,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 // Ports
 //
-//      D5 - SS
+//      D5 - SCLK
 //      D6 - MISO
 //      D7 - MOSI
-//      D8 - SCK
+//      D8 - SS
 //
 
 #include "bare.h"
 
-#include "bare/GPIO.h"
-#include "bare/Serial.h"
-#include "bare/Timer.h"
-
+#include <Ticker.h>
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
@@ -55,36 +52,52 @@ POSSIBILITY OF SUCH DAMAGE.
 static constexpr uint32_t ActivityLED = BUILTIN_LED;
 
 // Number of ms LED stays off in each mode
-constexpr uint32_t BlinkSampleRate = 10;
-const uint32_t ConnectingRate = 400;
-const uint32_t ConfigRate = 100;
-const uint32_t ConnectedRate = 1900;
+constexpr uint32_t BlinkSampleRate = 2;
+
+// These rates are in ms
+const uint32_t ConnectingRate = 800;
+const uint32_t ConfigRate = 200;
+const uint32_t ConnectedRate = 4000;
+const uint32_t IdleRate = 4000;
+
+uint32_t blinkRate = ConnectingRate;
+uint32_t previousMillis = 0;
+bool blinkState = false;
 
 bool connecting = true;
 
-class LEDBlinker : public bare::TimerCallback
+class Blinker
 {
 public:
-    LEDBlinker(uint32_t led) : _led(led)
+    Blinker()
     {
-        bare::GPIO::setFunction(_led, bare::GPIO::Function::Output);
+        pinMode(ActivityLED, OUTPUT);
+        _ticker.attach_ms(BlinkSampleRate, blink, this);
     }
-
-    void start(uint32_t rate)
-    {
-        bare::Timer::start(this, rate, true);
-    }
-
-    virtual void handleTimerEvent()
-    {
-        bare::GPIO::setPin(_led, !bare::GPIO::getPin(_led));
-    }
-
+    
+    void setRate(uint32_t rate) { _rate = (rate + (BlinkSampleRate / 2)) / BlinkSampleRate; }
+    
 private:
-    uint32_t _led;
+    static void blink(Blinker* self)
+    {
+        if (self->_count == 0) {
+            digitalWrite(ActivityLED, LOW);
+        } else if (self->_count == 1){
+            digitalWrite(ActivityLED, HIGH);
+        }
+        if (++self->_count >= self->_rate) {
+            self->_count = 0;
+        }
+    }
+    
+    Ticker _ticker;
+    uint32_t _rate = IdleRate;
+    uint32_t _count = 0;
 };
 
-//gets called when WiFiManager enters configuration mode
+Blinker blinker;
+
+// gets called when WiFiManager enters configuration mode
 void configModeCallback (WiFiManager *myWiFiManager)
 {
     Serial.println("Entered config mode");
@@ -95,15 +108,8 @@ void configModeCallback (WiFiManager *myWiFiManager)
     blinker.setRate(ConfigRate);
 }
 
-void setup()
+void startWifi()
 {
-    bare::Serial::init();
-
-    bare::Serial::printf("\n\nPlacid Wifi v0.1\n\n");
-
-    LEDBlinker blinker(ActivityLED);
-    blinker.start(ConnectingRate);
-
     // WiFiManager
     // Local intialization. Once its business is done, there is no need to keep it around
     WiFiManager wifiManager;
@@ -119,15 +125,31 @@ void setup()
     // here  "AutoConnectAP"
     // and goes into a blocking loop awaiting configuration
     if (!wifiManager.autoConnect()) {
-        bare::Serial::printf("failed to connect and hit timeout\n");
+        Serial.printf("failed to connect and hit timeout\n");
         // reset and try again, or maybe put it to deep sleep
         ESP.reset();
-        bare::Timer::usleep(1000000);
+        delay(1000);
     }
 
     //if you get here you have connected to the WiFi
-    bare::Serial::printf("Wifi connected, IP=%s\n", WiFi.localIP());
-    blinker.start(ConnectedRate);
+    Serial.printf("Wifi connected, IP=%s\n", WiFi.localIP().toString().c_str());
+    blinker.setRate(ConnectedRate);
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    Serial.setDebugOutput(true);
+
+    bare::Float f = 1234.56;
+    bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
+
+    bare::Serial::printf("\n\nHex value = %#010x\n\n", 0x1234);
+    bare::Serial::printf("\n\nFloat value = %g\n\n", bare::Float(1234.5078).toArg());
+
+    Serial.printf("\n\nPlacid Wifi v0.1\n\n");
+
+    blinker.setRate(IdleRate);
 }
 
 void loop()

@@ -220,6 +220,8 @@
 		496C3BC221891FC2004DBC22 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
 		49731F78216E914500F9A79F /* XYModem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XYModem.cpp; path = ../baremetal/XYModem.cpp; sourceTree = "<group>"; };
+		497E4DEE21E7A0690061779D /* makeEspArduino.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makeEspArduino.mk; path = ../baremetal/ESP/makeEspArduino.mk; sourceTree = "<group>"; };
+		497E4DEF21E7A0D50061779D /* ESPRPiWifi.ino */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ESPRPiWifi.ino; path = ../ESPRPiWifi/ESPRPiWifi.ino; sourceTree = "<group>"; };
 		497EE458216138E2000584CE /* Print.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Print.cpp; path = ../baremetal/Print.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -419,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				494FD63A21A4BA4C005C2A6B /* Darwin */,
+				497E4DED21E7A0460061779D /* ESP */,
 				494FD63B21A4BA64005C2A6B /* RPi */,
 			);
 			name = platform;
@@ -466,6 +469,7 @@
 		494FD64021A89616005C2A6B /* ESPRPiWifi */ = {
 			isa = PBXGroup;
 			children = (
+				497E4DEF21E7A0D50061779D /* ESPRPiWifi.ino */,
 				494FD64321A896DE005C2A6B /* Makefile */,
 			);
 			name = ESPRPiWifi;
@@ -513,6 +517,14 @@
 				49BC3FF921BDC82200D62847 /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		497E4DED21E7A0460061779D /* ESP */ = {
+			isa = PBXGroup;
+			children = (
+				497E4DEE21E7A0690061779D /* makeEspArduino.mk */,
+			);
+			name = ESP;
 			sourceTree = "<group>";
 		};
 		49BC402C21C05ED600D62847 /* drawtest */ = {
