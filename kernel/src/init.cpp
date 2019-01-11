@@ -90,7 +90,7 @@ extern "C" void init()
 {
     bare::initSystem();
     
-    bare::Serial::init();
+    bare::Serial::init(115200);
     bare::Timer::init();
     char buffer[256];
     emb_snprintf(buffer, 255, "This is %s: num=%d, %d\n", "a test", 1234, 0);

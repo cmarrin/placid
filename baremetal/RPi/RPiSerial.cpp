@@ -85,8 +85,10 @@ inline volatile UART1& uart()
 	return *(reinterpret_cast<volatile UART1*>(UART1Base));
 }
 
-void Serial::init()
+void Serial::init(uint32_t baudrate)
 {
+    baudrate = std::min(std::max(static_cast<int>(baudrate), 110), 31250000);
+    
     if (interruptsSupported()) {
         disableIRQ();
 	    InterruptManager::enableIRQ(29, false);
@@ -101,8 +103,7 @@ void Serial::init()
     uart().MCR = 0;
     uart().IER = interruptsSupported() ? 0x05 : 0;
     uart().IIR = 0xc6;
-    /* ((250,000,000 / 115200) / 8) - 1 = 270 */
-    uart().BAUD = 270;
+    uart().BAUD = 250000000 / baudrate / 8 - 1;
 
 	GPIO::setFunction(14, GPIO::Function::Alt5);
 	GPIO::setFunction(15, GPIO::Function::Alt5);

@@ -50,7 +50,7 @@ volatile unsigned int Serial::rxhead = 0;
 volatile unsigned int Serial::rxtail = 0;
 volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
 
-void Serial::init()
+void Serial::init(uint32_t baudrate)
 {
     //system("stty raw");
 }

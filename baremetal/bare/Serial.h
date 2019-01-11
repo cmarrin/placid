@@ -60,7 +60,7 @@ namespace bare {
 	public:
 		enum class Error { OK, Timeout, NoData, NotReady, Fail };
 		
-		static void init();
+		static void init(uint32_t baudrate);
 		
         static int32_t printf(const char* format, ...);
         static int32_t vprintf(const char* format, va_list);
