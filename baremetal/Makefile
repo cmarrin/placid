@@ -66,6 +66,7 @@ SRC = \
 	Print.cpp \
 	PrintFloat.cpp \
 	Serial.cpp \
+	Shell.cpp \
 	String.cpp \
 	Timer.cpp \
 	Volume.cpp \

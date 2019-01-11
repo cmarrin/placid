@@ -35,12 +35,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "Shell.h"
+#include "bare/Shell.h"
 
 #include "bare/Print.h"
 #include "bare/Serial.h"
 
-using namespace placid;
+using namespace bare;
 
 void Shell::connected()
 {

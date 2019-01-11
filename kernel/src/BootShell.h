@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "Shell.h"
+#include "bare/Shell.h"
 
 namespace placid {
 	
@@ -43,7 +43,7 @@ namespace placid {
 	//
 	// Subclass of Shell
 
-	class BootShell : public Shell {
+	class BootShell : public bare::Shell {
 	public:
 		virtual const char* welcomeString() const override;
 		virtual const char* helpString() const override;

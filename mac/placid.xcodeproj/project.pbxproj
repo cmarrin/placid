@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		49166D4721514C060077ACEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
-		49166D4B21514C060077ACEE /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
 		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
 		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
@@ -68,11 +67,11 @@
 		49BC404721C06D8600D62847 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
 		49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
 		49BC404921C06D9000D62847 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
-		49BC404A21C06D9500D62847 /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3A21514C050077ACEE /* Shell.cpp */; };
 		49BC404B21C08B7A00D62847 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49BC404C21C08BD700D62847 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64B21AB36E4005C2A6B /* String.cpp */; };
 		49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC404E21C19BA000D62847 /* DarwinMutex.cpp */; };
 		49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC405121C19CCA00D62847 /* RPiMutex.cpp */; };
+		49E887EB21E7FA0D0035DD64 /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887E921E7F9FA0035DD64 /* Shell.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,11 +133,9 @@
 
 /* Begin PBXFileReference section */
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		49166D3021514C050077ACEE /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shell.h; path = ../../kernel/src/Shell.h; sourceTree = "<group>"; };
 		49166D3121514C050077ACEE /* kernel.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = kernel.S; path = ../../kernel/src/kernel.S; sourceTree = "<group>"; };
 		49166D3221514C050077ACEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../../kernel/src/BootShell.cpp; sourceTree = "<group>"; };
 		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../../kernel/src/lib1funcs.asm; sourceTree = "<group>"; };
-		49166D3A21514C050077ACEE /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../../kernel/src/Shell.cpp; sourceTree = "<group>"; };
 		49166D3E21514C050077ACEE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../kernel/src/main.cpp; sourceTree = "<group>"; };
 		49166D3F21514C050077ACEE /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../../kernel/src/BootShell.h; sourceTree = "<group>"; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
@@ -257,6 +254,8 @@
 		49BC404D21C1976D00D62847 /* Mutex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
 		49BC404E21C19BA000D62847 /* DarwinMutex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinMutex.cpp; path = ../baremetal/Darwin/DarwinMutex.cpp; sourceTree = "<group>"; };
 		49BC405121C19CCA00D62847 /* RPiMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMutex.cpp; path = ../baremetal/RPi/RPiMutex.cpp; sourceTree = "<group>"; };
+		49E887E821E7F9D80035DD64 /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shell.h; sourceTree = "<group>"; };
+		49E887E921E7F9FA0035DD64 /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../baremetal/Shell.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -355,8 +354,6 @@
 				4932ACFA2168A8C600BDAABB /* MStream.h */,
 				4932ACF721689A5500BDAABB /* Scanner.cpp */,
 				4932ACF821689A5600BDAABB /* Scanner.h */,
-				49166D3A21514C050077ACEE /* Shell.cpp */,
-				49166D3021514C050077ACEE /* Shell.h */,
 			);
 			name = src;
 			path = ../kernel/src;
@@ -406,6 +403,7 @@
 				497EE459216138E2000584CE /* Print.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
+				49E887E821E7F9D80035DD64 /* Shell.h */,
 				496C3BBF21876279004DBC22 /* SPI.h */,
 				494FD64A21AB36D0005C2A6B /* String.h */,
 				492FF3FF215C5359003582FE /* Timer.h */,
@@ -491,6 +489,7 @@
 				497EE458216138E2000584CE /* Print.cpp */,
 				494FD634219F8951005C2A6B /* PrintFloat.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
+				49E887E921E7F9FA0035DD64 /* Shell.cpp */,
 				494FD64B21AB36E4005C2A6B /* String.cpp */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
@@ -721,7 +720,6 @@
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				4992122821CDA4A700AA7656 /* init.cpp in Sources */,
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
-				49166D4B21514C060077ACEE /* Shell.cpp in Sources */,
 				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
 				4992122521CD955900AA7656 /* (null) in Sources */,
 				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
@@ -746,6 +744,7 @@
 				496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */,
 				494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */,
 				494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */,
+				49E887EB21E7FA0D0035DD64 /* Shell.cpp in Sources */,
 				492FF402215C5359003582FE /* Timer.cpp in Sources */,
 				494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */,
 				49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */,
@@ -782,7 +781,6 @@
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
 				49BC404621C06D8300D62847 /* Allocator.cpp in Sources */,
 				49BC402F21C05ED600D62847 /* AppDelegate.m in Sources */,
-				49BC404A21C06D9500D62847 /* Shell.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

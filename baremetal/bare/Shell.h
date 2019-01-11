@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include "bare/String.h"
 
-namespace placid {
+namespace bare {
 	
 	// Shell - Base class for a console shell
 	//
