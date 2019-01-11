@@ -152,16 +152,18 @@ namespace bare {
         
         bool readAndCheckByte(uint8_t expected, const char* err)
         {
-            int32_t value = _spi->transferByte(0);
-            if (value < 0) {
+            _spi->startTransfer(BufferSizeMax + 2);
+            uint32_t value = _spi->transferByte(0);
+            bool success = true;
+            if (value == SPI::ErrorByte) {
                 ERROR_LOG("Timeout on %s cmd:expected %#02x\n", err, expected);
-                return false;
-            }
-            else if (static_cast<uint8_t>(value) != expected) {
+                success = false;
+            } else if (static_cast<uint8_t>(value) != expected && !_spi->simulatedData()) {
                 ERROR_LOG("Mismatch on %s:expexted %#02x, got %#02x\n", err, expected, value);
-                return false;
+                success = false;
             }
-            return true;
+            _spi->endTransfer();
+            return success;
         }
 
         bool readAndCheckByte(Command expected, const char* err) { return readAndCheckByte(static_cast<uint8_t>(expected), err); }
@@ -177,8 +179,8 @@ namespace bare {
         enum class MessageIndicator { Finished, Continues };
         void flush(MessageIndicator);
         
-        static constexpr uint64_t ReadyStatusTimeout = 3000000; // us
-        static constexpr uint64_t ReadTimeout = 1000000; // us
+        static constexpr int64_t ReadyStatusTimeout = 3000000; // us
+        static constexpr int64_t ReadTimeout = 1000000; // us
         
         // ReadyStatus is established by the master. Returned status has RxStatus in bits 31:28, TxStatus in bits 27:24
         // TxStatus: 0 - NoData, 1 - Ready, 2 - PreparingData
@@ -194,8 +196,8 @@ namespace bare {
         static constexpr uint32_t BufferSizeMax = 32;
 
         uint8_t _buffer[BufferSizeMax];
-        uint8_t _bufferSize;
-        uint8_t _bufferIndex;
+        uint8_t _bufferSize = 0;
+        uint8_t _bufferIndex = 0;
     };
 
 }

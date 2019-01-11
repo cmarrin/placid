@@ -55,9 +55,21 @@ void SPI::init(EnablePolarity, ClockEdge, ClockPolarity)
     showSim("init\n");
 }
 
-void SPI::startTransfer()
+int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
 {
-    showSim("startTransfer\n");
+    showSim("readWrite %d bytes:");
+    if (writeBuf) {
+        for (int i = 0; i < size; ++i) {
+            Serial::printf("%02x", writeBuf[i]);
+        }
+    }
+    Serial::printf("\n");
+    return size;
+}
+
+void SPI::startTransfer(uint32_t size)
+{
+    showSim("startTransfer(%d)\n", size);
 }
 
 uint32_t SPI::transferByte(uint8_t b)
@@ -69,4 +81,9 @@ uint32_t SPI::transferByte(uint8_t b)
 void SPI::endTransfer()
 {
     showSim("endTransfer\n");
+}
+
+bool SPI::simulatedData()
+{
+    return true;
 }

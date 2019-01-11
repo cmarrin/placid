@@ -55,13 +55,13 @@ void WiFiSpiDriver::sendCmd(Command cmd, uint8_t numParam)
     if (numParam == 0) {
         endCmd();
     }
-    DEBUG_LOG("WiFiSpi:sendCmd finished\n");
 }
 
 void WiFiSpiDriver::endCmd()
 {
     write(Command::END);
     flush(MessageIndicator::Finished);
+    DEBUG_LOG("WiFiSpi:endCmd finished\n");
 }
 
 void WiFiSpiDriver::sendParam(const uint8_t* param, uint8_t param_len)
@@ -118,6 +118,10 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
                 len |= read();
             }
             
+            if (_spi->simulatedData()) {
+                len = param_len;
+            }
+            
             for (uint16_t ii = 0; ii < len; ++ii) {
                 if (ii < param_len) {
                     param[ii] = read();
@@ -151,6 +155,10 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
             for (uint8_t i = 0; i < numParam; ++i) {
                 uint8_t len = read();
                 
+                if (_spi->simulatedData()) {
+                    len = params[i].length;
+                }
+                
                 for (uint8_t ii = 0; ii < len; ++ii) {
                     if (ii < params[i].length) {
                         params[i].value[ii] = read();
@@ -170,15 +178,14 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
 
 uint32_t WiFiSpiDriver::readStatus()
 {
-    _spi->startTransfer();
+    _spi->startTransfer(5);
     _spi->transferByte(static_cast<uint8_t>(Command::READSTATUS));
     uint32_t status = _spi->transferByte(0);
-    bool anyByte = status == SPI::AnyByte;
     status |= static_cast<uint32_t>(_spi->transferByte(0)) << 8;
     status |= static_cast<uint32_t>(_spi->transferByte(0)) << 16;
     status |= static_cast<uint32_t>(_spi->transferByte(0)) << 24;
     _spi->endTransfer();
-    return anyByte ? (((static_cast<uint32_t>(RxStatus::Ready) << 4) | static_cast<uint32_t>(TxStatus::Ready)) << 24) : status;
+    return _spi->simulatedData() ? (((static_cast<uint32_t>(RxStatus::Ready) << 4) | static_cast<uint32_t>(TxStatus::Ready)) << 24) : status;
 }
 
 WiFiSpiDriver::RxStatus WiFiSpiDriver::waitForRxReady()
@@ -189,6 +196,9 @@ WiFiSpiDriver::RxStatus WiFiSpiDriver::waitForRxReady()
     do {
         rawStatus = readStatus();
         RxStatus status = static_cast<RxStatus>(rawStatus >> 28);
+        if (rawStatus) {
+            DEBUG_LOG("********** waitForRxReady: Got a non-zero status: 0x%08x\n", rawStatus);
+        }
         if (status == RxStatus::Ready) {
             return status;
         } else if (status != RxStatus::Busy) {
@@ -211,6 +221,9 @@ WiFiSpiDriver::TxStatus WiFiSpiDriver::waitForTxReady()
     do {
         rawStatus = readStatus();
         status = static_cast<TxStatus>((rawStatus >> 24) & 0x0f);
+        if (rawStatus) {
+            DEBUG_LOG("********** waitForTxReady: Got a non-zero status: 0x%08x\n", rawStatus);
+        }
         if (status == TxStatus::Ready) {
             return status;
         } else if (status != TxStatus::NoData && status != TxStatus::PreparingData) {
@@ -248,7 +261,7 @@ uint8_t WiFiSpiDriver::read()
 
         do {
             fillBuffer();
-            cmd = static_cast<Command>(_buffer[0]);
+            cmd = _spi->simulatedData() ? Command::MESSAGE_FINISHED : static_cast<Command>(_buffer[0]);
             if (Timer::systemTime() >= endTime) {
                 return 0;
             }
@@ -273,13 +286,12 @@ void WiFiSpiDriver::write(uint8_t c)
 
 void WiFiSpiDriver::fillBuffer()
 {
-    _spi->startTransfer();
+    _spi->startTransfer(BufferSizeMax + 2);
     
     _spi->transferByte(static_cast<uint8_t>(Command::READDATA));
     _spi->transferByte(0x00);
     for(uint8_t i = 0; i < BufferSizeMax; i++) {
-        uint32_t b = _spi->transferByte(0);
-        _buffer[i] = (b == SPI::AnyByte) ? 0x55 : b;
+        _buffer[i] = _spi->transferByte(0);
     }
 
     _spi->endTransfer();
@@ -288,12 +300,14 @@ void WiFiSpiDriver::fillBuffer()
 void WiFiSpiDriver::writeBuffer()
 {
     uint8_t i = 0;
-    _spi->startTransfer();
+    uint8_t len = _bufferSize + 1;
+    
+    _spi->startTransfer(BufferSizeMax + 2);
     
     _spi->transferByte(static_cast<uint8_t>(Command::WRITEDATA));
     _spi->transferByte(0x00);
     
-    while(_bufferSize-- && i < BufferSizeMax) {
+    while(len-- && i < BufferSizeMax) {
         _spi->transferByte(_buffer[i++]);
     }
     

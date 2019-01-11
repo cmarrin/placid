@@ -90,7 +90,8 @@ void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity cloc
     DEBUG_LOG("SPI:Initializing\n");
 
     // Make sure CS is set as an input. Only switch it to its Alt0 mode when sending 
-    GPIO::setFunction(8, GPIO::Function::Input);
+    //GPIO::setFunction(8, GPIO::Function::Input);
+    GPIO::setFunction(8, GPIO::Function::Alt0);
     GPIO::setFunction(9, GPIO::Function::Alt0);
     GPIO::setFunction(10, GPIO::Function::Alt0);
     GPIO::setFunction(11, GPIO::Function::Alt0);
@@ -107,22 +108,66 @@ void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity cloc
     cs |= csPolarity ? SPI0::CSPOL : 0;
     cs |= csPolarity ? SPI0::CSPOL0 : 0;
     spi().CS = cs;
+    DEBUG_LOG("    cs=0x%08x, CS=0x%08x\n", cs, spi().CS);
     
     // FIXME: Wait a bit for things to settle. Not sure if we need this
     Timer::usleep(1000); 
     DEBUG_LOG("SPI:Initialization complete\n");
 }
 
-void SPI::startTransfer()
+int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
 {
-    DEBUG_LOG("SPI:startTransfer\n");
-    GPIO::setFunction(8, GPIO::Function::Alt0);
+    DEBUG_LOG("SPI:readWrite: readBuf=0x%p, writeBuf=0x%p, size=%d\n", readBuf, writeBuf, size);
+
+    spi().DLEN = static_cast<uint32_t>(size);
+    spi().CS = (spi().CS & ~SPI0::WhichCS) | SPI0::CLEAR_RX | SPI0::CLEAR_TX | SPI0::TA;
+
+    int32_t writeCount = 0;
+    int32_t readCount = 0;
+
+    DEBUG_LOG("SPI:readWrite: before read/write CS=0x%08x\n", spi().CS);
+
+    while (writeCount < size || readCount < size) {
+        for ( ; writeCount < size && (spi().CS & SPI0::TXD); ++writeCount) {
+            DEBUG_LOG("SPI:readWrite: writing '%c'\n", *writeBuf);
+            spi().FIFO = writeBuf ? *writeBuf++ : 0;
+        }
+        
+        for (; readCount < size && (spi().CS & SPI0::RXD); ++readCount) {
+            if (readBuf) {
+                *readBuf++ = spi().FIFO;
+                DEBUG_LOG("SPI:readWrite: reading '%c'\n", *(readBuf - 1));
+            }
+        }
+    }
+    
+    DEBUG_LOG("SPI:readWrite: finished read/write, wait for done\n");
+    while (!(spi().CS & SPI0::DONE)) {
+        while (spi().CS & SPI0::RXD) {
+            uint32_t volatile dummy = spi().FIFO;
+            (void) dummy;
+        }
+    }
+    
+    Timer::usleep(1000);
+    spi().CS = spi().CS & ~SPI0::TA;
+    
+    DEBUG_LOG("SPI:readWrite: finished, return\n");
+    return (int) size;
+}
+
+void SPI::startTransfer(uint32_t size)
+{
+    DEBUG_LOG("SPI:startTransfer(%d)\n", size);
+    //GPIO::setFunction(8, GPIO::Function::Alt0);
     spi().CS = spi().CS | SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
+    DEBUG_LOG("    CS=0x%08x\n", spi().CS);
+    Timer::usleep(1000); 
 }
 
 static inline bool wait(uint32_t csBit)
 {
-    for (uint32_t i = 0; i < 10000; ++i) {
+    for (uint32_t i = 0; i < 1000000; ++i) {
         if ((spi().CS & csBit) != 0) {
             return true;
         }
@@ -132,12 +177,14 @@ static inline bool wait(uint32_t csBit)
 
 uint32_t SPI::transferByte(uint8_t b)
 {
-    DEBUG_LOG("SPI:transferByte sent %#02x\n", b);
     if (!wait(SPI0::TXD)) {
+        ERROR_LOG("SPI:transferByte timeout on TXD\n");
         return ErrorByte;
     }
     spi().FIFO = b;
+    DEBUG_LOG("SPI:transferByte sent %#02x\n", b);
     if (!wait(SPI0::RXD)) {
+        ERROR_LOG("SPI:transferByte timeout on RXD\n");
         return ErrorByte;
     }
     b = spi().FIFO;
@@ -149,6 +196,12 @@ void SPI::endTransfer()
 {
     while((spi().CS & SPI0::DONE) == 0) ;
     spi().CS = spi().CS & ~SPI0::TA & ~SPI0::CLEAR_RX & ~SPI0::CLEAR_TX;
-    GPIO::setFunction(8, GPIO::Function::Input);
-    DEBUG_LOG("SPI:endTransfer\n");
+    Timer::usleep(1000); 
+    //GPIO::setFunction(8, GPIO::Function::Input);
+    DEBUG_LOG("SPI:endTransfer, CS=0x%08x\n", spi().CS);
+}
+
+bool SPI::simulatedData()
+{
+    return false;
 }

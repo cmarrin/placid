@@ -65,15 +65,15 @@ namespace bare {
     public:
         enum class Status {
             NoShield = 255,
-            Idle = 0,
-            NoSSIDAvail,
-            ScanCompleted,
-            Connected,
-            ConnectFailed,
-            ConnectionLost,
-            Disconnected,
-            Failure,
-            Success,
+            Idle            = 0,
+            NoSSIDAvail     = 1,
+            ScanCompleted   = 2,
+            Connected       = 3,
+            ConnectFailed   = 4,
+            ConnectionLost  = 5,
+            Disconnected    = 6,
+            Failure         = 128,
+            Success         = 129,
         };
         
         WiFiSpi(SPI* spi) : _driver(spi) { }

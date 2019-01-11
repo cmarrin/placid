@@ -58,9 +58,13 @@ namespace bare {
         
         static void init(EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
         
-        static void startTransfer();
+        static int32_t readWrite(char* readBuf, const char* writeBuf, int32_t);
+
+        static void startTransfer(uint32_t size);
         uint32_t transferByte(uint8_t b);
         static void endTransfer();
+        
+        static bool simulatedData();
 
     private:
     };
