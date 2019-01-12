@@ -46,6 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/GPIO.h"
 #include "bare/Serial.h"
 #include "bare/Shell.h"
+#include "bare/Timer.h"
 
 #include <Ticker.h>
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
@@ -54,6 +55,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
 static constexpr uint32_t ActivityLED = BUILTIN_LED;
+static constexpr uint32_t RPiResetPin = 16;
 
 // Number of ms LED stays off in each mode
 constexpr uint32_t BlinkSampleRate = 2;
@@ -146,7 +148,14 @@ public:
                 showMessage(MessageType::Error, "use 'pi' or 'esp' to reset\n");
             } else if (array[1] == "pi") {
                 bare::Serial::printf("Resetting Raspberry Pi\n");
-                // FIXME: Implement
+                bare::GPIO::setPin(RPiResetPin, true);
+                bare::GPIO::setFunction(RPiResetPin, bare::GPIO::Function::Output);
+                bare::Timer::usleep(10000);
+                bare::GPIO::setPin(RPiResetPin, false);
+                bare::Timer::usleep(100000);
+                bare::GPIO::setPin(RPiResetPin, true);
+                bare::Timer::usleep(100000);
+                bare::GPIO::setFunction(RPiResetPin, bare::GPIO::Function::Input);
             } else if (array[1] == "esp") {
                 bare::Serial::printf("Resetting ESP\n");
                 bare::restart();
