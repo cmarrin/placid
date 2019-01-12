@@ -259,6 +259,7 @@
 		49E887E821E7F9D80035DD64 /* Shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shell.h; sourceTree = "<group>"; };
 		49E887E921E7F9FA0035DD64 /* Shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shell.cpp; path = ../baremetal/Shell.cpp; sourceTree = "<group>"; };
 		49E887EC21E915EB0035DD64 /* ESPSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ESPSerial.cpp; path = ../baremetal/ESP/ESPSerial.cpp; sourceTree = "<group>"; };
+		49E887EE21EA2F180035DD64 /* ESPBare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ESPBare.cpp; path = ../baremetal/ESP/ESPBare.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -523,6 +524,7 @@
 		497E4DED21E7A0460061779D /* ESP */ = {
 			isa = PBXGroup;
 			children = (
+				49E887EE21EA2F180035DD64 /* ESPBare.cpp */,
 				497E4DEE21E7A0690061779D /* makeEspArduino.mk */,
 				49E887EC21E915EB0035DD64 /* ESPSerial.cpp */,
 			);
