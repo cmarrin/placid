@@ -37,7 +37,7 @@ FLOATTYPE = FLOAT32
 
 PLATFORMDIR = ESP
 
-EXTRA_LIBS = ../baremetal
+CUSTOM_LIBS = ../baremetal
 EXCLUDE_DIRS = ../baremetal/RPi ../baremetal/Darwin
 
 CHIP = esp8266
