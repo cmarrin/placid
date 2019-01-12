@@ -43,6 +43,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
+#include "bare/GPIO.h"
 #include "bare/Serial.h"
 #include "bare/Shell.h"
 
@@ -74,7 +75,7 @@ class Blinker
 public:
     Blinker()
     {
-        pinMode(ActivityLED, OUTPUT);
+        bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
         _ticker.attach_ms(BlinkSampleRate, blink, this);
     }
     
@@ -84,9 +85,9 @@ private:
     static void blink(Blinker* self)
     {
         if (self->_count == 0) {
-            digitalWrite(ActivityLED, LOW);
+            bare::GPIO::setPin(ActivityLED, false);
         } else if (self->_count == 1){
-            digitalWrite(ActivityLED, HIGH);
+            bare::GPIO::setPin(ActivityLED, true);
         }
         if (++self->_count >= self->_rate) {
             self->_count = 0;
