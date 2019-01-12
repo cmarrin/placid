@@ -44,6 +44,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare.h"
 
 #include "bare/Serial.h"
+#include "bare/Shell.h"
 
 #include <Ticker.h>
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
@@ -99,13 +100,83 @@ private:
 
 Blinker blinker;
 
+static void testSPI()
+{
+    // FIXME: Implement
+}
+
+class MyShell : public bare::Shell
+{
+public:
+    virtual const char* welcomeString() const override { return "\n\nPlacid ESP Shell v0.1"; }
+
+    virtual const char* helpString() const override
+    {
+        return
+                "    debug [on/off] : turn debugging on/off\n"
+                "    reset [pi/esp] : resest Raspberry Pi or ESP\n"
+                "    pi             : switch to Raspberry Pi kernel console\n"
+                "    test <id>      : run one of the built-in tests\n"
+                "                         spi : run spi test\n"
+        ;
+    }
+
+    virtual const char* promptString() const override { return "esp"; }
+
+    virtual void shellSend(const char* data, uint32_t size, bool raw) override
+    {
+        // puts converts control characters to printable, so if we want
+        // to send control we have to send raw
+        if (raw) {
+            while (size--) {
+                bare::Serial::write(*data++);
+            }
+        } else {
+            bare::Serial::puts(data, size);
+        }   
+    }
+
+    virtual bool executeShellCommand(const std::vector<bare::String>& array) override
+    {
+        if (array[0] == "pi") {
+            showMessage(MessageType::Error, "not yet implemented\n");
+        } else if (array[0] == "reset") {
+            if (array.size() < 2) {
+                showMessage(MessageType::Error, "use 'pi' or 'esp' to reset\n");
+            } else if (array[1] == "pi") {
+                bare::Serial::printf("Resetting Raspberry Pi\n");
+                // FIXME: Implement
+            } else if (array[1] == "esp") {
+                bare::Serial::printf("Resetting ESP\n");
+                bare::restart();
+            } else {
+                showMessage(MessageType::Error, "invalid test command\n");
+            }
+        } else if (array[0] == "debug") {
+            showMessage(MessageType::Info, "Debug true\n");
+        } else if (array[0] == "test") {
+            if (array.size() < 2) {
+                showMessage(MessageType::Error, "need a test command\n");
+            } else if (array[1] == "spi") {
+                bare::Serial::printf("SPI test\n");
+                testSPI();
+            } else {
+                showMessage(MessageType::Error, "invalid test command\n");
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+};
+
+MyShell myShell;
+
 // gets called when WiFiManager enters configuration mode
 void configModeCallback (WiFiManager *myWiFiManager)
 {
-    Serial.println("Entered config mode");
-    Serial.println(WiFi.softAPIP());
-    //if you used auto generated SSID, print it
-    Serial.println(myWiFiManager->getConfigPortalSSID());
+    bare::Serial::printf("Entered config mode: IP=%s, SSID=%s\n", WiFi.softAPIP().toString().c_str(), myWiFiManager->getConfigPortalSSID().c_str());
+
     //entered config mode, make led toggle faster
     blinker.setRate(ConfigRate);
 }
@@ -127,21 +198,20 @@ void startWifi()
     // here  "AutoConnectAP"
     // and goes into a blocking loop awaiting configuration
     if (!wifiManager.autoConnect()) {
-        Serial.printf("failed to connect and hit timeout\n");
+        bare::Serial::printf("failed to connect and hit timeout\n");
         // reset and try again, or maybe put it to deep sleep
         ESP.reset();
         delay(1000);
     }
 
     //if you get here you have connected to the WiFi
-    Serial.printf("Wifi connected, IP=%s\n", WiFi.localIP().toString().c_str());
+    bare::Serial::printf("Wifi connected, IP=%s\n", WiFi.localIP().toString().c_str());
     blinker.setRate(ConnectedRate);
 }
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.setDebugOutput(true);
+    bare::Serial::init(115200);
 
     bare::Float f = 1234.56;
     bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
@@ -149,11 +219,19 @@ void setup()
     bare::Serial::printf("\n\nHex value = %#010x\n\n", 0x1234);
     bare::Serial::printf("\n\nFloat value = %g\n\n", bare::Float(1234.5078).toArg());
 
-    Serial.printf("\n\nPlacid Wifi v0.1\n\n");
+    bare::Serial::printf("\n\nPlacid Wifi v0.1\n\n");
 
     blinker.setRate(IdleRate);
+    myShell.connected();
 }
 
 void loop()
 {
+    uint8_t c;
+    bare::Serial::Error error = bare::Serial::read(c);
+    if (error == bare::Serial::Error::OK) {
+        myShell.received(c);
+    } else if (error != bare::Serial::Error::NotReady) {
+        bare::Serial::puts("*** Serial Read Error\n");
+    }
 }
