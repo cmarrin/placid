@@ -414,24 +414,17 @@ SDCard::SDCard()
     DEBUG_LOG("SDCard: Start init\n");
 
     // Initialize GPIO for all the SD pins
-    GPIO::setFunction(GPIO_CD, GPIO::Function::Input);
-    GPIO::setPull(GPIO_CD, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CD, GPIO::Function::Input, GPIO::Pull::Up);
     uint32_t reg = GPIO::reg(GPIO::Register::GPHEN1);
     reg = reg | 1<<(47-32);
     GPIO::reg(GPIO::Register::GPHEN1) = reg;
 
-    GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_DAT3, GPIO::Pull::Up);
-    GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_DAT2, GPIO::Pull::Up);
-    GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_DAT1, GPIO::Pull::Up);
-    GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_DAT0, GPIO::Pull::Up);
-    GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_CMD, GPIO::Pull::Up);
-    GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3);
-    GPIO::setPull(GPIO_CLK, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT3, GPIO::Function::Alt3,GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT2, GPIO::Function::Alt3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT1, GPIO::Function::Alt3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_DAT0, GPIO::Function::Alt3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CMD, GPIO::Function::Alt3, GPIO::Pull::Up);
+    GPIO::setFunction(GPIO_CLK, GPIO::Function::Alt3, GPIO::Pull::Up);
 
     uint32_t hostVersion = (emmc().slotISRVersion & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
 

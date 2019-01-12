@@ -96,11 +96,10 @@ namespace bare {
         enum class Pull { None = 0b00, Down = 0b01, Up = 0b10 };
 		
 		// Set the alternate function select register
-		static void setFunction(uint32_t pin, Function);
+		static void setFunction(uint32_t pin, Function, Pull = Pull::None);
 		
 		static void setPin(uint32_t pin, bool on);
 		static bool getPin(uint32_t pin);
-        static void setPull(uint32_t pin, Pull);
 
 		static volatile uint32_t& reg(Register);
 	};

@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-void GPIO::setFunction(uint32_t pin, Function f)
+void GPIO::setFunction(uint32_t pin, Function f, Pull)
 {
 }
 
@@ -50,10 +50,6 @@ void GPIO::setPin(uint32_t pin, bool on)
 bool GPIO::getPin(uint32_t pin)
 {
     return false;
-}
-
-void GPIO::setPull(uint32_t pin, Pull val)
-{
 }
 
 volatile uint32_t& GPIO::reg(Register r)
