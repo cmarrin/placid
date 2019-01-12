@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Serial.h"
 
-#include "bare/Print.h"
+#include "bare/Formatter.h"
 #include "bare/Timer.h"
 
 using namespace bare;
@@ -54,7 +54,7 @@ int32_t Serial::printf(const char* format, ...)
 
 int32_t Serial::vprintf(const char* format, va_list va)
 {
-    return Print::vformat([](char c) { Serial::write(c); }, format, va);
+    return Formatter::vformat([](char c) { Serial::write(c); }, format, va);
 }
 
 Serial::Error Serial::puts(const char* s, uint32_t size)

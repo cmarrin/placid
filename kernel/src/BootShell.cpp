@@ -38,7 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "BootShell.h"
 
 #include "bare/Graphics.h"
-#include "bare/Print.h"
 #include "bare/Serial.h"
 #include "bare/WiFiSpi.h"
 #include "bare/Timer.h"
@@ -136,14 +135,10 @@ static bare::String timeString()
     static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
     bare::RealTime currentTime = bare::Timer::currentTime();
-    char buf[50];
-    char* p = buf;
-    uint32_t count = 49;
-    bare::Print::format([&p, &count](char c) { if (count--) *p++ = c; }, "%s %d/%d/%d %d:%02d:%02d",
+    return bare::String::format("%s %d/%d/%d %d:%02d:%02d",
         days[currentTime.dayOfWeek()],
         currentTime.month(), currentTime.day(), currentTime.year(),
         currentTime.hours(), currentTime.minutes(), currentTime.seconds());
-    return bare::String(buf);
 }
 
 bool BootShell::executeShellCommand(const std::vector<bare::String>& array)

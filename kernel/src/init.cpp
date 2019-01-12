@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/GPIO.h"
 #include "bare/Memory.h"
-#include "bare/Print.h"
 #include "bare/SDCard.h"
 #include "bare/Serial.h"
 #include "bare/Timer.h"
@@ -48,6 +47,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 
 using namespace placid;
+
+extern int  emb_snprintf(char *s, size_t n, const char *fmt, ...);
 
 static constexpr uint32_t ActivityLED = 47;
 static constexpr uint32_t blinkRate = 500000;

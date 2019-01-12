@@ -42,15 +42,13 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <cstdint>
 #include <functional>
 
-extern int  emb_snprintf(char *s, size_t n, const char *fmt, ...);
-
 namespace bare {
     
-    // Print - Formatted printer
+    // Formatter - Formatted printer
 
-    class Print {
+    class Formatter {
     public:
-        using Printer = std::function<void(char)>;
+        using Generator = std::function<void(char)>;
 
         enum class Capital { Yes, No };
         
@@ -59,27 +57,27 @@ namespace bare {
         static constexpr uint32_t MaxStringSize = 256;
         static constexpr uint32_t MaxIntegerBufferSize = 24; // Big enough for a 64 bit integer in octal
 
-        static int32_t format(Printer printer, const char* fmt, ...)
+        static int32_t format(Generator gen, const char* fmt, ...)
         {
             va_list va;
             va_start(va, fmt);
-            int32_t result = vformat(printer, fmt, va);
+            int32_t result = vformat(gen, fmt, va);
             va_end(va);
             return result;
         }
         
-        static int32_t vformat(Printer, const char *format, va_list);
+        static int32_t vformat(Generator, const char *format, va_list);
 
-        static uint32_t printString(Printer, Float v, int32_t precision = -1, Capital = Capital::No);
-        static uint32_t printString(Printer, uint64_t v, uint8_t base = 10, Capital = Capital::No);
+        static uint32_t printString(Generator, Float v, int32_t precision = -1, Capital = Capital::No);
+        static uint32_t printString(Generator, uint64_t v, uint8_t base = 10, Capital = Capital::No);
         
-        static uint32_t printString(Printer printer, int32_t v) { emitSign(printer, v); return printString(printer, static_cast<uint32_t>(v)); }
-        static uint32_t printString(Printer printer, uint32_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint64_t>(v), base, cap); }
-        static uint32_t printString(Printer printer, int64_t v) { emitSign(printer, v); return printString(printer, static_cast<uint64_t>(v)); }
-        static uint32_t printString(Printer printer, int8_t v) { return printString(printer, static_cast<int32_t>(v)); }
-        static uint32_t printString(Printer printer, uint8_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint32_t>(v), base, cap); }
-        static uint32_t printString(Printer printer, int16_t v) { return printString(printer, static_cast<int32_t>(v)); }
-        static uint32_t printString(Printer printer, uint16_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(printer, static_cast<uint32_t>(v), base, cap); }
+        static uint32_t printString(Generator gen, int32_t v) { emitSign(gen, v); return printString(gen, static_cast<uint32_t>(v)); }
+        static uint32_t printString(Generator gen, uint32_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(gen, static_cast<uint64_t>(v), base, cap); }
+        static uint32_t printString(Generator gen, int64_t v) { emitSign(gen, v); return printString(gen, static_cast<uint64_t>(v)); }
+        static uint32_t printString(Generator gen, int8_t v) { return printString(gen, static_cast<int32_t>(v)); }
+        static uint32_t printString(Generator gen, uint8_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(gen, static_cast<uint32_t>(v), base, cap); }
+        static uint32_t printString(Generator gen, int16_t v) { return printString(gen, static_cast<int32_t>(v)); }
+        static uint32_t printString(Generator gen, uint16_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(gen, static_cast<uint32_t>(v), base, cap); }
 
         static uint32_t toString(char* buf, Float v) { return printString([&buf](char c) { *buf++ = c; }, v); }
         static uint32_t toString(char* buf, int32_t v) { return printString([&buf](char c) { *buf++ = c; }, v); }
@@ -94,15 +92,10 @@ namespace bare {
         static bool toNumber(const char*& s, uint32_t& n);
         
     private:
-        Print() { }
-        Print(Print&) { }
-        Print& operator=(Print& other) { return other; }
-        
-        //static uint32_t intToString(uint64_t value, bare::Print::Printer printer, uint8_t base = 10, bare::Print::Capital cap = bare::Print::Capital::No);
-        template<typename T> static void emitSign(Printer printer, T& v)
+        template<typename T> static void emitSign(Generator gen, T& v)
         {
             if (v < 0) {
-                printer('-');
+                gen('-');
                 v = -v;
             }
         }

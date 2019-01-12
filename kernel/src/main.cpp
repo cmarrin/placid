@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/GPIO.h"
 #include "bare/Memory.h"
-#include "bare/Print.h"
 #include "bare/SDCard.h"
 #include "bare/Serial.h"
 #include "bare/Timer.h"

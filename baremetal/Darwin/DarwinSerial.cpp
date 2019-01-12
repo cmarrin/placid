@@ -39,7 +39,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/GPIO.h"
 #include "bare/InterruptManager.h"
-#include "bare/Print.h"
 #include "bare/Timer.h"
 
 #include <iostream>

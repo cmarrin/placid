@@ -153,8 +153,8 @@ namespace bare {
             return *this;
         }
 
-        String& printf(const char* format, ...);
-        String& vprintf(const char* format, va_list);
+        static String format(const char* format, ...);
+        static String vformat(const char* format, va_list);
         
         String& erase(size_t pos = 0)
         {

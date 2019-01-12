@@ -37,7 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Shell.h"
 
-#include "bare/Print.h"
 #include "bare/Serial.h"
 
 using namespace bare;
@@ -139,9 +138,7 @@ void Shell::showMessage(MessageType type, const char* msg, ...)
     va_list args;
     va_start(args, msg);
     
-    bare::String string;
-    string.vprintf(msg, args);    
-    shellSend(string.c_str());
+    shellSend(String::vformat(msg, args).c_str());
 
     if (type == MessageType::Error) {
         shellSend("\n");

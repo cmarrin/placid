@@ -63,8 +63,8 @@ SRC = \
 	FAT32.cpp \
 	FAT32DirectoryIterator.cpp \
 	FAT32RawFile.cpp \
-	Print.cpp \
-	PrintFloat.cpp \
+	Formatter.cpp \
+	FloatFormatter.cpp \
 	Serial.cpp \
 	Shell.cpp \
 	String.cpp \

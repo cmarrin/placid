@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/Print.h"
+#include "bare/Formatter.h"
 
 #include <cassert>
 
@@ -71,21 +71,21 @@ static uint32_t mantissaToString(const char* mantissa, char* buf, int32_t digits
     return static_cast<uint32_t>(buf - p);
 }
 
-static uint32_t mantissaToString(const char* mantissa, bare::Print::Printer printer, int32_t digitsToLeft)
+static uint32_t mantissaToString(const char* mantissa, bare::Formatter::Generator gen, int32_t digitsToLeft)
 {
-    char buf[bare::Print::MaxToStringBufferSize];
+    char buf[bare::Formatter::MaxToStringBufferSize];
     uint32_t size = mantissaToString(mantissa, buf, digitsToLeft);
     for (char* p = buf; *p; ++p) {
-        printer(*p);
+        gen(*p);
     }
     return size;
 }
 
-uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital cap)
+uint32_t Formatter::printString(Generator gen, Float v, int32_t precision, Capital cap)
 {
     if (v == Float()) {
-        printer('0');
-        printer('\0');
+        gen('0');
+        gen('\0');
         return 1;
     }
     
@@ -97,7 +97,7 @@ uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital
     // FIXME: Round using precision
     
     if (v < Float()) {
-        printer('-');
+        gen('-');
         size++;
     }
         
@@ -108,20 +108,20 @@ uint32_t Print::printString(Printer printer, Float v, int32_t precision, Capital
     
     if (n >= -4 && n <= 6) {
         // no exponent
-        return mantissaToString(buf, printer, n + 1) + size;
+        return mantissaToString(buf, gen, n + 1) + size;
     }
     
-    size += mantissaToString(buf, printer, 1);
-    printer((cap == bare::Print::Capital::Yes) ? 'E' : 'e');
+    size += mantissaToString(buf, gen, 1);
+    gen((cap == bare::Formatter::Capital::Yes) ? 'E' : 'e');
     size++;
 
     if (n < 0) {
-        printer('-');
+        gen('-');
         size++;
         n = -n;
     }
     
-    size += printString(printer, static_cast<uint64_t>(n));
-    printer('\0');
+    size += printString(gen, static_cast<uint64_t>(n));
+    gen('\0');
     return size;
 }

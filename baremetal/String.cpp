@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/String.h"
 
-#include "bare/Print.h"
+#include "bare/Formatter.h"
 
 using namespace bare;
 
@@ -43,18 +43,19 @@ String::operator uint32_t()
 {
     uint32_t n;
     const char* p = c_str();
-    return Print::toNumber(p, n) ? n : 0;
+    return Formatter::toNumber(p, n) ? n : 0;
 }
 
-String& String::printf(const char* format, ...)
+String String::format(const char* format, ...)
 {
     va_list va;
     va_start(va, format);
-    return String::vprintf(format, va);
+    return String::vformat(format, va);
 }
 
-String& String::vprintf(const char* format, va_list va)
+String String::vformat(const char* format, va_list va)
 {
-    bare::Print::vformat([this](char c) { *this += c; }, format, va);
-    return *this;
+    String s;
+    bare::Formatter::vformat([&s](char c) { s += c; }, format, va);
+    return s;
 }
