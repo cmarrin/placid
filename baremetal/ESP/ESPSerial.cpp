@@ -73,3 +73,7 @@ Serial::Error Serial::write(uint8_t c)
 void Serial::handleInterrupt()
 {
 }
+
+void Serial::clearInput() 
+{
+}

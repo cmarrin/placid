@@ -74,10 +74,11 @@ struct UART1 {
 };
 
 static constexpr uint32_t UART1Base = 0x20215000;
+static constexpr uint32_t RXBUFMASK = 0xFF;
 
-volatile unsigned int Serial::rxhead = 0;
-volatile unsigned int Serial::rxtail = 0;
-volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
+volatile unsigned int _rxhead = 0;
+volatile unsigned int _rxtail = 0;
+volatile unsigned char _rxbuffer[RXBUFMASK + 1];
 
 inline volatile UART1& uart()
 {
@@ -92,7 +93,7 @@ void Serial::init(uint32_t baudrate)
         disableIRQ();
 	    InterruptManager::enableIRQ(29, false);
 
-        rxhead = rxtail = 0;
+        _rxhead = _rxtail = 0;
     }
 
     uart().AUXENB = 1;
@@ -125,9 +126,9 @@ Serial::Error Serial::read(uint8_t& c)
 {
     if (interruptsSupported()) {
         while (1) {
-            if (rxtail != rxhead) {
-                c = rxbuffer[rxtail];
-                rxtail = (rxtail + 1) & RXBUFMASK;
+            if (_rxtail != _rxhead) {
+                c = _rxbuffer[_rxtail];
+                _rxtail = (_rxtail + 1) & RXBUFMASK;
                 break;
             }
             WFE();
@@ -142,7 +143,7 @@ Serial::Error Serial::read(uint8_t& c)
 bool Serial::rxReady()
 {
     if (interruptsSupported()) {
-        return rxtail != rxhead;
+        return _rxtail != _rxhead;
     }
     return (uart().LSR & 0x01) != 0;
 }
@@ -171,8 +172,13 @@ void Serial::handleInterrupt()
         if ((iir & 6) == 4) {
             //receiver holds a valid byte
             uint32_t b = uart().IO;
-            rxbuffer[rxhead] = b & 0xFF;
-            rxhead = (rxhead + 1) & RXBUFMASK;
+            _rxbuffer[_rxhead] = b & 0xFF;
+            _rxhead = (_rxhead + 1) & RXBUFMASK;
         }
     }
+}
+
+void Serial::clearInput() 
+{
+    _rxhead = _rxtail = 0;
 }

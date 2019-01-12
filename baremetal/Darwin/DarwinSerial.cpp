@@ -45,10 +45,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-volatile unsigned int Serial::rxhead = 0;
-volatile unsigned int Serial::rxtail = 0;
-volatile unsigned char Serial::rxbuffer[RXBUFMASK + 1];
-
 void Serial::init(uint32_t baudrate)
 {
     //system("stty raw");
@@ -72,5 +68,9 @@ Serial::Error Serial::write(uint8_t c)
 }
 
 void Serial::handleInterrupt()
+{
+}
+
+void Serial::clearInput() 
 {
 }

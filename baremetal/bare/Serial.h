@@ -71,7 +71,7 @@ namespace bare {
 		static Error write(uint8_t);
 		static Error puts(const char*, uint32_t size = 0);
         
-        static void clearInput() { rxhead = rxtail = 0; }
+        static void clearInput();
 
         static void handleInterrupt();
 
@@ -79,11 +79,6 @@ namespace bare {
 		Serial() { }
 		Serial(Serial&) { }
 		Serial& operator=(Serial& other) { return other; }
-		
-		static constexpr uint32_t RXBUFMASK = 0xFF;
-		static volatile unsigned int rxhead;
-		static volatile unsigned int rxtail;
-		static volatile unsigned char rxbuffer[RXBUFMASK + 1];
 	};
 	
 }
