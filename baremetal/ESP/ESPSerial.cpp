@@ -54,7 +54,7 @@ Serial::Error Serial::read(uint8_t& c)
     int b = ::Serial.read();
     if (b < 0) {
         c = 0;
-        return Error::Fail;
+        return Error::NotReady;
     }
     c = static_cast<uint8_t>(b);
 	return Error::OK;
