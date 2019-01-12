@@ -55,7 +55,20 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
 static constexpr uint32_t ActivityLED = BUILTIN_LED;
+
+// Connections to Raspberry Pi:
+//
+//      Wemos                   RPi
+//      =====                   ===
+//      GPIO16 (D0)         ==> Reset pin
+//      SCK (GPIO14, D5)    ==> SCK (BCM11, pin 23)
+//      MOSI (GPIO13, D7)   ==> MOSI (BCM10, pin 19)
+//      MISO (GPIO12, D6)   ==> MISO (BCM9, pin 21)
+//      SS (GPIO15, D8)     ==> CE0 (BCM8, pin 24)
+
 static constexpr uint32_t RPiResetPin = 16;
+static constexpr uint32_t RPiRxPin = 4;
+static constexpr uint32_t RPiTxPin = 5;
 
 // Number of ms LED stays off in each mode
 constexpr uint32_t BlinkSampleRate = 2;
@@ -116,9 +129,7 @@ public:
     virtual const char* helpString() const override
     {
         return
-                "    debug [on/off] : turn debugging on/off\n"
                 "    reset [pi/esp] : resest Raspberry Pi or ESP\n"
-                "    pi             : switch to Raspberry Pi kernel console\n"
                 "    test <id>      : run one of the built-in tests\n"
                 "                         spi : run spi test\n"
         ;
@@ -141,13 +152,11 @@ public:
 
     virtual bool executeShellCommand(const std::vector<bare::String>& array) override
     {
-        if (array[0] == "pi") {
-            showMessage(MessageType::Error, "not yet implemented\n");
-        } else if (array[0] == "reset") {
+        if (array[0] == "reset") {
             if (array.size() < 2) {
                 showMessage(MessageType::Error, "use 'pi' or 'esp' to reset\n");
             } else if (array[1] == "pi") {
-                bare::Serial::printf("Resetting Raspberry Pi\n");
+                showMessage(MessageType::Info, "Resetting Raspberry Pi\n");
                 bare::GPIO::setPin(RPiResetPin, true);
                 bare::GPIO::setFunction(RPiResetPin, bare::GPIO::Function::Output);
                 bare::Timer::usleep(10000);
@@ -157,13 +166,11 @@ public:
                 bare::Timer::usleep(100000);
                 bare::GPIO::setFunction(RPiResetPin, bare::GPIO::Function::Input);
             } else if (array[1] == "esp") {
-                bare::Serial::printf("Resetting ESP\n");
+                showMessage(MessageType::Info, "Resetting ESP\n");
                 bare::restart();
             } else {
                 showMessage(MessageType::Error, "invalid test command\n");
             }
-        } else if (array[0] == "debug") {
-            showMessage(MessageType::Info, "Debug true\n");
         } else if (array[0] == "test") {
             if (array.size() < 2) {
                 showMessage(MessageType::Error, "need a test command\n");
@@ -222,13 +229,7 @@ void startWifi()
 void setup()
 {
     bare::Serial::init(115200);
-
-    bare::Float f = 1234.56;
-    bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
-
-    bare::Serial::printf("\n\nHex value = %#010x\n\n", 0x1234);
-    bare::Serial::printf("\n\nFloat value = %g\n\n", bare::Float(1234.5078).toArg());
-
+    
     bare::Serial::printf("\n\nPlacid Wifi v0.1\n\n");
 
     blinker.setRate(IdleRate);
