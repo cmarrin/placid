@@ -64,12 +64,6 @@ void Timer::stop(Timer*)
     // FIXME: Implement
 }
 
-void Timer::usleep(uint32_t us)
-{
-    int64_t t0 = Timer::systemTime();
-    while(Timer::systemTime() < t0 + us) ;
-}
-
 void Timer::setCurrentTime(const RealTime& t)
 {
     _epochOffset = t.usSinceEpoch() - systemTime();

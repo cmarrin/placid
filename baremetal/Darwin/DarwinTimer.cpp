@@ -66,3 +66,10 @@ int64_t Timer::systemTime()
     gettimeofday(&time, NULL);
     return ((static_cast<int64_t>(time.tv_sec)) * 1000000) + (static_cast<int64_t>(time.tv_usec));
 }
+
+void Timer::usleep(uint32_t us)
+{
+    int64_t t0 = systemTime();
+    while(systemTime() < t0 + us) ;
+}
+

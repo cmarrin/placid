@@ -130,3 +130,9 @@ int64_t Timer::systemTime()
 {
     return (static_cast<int64_t>(systemTimer().counter1) << 32) | static_cast<int64_t>(systemTimer().counter0);
 }
+
+void Timer::usleep(uint32_t us)
+{
+    int64_t t0 = systemTime();
+    while(systemTime() < t0 + us) ;
+}
