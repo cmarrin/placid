@@ -43,6 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
+#include "bare/Serial.h"
+
 #include <Ticker.h>
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <DNSServer.h>
