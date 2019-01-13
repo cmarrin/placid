@@ -121,35 +121,38 @@ static void testSPI()
 {
     bare::SPISlave spi;
     spi.init();
-    int thingsDone = 0;
+    bool finished = false;
     
-    spi.setDataReceivedFunction([&thingsDone](uint8_t* data, uint8_t size) {
+    spi.setDataReceivedFunction([&spi](uint8_t* data, uint8_t size) {
+        spi.setStatus(0);
         bare::String s(reinterpret_cast<const char*>(data), size);
         bare::Serial::printf("SPI receivedData (%d):'%s'\n", size, s.c_str());
-        thingsDone++;
+        spi.setData(reinterpret_cast<const uint8_t*>("I am here."), 11);
+        
+        // Let master know that I am both ready to receive more data and that I have sent some data
+        spi.setStatus(0x03);
     });
     
-    spi.setDataSentFunction([&thingsDone]() {
+    spi.setDataSentFunction([&spi, &finished]() {
+        spi.setStatus(0x01);
         bare::Serial::printf("SPI data sent\n");
-        thingsDone++;
+        finished = true;
     });
     
-    spi.setStatusReceivedFunction([&thingsDone](uint32_t status) {
+    spi.setStatusReceivedFunction([](uint32_t status) {
         bare::Serial::printf("SPI status received:0x%02x\n", status);
-        thingsDone++;
     });
     
-    spi.setStatusSentFunction([&thingsDone]() {
+    spi.setStatusSentFunction([]() {
         bare::Serial::printf("SPI status sent\n");
-        thingsDone++;
     });
     
-    spi.setStatus(0xa5);
-    spi.setData(reinterpret_cast<const uint8_t*>("Hello World!!!\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"), 32);
+    // Tell the master that the slave is ready to receive data
+    spi.setStatus(0x01);
     
     // Wait 10 seconds for it to finish
     for (int i = 0; i < 100; ++i) {
-        if (thingsDone >= 4) {
+        if (finished) {
             bare::Serial::printf("SPI test succeeded!!!\n");
             return;
         }

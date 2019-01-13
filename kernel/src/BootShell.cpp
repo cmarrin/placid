@@ -47,58 +47,76 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace placid;
 
+static bool waitForSlaveBitSet(bare::SPIMaster* spi, uint8_t bit)
+{
+    for (int i = 0; i < 100; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            uint32_t status = spi->receiveStatus(1);
+            if (status & bit) {
+                return true;
+            }
+        }
+        bare::Timer::usleep(1000);
+    }
+    return false;
+}
+
 static void testSPI()
 {
     bare::SPIMaster spi;
     spi.init();
     
-    uint32_t status = spi.receiveStatus();
-    bare::Serial::printf("Received status:0x%08x\n", status);
-    
-    bare::Timer::usleep(100000);
+    // Wait for slave to be ready to receive data
+    if (!waitForSlaveBitSet(&spi, 0x01)) {
+        bare::Serial::printf("*** Error: timeout waiting for slave to be ready to receive data\n");
+        return;
+    }
 
-    spi.sendStatus(0x5a, 1);
-    bare::Serial::printf("Sent status\n");
-    
-    bare::Timer::usleep(100000);
-
-    const char* str = "From Master!!!";
+    bare::Serial::printf("Slave ready\n");
+    const char* str = "Are you there?";
     spi.sendData(reinterpret_cast<const uint8_t*>(str), 15);
-    bare::Serial::printf("Sent data\n");
+    bare::Serial::printf("Sent data from master to slave\n");
     
-    bare::Timer::usleep(100000);
+    // Wait for slave to have data to send
+    if (!waitForSlaveBitSet(&spi, 0x02)) {
+        bare::Serial::printf("*** Error: timeout waiting for slave to have data to send\n");
+        return;
+    }
 
     uint8_t buffer[15];
     spi.receiveData(buffer, 15);
-    bare::Serial::printf("Received data:'%s'\n", buffer);
-    
-    // Test WiFiSpi
-//    bare::WiFiSpi wifi(&spi);
-//
-//    wifi.init();
-//
-//    // check for the presence of the ESP module:
-//    bare::WiFiSpi::Status status = wifi.status();
-//    if (status == bare::WiFiSpi::Status::NoShield) {
-//        bare::Serial::printf("WiFi module not present");
-//    } else {
-//        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
-//        
-//        bare::String fv = wifi.firmwareVersion();
-//        if (fv != "0.1.2") {
-//            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
-//        } else {
-//            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
-//            while (status != bare::WiFiSpi::Status::Connected) {
-//                bare::Serial::printf("Wifi status: %d\n", status);
-//                bare::Timer::usleep(1000000);
-//                status = wifi.status();
-//            }
-//
-//            // you're connected now, so print out the data:
-//            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
-//        }
-//    }
+    bare::Serial::printf("Received data from slave:'%s'\n", buffer);
+}
+
+static void testWifi()
+{
+    bare::SPIMaster spi;
+    spi.init();
+    bare::WiFiSpi wifi(&spi);
+    wifi.init();
+
+    // check for the presence of the ESP module:
+    bare::WiFiSpi::Status status = wifi.status();
+    if (status == bare::WiFiSpi::Status::NoShield) {
+        bare::Serial::printf("WiFi module not present");
+    } else {
+        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
+        
+        bare::String fv = wifi.firmwareVersion();
+        if (fv != "0.1.2") {
+            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
+        } else {
+            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
+            while (status != bare::WiFiSpi::Status::Connected) {
+                bare::Serial::printf("Wifi status: %d\n", status);
+                bare::Timer::usleep(1000000);
+                status = wifi.status();
+            }
+
+            // you're connected now, so print out the data:
+            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
+        }
+    }
 }
 
 static void testDraw()
@@ -291,6 +309,9 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
         } else if (array[1] == "spi") {
             bare::Serial::printf("SPI test\n");
             testSPI();
+        } else if (array[1] == "wifi") {
+            bare::Serial::printf("Wifi (ESP) test\n");
+            testWifi();
         } else if (array[1] == "draw") {
             bare::Serial::printf("GPU Drawing test\n");
             testDraw();
