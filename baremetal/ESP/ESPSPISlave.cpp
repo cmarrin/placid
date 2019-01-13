@@ -77,7 +77,7 @@ static void _onStatusSent(void *arg)
 void SPISlave::init(EnablePolarity, ClockEdge, ClockPolarity)
 {
     // FIXME: handle EnablePolarity, ClockEdge, ClockPolarity
-    hspi_slave_begin(4, this);
+    hspi_slave_begin(1, this);
     hspi_slave_onData(_onDataReceived);
     hspi_slave_onDataSent(_onDataSent);
     hspi_slave_onStatus(_onStatusReceived);

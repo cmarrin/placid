@@ -135,7 +135,7 @@ static void testSPI()
     });
     
     spi.setStatusReceivedFunction([&thingsDone](uint32_t status) {
-        bare::Serial::printf("SPI status received:0x%08x\n", status);
+        bare::Serial::printf("SPI status received:0x%02x\n", status);
         thingsDone++;
     });
     
@@ -144,7 +144,7 @@ static void testSPI()
         thingsDone++;
     });
     
-    spi.setStatus(0xdeadbeef);
+    spi.setStatus(0xa5);
     spi.setData(reinterpret_cast<const uint8_t*>("Hello World!!!\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"), 32);
     
     // Wait 10 seconds for it to finish

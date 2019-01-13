@@ -57,7 +57,7 @@ static void testSPI()
     
     bare::Timer::usleep(100000);
 
-    spi.sendStatus(0xfeedfade);
+    spi.sendStatus(0x5a, 1);
     bare::Serial::printf("Sent status\n");
     
     bare::Timer::usleep(100000);
