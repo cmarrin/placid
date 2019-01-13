@@ -46,6 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/GPIO.h"
 #include "bare/Serial.h"
 #include "bare/Shell.h"
+#include "bare/SpiSlave.h"
 #include "bare/Timer.h"
 
 #include <Ticker.h>
@@ -118,7 +119,45 @@ Blinker blinker;
 
 static void testSPI()
 {
-    // FIXME: Implement
+    bare::SPISlave spi;
+    spi.init();
+    int thingsDone = 0;
+    
+    spi.setDataReceivedFunction([&thingsDone](uint8_t* data, uint8_t size) {
+        bare::String s(reinterpret_cast<const char*>(data), size);
+        bare::Serial::printf("SPI receivedData (%d):'%s'\n", size, s.c_str());
+        thingsDone++;
+    });
+    
+    spi.setDataSentFunction([&thingsDone]() {
+        bare::Serial::printf("SPI data sent\n");
+        thingsDone++;
+    });
+    
+    spi.setStatusReceivedFunction([&thingsDone](uint32_t status) {
+        bare::Serial::printf("SPI status received:0x%08x\n", status);
+        thingsDone++;
+    });
+    
+    spi.setStatusSentFunction([&thingsDone]() {
+        bare::Serial::printf("SPI status sent\n");
+        thingsDone++;
+    });
+    
+    spi.setStatus(0xdeadbeef);
+    spi.setData(reinterpret_cast<const uint8_t*>("Hello World!!!\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"), 32);
+    
+    // Wait 10 seconds for it to finish
+    for (int i = 0; i < 100; ++i) {
+        if (thingsDone >= 4) {
+            bare::Serial::printf("SPI test succeeded!!!\n");
+            return;
+        }
+        
+        bare::Timer::usleep(100000);
+        yield();
+    }
+    bare::Serial::printf("******** SPI test timed out\n");
 }
 
 class MyShell : public bare::Shell

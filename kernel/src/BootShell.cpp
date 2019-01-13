@@ -49,34 +49,56 @@ using namespace placid;
 
 static void testSPI()
 {
+    bare::SPIMaster spi;
+    spi.init();
+    
+    uint32_t status = spi.receiveStatus();
+    bare::Serial::printf("Received status:0x%08x\n", status);
+    
+    bare::Timer::usleep(100000);
+
+    spi.sendStatus(0xfeedfade);
+    bare::Serial::printf("Sent status\n");
+    
+    bare::Timer::usleep(100000);
+
+    const char* str = "From Master!!!";
+    spi.sendData(reinterpret_cast<const uint8_t*>(str), 15);
+    bare::Serial::printf("Sent data\n");
+    
+    bare::Timer::usleep(100000);
+
+    uint8_t buffer[15];
+    spi.receiveData(buffer, 15);
+    bare::Serial::printf("Received data:'%s'\n", buffer);
+    
     // Test WiFiSpi
-    bare::SPI spi;
-    bare::WiFiSpi wifi(&spi);
-
-    wifi.init();
-
-    // check for the presence of the ESP module:
-    bare::WiFiSpi::Status status = wifi.status();
-    if (status == bare::WiFiSpi::Status::NoShield) {
-        bare::Serial::printf("WiFi module not present");
-    } else {
-        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
-        
-        bare::String fv = wifi.firmwareVersion();
-        if (fv != "0.1.2") {
-            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
-        } else {
-            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
-            while (status != bare::WiFiSpi::Status::Connected) {
-                bare::Serial::printf("Wifi status: %d\n", status);
-                bare::Timer::usleep(1000000);
-                status = wifi.status();
-            }
-
-            // you're connected now, so print out the data:
-            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
-        }
-    }
+//    bare::WiFiSpi wifi(&spi);
+//
+//    wifi.init();
+//
+//    // check for the presence of the ESP module:
+//    bare::WiFiSpi::Status status = wifi.status();
+//    if (status == bare::WiFiSpi::Status::NoShield) {
+//        bare::Serial::printf("WiFi module not present");
+//    } else {
+//        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
+//        
+//        bare::String fv = wifi.firmwareVersion();
+//        if (fv != "0.1.2") {
+//            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
+//        } else {
+//            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
+//            while (status != bare::WiFiSpi::Status::Connected) {
+//                bare::Serial::printf("Wifi status: %d\n", status);
+//                bare::Timer::usleep(1000000);
+//                status = wifi.status();
+//            }
+//
+//            // you're connected now, so print out the data:
+//            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
+//        }
+//    }
 }
 
 static void testDraw()
