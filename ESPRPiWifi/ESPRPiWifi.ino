@@ -133,14 +133,16 @@ static void testSPI()
         spi.setStatus(0x03);
     });
     
-    spi.setDataSentFunction([&spi, &finished]() {
+    spi.setDataSentFunction([&spi]() {
         spi.setStatus(0x01);
         bare::Serial::printf("SPI data sent\n");
-        finished = true;
     });
     
-    spi.setStatusReceivedFunction([](uint32_t status) {
+    spi.setStatusReceivedFunction([&finished](uint32_t status) {
         bare::Serial::printf("SPI status received:0x%02x\n", status);
+        if (status & 0x04) {
+            finished = true;
+        }
     });
     
     spi.setStatusSentFunction([]() {

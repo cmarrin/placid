@@ -66,26 +66,31 @@ static void testSPI()
     bare::SPIMaster spi;
     spi.init();
     
-    // Wait for slave to be ready to receive data
-    if (!waitForSlaveBitSet(&spi, 0x01)) {
-        bare::Serial::printf("*** Error: timeout waiting for slave to be ready to receive data\n");
-        return;
-    }
+    for (int i = 0; i < 10; ++i) {
+        // Wait for slave to be ready to receive data
+        if (!waitForSlaveBitSet(&spi, 0x01)) {
+            bare::Serial::printf("*** Error: timeout waiting for slave to be ready to receive data\n");
+            return;
+        }
 
-    bare::Serial::printf("Slave ready\n");
-    const char* str = "Are you there?";
-    spi.sendData(reinterpret_cast<const uint8_t*>(str), 15);
-    bare::Serial::printf("Sent data from master to slave\n");
+        bare::Serial::printf("Slave ready\n");
+        const char* str = "Are you there?";
+        spi.sendData(reinterpret_cast<const uint8_t*>(str), 15);
+        bare::Serial::printf("Sent data from master to slave\n");
+        
+        // Wait for slave to have data to send
+        if (!waitForSlaveBitSet(&spi, 0x02)) {
+            bare::Serial::printf("*** Error: timeout waiting for slave to have data to send\n");
+            return;
+        }
+
+        uint8_t buffer[15];
+        spi.receiveData(buffer, 15);
+        bare::Serial::printf("Received data from slave:'%s'\n", buffer);
+    }
     
-    // Wait for slave to have data to send
-    if (!waitForSlaveBitSet(&spi, 0x02)) {
-        bare::Serial::printf("*** Error: timeout waiting for slave to have data to send\n");
-        return;
-    }
-
-    uint8_t buffer[15];
-    spi.receiveData(buffer, 15);
-    bare::Serial::printf("Received data from slave:'%s'\n", buffer);
+    spi.sendStatus(0x04, 1);
+    bare::Serial::printf("Sent test finished status\n");
 }
 
 static void testWifi()
