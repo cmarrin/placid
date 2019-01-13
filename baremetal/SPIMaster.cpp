@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 //#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
+#include <algorithm>
 
 using namespace bare;
 
@@ -47,20 +48,27 @@ static constexpr uint8_t WriteData = 0x02;
 static constexpr uint8_t ReadData = 0x03;
 static constexpr uint8_t ReadStatus = 0x04;
 
-void SPIMaster::sendStatus(uint32_t status)
+void SPIMaster::sendStatus(uint32_t status, uint8_t statusByteCount)
 {
-    startTransfer(0);
+    statusByteCount = std::max(std::min(static_cast<int>(statusByteCount), 4), 1);
+    startTransfer();
     transferByte(WriteStatus);
     transferByte(status & 0xff);
-    transferByte(status >> 8 & 0xff);
-    transferByte(status >> 16 & 0xff);
-    transferByte(status >> 24 & 0xff);
+    if (statusByteCount > 1) {
+        transferByte(status >> 8 & 0xff);
+    }
+    if (statusByteCount > 2) {
+        transferByte(status >> 16 & 0xff);
+    }
+    if (statusByteCount > 3) {
+        transferByte(status >> 24 & 0xff);
+    }
     endTransfer();
 }
 
 void SPIMaster::sendData(const uint8_t* data, uint8_t size)
 {
-    startTransfer(0);
+    startTransfer();
     transferByte(WriteData);
     transferByte(0);
     for (int i = 0; i < size; i++) {
@@ -69,22 +77,28 @@ void SPIMaster::sendData(const uint8_t* data, uint8_t size)
     endTransfer();
 }
 
-uint32_t SPIMaster::receiveStatus()
+uint32_t SPIMaster::receiveStatus(uint8_t statusByteCount)
 {
-    startTransfer(0);
+    statusByteCount = std::max(std::min(static_cast<int>(statusByteCount), 4), 1);
+    startTransfer();
     transferByte(ReadStatus);
-    uint32_t status = 
-        static_cast<uint32_t>(transferByte(0)) + 
-        (static_cast<uint32_t>(transferByte(0)) << 8) +
-        (static_cast<uint32_t>(transferByte(0)) << 16) +
-        (static_cast<uint32_t>(transferByte(0)) << 24);
+    uint32_t status = transferByte(0);
+    if (statusByteCount > 1) {
+        status += static_cast<uint32_t>(transferByte(0)) << 8;
+    }
+    if (statusByteCount > 2) {
+        status += static_cast<uint32_t>(transferByte(0)) << 16;
+    }
+    if (statusByteCount > 3) {
+        status += static_cast<uint32_t>(transferByte(0)) << 24;
+    }
     endTransfer();
     return status;
 }
 
 uint8_t SPIMaster::receiveData(uint8_t* data, uint8_t maxSize)
 {
-    startTransfer(0);
+    startTransfer();
     transferByte(ReadData);
     transferByte(0);
     for (int i = 0; i < maxSize; i++) {

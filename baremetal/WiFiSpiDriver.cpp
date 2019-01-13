@@ -178,7 +178,7 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
 
 uint32_t WiFiSpiDriver::readStatus()
 {
-    _spi->startTransfer(5);
+    _spi->startTransfer();
     _spi->transferByte(static_cast<uint8_t>(Command::READSTATUS));
     uint32_t status = _spi->transferByte(0);
     status |= static_cast<uint32_t>(_spi->transferByte(0)) << 8;
@@ -286,7 +286,7 @@ void WiFiSpiDriver::write(uint8_t c)
 
 void WiFiSpiDriver::fillBuffer()
 {
-    _spi->startTransfer(BufferSizeMax + 2);
+    _spi->startTransfer();
     
     _spi->transferByte(static_cast<uint8_t>(Command::READDATA));
     _spi->transferByte(0x00);
@@ -302,7 +302,7 @@ void WiFiSpiDriver::writeBuffer()
     uint8_t i = 0;
     uint8_t len = _bufferSize + 1;
     
-    _spi->startTransfer(BufferSizeMax + 2);
+    _spi->startTransfer();
     
     _spi->transferByte(static_cast<uint8_t>(Command::WRITEDATA));
     _spi->transferByte(0x00);

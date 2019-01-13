@@ -67,9 +67,9 @@ int32_t SPIMaster::readWrite(char* readBuf, const char* writeBuf, int32_t size)
     return size;
 }
 
-void SPIMaster::startTransfer(uint32_t size)
+void SPIMaster::startTransfer()
 {
-    showSim("startTransfer(%d)\n", size);
+    showSim("startTransfer\n");
 }
 
 uint32_t SPIMaster::transferByte(uint8_t b)

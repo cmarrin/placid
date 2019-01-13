@@ -152,7 +152,7 @@ namespace bare {
         
         bool readAndCheckByte(uint8_t expected, const char* err)
         {
-            _spi->startTransfer(BufferSizeMax + 2);
+            _spi->startTransfer();
             uint32_t value = _spi->transferByte(0);
             bool success = true;
             if (value == SPIMaster::ErrorByte) {

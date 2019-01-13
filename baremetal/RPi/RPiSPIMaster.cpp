@@ -155,9 +155,9 @@ int32_t SPIMaster::readWrite(char* readBuf, const char* writeBuf, int32_t size)
     return (int) size;
 }
 
-void SPIMaster::startTransfer(uint32_t size)
+void SPIMaster::startTransfer()
 {
-    DEBUG_LOG("SPIMaster:startTransfer(%d)\n", size);
+    DEBUG_LOG("SPIMaster:startTransfer\n");
     //GPIO::setFunction(8, GPIO::Function::Alt0);
     spi().CS = spi().CS | SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
     DEBUG_LOG("    CS=0x%08x\n", spi().CS);

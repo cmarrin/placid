@@ -58,14 +58,14 @@ namespace bare {
         
         static void init(EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
         
-        static void sendStatus(uint32_t status);
+        static void sendStatus(uint32_t status, uint8_t statusByteCount);
         static void sendData(const uint8_t* data, uint8_t size);
-        static uint32_t receiveStatus();
+        static uint32_t receiveStatus(uint8_t statusByteCount);
         static uint8_t receiveData(uint8_t* data, uint8_t maxSize);
         
         static int32_t readWrite(char* readBuf, const char* writeBuf, int32_t);
 
-        static void startTransfer(uint32_t size);
+        static void startTransfer();
         static uint32_t transferByte(uint8_t b);
         static void endTransfer();
         
