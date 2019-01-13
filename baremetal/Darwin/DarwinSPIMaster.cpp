@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/SPI.h"
+#include "bare/SPIMaster.h"
 
 #include "bare/Serial.h"
 
@@ -45,17 +45,17 @@ static void showSim(const char* format, ...)
 {
     va_list args;
     va_start(args, format);
-    Serial::printf("[SPI Sim]===> ");
+    Serial::printf("[SPIMaster Sim]===> ");
     Serial::vprintf(format, args);
     va_end(args);
 }
 
-void SPI::init(EnablePolarity, ClockEdge, ClockPolarity)
+void SPIMaster::init(EnablePolarity, ClockEdge, ClockPolarity)
 {
     showSim("init\n");
 }
 
-int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
+int32_t SPIMaster::readWrite(char* readBuf, const char* writeBuf, int32_t size)
 {
     showSim("readWrite %d bytes:");
     if (writeBuf) {
@@ -67,23 +67,23 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
     return size;
 }
 
-void SPI::startTransfer(uint32_t size)
+void SPIMaster::startTransfer(uint32_t size)
 {
     showSim("startTransfer(%d)\n", size);
 }
 
-uint32_t SPI::transferByte(uint8_t b)
+uint32_t SPIMaster::transferByte(uint8_t b)
 {
     showSim("transferByte(0x%02x)\n", b);
     return AnyByte;
 }
 
-void SPI::endTransfer()
+void SPIMaster::endTransfer()
 {
     showSim("endTransfer\n");
 }
 
-bool SPI::simulatedData()
+bool SPIMaster::simulatedData()
 {
     return true;
 }

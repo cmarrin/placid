@@ -53,7 +53,7 @@ PLATFORMSRC = \
 	RPi/RPiMutex.cpp \
 	RPi/RPiSDCard.cpp \
 	RPi/RPiSerial.cpp \
-	RPi/RPiSPI.cpp \
+	RPi/RPiSPIMaster.cpp \
 	RPi/RPiTimer.cpp \
 	
 SRC = \

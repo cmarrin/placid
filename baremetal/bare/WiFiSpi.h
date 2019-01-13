@@ -76,7 +76,7 @@ namespace bare {
             Success         = 129,
         };
         
-        WiFiSpi(SPI* spi) : _driver(spi) { }
+        WiFiSpi(SPIMaster* spi) : _driver(spi) { }
         
         /*
          * Initialization of the library.

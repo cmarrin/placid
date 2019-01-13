@@ -35,12 +35,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/SPI.h"
+#include "bare/SPIMaster.h"
 
 #include "bare/GPIO.h"
 #include "bare/Timer.h"
 
-#define ENABLE_DEBUG_LOG
+//#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
 
 using namespace bare;
@@ -77,7 +77,6 @@ struct SPI0 {
     uint32_t DC;
 };
 
-
 static constexpr uint32_t SPI0Base = 0x20204000;
 
 inline volatile SPI0& spi()
@@ -85,9 +84,9 @@ inline volatile SPI0& spi()
     return *(reinterpret_cast<volatile SPI0*>(SPI0Base));
 }
 
-void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity clockPol)
+void SPIMaster::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity clockPol)
 {
-    DEBUG_LOG("SPI:Initializing\n");
+    DEBUG_LOG("SPIMaster:Initializing\n");
 
     // Make sure CS is set as an input. Only switch it to its Alt0 mode when sending 
     //GPIO::setFunction(8, GPIO::Function::Input);
@@ -112,12 +111,12 @@ void SPI::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity cloc
     
     // FIXME: Wait a bit for things to settle. Not sure if we need this
     Timer::usleep(1000); 
-    DEBUG_LOG("SPI:Initialization complete\n");
+    DEBUG_LOG("SPIMaster:Initialization complete\n");
 }
 
-int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
+int32_t SPIMaster::readWrite(char* readBuf, const char* writeBuf, int32_t size)
 {
-    DEBUG_LOG("SPI:readWrite: readBuf=0x%p, writeBuf=0x%p, size=%d\n", readBuf, writeBuf, size);
+    DEBUG_LOG("SPIMaster:readWrite: readBuf=0x%p, writeBuf=0x%p, size=%d\n", readBuf, writeBuf, size);
 
     spi().DLEN = static_cast<uint32_t>(size);
     spi().CS = (spi().CS & ~SPI0::WhichCS) | SPI0::CLEAR_RX | SPI0::CLEAR_TX | SPI0::TA;
@@ -125,23 +124,23 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
     int32_t writeCount = 0;
     int32_t readCount = 0;
 
-    DEBUG_LOG("SPI:readWrite: before read/write CS=0x%08x\n", spi().CS);
+    DEBUG_LOG("SPIMaster:readWrite: before read/write CS=0x%08x\n", spi().CS);
 
     while (writeCount < size || readCount < size) {
         for ( ; writeCount < size && (spi().CS & SPI0::TXD); ++writeCount) {
-            DEBUG_LOG("SPI:readWrite: writing '%c'\n", *writeBuf);
+            DEBUG_LOG("SPIMaster:readWrite: writing '%c'\n", *writeBuf);
             spi().FIFO = writeBuf ? *writeBuf++ : 0;
         }
         
         for (; readCount < size && (spi().CS & SPI0::RXD); ++readCount) {
             if (readBuf) {
                 *readBuf++ = spi().FIFO;
-                DEBUG_LOG("SPI:readWrite: reading '%c'\n", *(readBuf - 1));
+                DEBUG_LOG("SPIMaster:readWrite: reading '%c'\n", *(readBuf - 1));
             }
         }
     }
     
-    DEBUG_LOG("SPI:readWrite: finished read/write, wait for done\n");
+    DEBUG_LOG("SPIMaster:readWrite: finished read/write, wait for done\n");
     while (!(spi().CS & SPI0::DONE)) {
         while (spi().CS & SPI0::RXD) {
             uint32_t volatile dummy = spi().FIFO;
@@ -152,13 +151,13 @@ int32_t SPI::readWrite(char* readBuf, const char* writeBuf, int32_t size)
     Timer::usleep(1000);
     spi().CS = spi().CS & ~SPI0::TA;
     
-    DEBUG_LOG("SPI:readWrite: finished, return\n");
+    DEBUG_LOG("SPIMaster:readWrite: finished, return\n");
     return (int) size;
 }
 
-void SPI::startTransfer(uint32_t size)
+void SPIMaster::startTransfer(uint32_t size)
 {
-    DEBUG_LOG("SPI:startTransfer(%d)\n", size);
+    DEBUG_LOG("SPIMaster:startTransfer(%d)\n", size);
     //GPIO::setFunction(8, GPIO::Function::Alt0);
     spi().CS = spi().CS | SPI0::TA | SPI0::CLEAR_RX | SPI0::CLEAR_TX;
     DEBUG_LOG("    CS=0x%08x\n", spi().CS);
@@ -175,33 +174,33 @@ static inline bool wait(uint32_t csBit)
     return false;
 }
 
-uint32_t SPI::transferByte(uint8_t b)
+uint32_t SPIMaster::transferByte(uint8_t b)
 {
     if (!wait(SPI0::TXD)) {
-        ERROR_LOG("SPI:transferByte timeout on TXD\n");
+        ERROR_LOG("SPIMaster:transferByte timeout on TXD\n");
         return ErrorByte;
     }
     spi().FIFO = b;
-    DEBUG_LOG("SPI:transferByte sent %#02x\n", b);
+    DEBUG_LOG("SPIMaster:transferByte sent %#02x\n", b);
     if (!wait(SPI0::RXD)) {
-        ERROR_LOG("SPI:transferByte timeout on RXD\n");
+        ERROR_LOG("SPIMaster:transferByte timeout on RXD\n");
         return ErrorByte;
     }
     b = spi().FIFO;
-    DEBUG_LOG("SPI:transferByte received %#02x\n", b);
+    DEBUG_LOG("SPIMaster:transferByte received %#02x\n", b);
     return b;
 }
 
-void SPI::endTransfer()
+void SPIMaster::endTransfer()
 {
     while((spi().CS & SPI0::DONE) == 0) ;
     spi().CS = spi().CS & ~SPI0::TA & ~SPI0::CLEAR_RX & ~SPI0::CLEAR_TX;
     Timer::usleep(1000); 
     //GPIO::setFunction(8, GPIO::Function::Input);
-    DEBUG_LOG("SPI:endTransfer, CS=0x%08x\n", spi().CS);
+    DEBUG_LOG("SPIMaster:endTransfer, CS=0x%08x\n", spi().CS);
 }
 
-bool SPI::simulatedData()
+bool SPIMaster::simulatedData()
 {
     return false;
 }

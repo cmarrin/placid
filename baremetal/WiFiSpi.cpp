@@ -24,7 +24,7 @@
 
 #include "bare/WiFiSpi.h"
 
-#include "bare/SPI.h"
+#include "bare/SPIMaster.h"
 
 #define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
@@ -43,7 +43,7 @@ void WiFiSpi::init(int8_t pin, uint32_t max_speed)
         pin = SS;
     }
     
-    SPI::init(SPI::EnablePolarity::ActiveLow, SPI::ClockEdge::Falling, SPI::ClockPolarity::ActiveLow);
+    SPIMaster::init(SPIMaster::EnablePolarity::ActiveLow, SPIMaster::ClockEdge::Falling, SPIMaster::ClockPolarity::ActiveLow);
     
 //    if (max_speed != 0)
 //        spi_obj->beginTransaction(SPISettings(max_speed, MSBFIRST, SPI_MODE0));

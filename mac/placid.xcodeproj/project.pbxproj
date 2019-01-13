@@ -23,7 +23,7 @@
 		494FD6132199D17F005C2A6B /* DarwinSerial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */; };
 		494FD6142199D18B005C2A6B /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6112199D070005C2A6B /* Serial.cpp */; };
 		494FD61B2199D3DD005C2A6B /* DarwinTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */; };
-		494FD61D2199D571005C2A6B /* DarwinSPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */; };
+		494FD61D2199D571005C2A6B /* DarwinSPIMaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6152199D2E2005C2A6B /* DarwinSPIMaster.cpp */; };
 		494FD6212199E64F005C2A6B /* Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 494FD61F2199E64F005C2A6B /* Memory.h */; };
 		494FD6232199E6D1005C2A6B /* DarwinMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */; };
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
@@ -72,6 +72,7 @@
 		49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC404E21C19BA000D62847 /* DarwinMutex.cpp */; };
 		49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC405121C19CCA00D62847 /* RPiMutex.cpp */; };
 		49E887EB21E7FA0D0035DD64 /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887E921E7F9FA0035DD64 /* Shell.cpp */; };
+		49E887FB21EB7FD00035DD64 /* SPIMaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,8 +178,8 @@
 		494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSDCard.cpp; path = ../baremetal/Darwin/DarwinSDCard.cpp; sourceTree = "<group>"; };
 		494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSerial.cpp; path = ../baremetal/Darwin/DarwinSerial.cpp; sourceTree = "<group>"; };
 		494FD6112199D070005C2A6B /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../baremetal/Serial.cpp; sourceTree = "<group>"; };
-		494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSPI.cpp; path = ../baremetal/Darwin/DarwinSPI.cpp; sourceTree = "<group>"; };
-		494FD6162199D2E2005C2A6B /* RPiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSPI.cpp; path = ../baremetal/RPi/RPiSPI.cpp; sourceTree = "<group>"; };
+		494FD6152199D2E2005C2A6B /* DarwinSPIMaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinSPIMaster.cpp; path = ../baremetal/Darwin/DarwinSPIMaster.cpp; sourceTree = "<group>"; };
+		494FD6162199D2E2005C2A6B /* RPiSPIMaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSPIMaster.cpp; path = ../baremetal/RPi/RPiSPIMaster.cpp; sourceTree = "<group>"; };
 		494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinTimer.cpp; path = ../baremetal/Darwin/DarwinTimer.cpp; sourceTree = "<group>"; };
 		494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiTimer.cpp; path = ../baremetal/RPi/RPiTimer.cpp; sourceTree = "<group>"; };
 		494FD61E2199E64F005C2A6B /* RPiMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiMemory.cpp; path = ../baremetal/RPi/RPiMemory.cpp; sourceTree = "<group>"; };
@@ -216,7 +217,7 @@
 		496C3BB7217E225B004DBC22 /* FAT32RawFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FAT32RawFile.h; sourceTree = "<group>"; };
 		496C3BB9217E2368004DBC22 /* FAT32DirectoryIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32DirectoryIterator.cpp; path = ../baremetal/FAT32DirectoryIterator.cpp; sourceTree = "<group>"; };
 		496C3BBA217E2368004DBC22 /* FAT32DirectoryIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FAT32DirectoryIterator.h; sourceTree = "<group>"; };
-		496C3BBF21876279004DBC22 /* SPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPI.h; sourceTree = "<group>"; };
+		496C3BBF21876279004DBC22 /* SPIMaster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPIMaster.h; sourceTree = "<group>"; };
 		496C3BC221891FC2004DBC22 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		49731F74216E23AC00F9A79F /* FAT32.img */ = {isa = PBXFileReference; lastKnownFileType = file; name = FAT32.img; path = ../baremetal/FAT32.img; sourceTree = "<group>"; };
 		49731F78216E914500F9A79F /* XYModem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XYModem.cpp; path = ../baremetal/XYModem.cpp; sourceTree = "<group>"; };
@@ -410,7 +411,8 @@
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				49E887E821E7F9D80035DD64 /* Shell.h */,
-				496C3BBF21876279004DBC22 /* SPI.h */,
+				496C3BBF21876279004DBC22 /* SPIMaster.h */,
+				49E887F821EAB1A80035DD64 /* SPISlave.h */,
 				494FD64A21AB36D0005C2A6B /* String.h */,
 				492FF3FF215C5359003582FE /* Timer.h */,
 				492FF3EF215C4F72003582FE /* Volume.h */,
@@ -441,7 +443,7 @@
 				49BC404E21C19BA000D62847 /* DarwinMutex.cpp */,
 				494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */,
 				494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */,
-				494FD6152199D2E2005C2A6B /* DarwinSPI.cpp */,
+				494FD6152199D2E2005C2A6B /* DarwinSPIMaster.cpp */,
 				494FD6192199D3DD005C2A6B /* DarwinTimer.cpp */,
 			);
 			name = Darwin;
@@ -461,7 +463,7 @@
 				49BC405121C19CCA00D62847 /* RPiMutex.cpp */,
 				4965788C2169805800B3F088 /* RPiSDCard.cpp */,
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
-				494FD6162199D2E2005C2A6B /* RPiSPI.cpp */,
+				494FD6162199D2E2005C2A6B /* RPiSPIMaster.cpp */,
 				494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */,
 				494FD628219B9E28005C2A6B /* idivmod.S */,
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
@@ -498,6 +500,7 @@
 				494FD634219F8951005C2A6B /* FloatFormatter.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
 				49E887E921E7F9FA0035DD64 /* Shell.cpp */,
+				49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */,
 				494FD64B21AB36E4005C2A6B /* String.cpp */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
@@ -737,6 +740,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
+				49E887FB21EB7FD00035DD64 /* SPIMaster.cpp in Sources */,
 				49166D4F21514C060077ACEE /* main.cpp in Sources */,
 				4992122821CDA4A700AA7656 /* init.cpp in Sources */,
 				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
@@ -775,7 +779,7 @@
 				49BC404C21C08BD700D62847 /* String.cpp in Sources */,
 				494FD6132199D17F005C2A6B /* DarwinSerial.cpp in Sources */,
 				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
-				494FD61D2199D571005C2A6B /* DarwinSPI.cpp in Sources */,
+				494FD61D2199D571005C2A6B /* DarwinSPIMaster.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

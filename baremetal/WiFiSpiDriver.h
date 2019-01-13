@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "bare/SPI.h"
+#include "bare/SPIMaster.h"
 #include <cstdint>
 
 #define ENABLE_DEBUG_LOG
@@ -101,7 +101,7 @@ namespace bare {
             char* value;
         };
         
-        WiFiSpiDriver(SPI* spi) : _spi(spi) { }
+        WiFiSpiDriver(SPIMaster* spi) : _spi(spi) { }
 
         void sendCmd(Command cmd, uint8_t numParam = 0);
         void endCmd();
@@ -155,7 +155,7 @@ namespace bare {
             _spi->startTransfer(BufferSizeMax + 2);
             uint32_t value = _spi->transferByte(0);
             bool success = true;
-            if (value == SPI::ErrorByte) {
+            if (value == SPIMaster::ErrorByte) {
                 ERROR_LOG("Timeout on %s cmd:expected %#02x\n", err, expected);
                 success = false;
             } else if (static_cast<uint8_t>(value) != expected && !_spi->simulatedData()) {
@@ -191,7 +191,7 @@ namespace bare {
         RxStatus waitForRxReady();
         TxStatus waitForTxReady();
         
-        SPI* _spi;
+        SPIMaster* _spi;
         
         static constexpr uint32_t BufferSizeMax = 32;
 
