@@ -73,10 +73,8 @@ static void testSPI()
             return;
         }
 
-        bare::Serial::printf("Slave ready\n");
         const char* str = "Are you there?";
         spi.sendData(reinterpret_cast<const uint8_t*>(str), 15);
-        bare::Serial::printf("Sent data from master to slave\n");
         
         // Wait for slave to have data to send
         if (!waitForSlaveBitSet(&spi, 0x02)) {
@@ -86,11 +84,15 @@ static void testSPI()
 
         uint8_t buffer[15];
         spi.receiveData(buffer, 15);
-        bare::Serial::printf("Received data from slave:'%s'\n", buffer);
+        if (strcmp("I am here.", reinterpret_cast<const char*>(buffer)) != 0) {
+            bare::Serial::printf("*** Error: no match, got '%s'\n", buffer);
+            return;
+        }
+        bare::Serial::printf("*");
     }
     
     spi.sendStatus(0x04, 1);
-    bare::Serial::printf("Sent test finished status\n");
+    bare::Serial::printf("\nDone.\n\n");
 }
 
 static void testWifi()

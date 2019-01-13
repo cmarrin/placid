@@ -123,10 +123,14 @@ static void testSPI()
     spi.init();
     bool finished = false;
     
-    spi.setDataReceivedFunction([&spi](uint8_t* data, uint8_t size) {
+    spi.setDataReceivedFunction([&spi, &finished](uint8_t* data, uint8_t size) {
         spi.setStatus(0);
         bare::String s(reinterpret_cast<const char*>(data), size);
-        bare::Serial::printf("SPI receivedData (%d):'%s'\n", size, s.c_str());
+        if (strcmp(reinterpret_cast<const char*>(data), "Are you there?") != 0) {
+            bare::Serial::printf("*** Error:No match, got '%s'\n", s.c_str());
+            finished = true;
+        }
+        
         spi.setData(reinterpret_cast<const uint8_t*>("I am here."), 11);
         
         // Let master know that I am both ready to receive more data and that I have sent some data
@@ -135,18 +139,15 @@ static void testSPI()
     
     spi.setDataSentFunction([&spi]() {
         spi.setStatus(0x01);
-        bare::Serial::printf("SPI data sent\n");
     });
     
     spi.setStatusReceivedFunction([&finished](uint32_t status) {
-        bare::Serial::printf("SPI status received:0x%02x\n", status);
         if (status & 0x04) {
             finished = true;
         }
     });
     
     spi.setStatusSentFunction([]() {
-        bare::Serial::printf("SPI status sent\n");
     });
     
     // Tell the master that the slave is ready to receive data
