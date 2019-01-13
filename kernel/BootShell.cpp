@@ -67,7 +67,7 @@ static void testSPI()
     bare::SPIMaster spi;
     spi.init();
     
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 50; ++i) {
         // Wait for slave to be ready to receive data
         if (!waitForSlaveBitSet(&spi, 0x01)) {
             bare::Serial::printf("*** Error: timeout waiting for slave to be ready to receive data\n");

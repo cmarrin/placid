@@ -132,6 +132,7 @@ static void testSPI()
         }
         
         spi.setData(reinterpret_cast<const uint8_t*>("I am here."), 11);
+        bare::Serial::printf("*");
         
         // Let master know that I am both ready to receive more data and that I have sent some data
         spi.setStatus(0x03);
@@ -156,14 +157,14 @@ static void testSPI()
     // Wait 10 seconds for it to finish
     for (int i = 0; i < 100; ++i) {
         if (finished) {
-            bare::Serial::printf("SPI test succeeded!!!\n");
+            bare::Serial::printf("\nSPI test succeeded!!!\n\n");
             return;
         }
         
         bare::Timer::usleep(100000);
         yield();
     }
-    bare::Serial::printf("******** SPI test timed out\n");
+    bare::Serial::printf("\n******** SPI test timed out\n\n");
 }
 
 class MyShell : public bare::Shell
