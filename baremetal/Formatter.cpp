@@ -123,17 +123,30 @@ static Length handleLength(const char*& format)
     return length;
 }
 
-static uintmax_t getInteger(Length length, VA_LIST& va)
+static uintmax_t getInteger(Length length, Signed sign, VA_LIST& va)
 {
-    switch(length) {
-    case Length::None: return static_cast<uintmax_t>(va_arg(va.value, int));
-    case Length::H: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xffff;
-    case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xff;
-    case Length::L: return static_cast<uintmax_t>(va_arg(va.value, long int));
-    case Length::LL: return static_cast<uintmax_t>(va_arg(va.value, long long int));
-    case Length::J: return static_cast<uintmax_t>(va_arg(va.value, intmax_t));
-    case Length::Z: return static_cast<uintmax_t>(va_arg(va.value, size_t));
-    case Length::T: return static_cast<uintmax_t>(va_arg(va.value, ptrdiff_t));
+    if (sign == Signed::Yes) {
+        switch(length) {
+        case Length::None: return static_cast<uintmax_t>(va_arg(va.value, int));
+        case Length::H: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xffff;
+        case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xff;
+        case Length::L: return static_cast<uintmax_t>(va_arg(va.value, long int));
+        case Length::LL: return static_cast<uintmax_t>(va_arg(va.value, long long int));
+        case Length::J: return static_cast<uintmax_t>(va_arg(va.value, intmax_t));
+        case Length::Z: return static_cast<uintmax_t>(va_arg(va.value, size_t));
+        case Length::T: return static_cast<uintmax_t>(va_arg(va.value, ptrdiff_t));
+        }
+    } else {
+        switch(length) {
+        case Length::None: return static_cast<uintmax_t>(va_arg(va.value, unsigned int));
+        case Length::H: return static_cast<uintmax_t>(va_arg(va.value, unsigned int)) & 0xffff;
+        case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, unsigned int)) & 0xff;
+        case Length::L: return static_cast<uintmax_t>(va_arg(va.value, unsigned long int));
+        case Length::LL: return static_cast<uintmax_t>(va_arg(va.value, unsigned long long int));
+        case Length::J: return static_cast<uintmax_t>(va_arg(va.value, intmax_t));
+        case Length::Z: return static_cast<uintmax_t>(va_arg(va.value, size_t));
+        case Length::T: return static_cast<uintmax_t>(va_arg(va.value, ptrdiff_t));
+        }
     }
     return 0;
 }
@@ -269,17 +282,17 @@ int32_t Formatter::vformat(Formatter::Generator gen, const char *format, va_list
         {
         case 'd':
         case 'i':
-            size += outInteger(gen, getInteger(length, va), Signed::Yes, width, precision, flags, 10, Formatter::Capital::No);
+            size += outInteger(gen, getInteger(length, Signed::Yes, va), Signed::Yes, width, precision, flags, 10, Formatter::Capital::No);
             break;
         case 'u':
-            size += outInteger(gen, getInteger(length, va), Signed::No, width, precision, flags, 10, Formatter::Capital::No);
+            size += outInteger(gen, getInteger(length, Signed::No, va), Signed::No, width, precision, flags, 10, Formatter::Capital::No);
             break;
         case 'o':
-            size += outInteger(gen, getInteger(length, va), Signed::No, width, precision, flags, 8, Formatter::Capital::No);
+            size += outInteger(gen, getInteger(length, Signed::No, va), Signed::No, width, precision, flags, 8, Formatter::Capital::No);
             break;
         case 'x':
         case 'X':
-            size += outInteger(gen, getInteger(length, va), Signed::No, width, precision, flags, 16, (*format == 'X') ? Formatter::Capital::Yes : Formatter::Capital::No);
+            size += outInteger(gen, getInteger(length, Signed::No, va), Signed::No, width, precision, flags, 16, (*format == 'X') ? Formatter::Capital::Yes : Formatter::Capital::No);
             break;
 #if !defined(FLOATNONE)
         case 'f':
