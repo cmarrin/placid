@@ -67,6 +67,7 @@ SRC = \
 	FloatFormatter.cpp \
 	Serial.cpp \
 	Shell.cpp \
+	SPIMaster.cpp \
 	String.cpp \
 	Timer.cpp \
 	Volume.cpp \
