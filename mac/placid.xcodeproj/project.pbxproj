@@ -263,6 +263,11 @@
 		49E887EE21EA2F180035DD64 /* ESPBare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ESPBare.cpp; path = ../baremetal/ESP/ESPBare.cpp; sourceTree = "<group>"; };
 		49E887F021EA57CB0035DD64 /* ESPGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ESPGPIO.cpp; path = ../baremetal/ESP/ESPGPIO.cpp; sourceTree = "<group>"; };
 		49E887F221EA6C760035DD64 /* ESPTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ESPTimer.cpp; path = ../baremetal/ESP/ESPTimer.cpp; sourceTree = "<group>"; };
+		49E887F621EAB1120035DD64 /* hspi_slave.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = hspi_slave.cpp; path = ../baremetal/ESP/hspi_slave.cpp; sourceTree = "<group>"; };
+		49E887F721EAB1120035DD64 /* hspi_slave.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = hspi_slave.h; path = ../baremetal/ESP/hspi_slave.h; sourceTree = "<group>"; };
+		49E887F821EAB1A80035DD64 /* SPISlave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPISlave.h; sourceTree = "<group>"; };
+		49E887F921EABB560035DD64 /* ESPSPISlave.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ESPSPISlave.cpp; path = ../baremetal/ESP/ESPSPISlave.cpp; sourceTree = "<group>"; };
+		49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SPIMaster.cpp; path = ../baremetal/SPIMaster.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -532,7 +537,10 @@
 				49E887EE21EA2F180035DD64 /* ESPBare.cpp */,
 				49E887F021EA57CB0035DD64 /* ESPGPIO.cpp */,
 				49E887EC21E915EB0035DD64 /* ESPSerial.cpp */,
+				49E887F921EABB560035DD64 /* ESPSPISlave.cpp */,
 				49E887F221EA6C760035DD64 /* ESPTimer.cpp */,
+				49E887F621EAB1120035DD64 /* hspi_slave.cpp */,
+				49E887F721EAB1120035DD64 /* hspi_slave.h */,
 				497E4DEE21E7A0690061779D /* makeEspArduino.mk */,
 			);
 			name = ESP;
