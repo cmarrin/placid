@@ -54,6 +54,10 @@
 		4992124E21ED0A4700AA7656 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123521ED09B100AA7656 /* Scanner.cpp */; };
 		4992125021ED0B8A00AA7656 /* SPIMaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */; };
 		4992125221ED0E4E00AA7656 /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125121ED0E4E00AA7656 /* InterruptManager.cpp */; };
+		4992125521ED178900AA7656 /* Dispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125321ED178900AA7656 /* Dispatcher.cpp */; };
+		4992125621ED178900AA7656 /* Dispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125321ED178900AA7656 /* Dispatcher.cpp */; };
+		4992125921ED191A00AA7656 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125721ED191A00AA7656 /* Process.cpp */; };
+		4992125A21ED191A00AA7656 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125721ED191A00AA7656 /* Process.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -234,6 +238,10 @@
 		4992123E21ED09B100AA7656 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystem.h; path = ../kernel/FileSystem.h; sourceTree = "<group>"; };
 		4992123F21ED09B100AA7656 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../kernel/main.cpp; sourceTree = "<group>"; };
 		4992125121ED0E4E00AA7656 /* InterruptManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../baremetal/InterruptManager.cpp; sourceTree = "<group>"; };
+		4992125321ED178900AA7656 /* Dispatcher.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Dispatcher.cpp; path = ../kernel/Dispatcher.cpp; sourceTree = "<group>"; };
+		4992125421ED178900AA7656 /* Dispatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Dispatcher.h; path = ../kernel/Dispatcher.h; sourceTree = "<group>"; };
+		4992125721ED191A00AA7656 /* Process.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Process.cpp; path = ../kernel/Process.cpp; sourceTree = "<group>"; };
+		4992125821ED191A00AA7656 /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = ../kernel/Process.h; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -329,24 +337,28 @@
 				492FF40A2160045C003582FE /* README.md */,
 				49166D2A21514BDE0077ACEE /* Makefile */,
 				49166D562151914C0077ACEE /* loadmap.ld */,
+				4992123421ED09B100AA7656 /* kernel.S */,
+				4992123921ED09B100AA7656 /* lib1funcs.asm */,
+				4992123B21ED09B100AA7656 /* stackAddrs.h */,
+				4992123721ED09B100AA7656 /* init.cpp */,
+				4992123F21ED09B100AA7656 /* main.cpp */,
 				4992123621ED09B100AA7656 /* Allocator.cpp */,
 				4992122E21ED09B000AA7656 /* Allocator.h */,
 				4992123021ED09B000AA7656 /* BootShell.cpp */,
 				4992123221ED09B100AA7656 /* BootShell.h */,
+				4992125321ED178900AA7656 /* Dispatcher.cpp */,
+				4992125421ED178900AA7656 /* Dispatcher.h */,
 				4992122F21ED09B000AA7656 /* dlmalloc.cpp */,
 				4992123821ED09B100AA7656 /* ELFLoader.cpp */,
 				4992123C21ED09B100AA7656 /* ELFLoader.h */,
 				4992123121ED09B000AA7656 /* ELFLoaderConfig.h */,
 				4992123321ED09B100AA7656 /* FileSystem.cpp */,
 				4992123E21ED09B100AA7656 /* FileSystem.h */,
-				4992123721ED09B100AA7656 /* init.cpp */,
-				4992123421ED09B100AA7656 /* kernel.S */,
-				4992123921ED09B100AA7656 /* lib1funcs.asm */,
-				4992123F21ED09B100AA7656 /* main.cpp */,
 				4992123D21ED09B100AA7656 /* MStream.h */,
+				4992125721ED191A00AA7656 /* Process.cpp */,
+				4992125821ED191A00AA7656 /* Process.h */,
 				4992123521ED09B100AA7656 /* Scanner.cpp */,
 				4992123A21ED09B100AA7656 /* Scanner.h */,
-				4992123B21ED09B100AA7656 /* stackAddrs.h */,
 			);
 			name = kernel;
 			sourceTree = "<group>";
@@ -746,11 +758,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4992124121ED09B100AA7656 /* BootShell.cpp in Sources */,
+				4992125921ED191A00AA7656 /* Process.cpp in Sources */,
 				4992124621ED09B100AA7656 /* init.cpp in Sources */,
 				4992122521CD955900AA7656 /* (null) in Sources */,
 				4992124521ED09B100AA7656 /* Allocator.cpp in Sources */,
 				4992124221ED09B100AA7656 /* FileSystem.cpp in Sources */,
 				4992124921ED09B100AA7656 /* main.cpp in Sources */,
+				4992125521ED178900AA7656 /* Dispatcher.cpp in Sources */,
 				4992124421ED09B100AA7656 /* Scanner.cpp in Sources */,
 				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
 			);
@@ -807,6 +821,8 @@
 				4992124D21ED0A3F00AA7656 /* init.cpp in Sources */,
 				4992122621CD959900AA7656 /* (null) in Sources */,
 				4992124C21ED0A3C00AA7656 /* FileSystem.cpp in Sources */,
+				4992125621ED178900AA7656 /* Dispatcher.cpp in Sources */,
+				4992125A21ED191A00AA7656 /* Process.cpp in Sources */,
 				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
 				4992124E21ED0A4700AA7656 /* Scanner.cpp in Sources */,
