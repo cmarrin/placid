@@ -7,16 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49166D4721514C060077ACEE /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
-		49166D4F21514C060077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3E21514C050077ACEE /* main.cpp */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
 		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
 		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
 		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
 		492FF408215D479A003582FE /* FAT32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF406215D4799003582FE /* FAT32.cpp */; };
 		492FF409215D479A003582FE /* FAT32.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF407215D479A003582FE /* FAT32.h */; };
-		4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
-		4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
 		494FD6062198ACFA005C2A6B /* DarwinBare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6052198ACFA005C2A6B /* DarwinBare.cpp */; };
 		494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD6092198EA27005C2A6B /* DarwinGPIO.cpp */; };
 		494FD60E2199CF22005C2A6B /* DarwinSDCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */; };
@@ -37,17 +33,25 @@
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49657892216BFDA200B3F088 /* Volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* Volume.cpp */; };
-		49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
 		496C3BB5217D0689004DBC22 /* nanoalloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */; };
 		496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB9217E2368004DBC22 /* FAT32DirectoryIterator.cpp */; };
 		496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */; };
 		49731F75216E23C600F9A79F /* FAT32.img in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49731F74216E23AC00F9A79F /* FAT32.img */; };
 		49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49731F78216E914500F9A79F /* XYModem.cpp */; };
-		497E4DEC21E02F6E0061779D /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122721CDA4A700AA7656 /* init.cpp */; };
 		497EE45B2161442D000584CE /* Formatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 497EE458216138E2000584CE /* Formatter.cpp */; };
 		4992122521CD955900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4992122621CD959900AA7656 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		4992122821CDA4A700AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992122721CDA4A700AA7656 /* init.cpp */; };
+		4992124121ED09B100AA7656 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123021ED09B000AA7656 /* BootShell.cpp */; };
+		4992124221ED09B100AA7656 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123321ED09B100AA7656 /* FileSystem.cpp */; };
+		4992124421ED09B100AA7656 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123521ED09B100AA7656 /* Scanner.cpp */; };
+		4992124521ED09B100AA7656 /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123621ED09B100AA7656 /* Allocator.cpp */; };
+		4992124621ED09B100AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123721ED09B100AA7656 /* init.cpp */; };
+		4992124921ED09B100AA7656 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123F21ED09B100AA7656 /* main.cpp */; };
+		4992124A21ED0A3300AA7656 /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123621ED09B100AA7656 /* Allocator.cpp */; };
+		4992124B21ED0A3600AA7656 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123021ED09B000AA7656 /* BootShell.cpp */; };
+		4992124C21ED0A3C00AA7656 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123321ED09B100AA7656 /* FileSystem.cpp */; };
+		4992124D21ED0A3F00AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123721ED09B100AA7656 /* init.cpp */; };
+		4992124E21ED0A4700AA7656 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123521ED09B100AA7656 /* Scanner.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -63,10 +67,6 @@
 		49BC403A21C05ED700D62847 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403921C05ED700D62847 /* Assets.xcassets */; };
 		49BC403D21C05ED700D62847 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49BC403B21C05ED700D62847 /* Main.storyboard */; };
 		49BC404021C05ED700D62847 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC403F21C05ED700D62847 /* main.m */; };
-		49BC404621C06D8300D62847 /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF02167156E00BDAABB /* Allocator.cpp */; };
-		49BC404721C06D8600D62847 /* BootShell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D3221514C050077ACEE /* BootShell.cpp */; };
-		49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49657897216D1E2D00B3F088 /* FileSystem.cpp */; };
-		49BC404921C06D9000D62847 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4932ACF721689A5500BDAABB /* Scanner.cpp */; };
 		49BC404B21C08B7A00D62847 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49BC404C21C08BD700D62847 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64B21AB36E4005C2A6B /* String.cpp */; };
 		49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC404E21C19BA000D62847 /* DarwinMutex.cpp */; };
@@ -134,11 +134,6 @@
 
 /* Begin PBXFileReference section */
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		49166D3121514C050077ACEE /* kernel.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = kernel.S; sourceTree = "<group>"; };
-		49166D3221514C050077ACEE /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BootShell.cpp; sourceTree = "<group>"; };
-		49166D3721514C050077ACEE /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = lib1funcs.asm; sourceTree = "<group>"; };
-		49166D3E21514C050077ACEE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		49166D3F21514C050077ACEE /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BootShell.h; sourceTree = "<group>"; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
 		49166D57215194260077ACEE /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; name = Makefile; path = ../bootloader/Makefile; sourceTree = "<group>"; usesTabs = 1; };
@@ -162,13 +157,7 @@
 		492FF406215D4799003582FE /* FAT32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32.cpp; path = ../baremetal/FAT32.cpp; sourceTree = "<group>"; };
 		492FF407215D479A003582FE /* FAT32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAT32.h; sourceTree = "<group>"; };
 		492FF40A2160045C003582FE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../kernel/README.md; sourceTree = "<group>"; };
-		4932ACEE2166770800BDAABB /* stackAddrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stackAddrs.h; sourceTree = "<group>"; };
-		4932ACF02167156E00BDAABB /* Allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Allocator.cpp; sourceTree = "<group>"; };
-		4932ACF12167156E00BDAABB /* Allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Allocator.h; sourceTree = "<group>"; };
 		4932ACF521681EF200BDAABB /* ldivmod.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = ldivmod.S; path = ../baremetal/RPi/ldivmod.S; sourceTree = "<group>"; };
-		4932ACF721689A5500BDAABB /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scanner.cpp; sourceTree = "<group>"; };
-		4932ACF821689A5600BDAABB /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scanner.h; sourceTree = "<group>"; };
-		4932ACFA2168A8C600BDAABB /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MStream.h; sourceTree = "<group>"; };
 		494FD5FC219615FE005C2A6B /* XYModem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYModem.h; sourceTree = "<group>"; };
 		494FD6002197A44F005C2A6B /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		494FD6032198ACDB005C2A6B /* RPiBare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiBare.cpp; path = ../baremetal/RPi/RPiBare.cpp; sourceTree = "<group>"; };
@@ -209,8 +198,6 @@
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPi/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
-		49657897216D1E2D00B3F088 /* FileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystem.cpp; sourceTree = "<group>"; };
-		49657898216D1E2D00B3F088 /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
 		496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = nanoalloc.cpp; path = ../bootloader/nanoalloc.cpp; sourceTree = "<group>"; };
 		496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32RawFile.cpp; path = ../baremetal/FAT32RawFile.cpp; sourceTree = "<group>"; };
@@ -226,11 +213,25 @@
 		497EE458216138E2000584CE /* Formatter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Formatter.cpp; path = ../baremetal/Formatter.cpp; sourceTree = "<group>"; };
 		497EE459216138E2000584CE /* Formatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Formatter.h; sourceTree = "<group>"; };
 		498747882191F68E00245E91 /* ESPWifi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESPWifi; sourceTree = BUILT_PRODUCTS_DIR; };
-		4992122721CDA4A700AA7656 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
-		4992122921CDA4D900AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoaderConfig.h; sourceTree = "<group>"; };
-		4992122A21CDA4D900AA7656 /* ELFLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoader.h; sourceTree = "<group>"; };
-		4992122B21CDA4D900AA7656 /* ELFLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ELFLoader.cpp; sourceTree = "<group>"; };
 		4992122D21ECF2F800AA7656 /* Singleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
+		4992122E21ED09B000AA7656 /* Allocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Allocator.h; path = ../kernel/Allocator.h; sourceTree = "<group>"; };
+		4992122F21ED09B000AA7656 /* dlmalloc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlmalloc.cpp; path = ../kernel/dlmalloc.cpp; sourceTree = "<group>"; };
+		4992123021ED09B000AA7656 /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../kernel/BootShell.cpp; sourceTree = "<group>"; };
+		4992123121ED09B000AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELFLoaderConfig.h; path = ../kernel/ELFLoaderConfig.h; sourceTree = "<group>"; };
+		4992123221ED09B100AA7656 /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../kernel/BootShell.h; sourceTree = "<group>"; };
+		4992123321ED09B100AA7656 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../kernel/FileSystem.cpp; sourceTree = "<group>"; };
+		4992123421ED09B100AA7656 /* kernel.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = kernel.S; path = ../kernel/kernel.S; sourceTree = "<group>"; };
+		4992123521ED09B100AA7656 /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../kernel/Scanner.cpp; sourceTree = "<group>"; };
+		4992123621ED09B100AA7656 /* Allocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Allocator.cpp; path = ../kernel/Allocator.cpp; sourceTree = "<group>"; };
+		4992123721ED09B100AA7656 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = init.cpp; path = ../kernel/init.cpp; sourceTree = "<group>"; };
+		4992123821ED09B100AA7656 /* ELFLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ELFLoader.cpp; path = ../kernel/ELFLoader.cpp; sourceTree = "<group>"; };
+		4992123921ED09B100AA7656 /* lib1funcs.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; name = lib1funcs.asm; path = ../kernel/lib1funcs.asm; sourceTree = "<group>"; };
+		4992123A21ED09B100AA7656 /* Scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanner.h; path = ../kernel/Scanner.h; sourceTree = "<group>"; };
+		4992123B21ED09B100AA7656 /* stackAddrs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stackAddrs.h; path = ../kernel/stackAddrs.h; sourceTree = "<group>"; };
+		4992123C21ED09B100AA7656 /* ELFLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELFLoader.h; path = ../kernel/ELFLoader.h; sourceTree = "<group>"; };
+		4992123D21ED09B100AA7656 /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../kernel/MStream.h; sourceTree = "<group>"; };
+		4992123E21ED09B100AA7656 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystem.h; path = ../kernel/FileSystem.h; sourceTree = "<group>"; };
+		4992123F21ED09B100AA7656 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../kernel/main.cpp; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -326,23 +327,24 @@
 				492FF40A2160045C003582FE /* README.md */,
 				49166D2A21514BDE0077ACEE /* Makefile */,
 				49166D562151914C0077ACEE /* loadmap.ld */,
-				49166D3121514C050077ACEE /* kernel.S */,
-				49166D3721514C050077ACEE /* lib1funcs.asm */,
-				4932ACEE2166770800BDAABB /* stackAddrs.h */,
-				4992122721CDA4A700AA7656 /* init.cpp */,
-				49166D3E21514C050077ACEE /* main.cpp */,
-				4932ACF02167156E00BDAABB /* Allocator.cpp */,
-				4932ACF12167156E00BDAABB /* Allocator.h */,
-				49166D3221514C050077ACEE /* BootShell.cpp */,
-				49166D3F21514C050077ACEE /* BootShell.h */,
-				4992122B21CDA4D900AA7656 /* ELFLoader.cpp */,
-				4992122A21CDA4D900AA7656 /* ELFLoader.h */,
-				4992122921CDA4D900AA7656 /* ELFLoaderConfig.h */,
-				49657897216D1E2D00B3F088 /* FileSystem.cpp */,
-				49657898216D1E2D00B3F088 /* FileSystem.h */,
-				4932ACFA2168A8C600BDAABB /* MStream.h */,
-				4932ACF721689A5500BDAABB /* Scanner.cpp */,
-				4932ACF821689A5600BDAABB /* Scanner.h */,
+				4992123621ED09B100AA7656 /* Allocator.cpp */,
+				4992122E21ED09B000AA7656 /* Allocator.h */,
+				4992123021ED09B000AA7656 /* BootShell.cpp */,
+				4992123221ED09B100AA7656 /* BootShell.h */,
+				4992122F21ED09B000AA7656 /* dlmalloc.cpp */,
+				4992123821ED09B100AA7656 /* ELFLoader.cpp */,
+				4992123C21ED09B100AA7656 /* ELFLoader.h */,
+				4992123121ED09B000AA7656 /* ELFLoaderConfig.h */,
+				4992123321ED09B100AA7656 /* FileSystem.cpp */,
+				4992123E21ED09B100AA7656 /* FileSystem.h */,
+				4992123721ED09B100AA7656 /* init.cpp */,
+				4992123421ED09B100AA7656 /* kernel.S */,
+				4992123921ED09B100AA7656 /* lib1funcs.asm */,
+				4992123F21ED09B100AA7656 /* main.cpp */,
+				4992123D21ED09B100AA7656 /* MStream.h */,
+				4992123521ED09B100AA7656 /* Scanner.cpp */,
+				4992123A21ED09B100AA7656 /* Scanner.h */,
+				4992123B21ED09B100AA7656 /* stackAddrs.h */,
 			);
 			name = kernel;
 			sourceTree = "<group>";
@@ -740,15 +742,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49166D4721514C060077ACEE /* BootShell.cpp in Sources */,
 				49E887FB21EB7FD00035DD64 /* SPIMaster.cpp in Sources */,
-				49166D4F21514C060077ACEE /* main.cpp in Sources */,
-				4992122821CDA4A700AA7656 /* init.cpp in Sources */,
-				49657899216D1E2D00B3F088 /* FileSystem.cpp in Sources */,
-				4932ACF22167156E00BDAABB /* Allocator.cpp in Sources */,
+				4992124121ED09B100AA7656 /* BootShell.cpp in Sources */,
+				4992124621ED09B100AA7656 /* init.cpp in Sources */,
 				4992122521CD955900AA7656 /* (null) in Sources */,
+				4992124521ED09B100AA7656 /* Allocator.cpp in Sources */,
+				4992124221ED09B100AA7656 /* FileSystem.cpp in Sources */,
+				4992124921ED09B100AA7656 /* main.cpp in Sources */,
+				4992124421ED09B100AA7656 /* Scanner.cpp in Sources */,
 				49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */,
-				4932ACF921689A5600BDAABB /* Scanner.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,14 +799,14 @@
 			files = (
 				49BC404021C05ED700D62847 /* main.m in Sources */,
 				49BC403721C05ED600D62847 /* Shaders.metal in Sources */,
-				49BC404721C06D8600D62847 /* BootShell.cpp in Sources */,
-				49BC404921C06D9000D62847 /* Scanner.cpp in Sources */,
+				4992124B21ED0A3600AA7656 /* BootShell.cpp in Sources */,
+				4992124D21ED0A3F00AA7656 /* init.cpp in Sources */,
 				4992122621CD959900AA7656 /* (null) in Sources */,
-				497E4DEC21E02F6E0061779D /* init.cpp in Sources */,
-				49BC404821C06D8B00D62847 /* FileSystem.cpp in Sources */,
+				4992124C21ED0A3C00AA7656 /* FileSystem.cpp in Sources */,
 				49BC403221C05ED600D62847 /* Renderer.m in Sources */,
 				49BC403521C05ED600D62847 /* GameViewController.m in Sources */,
-				49BC404621C06D8300D62847 /* Allocator.cpp in Sources */,
+				4992124E21ED0A4700AA7656 /* Scanner.cpp in Sources */,
+				4992124A21ED0A3300AA7656 /* Allocator.cpp in Sources */,
 				49BC402F21C05ED600D62847 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
