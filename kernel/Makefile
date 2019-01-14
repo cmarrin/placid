@@ -43,7 +43,7 @@ BUILDDIR = build
 PRODUCTDIR = $(BUILDDIR)
 PRODUCT = kernel
 LOADER = loadmap.ld
-SRCDIR = src
+SRCDIR = .
 
 SRC =	kernel.S \
         init.cpp \
