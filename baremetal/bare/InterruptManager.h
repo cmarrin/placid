@@ -35,7 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "Singleton.h"
 #include <cstdint>
+#include <cstdint>
+#include <functional>
 
 namespace bare {
 	
@@ -47,15 +50,21 @@ namespace bare {
 	//
 	//		https://github.com/dwelch67/raspberrypi
 	//
-	class InterruptManager {
+	class InterruptManager : public Singleton<InterruptManager> {
 	public:
-        static void enableIRQ(uint32_t n, bool enable);
-        static void enableBasicIRQ(uint32_t n, bool enable);
+        using Handler = std::function<void()>;
+        
+        void enableIRQ(uint32_t n, bool enable);
+        void enableBasicIRQ(uint32_t n, bool enable);
+        
+        void addHandler(Handler);
+        
+        void handleInterrupt();
         
 	private:
-		InterruptManager() { }
-		InterruptManager(InterruptManager&) { }
-		InterruptManager& operator=(InterruptManager& other) { return other; }
+        static constexpr uint32_t MaxHandlers = 4;
+        Handler _handlers[MaxHandlers];
+        uint8_t _handlerIndex = 0;
 	};
 	
 }

@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "bare/InterruptManager.h"
 #include "bare/Singleton.h"
 #include <stdint.h>
 
@@ -80,11 +81,18 @@ namespace bare {
     private:
         struct TimerManager : public Singleton <TimerManager>
         {
+            void init();
+            
             void start(Timer*, uint32_t us, bool repeat);
             void stop(Timer*);
             
+            void fireTimers();
+            
             RealTime currentTime();
             void setCurrentTime(const RealTime&);
+
+            // Platform implementation
+            void updateTimers();
 
             Timer* _head;
             int64_t _epochOffset = 0;
@@ -94,6 +102,12 @@ namespace bare {
         Timer() { }
         virtual ~Timer() { }
         
+        static void init()
+        {
+            TimerManager::instance().init();
+            InterruptManager::instance().addHandler(handleInterrupt);
+        }
+
         virtual void handleTimerEvent() = 0;
         
         // FIXME: repeat is currently not implemented 
@@ -101,18 +115,14 @@ namespace bare {
         void stop() { TimerManager::instance().stop(this); }
 
         // Platform implementations
-        static void init();
+        static void handleInterrupt();
         static void usleep(uint32_t us);
         static int64_t systemTime();
-        static void handleInterrupt();
 
         static RealTime currentTime() { return TimerManager::instance().currentTime(); }
         static void setCurrentTime(const RealTime& t) { TimerManager::instance().setCurrentTime(t); }
 
 	private:
-        // Platform implementations
-        static void updateTimers();
-        
         Timer* _next = nullptr;
         uint32_t _timeout = 0;
         bool _repeat = false;

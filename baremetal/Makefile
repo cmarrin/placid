@@ -65,6 +65,7 @@ SRC = \
 	FAT32RawFile.cpp \
 	Formatter.cpp \
 	FloatFormatter.cpp \
+	InterruptManager.cpp \
 	Serial.cpp \
 	Shell.cpp \
 	SPIMaster.cpp \

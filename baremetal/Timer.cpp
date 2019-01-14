@@ -61,6 +61,13 @@ void Timer::TimerManager::stop(Timer*)
     // FIXME: Implement
 }
 
+void Timer::TimerManager::fireTimers()
+{
+    for (Timer* timer = _head; timer; timer = timer->_next) {
+        timer->handleTimerEvent();
+    }    
+}
+
 void Timer::TimerManager::setCurrentTime(const RealTime& t)
 {
     _epochOffset = t.usSinceEpoch() - systemTime();

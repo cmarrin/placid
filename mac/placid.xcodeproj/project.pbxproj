@@ -52,6 +52,8 @@
 		4992124C21ED0A3C00AA7656 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123321ED09B100AA7656 /* FileSystem.cpp */; };
 		4992124D21ED0A3F00AA7656 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123721ED09B100AA7656 /* init.cpp */; };
 		4992124E21ED0A4700AA7656 /* Scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123521ED09B100AA7656 /* Scanner.cpp */; };
+		4992125021ED0B8A00AA7656 /* SPIMaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */; };
+		4992125221ED0E4E00AA7656 /* InterruptManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125121ED0E4E00AA7656 /* InterruptManager.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -72,7 +74,6 @@
 		49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC404E21C19BA000D62847 /* DarwinMutex.cpp */; };
 		49BC405221C19CCA00D62847 /* RPiMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC405121C19CCA00D62847 /* RPiMutex.cpp */; };
 		49E887EB21E7FA0D0035DD64 /* Shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887E921E7F9FA0035DD64 /* Shell.cpp */; };
-		49E887FB21EB7FD00035DD64 /* SPIMaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +233,7 @@
 		4992123D21ED09B100AA7656 /* MStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MStream.h; path = ../kernel/MStream.h; sourceTree = "<group>"; };
 		4992123E21ED09B100AA7656 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystem.h; path = ../kernel/FileSystem.h; sourceTree = "<group>"; };
 		4992123F21ED09B100AA7656 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../kernel/main.cpp; sourceTree = "<group>"; };
+		4992125121ED0E4E00AA7656 /* InterruptManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InterruptManager.cpp; path = ../baremetal/InterruptManager.cpp; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */,
 				497EE458216138E2000584CE /* Formatter.cpp */,
 				494FD634219F8951005C2A6B /* FloatFormatter.cpp */,
+				4992125121ED0E4E00AA7656 /* InterruptManager.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
 				49E887E921E7F9FA0035DD64 /* Shell.cpp */,
 				49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */,
@@ -742,7 +745,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49E887FB21EB7FD00035DD64 /* SPIMaster.cpp in Sources */,
 				4992124121ED09B100AA7656 /* BootShell.cpp in Sources */,
 				4992124621ED09B100AA7656 /* init.cpp in Sources */,
 				4992122521CD955900AA7656 /* (null) in Sources */,
@@ -759,6 +761,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */,
+				4992125221ED0E4E00AA7656 /* InterruptManager.cpp in Sources */,
 				494FD65321AC5A4A005C2A6B /* WiFiSpiDriver.cpp in Sources */,
 				494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */,
 				494FD60E2199CF22005C2A6B /* DarwinSDCard.cpp in Sources */,
@@ -780,6 +783,7 @@
 				494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
 				49BC404C21C08BD700D62847 /* String.cpp in Sources */,
+				4992125021ED0B8A00AA7656 /* SPIMaster.cpp in Sources */,
 				494FD6132199D17F005C2A6B /* DarwinSerial.cpp in Sources */,
 				492FF408215D479A003582FE /* FAT32.cpp in Sources */,
 				494FD61D2199D571005C2A6B /* DarwinSPIMaster.cpp in Sources */,

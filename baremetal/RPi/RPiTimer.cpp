@@ -79,7 +79,7 @@ inline volatile SystemTimer& systemTimer()
     return *(reinterpret_cast<volatile SystemTimer*>(SystemTimerBase));
 }
 
-void  Timer::init()
+void  Timer::TimerManager::init()
 {
     // We want a 1MHz tick. System clock is 250MHz, so we divide by 250
     // Set the prescaler (bits 16-23) to one less, or 0xf9
@@ -87,7 +87,7 @@ void  Timer::init()
     armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
 }
 
-void Timer::updateTimers()
+void Timer::TimerManager::updateTimers()
 {
     // FIXME: For now we only support a single timer at the head of the list
     if (!_head) {
@@ -95,7 +95,7 @@ void Timer::updateTimers()
     }
     
     disableIRQ();
-    InterruptManager::enableBasicIRQ(0, false);
+    InterruptManager::instance().enableBasicIRQ(0, false);
 
     // Reset Free running prescaler
     armTimer().control = 0x003E0000;
@@ -103,7 +103,7 @@ void Timer::updateTimers()
     armTimer().load = _head->_timeout - 1;
     armTimer().reload = _head->_timeout - 1;
     
-    InterruptManager::enableBasicIRQ(0, true);
+    InterruptManager::instance().enableBasicIRQ(0, true);
     armTimer().clearIRQ = 0;
     
     enableIRQ();
@@ -115,14 +115,7 @@ void Timer::updateTimers()
 
 void Timer::handleInterrupt()
 {
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-    for (Timer* timer = _head; timer; timer = timer->_next) {
-        timer->handleTimerEvent();
-	}
-    
+    Timer::TimerManager::instance().fireTimers();
 	armTimer().clearIRQ = 0;
 }
 

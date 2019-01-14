@@ -45,7 +45,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-void  Timer::init()
+void  Timer::TimerManager::init()
 {
     // FIXME:: Implement
 }
@@ -55,7 +55,7 @@ void Timer::handleInterrupt()
     // FIXME:: Implement
 }
 
-void Timer::updateTimers()
+void Timer::TimerManager::updateTimers()
 {
     // FIXME:: Implement
 }

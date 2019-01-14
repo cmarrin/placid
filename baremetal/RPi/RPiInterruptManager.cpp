@@ -65,8 +65,7 @@ inline volatile IRPT& irpt()
 extern "C" void handleIRQ()
 {
     if (interruptsSupported()) {
-        Serial::handleInterrupt();
-	    Timer::handleInterrupt();
+        InterruptManager::instance().handleInterrupt();
     }
 }
 

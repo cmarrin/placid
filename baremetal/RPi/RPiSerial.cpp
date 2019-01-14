@@ -91,9 +91,11 @@ void Serial::init(uint32_t baudrate)
     
     if (interruptsSupported()) {
         disableIRQ();
-	    InterruptManager::enableIRQ(29, false);
+	    InterruptManager::instance().enableIRQ(29, false);
 
         _rxhead = _rxtail = 0;
+        
+        InterruptManager::instance().addHandler(handleInterrupt);
     }
 
     uart().AUXENB = 1;
@@ -117,7 +119,7 @@ void Serial::init(uint32_t baudrate)
     uart().CNTL = 3;
     
     if (interruptsSupported()) {
-	    InterruptManager::enableIRQ(29, true);
+	    InterruptManager::instance().enableIRQ(29, true);
 	    enableIRQ();
     }
 }
@@ -157,10 +159,6 @@ Serial::Error Serial::write(uint8_t c)
 
 void Serial::handleInterrupt()
 {
-    if (!interruptsSupported()) {
-        return;
-    }
-    
     while (1)
     {
         uint32_t iir = uart().IIR;
