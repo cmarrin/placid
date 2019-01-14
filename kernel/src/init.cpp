@@ -206,7 +206,7 @@ extern "C" void init()
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
     LEDBlinker blinker;
-    bare::Timer::start(&blinker, blinkRate, true);
+    blinker.start(blinkRate, true);
     
 	shell.connected();
 }

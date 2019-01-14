@@ -42,10 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using namespace bare;
 
-Timer* Timer::_head = nullptr;
-int64_t Timer::_epochOffset = 0;
-
-void Timer::start(Timer* timer, uint32_t us, bool repeat)
+void Timer::TimerManager::start(Timer* timer, uint32_t us, bool repeat)
 {
     if (!interruptsSupported()) {
         return;
@@ -59,19 +56,19 @@ void Timer::start(Timer* timer, uint32_t us, bool repeat)
     updateTimers();
 }
 
-void Timer::stop(Timer*)
+void Timer::TimerManager::stop(Timer*)
 {
     // FIXME: Implement
 }
 
-void Timer::setCurrentTime(const RealTime& t)
+void Timer::TimerManager::setCurrentTime(const RealTime& t)
 {
     _epochOffset = t.usSinceEpoch() - systemTime();
 }
 
-RealTime Timer::currentTime()
+RealTime Timer::TimerManager::currentTime()
 {
-    return RealTime(_epochOffset + systemTime());
+    return RealTime(_epochOffset + Timer::systemTime());
 }
 
 // This returns the number of days from 0001-01-01

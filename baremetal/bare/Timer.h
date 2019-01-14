@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include "bare/Singleton.h"
 #include <stdint.h>
 
 namespace bare {
@@ -76,34 +77,45 @@ namespace bare {
     };
     
 	class Timer {
-	public:        
+    private:
+        struct TimerManager : public Singleton <TimerManager>
+        {
+            void start(Timer*, uint32_t us, bool repeat);
+            void stop(Timer*);
+            
+            RealTime currentTime();
+            void setCurrentTime(const RealTime&);
+
+            Timer* _head;
+            int64_t _epochOffset = 0;
+        };
+        
+	public:
         Timer() { }
         virtual ~Timer() { }
         
         virtual void handleTimerEvent() = 0;
         
-        static void init();
-
         // FIXME: repeat is currently not implemented 
-        static void start(Timer*, uint32_t us, bool repeat);
-        static void stop(Timer*);
+        void start(uint32_t us, bool repeat) { TimerManager::instance().start(this, us, repeat); }
+        void stop() { TimerManager::instance().stop(this); }
 
+        // Platform implementations
+        static void init();
         static void usleep(uint32_t us);
         static int64_t systemTime();
-        static RealTime currentTime();
-        static void setCurrentTime(const RealTime&);            
-
         static void handleInterrupt();
 
+        static RealTime currentTime() { return TimerManager::instance().currentTime(); }
+        static void setCurrentTime(const RealTime& t) { TimerManager::instance().setCurrentTime(t); }
+
 	private:
+        // Platform implementations
         static void updateTimers();
         
         Timer* _next = nullptr;
         uint32_t _timeout = 0;
         bool _repeat = false;
-
-        static int64_t _epochOffset;
-        static Timer* _head;
 	};
 	
 }

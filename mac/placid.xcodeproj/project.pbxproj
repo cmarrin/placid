@@ -230,6 +230,7 @@
 		4992122921CDA4D900AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoaderConfig.h; sourceTree = "<group>"; };
 		4992122A21CDA4D900AA7656 /* ELFLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELFLoader.h; sourceTree = "<group>"; };
 		4992122B21CDA4D900AA7656 /* ELFLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ELFLoader.cpp; sourceTree = "<group>"; };
+		4992122D21ECF2F800AA7656 /* Singleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -416,6 +417,7 @@
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				49E887E821E7F9D80035DD64 /* Shell.h */,
+				4992122D21ECF2F800AA7656 /* Singleton.h */,
 				496C3BBF21876279004DBC22 /* SPIMaster.h */,
 				49E887F821EAB1A80035DD64 /* SPISlave.h */,
 				494FD64A21AB36D0005C2A6B /* String.h */,
