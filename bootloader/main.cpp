@@ -47,7 +47,7 @@ int main()
 {
     bare::initSystem();
     
-    bare::Serial::init();
+    bare::Serial::init(115200);
         
     bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
     bare::Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
