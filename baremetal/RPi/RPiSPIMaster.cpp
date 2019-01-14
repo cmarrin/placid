@@ -84,7 +84,7 @@ inline volatile SPI0& spi()
     return *(reinterpret_cast<volatile SPI0*>(SPI0Base));
 }
 
-void SPIMaster::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity clockPol)
+void SPIMaster::init(uint32_t transferRate, EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarity clockPol)
 {
     DEBUG_LOG("SPIMaster:Initializing\n");
 
@@ -96,7 +96,14 @@ void SPIMaster::init(EnablePolarity enablePol, ClockEdge clockEdge, ClockPolarit
     GPIO::setFunction(11, GPIO::Function::Alt0);
     
     spi().CS = SPI0::CLEAR_RX | SPI0::CLEAR_TX;
-    spi().CLK = 0; // 250MHz / 65536 = 3814.7Hz (slowest possible transfer rate)
+    
+    spi().CLK = 0;
+    for (uint32_t cdiv = 1; cdiv < 0x10000; cdiv <<= 1) {
+        if (250000000 / cdiv <= transferRate) {
+            spi().CLK = cdiv;
+            break;
+        }
+    }
     
     bool csPolarity = enablePol == EnablePolarity::ActiveHigh;
     bool clockPolarity = clockPol == ClockPolarity::ActiveLow;

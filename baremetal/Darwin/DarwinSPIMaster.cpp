@@ -50,7 +50,7 @@ static void showSim(const char* format, ...)
     va_end(args);
 }
 
-void SPIMaster::init(EnablePolarity, ClockEdge, ClockPolarity)
+void SPIMaster::init(uint32_t transferRate, EnablePolarity, ClockEdge, ClockPolarity)
 {
     showSim("init\n");
 }

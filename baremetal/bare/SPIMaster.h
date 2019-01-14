@@ -56,7 +56,7 @@ namespace bare {
         enum class ClockPolarity { ActiveHigh, ActiveLow };
         enum class EnablePolarity { ActiveLow, ActiveHigh };
         
-        static void init(EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
+        static void init(uint32_t transferRate, EnablePolarity = EnablePolarity::ActiveLow, ClockEdge = ClockEdge::Rising, ClockPolarity = ClockPolarity::ActiveHigh);
         
         static void sendStatus(uint32_t status, uint8_t statusByteCount);
         static void sendData(const uint8_t* data, uint8_t size);

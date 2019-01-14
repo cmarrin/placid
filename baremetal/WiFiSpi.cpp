@@ -43,10 +43,7 @@ void WiFiSpi::init(int8_t pin, uint32_t max_speed)
         pin = SS;
     }
     
-    SPIMaster::init(SPIMaster::EnablePolarity::ActiveLow, SPIMaster::ClockEdge::Falling, SPIMaster::ClockPolarity::ActiveLow);
-    
-//    if (max_speed != 0)
-//        spi_obj->beginTransaction(SPISettings(max_speed, MSBFIRST, SPI_MODE0));
+    SPIMaster::init(20000, SPIMaster::EnablePolarity::ActiveLow, SPIMaster::ClockEdge::Falling, SPIMaster::ClockPolarity::ActiveLow);
 }
 
 uint8_t WiFiSpi::getSocket()
