@@ -43,6 +43,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/Timer.h"
 #include "bare/XYModem.h"
 #include "Allocator.h"
+#include "Dispatcher.h"
 #include "FileSystem.h"
 
 using namespace placid;
@@ -305,7 +306,11 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
         uint32_t size = Allocator::kernelAllocator().size();
         showMessage(MessageType::Info, "heap size: %d\n", size);
     } else if (array[0] == "run") {
-        showMessage(MessageType::Info, "Program started...\n");
+        if (array.size() < 2) {
+            showMessage(MessageType::Error, "enter a program to run\n");
+        } else {
+            Dispatcher::instance().exec(array[1]);
+        }
     } else if (array[0] == "stop") {
         showMessage(MessageType::Info, "Program stopped\n");
     } else if (array[0] == "debug") {
