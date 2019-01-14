@@ -65,7 +65,7 @@ static bool waitForSlaveBitSet(bare::SPIMaster* spi, uint8_t bit)
 static void testSPI()
 {
     bare::SPIMaster spi;
-    spi.init();
+    spi.init(8000000);
     
     for (int i = 0; i < 50; ++i) {
         // Wait for slave to be ready to receive data
@@ -99,7 +99,7 @@ static void testSPI()
 static void testWifi()
 {
     bare::SPIMaster spi;
-    spi.init();
+    spi.init(20000);
     bare::WiFiSpi wifi(&spi);
     wifi.init();
 
