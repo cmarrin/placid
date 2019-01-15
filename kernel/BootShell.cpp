@@ -107,22 +107,60 @@ static void testWifi()
     if (status == bare::WiFiSpi::Status::NoShield) {
         bare::Serial::printf("WiFi module not present");
     } else {
-        bare::Serial::printf("WiFiSpi status=%#04x\n", static_cast<uint8_t>(status));
+        bare::Serial::printf("WiFiSpi status=%s\n", bare::WiFiSpi::statusDetail(status));
         
-        bare::String fv = wifi.firmwareVersion();
-        if (fv != "0.1.2") {
-            bare::Serial::printf("WiFiSpi firmware version='%s', expected 0.1.2\n", fv.c_str());
-        } else {
-            bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
-            while (status != bare::WiFiSpi::Status::Connected) {
-                bare::Serial::printf("Wifi status: %d\n", status);
-                bare::Timer::usleep(1000000);
-                status = wifi.status();
-            }
+        bare::String s = wifi.firmwareVersion();
+        bare::Serial::printf("WiFiSpi firmware version='%s'\n", s.c_str());
+        s = wifi.protocolVersion();
+        bare::Serial::printf("WiFiSpi protocol version='%s'\n", s.c_str());
+        
+        bare::Serial::printf("Scanning network...\n");
 
-            // you're connected now, so print out the data:
-            bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
+        wifi.startNetworkScan();
+        bool succeeded = false;
+        uint8_t attempts = 20;
+        uint8_t networkCount = 0;
+        
+        while (--attempts > 0) {
+            status = wifi.checkNetworkScan(networkCount);
+            if (status == bare::WiFiSpi::Status::ScanCompleted) {
+                succeeded = true;
+                break;
+            } else if (status == bare::WiFiSpi::Status::Failure) {
+                bare::Serial::printf("WiFi network scan failed\n");
+                break;
+            } else if (status != bare::WiFiSpi::Status::Scanning) {
+                bare::Serial::printf("Unexpected status from checkNetworkScan:%s\n", bare::WiFiSpi::statusDetail(status));
+                break;
+            }
+            bare::Timer::usleep(1000000);
         }
+        
+        if (!succeeded) {
+            if (attempts == 0) {
+                bare::Serial::printf("WiFi network scan timed out\n");
+            }
+        } else {
+            bare::Serial::printf("Scanned networks (%d):\n", networkCount);
+            for (uint8_t i = 0; i < networkCount; ++i) {
+                bare::String ssid;
+                uint8_t encryptionType;
+                int32_t rssi;
+                wifi.scannedNetworkItem(i, ssid, encryptionType, rssi);
+                bare::Serial::printf("    ssid=%s, encr=%d, rssi=%d\n", ssid.c_str(), encryptionType, rssi);
+            }
+            bare::Serial::printf("done\n");
+        }
+        
+        bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
+        while (status != bare::WiFiSpi::Status::Connected) {
+            bare::Timer::usleep(1000000);
+            status = wifi.status();
+            bare::Serial::printf("Wifi status: %s\n", bare::WiFiSpi::statusDetail(status));
+        }
+
+        // you're connected now, so print out the data:
+        bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
     }
 }
 
