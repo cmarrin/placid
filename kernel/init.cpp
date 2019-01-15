@@ -103,6 +103,7 @@ extern "C" void init()
     bare::Serial::printf("\n\nFloat value = %g\n\n", f.toArg());
 
     bare::Serial::printf("\n\nHex value = %#010x\n\n", 0xdeadbeef);
+    bare::Serial::printf("\n\nInt value = %d\n\n", 0xffffffaf);
     bare::Serial::printf("\n\nFloat value = %g\n\n", bare::Float(1234.5078).toArg());
 
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
