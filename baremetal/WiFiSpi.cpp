@@ -25,6 +25,7 @@
 #include "bare/WiFiSpi.h"
 
 #include "bare/SPIMaster.h"
+#include "bare/Timer.h"
 
 //#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
@@ -72,92 +73,46 @@ String WiFiSpi::getStringCmd(WiFiSpiDriver::Command cmd, uint8_t length)
 
 WiFiSpi::Status WiFiSpi::getStatusCmd(WiFiSpiDriver::Command cmd)
 {
+    DEBUG_LOG("WiFiSpi::getStatusCmd:(0x%02x)\n", static_cast<uint32_t>(cmd));
     _driver.sendCmd(cmd);
+    DEBUG_LOG("WiFiSpi::getStatusCmd:command sent\n");
+    
+    return waitForStatus(cmd);
+}
 
+uint8_t WiFiSpi::getUInt8Cmd(WiFiSpiDriver::Command cmd)
+{
+    DEBUG_LOG("WiFiSpi::getUInt8Cmd:(0x%02x)\n", static_cast<uint32_t>(cmd));
+    _driver.sendCmd(cmd);
+    
     uint8_t value;
+    waitForUInt8(cmd, value);
+    return value;
+}
+
+WiFiSpi::Status WiFiSpi::waitForUInt8(WiFiSpiDriver::Command cmd, uint8_t& value)
+{
     if (!_driver.waitResponse(cmd, value)) {
         return WiFiSpi::Status::Failure;
     }
-    return static_cast<Status>(value);
+    return WiFiSpi::Status::Success;
 }
 
-/*
- * 
- */
-WiFiSpi::Status WiFiSpi::begin(const char* ssid)
+const char* WiFiSpi::statusDetail(Status status)
 {
-	Status status = Status::Idle;
-//    uint8_t attempts = WL_MAX_ATTEMPT_CONNECTION;
-//
-//    if (WiFiSpiDrv::wifiSetNetwork(ssid, strlen(ssid)) != WL_FAILURE)
-//    {
-//        // TODO: Improve timing
-//        do
-//        {
-//            delay(WL_DELAY_START_CONNECTION);
-//            status = WiFiSpiDrv::getConnectionStatus();
-//        }
-//        while (((status == WL_IDLE_STATUS) || (status == WL_SCAN_COMPLETED) || (status == WL_DISCONNECTED)) && (--attempts > 0));
-//    } else
-//        status = WL_CONNECT_FAILED;
-//   
-    return status;
-}
-
-/*
- * 
- */
-WiFiSpi::Status WiFiSpi::begin(const char* ssid, const char *passphrase)
-{
-    Status status = Status::Idle;
-//    uint8_t attempts = WL_MAX_ATTEMPT_CONNECTION;
-//
-//    // SSID and passphrase for WPA connection
-//    if (WiFiSpiDrv::wifiSetPassphrase(ssid, strlen(ssid), passphrase, strlen(passphrase)) != WL_FAILURE)
-//    {
-//      // TODO: Improve timing
-//        do
-//        {
-//            delay(WL_DELAY_START_CONNECTION);
-//            status = WiFiSpiDrv::getConnectionStatus();
-//        }
-//        while (((status == WL_IDLE_STATUS) || (status == WL_SCAN_COMPLETED) || (status == WL_DISCONNECTED)) && (--attempts > 0));
-//    } else
-//        status = WL_CONNECT_FAILED;
-//    
-    return status;
-}
-
-/*
- * 
- */
-bool WiFiSpi::config(IPAddr local_ip)
-{
-	return false; // WiFiSpiDrv::config((uint32_t)local_ip, 0, 0, 0, 0);
-}
-
-/*
- * 
- */
-bool WiFiSpi::config(IPAddr local_ip, IPAddr dns_server)
-{
-	return false; // WiFiSpiDrv::config((uint32_t)local_ip, 0, 0, (uint32_t)dns_server, 0);
-}
-
-/*
- * 
- */
-bool WiFiSpi::config(IPAddr local_ip, IPAddr dns_server, IPAddr gateway)
-{
-	return false; // WiFiSpiDrv::config((uint32_t)local_ip, (uint32_t)gateway, 0, (uint32_t)dns_server, 0);
-}
-
-/*
- * 
- */
-bool WiFiSpi::config(IPAddr local_ip, IPAddr dns_server, IPAddr gateway, IPAddr subnet)
-{
-	return false; // WiFiSpiDrv::config((uint32_t)local_ip, (uint32_t)gateway, (uint32_t)subnet, (uint32_t)dns_server, 0);
+    switch (status) {
+    case Status::NoShield       : return "no shield";
+    case Status::Idle           : return "idle";
+    case Status::NoSSIDAvail    : return "no SSID available";
+    case Status::ScanCompleted  : return "scan completed";
+    case Status::Connected      : return "connected";
+    case Status::ConnectFailed  : return "connect failed";
+    case Status::ConnectionLost : return "connection lost";
+    case Status::Disconnected   : return "disconnected";
+    case Status::Failure        : return "failure";
+    case Status::Success        : return "success";
+    default                     : return "*** unknown ***";
+    }
 }
 
 /*
@@ -237,75 +192,6 @@ int32_t WiFiSpi::RSSI()
 }
 
 /*
- * 
- */
-int8_t WiFiSpi::scanNetworks()
-{
-//    #define WIFI_SCAN_RUNNING   (-1)
-//    #define WIFI_SCAN_FAILED    (-2)
-//
-//    uint8_t attempts = 10;
-//    int8_t numOfNetworks = 0;
-//
-//    sendCmd(Command::START_SCAN_NETWORKS);
-//    
-//    int8_t _data = -1;
-//    uint8_t _dataLen = sizeof(_data);
-//    if (!waitResponse(Command::START_SCAN_NETWORKS, 1, reinterpret_cast<uint8_t *>(&_data), &_dataLen)) {
-//        return -1;
-//    }
-//
-//    if (_data == WIFI_SCAN_FAILED) {
-//        return -1;
-//    }
-//    
-//    do {
-//        Timer::usleep(2000000);
-//        numOfNetworks = WiFiSpiDrv::getScanNetworks();
-//
-//        if (numOfNetworks == WIFI_SCAN_FAILED)
-//            return WL_FAILURE;
-//    }
-//    while ((numOfNetworks == WIFI_SCAN_RUNNING) && (--attempts > 0));
-//    
-//    return numOfNetworks;
-    return 0;
-}
-
-/*
- * 
- */
-String WiFiSpi::SSID(uint8_t networkItem)
-{
-	return String(); // WiFiSpiDrv::getSSIDNetworks(networkItem);
-}
-
-/*
- * 
- */
-int32_t WiFiSpi::RSSI(uint8_t networkItem)
-{
-	return -1; // WiFiSpiDrv::getRSSINetworks(networkItem);
-}
-
-/*
- * 
- */
-uint8_t WiFiSpi::encryptionType(uint8_t networkItem)
-{
-  return 0; // WiFiSpiDrv::getEncTypeNetworks(networkItem);
-}
-
-
-/*
- * 
- */
-int8_t WiFiSpi::hostByName(const char* aHostname, IPAddr& aResult)
-{
-	return -1; // WiFiSpiDrv::getHostByName(aHostname, aResult);
-}
-
-/*
  * Perform remote software reset of the ESP8266 module. 
  * The reset succeedes only if the SPI communication is not broken.
  * The function does not wait for the ESP8266.
@@ -313,3 +199,41 @@ int8_t WiFiSpi::hostByName(const char* aHostname, IPAddr& aResult)
 void WiFiSpi::softReset(void) {
 //    WiFiSpiDrv::softReset();
 }
+
+static constexpr int8_t WiFiScanRunning = -1;
+static constexpr int8_t WiFiScanFailed = -2;
+
+WiFiSpi::Status WiFiSpi::startNetworkScan()
+{
+    int8_t num = getUInt8Cmd(WiFiSpiDriver::Command::START_SCAN_NETWORKS);
+    return (num == WiFiScanFailed) ? Status::Failure : Status::Scanning;
+}
+
+WiFiSpi::Status WiFiSpi::checkNetworkScan(uint8_t& numNetworks)
+{
+    int8_t num = getUInt8Cmd(WiFiSpiDriver::Command::SCAN_NETWORKS);
+    if (num == WiFiScanFailed) {
+        return Status::Failure;
+    }
+    numNetworks = (num < 0) ? 0 : static_cast<uint8_t>(num);
+    return (num == WiFiScanRunning) ? Status::Scanning : Status::ScanCompleted;
+}
+
+WiFiSpi::Status WiFiSpi::scannedNetworkItem(uint8_t i, String& ssid, uint8_t& encryptionType, int32_t& rssi)
+{
+    char ssidBuffer[WiFiSpiDriver::MaxSSIDSize];
+    WiFiSpiDriver::Param params[] =
+    {
+        { WiFiSpiDriver::MaxSSIDSize, ssidBuffer },
+        { sizeof(rssi), reinterpret_cast<char*>(&rssi) },
+        { sizeof(encryptionType), reinterpret_cast<char*>(&encryptionType) }
+    };
+        
+    _driver.sendCmd(WiFiSpiDriver::Command::GET_SCANNED_DATA, 1);
+    _driver.sendParam(i);
+    _driver.endCmd();
+    Status status = _driver.waitResponse(WiFiSpiDriver::Command::GET_SCANNED_DATA, 3, params) ? Status::Success : Status::Failure;
+    ssid = String(ssidBuffer, params[0].length);
+    return status;
+}
+

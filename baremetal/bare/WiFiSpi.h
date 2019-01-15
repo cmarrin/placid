@@ -74,6 +74,7 @@ namespace bare {
             Disconnected    = 6,
             Failure         = 128,
             Success         = 129,
+            Scanning        = 130,
         };
         
         WiFiSpi(SPIMaster* spi) : _driver(spi) { }
@@ -89,169 +90,82 @@ namespace bare {
         uint8_t getSocket();
 
         String firmwareVersion() { return getStringCmd(WiFiSpiDriver::Command::GET_FW_VERSION, WL_FW_VER_LENGTH); }
-        String SSID() { return getStringCmd(WiFiSpiDriver::Command::GET_CURR_SSID, WL_SSID_MAX_LENGTH); }
         String protocolVersion() { return getStringCmd(WiFiSpiDriver::Command::GET_PROTOCOL_VERSION, WL_PROTOCOL_VER_LENGTH); }
+        String SSID() { return getStringCmd(WiFiSpiDriver::Command::GET_CURR_SSID, WL_SSID_MAX_LENGTH); }
 
         Status status() { return getStatusCmd(WiFiSpiDriver::Command::GET_CONN_STATUS); }
+        Status connect(const char* ssid) { return sendParamCmd(WiFiSpiDriver::Command::SET_NET, ssid); }
+        Status connect(const char* ssid, const char* pwd) { return sendParamCmd(WiFiSpiDriver::Command::SET_PASSPHRASE, ssid, pwd); }
         Status disconnect() { return getStatusCmd(WiFiSpiDriver::Command::DISCONNECT); }
 
-        /* Start Wifi connection for OPEN networks
-         *
-         * param ssid: Pointer to the SSID string.
-         */
-        Status begin(const char* ssid);
-
-        /* Start Wifi connection with passphrase
-         * the most secure supported mode will be automatically selected
-         *
-         * param ssid: Pointer to the SSID string.
-         * param passphrase: Passphrase. Valid characters in a passphrase
-         *        must be between ASCII 32-126 (decimal).
-         */
-        Status begin(const char* ssid, const char *passphrase);
-
-        /* Change Ip configuration settings disabling the dhcp client
-         *
-         * param local_ip: 	Static ip configuration
-         */
-        bool config(IPAddr local_ip);
-
-        /* Change Ip configuration settings disabling the dhcp client
-         *
-         * param local_ip: 	Static ip configuration
-         * param dns_server:     IP configuration for DNS server 1
-         */
-        bool config(IPAddr local_ip, IPAddr dns_server);
-
-        /* Change Ip configuration settings disabling the dhcp client
-         *
-         * param local_ip: 	Static ip configuration
-         * param dns_server:     IP configuration for DNS server 1
-         * param gateway : 	Static gateway configuration
-         */
-        bool config(IPAddr local_ip, IPAddr dns_server, IPAddr gateway);
-
-        /* Change Ip configuration settings disabling the dhcp client
-         *
-         * param local_ip: 	Static ip configuration
-         * param dns_server:     IP configuration for DNS server 1
-         * param gateway: 	Static gateway configuration
-         * param subnet:		Static Subnet mask
-         */
+        // Change Ip configuration settings disabling the dhcp client
+        bool setConfig(IPAddr local_ip);
+        bool setConfig(IPAddr local_ip, IPAddr dns_server);
+        bool setConfig(IPAddr local_ip, IPAddr dns_server, IPAddr gateway);
         bool config(IPAddr local_ip, IPAddr dns_server, IPAddr gateway, IPAddr subnet);
 
-        /* Change DNS Ip configuration
-         *
-         * param dns_server1: ip configuration for DNS server 1
-         */
         bool setDNS(IPAddr dns_server1);
-
-        /* Change DNS Ip configuration
-         *
-         * param dns_server1: ip configuration for DNS server 1
-         * param dns_server2: ip configuration for DNS server 2
-         *
-         */
         bool setDNS(IPAddr dns_server1, IPAddr dns_server2);
 
-        /*
-         * Get the interface MAC address.
-         *
-         * return: pointer to uint8_t array with length WL_MAC_ADDR_LENGTH
-         */
         uint8_t* macAddress(uint8_t* mac);
-
-        /*
-         * Get the interface IP address.
-         *
-         * return: Ip address value
-         */
         IPAddr localIP();
-
-        /*
-         * Get the interface subnet mask address.
-         *
-         * return: subnet mask address value
-         */
         IPAddr subnetMask();
-
-        /*
-         * Get the gateway ip address.
-         *
-         * return: gateway ip address value
-         */
-       IPAddr gatewayIP();
-
-        /*
-         * Return the current BSSID associated with the network.
-         * It is the MAC address of the Access Point
-         *
-         * return: pointer to uint8_t array with length WL_MAC_ADDR_LENGTH
-         */
+        IPAddr gatewayIP();
         uint8_t* BSSID();
-
-        /*
-         * Return the current RSSI /Received Signal Strength in dBm)
-         * associated with the network
-         *
-         * return: signed value
-         */
+        
+        // Return the signal strength
         int32_t RSSI();
 
-        /*
-         * Start scan WiFi networks available
-         *
-         * return: Number of discovered networks
-         */
-        int8_t scanNetworks();
+        //Start scan WiFi networks available
+        //return: Number of discovered networks
+        Status startNetworkScan();
+        Status checkNetworkScan(uint8_t& numNetworks);
 
-        /*
-         * Return the SSID discovered during the network scan.
-         *
-         * param networkItem: specify from which network item want to get the information
-         *
-         * return: ssid string of the specified item on the networks scanned list
-         */
-        String SSID(uint8_t networkItem);
+        // Return the i-th discovered network from scanNetworks
+        Status scannedNetworkItem(uint8_t i, String& ssid, uint8_t& encryptionType, int32_t& rssi);
+     
+        Status hostByName(const char* aHostname, IPAddr& aResult);
 
-        /*
-         * Return the encryption type of the networks discovered during the scanNetworks
-         *
-         * param networkItem: specify from which network item want to get the information
-         *
-         * return: encryption type (enum wl_enc_type) of the specified item on the networks scanned list
-         */
-        uint8_t	encryptionType(uint8_t networkItem);
-
-        /*
-         * Return the RSSI of the networks discovered during the scanNetworks
-         *
-         * param networkItem: specify from which network item want to get the information
-         *
-         * return: signed value of RSSI of the specified item on the networks scanned list
-         */
-        int32_t RSSI(uint8_t networkItem);
-
-        /*
-         * Resolve the given hostname to an IP address.
-         * param aHostname: Name to be resolved
-         * param aResult: IPAddr structure to store the returned IP address
-         * result: 1 if aIPAddrString was successfully converted to an IP address,
-         *          else error code
-         */
-        int8_t hostByName(const char* aHostname, IPAddr& aResult);
-
-        /*
-         * Perform software reset of the ESP8266 module. 
-         * The reset succeedes only if the SPI communication is not broken.
-         * After the reset wait for the ESP8266 to came to life again. Typically, the ESP8266 boots within 100 ms,
-         * but with the WifiManager installed on ESP it can be a couple of seconds.
-         */
-        void softReset(void);
+        void softReset();
+        
+        static const char* statusDetail(Status);
 
     private:
         String getStringCmd(WiFiSpiDriver::Command, uint8_t length);
         Status getStatusCmd(WiFiSpiDriver::Command);
+        uint8_t getUInt8Cmd(WiFiSpiDriver::Command);
+        
+        Status waitForUInt8(WiFiSpiDriver::Command, uint8_t&);
+        Status waitForStatus(WiFiSpiDriver::Command cmd)
+        {
+            uint8_t value;
+            if (waitForUInt8(cmd, value) == Status::Failure) {
+                return Status::Failure;
+            }
+            return static_cast<Status>(value);
+        }
+
+        template<typename T>
+        void sendParams(T first)
+        {
+            _driver.sendParam(first);
+        }
+
+        template<typename T, typename... Args>
+        void sendParams(T first, Args... args)
+        {
+            _driver.sendParam(first);
+            sendParams(args...);
+        }
+
+        template<typename ... Args>
+        Status sendParamCmd(WiFiSpiDriver::Command cmd, Args... args)
+        {
+            _driver.sendCmd(cmd);
+            sendParams(args...);
+            _driver.endCmd();
+            return waitForStatus(cmd);
+        }
 
         int16_t  _state[MAX_SOCK_NUM];
         uint16_t _server_port[MAX_SOCK_NUM];

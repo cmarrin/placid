@@ -21,6 +21,7 @@
 #include "WiFiSpiDriver.h"
 
 #include "bare/Timer.h"
+#include <cstring>
 
 using namespace bare;
 
@@ -82,6 +83,11 @@ void WiFiSpiDriver::sendParam(uint8_t param)
     write(param);
 }
 
+void WiFiSpiDriver::sendParam(const char* str)
+{
+    sendParam(reinterpret_cast<const uint8_t*>(str), strlen(str));
+}
+
 void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
 {
     DEBUG_LOG("WiFiSpi:sendBuffer(length=%d)\n", param_len);
@@ -107,10 +113,12 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
 
     bool result = false;
     waitForTxReady();
+    DEBUG_LOG("WiFiSpi:waitResponse:Tx ready\n");
 
     if (readAndCheckByte(Command::START, "Start") &&
             readAndCheckByte(setReply(cmd), "Cmd") &&
             readAndCheckByte(numParam, "Param")) {    
+        DEBUG_LOG("WiFiSpi:waitResponse:valid response\n");
         if (numParam == 1) {
             int16_t len = read();
             if (paramLength16) {
@@ -138,6 +146,7 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
         
         result = readAndCheckByte(Command::END, "End");
     }
+    DEBUG_LOG("WiFiSpi:waitResponse:returning %s\n", result ? "true" : "false");
     return result;
 }
 

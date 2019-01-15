@@ -94,6 +94,8 @@ namespace bare {
             START                = 0xe0,
             END                  = 0xee,
         };
+        
+        static constexpr uint8_t MaxSSIDSize = 32;
 
         struct Param
         {
@@ -108,6 +110,7 @@ namespace bare {
 
         void sendParam(const uint8_t* param, uint8_t param_len);
         void sendParam(uint8_t param);
+        void sendParam(const char*);
 
         void sendBuffer(const uint8_t* param, uint16_t param_len);
 
