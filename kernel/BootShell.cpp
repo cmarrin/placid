@@ -99,7 +99,6 @@ static void testSPI()
 static void testWifi()
 {
     bare::SPIMaster spi;
-    spi.init(20000);
     bare::WiFiSpi wifi(&spi);
     wifi.init();
 
