@@ -26,7 +26,7 @@
 
 #include "bare/SPIMaster.h"
 
-#define ENABLE_DEBUG_LOG
+//#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
 
 using namespace bare;

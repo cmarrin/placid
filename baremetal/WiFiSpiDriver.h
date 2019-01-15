@@ -23,7 +23,7 @@
 #include "bare/SPIMaster.h"
 #include <cstdint>
 
-#define ENABLE_DEBUG_LOG
+//#define ENABLE_DEBUG_LOG
 #include "bare/Log.h"
 
 namespace bare {
