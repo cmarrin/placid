@@ -50,7 +50,9 @@ SRC =	kernel.S \
         main.cpp \
 		Allocator.cpp \
 		BootShell.cpp \
+		Dispatcher.cpp \
 		FileSystem.cpp \
+		Process.cpp \
 		Scanner.cpp \
 
 all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin

@@ -38,6 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/Singleton.h"
 #include "bare/String.h"
 #include "Process.h"
+#include <memory>
 
 namespace placid {
     

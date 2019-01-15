@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "bare/String.h"
+#include <memory>
 
 namespace placid {
     
