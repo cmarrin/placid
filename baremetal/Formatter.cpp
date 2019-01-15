@@ -127,7 +127,7 @@ static uintmax_t getInteger(Length length, Signed sign, VA_LIST& va)
 {
     if (sign == Signed::Yes) {
         switch(length) {
-        case Length::None: return static_cast<uintmax_t>(va_arg(va.value, int));
+        case Length::None: return static_cast<intmax_t>(va_arg(va.value, int));
         case Length::H: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xffff;
         case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, int)) & 0xff;
         case Length::L: return static_cast<uintmax_t>(va_arg(va.value, long int));
@@ -138,7 +138,7 @@ static uintmax_t getInteger(Length length, Signed sign, VA_LIST& va)
         }
     } else {
         switch(length) {
-        case Length::None: return static_cast<uintmax_t>(va_arg(va.value, unsigned int));
+        case Length::None: return static_cast<uintmax_t>(va_arg(va.value, unsigned int)) & 0xffffffff;
         case Length::H: return static_cast<uintmax_t>(va_arg(va.value, unsigned int)) & 0xffff;
         case Length::HH: return static_cast<uintmax_t>(va_arg(va.value, unsigned int)) & 0xff;
         case Length::L: return static_cast<uintmax_t>(va_arg(va.value, unsigned long int));
@@ -175,8 +175,9 @@ static int32_t outInteger(bare::Formatter::Generator gen, uintmax_t value, Signe
 {
     uint32_t size = 0;
     if (sign == Signed::Yes) {
-        if (value < 0) {
-            value = -value;
+        intmax_t signedValue = value;
+        if (signedValue < 0) {
+            value = -signedValue;
             gen('-');
             size = 1;
             width--;
