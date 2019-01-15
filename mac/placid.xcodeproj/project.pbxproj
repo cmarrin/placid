@@ -25,8 +25,8 @@
 		494FD633219F7E13005C2A6B /* fpconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD630219F7E13005C2A6B /* fpconv.cpp */; };
 		494FD635219F8951005C2A6B /* FloatFormatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD634219F8951005C2A6B /* FloatFormatter.cpp */; };
 		494FD63821A08894005C2A6B /* printf-emb_tiny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */; };
-		494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64D21AB4338005C2A6B /* WiFiSpi.cpp */; };
-		494FD65321AC5A4A005C2A6B /* WiFiSpiDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD65021AC5991005C2A6B /* WiFiSpiDriver.cpp */; };
+		494FD64F21ABDB5D005C2A6B /* WiFiSPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD64D21AB4338005C2A6B /* WiFiSPI.cpp */; };
+		494FD65321AC5A4A005C2A6B /* WiFiSPIDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 494FD65021AC5991005C2A6B /* WiFiSPIDriver.cpp */; };
 		49629556215929410064B9C9 /* autoload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496295542159286E0064B9C9 /* autoload.cpp */; };
 		4962957A215AA53B0064B9C9 /* bare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49629576215AA53B0064B9C9 /* bare.cpp */; };
 		4962957C215AA53B0064B9C9 /* bare.h in Headers */ = {isa = PBXBuildFile; fileRef = 49629578215AA53B0064B9C9 /* bare.h */; };
@@ -189,13 +189,13 @@
 		494FD634219F8951005C2A6B /* FloatFormatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FloatFormatter.cpp; path = ../baremetal/FloatFormatter.cpp; sourceTree = "<group>"; };
 		494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "printf-emb_tiny.cpp"; path = "../baremetal/printf-emb_tiny.cpp"; sourceTree = "<group>"; };
 		494FD64321A896DE005C2A6B /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../ESPRPiWifi/Makefile; sourceTree = "<group>"; usesTabs = 1; };
-		494FD64821AB225B005C2A6B /* WiFiSpi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WiFiSpi.h; sourceTree = "<group>"; };
+		494FD64821AB225B005C2A6B /* WiFiSPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WiFiSPI.h; sourceTree = "<group>"; };
 		494FD64921AB3596005C2A6B /* IPAddr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPAddr.h; sourceTree = "<group>"; };
 		494FD64A21AB36D0005C2A6B /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		494FD64B21AB36E4005C2A6B /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = String.cpp; path = ../baremetal/String.cpp; sourceTree = "<group>"; };
-		494FD64D21AB4338005C2A6B /* WiFiSpi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSpi.cpp; path = ../baremetal/WiFiSpi.cpp; sourceTree = "<group>"; };
-		494FD65021AC5991005C2A6B /* WiFiSpiDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSpiDriver.cpp; path = ../baremetal/WiFiSpiDriver.cpp; sourceTree = "<group>"; };
-		494FD65221AC59AA005C2A6B /* WiFiSpiDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiSpiDriver.h; path = ../baremetal/WiFiSpiDriver.h; sourceTree = "<group>"; };
+		494FD64D21AB4338005C2A6B /* WiFiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSPI.cpp; path = ../baremetal/WiFiSPI.cpp; sourceTree = "<group>"; };
+		494FD65021AC5991005C2A6B /* WiFiSPIDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSPIDriver.cpp; path = ../baremetal/WiFiSPIDriver.cpp; sourceTree = "<group>"; };
+		494FD65221AC59AA005C2A6B /* WiFiSPIDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiSPIDriver.h; path = ../baremetal/WiFiSPIDriver.h; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -430,7 +430,7 @@
 				494FD64A21AB36D0005C2A6B /* String.h */,
 				492FF3FF215C5359003582FE /* Timer.h */,
 				492FF3EF215C4F72003582FE /* Volume.h */,
-				494FD64821AB225B005C2A6B /* WiFiSpi.h */,
+				494FD64821AB225B005C2A6B /* WiFiSPI.h */,
 				494FD5FC219615FE005C2A6B /* XYModem.h */,
 			);
 			name = bare;
@@ -519,9 +519,9 @@
 				494FD64B21AB36E4005C2A6B /* String.cpp */,
 				492FF3FE215C5359003582FE /* Timer.cpp */,
 				492FF3F1215C4F72003582FE /* Volume.cpp */,
-				494FD64D21AB4338005C2A6B /* WiFiSpi.cpp */,
-				494FD65021AC5991005C2A6B /* WiFiSpiDriver.cpp */,
-				494FD65221AC59AA005C2A6B /* WiFiSpiDriver.h */,
+				494FD64D21AB4338005C2A6B /* WiFiSPI.cpp */,
+				494FD65021AC5991005C2A6B /* WiFiSPIDriver.cpp */,
+				494FD65221AC59AA005C2A6B /* WiFiSPIDriver.h */,
 				49731F78216E914500F9A79F /* XYModem.cpp */,
 			);
 			name = baremetal;
@@ -776,7 +776,7 @@
 			files = (
 				49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */,
 				4992125221ED0E4E00AA7656 /* InterruptManager.cpp in Sources */,
-				494FD65321AC5A4A005C2A6B /* WiFiSpiDriver.cpp in Sources */,
+				494FD65321AC5A4A005C2A6B /* WiFiSPIDriver.cpp in Sources */,
 				494FD60B2198EA9A005C2A6B /* DarwinGPIO.cpp in Sources */,
 				494FD60E2199CF22005C2A6B /* DarwinSDCard.cpp in Sources */,
 				496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */,
@@ -794,7 +794,7 @@
 				49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */,
 				49BC405021C19C0A00D62847 /* DarwinMutex.cpp in Sources */,
 				497EE45B2161442D000584CE /* Formatter.cpp in Sources */,
-				494FD64F21ABDB5D005C2A6B /* WiFiSpi.cpp in Sources */,
+				494FD64F21ABDB5D005C2A6B /* WiFiSPI.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
 				49BC404C21C08BD700D62847 /* String.cpp in Sources */,
 				4992125021ED0B8A00AA7656 /* SPIMaster.cpp in Sources */,

@@ -18,7 +18,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "WiFiSpiDriver.h"
+#include "WiFiSPIDriver.h"
 
 #include "bare/Timer.h"
 #include <cstring>
@@ -29,12 +29,12 @@ static constexpr uint8_t REPLY_FLAG = 1 << 7;
 
 
 // Read and check one byte from the input
-void WiFiSpiDriver::showCheckError(const char* err, uint8_t expected, uint8_t got)
+void WiFiSPIDriver::showCheckError(const char* err, uint8_t expected, uint8_t got)
 {
     Serial::printf("%s exp:%#02x, got:%#02x\n", err, expected, got);
 }
 
-static inline uint8_t setReply(WiFiSpiDriver::Command cmd) { return static_cast<uint8_t>(cmd) | REPLY_FLAG; }
+static inline uint8_t setReply(WiFiSPIDriver::Command cmd) { return static_cast<uint8_t>(cmd) | REPLY_FLAG; }
 
 /* 
     Sends a command to ESP. If numParam == 0 ends the command otherwise keeps it open.
@@ -46,9 +46,9 @@ static inline uint8_t setReply(WiFiSpiDriver::Command cmd) { return static_cast<
   |   8 bit   | 1bit | 7bit |  8bit   |   8bit    | nbytes | .. |   8bit  |
   |___________|______|______|_________|___________|________|____|_________|
 */
-void WiFiSpiDriver::sendCmd(Command cmd, uint8_t numParam)
+void WiFiSPIDriver::sendCmd(Command cmd, uint8_t numParam)
 {
-    DEBUG_LOG("WiFiSpi:sendCmd(%#02x, %d)\n", static_cast<uint32_t>(cmd), numParam);
+    DEBUG_LOG("WiFiSPI:sendCmd(%#02x, %d)\n", static_cast<uint32_t>(cmd), numParam);
     
     write(Command::START);
     write(cmd);
@@ -58,16 +58,16 @@ void WiFiSpiDriver::sendCmd(Command cmd, uint8_t numParam)
     }
 }
 
-void WiFiSpiDriver::endCmd()
+void WiFiSPIDriver::endCmd()
 {
     write(Command::END);
     flush(MessageIndicator::Finished);
-    DEBUG_LOG("WiFiSpi:endCmd finished\n");
+    DEBUG_LOG("WiFiSPI:endCmd finished\n");
 }
 
-void WiFiSpiDriver::sendParam(const uint8_t* param, uint8_t param_len)
+void WiFiSPIDriver::sendParam(const uint8_t* param, uint8_t param_len)
 {
-    DEBUG_LOG("WiFiSpi:sendParam(length=%d)\n", param_len);
+    DEBUG_LOG("WiFiSPI:sendParam(length=%d)\n", param_len);
 
     write(param_len);
     for (int i = 0; i < param_len; ++i) {
@@ -75,22 +75,22 @@ void WiFiSpiDriver::sendParam(const uint8_t* param, uint8_t param_len)
     }
 }
 
-void WiFiSpiDriver::sendParam(uint8_t param)
+void WiFiSPIDriver::sendParam(uint8_t param)
 {
-    DEBUG_LOG("WiFiSpi:sendParam(param=%#02x)\n", param);
+    DEBUG_LOG("WiFiSPI:sendParam(param=%#02x)\n", param);
 
     write(1);
     write(param);
 }
 
-void WiFiSpiDriver::sendParam(const char* str)
+void WiFiSPIDriver::sendParam(const char* str)
 {
     sendParam(reinterpret_cast<const uint8_t*>(str), strlen(str));
 }
 
-void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
+void WiFiSPIDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
 {
-    DEBUG_LOG("WiFiSpi:sendBuffer(length=%d)\n", param_len);
+    DEBUG_LOG("WiFiSPI:sendBuffer(length=%d)\n", param_len);
 
     write(param_len & 0xff);
     write(param_len >> 8);
@@ -107,18 +107,18 @@ void WiFiSpiDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
     param  ... pointer to space for the first parameter
     param_len ... max length of the first parameter (16 bit if paramLength16 is true, 8 bit otherwise), returns actual length
  */
-bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len, bool paramLength16)
+bool WiFiSPIDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len, bool paramLength16)
 {
-    DEBUG_LOG("WiFiSpi:waitResponse(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
+    DEBUG_LOG("WiFiSPI:waitResponse(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
 
     bool result = false;
     waitForTxReady();
-    DEBUG_LOG("WiFiSpi:waitResponse:Tx ready\n");
+    DEBUG_LOG("WiFiSPI:waitResponse:Tx ready\n");
 
     if (readAndCheckByte(Command::START, "Start") &&
             readAndCheckByte(setReply(cmd), "Cmd") &&
             readAndCheckByte(numParam, "Param")) {    
-        DEBUG_LOG("WiFiSpi:waitResponse:valid response\n");
+        DEBUG_LOG("WiFiSPI:waitResponse:valid response\n");
         if (numParam == 1) {
             int16_t len = read();
             if (paramLength16) {
@@ -146,13 +146,13 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, 
         
         result = readAndCheckByte(Command::END, "End");
     }
-    DEBUG_LOG("WiFiSpi:waitResponse:returning %s\n", result ? "true" : "false");
+    DEBUG_LOG("WiFiSPI:waitResponse:returning %s\n", result ? "true" : "false");
     return result;
 }
 
-bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
+bool WiFiSPIDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
 {
-    DEBUG_LOG("WiFiSpi:waitResponse[Params](cmd=%#02x, num=%d)\n", cmd, numParam);
+    DEBUG_LOG("WiFiSPI:waitResponse[Params](cmd=%#02x, num=%d)\n", cmd, numParam);
 
     bool result = false;
     waitForTxReady();
@@ -185,7 +185,7 @@ bool WiFiSpiDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
     return result;
 }
 
-uint32_t WiFiSpiDriver::readStatus()
+uint32_t WiFiSPIDriver::readStatus()
 {
     _spi->startTransfer();
     _spi->transferByte(static_cast<uint8_t>(Command::READSTATUS));
@@ -197,7 +197,7 @@ uint32_t WiFiSpiDriver::readStatus()
     return _spi->simulatedData() ? (((static_cast<uint32_t>(RxStatus::Ready) << 4) | static_cast<uint32_t>(TxStatus::Ready)) << 24) : status;
 }
 
-WiFiSpiDriver::RxStatus WiFiSpiDriver::waitForRxReady()
+WiFiSPIDriver::RxStatus WiFiSPIDriver::waitForRxReady()
 {
     int64_t endTime = Timer::systemTime() + ReadyStatusTimeout;
     uint32_t rawStatus;
@@ -211,17 +211,17 @@ WiFiSpiDriver::RxStatus WiFiSpiDriver::waitForRxReady()
         if (status == RxStatus::Ready) {
             return status;
         } else if (status != RxStatus::Busy) {
-            ERROR_LOG("WiFiSpiDriver::waitForRxReady: Invalid status=0x%08x\n", rawStatus);
+            ERROR_LOG("WiFiSPIDriver::waitForRxReady: Invalid status=0x%08x\n", rawStatus);
             return RxStatus::Invalid;
         }
     } while (Timer::systemTime() < endTime);
 
-    ERROR_LOG("WiFiSpiDriver::waitForRxReady: timeout, status=0x%08x\n", rawStatus);
+    ERROR_LOG("WiFiSPIDriver::waitForRxReady: timeout, status=0x%08x\n", rawStatus);
     
     return RxStatus::Busy;
 }
 
-WiFiSpiDriver::TxStatus WiFiSpiDriver::waitForTxReady()
+WiFiSPIDriver::TxStatus WiFiSPIDriver::waitForTxReady()
 {
     int64_t endTime = Timer::systemTime() + ReadyStatusTimeout;
     uint32_t rawStatus;
@@ -236,17 +236,17 @@ WiFiSpiDriver::TxStatus WiFiSpiDriver::waitForTxReady()
         if (status == TxStatus::Ready) {
             return status;
         } else if (status != TxStatus::NoData && status != TxStatus::PreparingData) {
-            ERROR_LOG("WiFiSpiDriver::waitForTxReady: Invalid status=0x%08x\n", rawStatus);
+            ERROR_LOG("WiFiSPIDriver::waitForTxReady: Invalid status=0x%08x\n", rawStatus);
             return TxStatus::Invalid;
         }
     } while (Timer::systemTime() < endTime);
 
-    ERROR_LOG("WiFiSpiDriver::waitForTxReady: timeout, status=0x%08x\n", rawStatus);
+    ERROR_LOG("WiFiSPIDriver::waitForTxReady: timeout, status=0x%08x\n", rawStatus);
     
     return status;
 }
 
-uint8_t WiFiSpiDriver::read()
+uint8_t WiFiSPIDriver::read()
 {
     // discard output data in the buffer
     _bufferSize = 0;
@@ -281,7 +281,7 @@ uint8_t WiFiSpiDriver::read()
     return _buffer[_bufferIndex++];
 }
        
-void WiFiSpiDriver::write(uint8_t c)
+void WiFiSPIDriver::write(uint8_t c)
 {
     // discard input data in the buffer
     _bufferIndex = 0;
@@ -293,7 +293,7 @@ void WiFiSpiDriver::write(uint8_t c)
     _buffer[++_bufferSize] = c;
 }
 
-void WiFiSpiDriver::fillBuffer()
+void WiFiSPIDriver::fillBuffer()
 {
     _spi->startTransfer();
     
@@ -306,7 +306,7 @@ void WiFiSpiDriver::fillBuffer()
     _spi->endTransfer();
 }
 
-void WiFiSpiDriver::writeBuffer()
+void WiFiSPIDriver::writeBuffer()
 {
     uint8_t i = 0;
     uint8_t len = _bufferSize + 1;
@@ -327,7 +327,7 @@ void WiFiSpiDriver::writeBuffer()
     _spi->endTransfer();
 }
 
-void WiFiSpiDriver::flush(MessageIndicator indicator)
+void WiFiSPIDriver::flush(MessageIndicator indicator)
 {
     if (_bufferSize == 0) {
         return;

@@ -28,7 +28,7 @@
 
 namespace bare {
 
-    class WiFiSpiDriver
+    class WiFiSPIDriver
     {
       public:
         static constexpr uint32_t ResponseTimeout = 3000000;
@@ -103,7 +103,7 @@ namespace bare {
             char* value;
         };
         
-        WiFiSpiDriver(SPIMaster* spi) : _spi(spi) { }
+        WiFiSPIDriver(SPIMaster* spi) : _spi(spi) { }
 
         void sendCmd(Command cmd, uint8_t numParam = 0);
         void endCmd();

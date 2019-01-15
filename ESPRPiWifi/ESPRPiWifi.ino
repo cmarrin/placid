@@ -46,7 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/GPIO.h"
 #include "bare/Serial.h"
 #include "bare/Shell.h"
-#include "bare/SpiSlave.h"
+#include "bare/SPISlave.h"
 #include "bare/Timer.h"
 
 #include <Ticker.h>

@@ -72,8 +72,8 @@ SRC = \
 	String.cpp \
 	Timer.cpp \
 	Volume.cpp \
-	WiFiSpi.cpp \
-	WiFiSpiDriver.cpp \
+	WiFiSPI.cpp \
+	WiFiSPIDriver.cpp \
 	XYModem.cpp \
 
 include Common.mk

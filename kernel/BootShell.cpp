@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/Graphics.h"
 #include "bare/Serial.h"
-#include "bare/WiFiSpi.h"
+#include "bare/WiFiSPI.h"
 #include "bare/Timer.h"
 #include "bare/XYModem.h"
 #include "Allocator.h"
@@ -99,20 +99,20 @@ static void testSPI()
 static void testWifi()
 {
     bare::SPIMaster spi;
-    bare::WiFiSpi wifi(&spi);
+    bare::WiFiSPI wifi(&spi);
     wifi.init();
 
     // check for the presence of the ESP module:
-    bare::WiFiSpi::Status status = wifi.status();
-    if (status == bare::WiFiSpi::Status::NoShield) {
+    bare::WiFiSPI::Status status = wifi.status();
+    if (status == bare::WiFiSPI::Status::NoShield) {
         bare::Serial::printf("WiFi module not present");
     } else {
-        bare::Serial::printf("WiFiSpi status=%s\n", bare::WiFiSpi::statusDetail(status));
+        bare::Serial::printf("WiFiSPI status=%s\n", bare::WiFiSPI::statusDetail(status));
         
         bare::String s = wifi.firmwareVersion();
-        bare::Serial::printf("WiFiSpi firmware version='%s'\n", s.c_str());
+        bare::Serial::printf("WiFiSPI firmware version='%s'\n", s.c_str());
         s = wifi.protocolVersion();
-        bare::Serial::printf("WiFiSpi protocol version='%s'\n", s.c_str());
+        bare::Serial::printf("WiFiSPI protocol version='%s'\n", s.c_str());
         
         bare::Serial::printf("Scanning network...\n");
 
@@ -123,14 +123,14 @@ static void testWifi()
         
         while (--attempts > 0) {
             status = wifi.checkNetworkScan(networkCount);
-            if (status == bare::WiFiSpi::Status::ScanCompleted) {
+            if (status == bare::WiFiSPI::Status::ScanCompleted) {
                 succeeded = true;
                 break;
-            } else if (status == bare::WiFiSpi::Status::Failure) {
+            } else if (status == bare::WiFiSPI::Status::Failure) {
                 bare::Serial::printf("WiFi network scan failed\n");
                 break;
-            } else if (status != bare::WiFiSpi::Status::Scanning) {
-                bare::Serial::printf("Unexpected status from checkNetworkScan:%s\n", bare::WiFiSpi::statusDetail(status));
+            } else if (status != bare::WiFiSPI::Status::Scanning) {
+                bare::Serial::printf("Unexpected status from checkNetworkScan:%s\n", bare::WiFiSPI::statusDetail(status));
                 break;
             }
             bare::Timer::usleep(1000000);
@@ -152,11 +152,11 @@ static void testWifi()
             bare::Serial::printf("done\n");
         }
         
-        bare::WiFiSpi::Status status = bare::WiFiSpi::Status::Idle;
-        while (status != bare::WiFiSpi::Status::Connected) {
+        bare::WiFiSPI::Status status = bare::WiFiSPI::Status::Idle;
+        while (status != bare::WiFiSPI::Status::Connected) {
             bare::Timer::usleep(1000000);
             status = wifi.status();
-            bare::Serial::printf("Wifi status: %s\n", bare::WiFiSpi::statusDetail(status));
+            bare::Serial::printf("Wifi status: %s\n", bare::WiFiSPI::statusDetail(status));
         }
 
         // you're connected now, so print out the data:

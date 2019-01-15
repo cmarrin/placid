@@ -42,7 +42,7 @@
 
 #include <cstdint>
 #include "bare/IPAddr.h"
-#include "WiFiSpiDriver.h"
+#include "WiFiSPIDriver.h"
 
 namespace bare {
 
@@ -60,7 +60,7 @@ namespace bare {
     static constexpr uint8_t WL_MAX_ATTEMPT_CONNECTION = 20;
     static constexpr uint8_t SS = 8;
 
-    class WiFiSpi
+    class WiFiSPI
     {
     public:
         enum class Status {
@@ -77,7 +77,7 @@ namespace bare {
             Scanning        = 130,
         };
         
-        WiFiSpi(SPIMaster* spi) : _driver(spi) { }
+        WiFiSPI(SPIMaster* spi) : _driver(spi) { }
         
         /*
          * Initialization of the library.
@@ -89,14 +89,14 @@ namespace bare {
 
         uint8_t getSocket();
 
-        String firmwareVersion() { return getStringCmd(WiFiSpiDriver::Command::GET_FW_VERSION, WL_FW_VER_LENGTH); }
-        String protocolVersion() { return getStringCmd(WiFiSpiDriver::Command::GET_PROTOCOL_VERSION, WL_PROTOCOL_VER_LENGTH); }
-        String SSID() { return getStringCmd(WiFiSpiDriver::Command::GET_CURR_SSID, WL_SSID_MAX_LENGTH); }
+        String firmwareVersion() { return getStringCmd(WiFiSPIDriver::Command::GET_FW_VERSION, WL_FW_VER_LENGTH); }
+        String protocolVersion() { return getStringCmd(WiFiSPIDriver::Command::GET_PROTOCOL_VERSION, WL_PROTOCOL_VER_LENGTH); }
+        String SSID() { return getStringCmd(WiFiSPIDriver::Command::GET_CURR_SSID, WL_SSID_MAX_LENGTH); }
 
-        Status status() { return getStatusCmd(WiFiSpiDriver::Command::GET_CONN_STATUS); }
-        Status connect(const char* ssid) { return sendParamCmd(WiFiSpiDriver::Command::SET_NET, ssid); }
-        Status connect(const char* ssid, const char* pwd) { return sendParamCmd(WiFiSpiDriver::Command::SET_PASSPHRASE, ssid, pwd); }
-        Status disconnect() { return getStatusCmd(WiFiSpiDriver::Command::DISCONNECT); }
+        Status status() { return getStatusCmd(WiFiSPIDriver::Command::GET_CONN_STATUS); }
+        Status connect(const char* ssid) { return sendParamCmd(WiFiSPIDriver::Command::SET_NET, ssid); }
+        Status connect(const char* ssid, const char* pwd) { return sendParamCmd(WiFiSPIDriver::Command::SET_PASSPHRASE, ssid, pwd); }
+        Status disconnect() { return getStatusCmd(WiFiSPIDriver::Command::DISCONNECT); }
 
         // Change Ip configuration settings disabling the dhcp client
         bool setConfig(IPAddr local_ip);
@@ -131,12 +131,12 @@ namespace bare {
         static const char* statusDetail(Status);
 
     private:
-        String getStringCmd(WiFiSpiDriver::Command, uint8_t length);
-        Status getStatusCmd(WiFiSpiDriver::Command);
-        uint8_t getUInt8Cmd(WiFiSpiDriver::Command);
+        String getStringCmd(WiFiSPIDriver::Command, uint8_t length);
+        Status getStatusCmd(WiFiSPIDriver::Command);
+        uint8_t getUInt8Cmd(WiFiSPIDriver::Command);
         
-        Status waitForUInt8(WiFiSpiDriver::Command, uint8_t&);
-        Status waitForStatus(WiFiSpiDriver::Command cmd)
+        Status waitForUInt8(WiFiSPIDriver::Command, uint8_t&);
+        Status waitForStatus(WiFiSPIDriver::Command cmd)
         {
             uint8_t value;
             if (waitForUInt8(cmd, value) == Status::Failure) {
@@ -159,7 +159,7 @@ namespace bare {
         }
 
         template<typename ... Args>
-        Status sendParamCmd(WiFiSpiDriver::Command cmd, Args... args)
+        Status sendParamCmd(WiFiSPIDriver::Command cmd, Args... args)
         {
             _driver.sendCmd(cmd);
             sendParams(args...);
@@ -169,7 +169,7 @@ namespace bare {
 
         int16_t  _state[MAX_SOCK_NUM];
         uint16_t _server_port[MAX_SOCK_NUM];
-        WiFiSpiDriver _driver;
+        WiFiSPIDriver _driver;
     };
 
 }
