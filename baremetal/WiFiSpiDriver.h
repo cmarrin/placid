@@ -152,8 +152,7 @@ namespace bare {
         
         bool readAndCheckByte(uint8_t expected, const char* err)
         {
-            _spi->startTransfer();
-            uint32_t value = _spi->transferByte(0);
+            uint32_t value = read();
             bool success = true;
             if (value == SPIMaster::ErrorByte) {
                 ERROR_LOG("Timeout on %s cmd:expected %#02x\n", err, expected);
@@ -162,7 +161,6 @@ namespace bare {
                 ERROR_LOG("Mismatch on %s:expexted %#02x, got %#02x\n", err, expected, value);
                 success = false;
             }
-            _spi->endTransfer();
             return success;
         }
 
