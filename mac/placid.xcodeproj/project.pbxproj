@@ -190,7 +190,7 @@
 		494FD63621A08885005C2A6B /* printf-emb_tiny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "printf-emb_tiny.cpp"; path = "../baremetal/printf-emb_tiny.cpp"; sourceTree = "<group>"; };
 		494FD64321A896DE005C2A6B /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../ESPRPiWifi/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		494FD64821AB225B005C2A6B /* WiFiSPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WiFiSPI.h; sourceTree = "<group>"; };
-		494FD64921AB3596005C2A6B /* IPAddr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPAddr.h; sourceTree = "<group>"; };
+		494FD64921AB3596005C2A6B /* IPAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPAddress.h; sourceTree = "<group>"; };
 		494FD64A21AB36D0005C2A6B /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		494FD64B21AB36E4005C2A6B /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = String.cpp; path = ../baremetal/String.cpp; sourceTree = "<group>"; };
 		494FD64D21AB4338005C2A6B /* WiFiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSPI.cpp; path = ../baremetal/WiFiSPI.cpp; sourceTree = "<group>"; };
@@ -416,7 +416,7 @@
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				49BC3FF421BB0AEE00D62847 /* Graphics.h */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
-				494FD64921AB3596005C2A6B /* IPAddr.h */,
+				494FD64921AB3596005C2A6B /* IPAddress.h */,
 				496C3BC221891FC2004DBC22 /* Log.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
 				49BC404D21C1976D00D62847 /* Mutex.h */,
