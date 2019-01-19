@@ -59,15 +59,8 @@ uint8_t WiFiSPI::getSocket()
 
 String WiFiSPI::getStringCmd(WiFiSPIDriver::Command cmd, uint8_t length)
 {
-    _driver.sendCmd(cmd);
-
-    char* buf = new char[length + 1];
-    if (!_driver.waitResponse(cmd, reinterpret_cast<uint8_t*>(buf), length)) {
-        return "***ERROR***";
-    }
-    buf[length] = '\0';
-    String s(buf);
-    delete [ ] buf;
+    String s;
+    getParamsCmd(cmd, s);
     return s;
 }
 
@@ -92,7 +85,11 @@ uint8_t WiFiSPI::getUInt8Cmd(WiFiSPIDriver::Command cmd)
 
 WiFiSPI::Status WiFiSPI::waitForUInt8(WiFiSPIDriver::Command cmd, uint8_t& value)
 {
-    if (!_driver.waitResponse(cmd, value)) {
+    if (!_driver.waitResponseStart(cmd, 1)) {
+        return WiFiSPI::Status::Failure;
+    }
+    _driver.waitResponseParam(value);
+    if (!_driver.waitResponseEnd()) {
         return WiFiSPI::Status::Failure;
     }
     return WiFiSPI::Status::Success;
@@ -219,21 +216,8 @@ WiFiSPI::Status WiFiSPI::checkNetworkScan(uint8_t& numNetworks)
     return (num == WiFiScanRunning) ? Status::Scanning : Status::ScanCompleted;
 }
 
-WiFiSPI::Status WiFiSPI::scannedNetworkItem(uint8_t i, String& ssid, uint8_t& encryptionType, int32_t& rssi)
+WiFiSPI::Status WiFiSPI::scannedNetworkItem(uint8_t i, String& ssid, int32_t& rssi, uint8_t& encryptionType)
 {
-    char ssidBuffer[WiFiSPIDriver::MaxSSIDSize];
-    WiFiSPIDriver::Param params[] =
-    {
-        { WiFiSPIDriver::MaxSSIDSize, ssidBuffer },
-        { sizeof(rssi), reinterpret_cast<char*>(&rssi) },
-        { sizeof(encryptionType), reinterpret_cast<char*>(&encryptionType) }
-    };
-        
-    _driver.sendCmd(WiFiSPIDriver::Command::GET_SCANNED_DATA, 1);
-    _driver.sendParam(i);
-    _driver.endCmd();
-    Status status = _driver.waitResponse(WiFiSPIDriver::Command::GET_SCANNED_DATA, 3, params) ? Status::Success : Status::Failure;
-    ssid = String(ssidBuffer, params[0].length);
-    return status;
+    return getParamsWithSentParamCmd(WiFiSPIDriver::Command::GET_SCANNED_DATA, i, ssid, rssi, encryptionType);
 }
 

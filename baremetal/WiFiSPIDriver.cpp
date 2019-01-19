@@ -100,89 +100,49 @@ void WiFiSPIDriver::sendBuffer(const uint8_t* param, uint16_t param_len)
     }
 }
 
-/*
-    Gets a response from the ESP
-    cmd ... command id
-    numParam ... number of parameters - currently supported 0 or 1
-    param  ... pointer to space for the first parameter
-    param_len ... max length of the first parameter (16 bit if paramLength16 is true, 8 bit otherwise), returns actual length
- */
-bool WiFiSPIDriver::waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len, bool paramLength16)
+bool WiFiSPIDriver::waitResponseStart(Command cmd, uint8_t numParam)
 {
-    DEBUG_LOG("WiFiSPI:waitResponse(cmd=%#02x, num=%d, len=%d)\n", cmd, numParam, param_len);
-
-    bool result = false;
     waitForTxReady();
-    DEBUG_LOG("WiFiSPI:waitResponse:Tx ready\n");
-
-    if (readAndCheckByte(Command::START, "Start") &&
+    return readAndCheckByte(Command::START, "Start") &&
             readAndCheckByte(setReply(cmd), "Cmd") &&
-            readAndCheckByte(numParam, "Param")) {    
-        DEBUG_LOG("WiFiSPI:waitResponse:valid response\n");
-        if (numParam == 1) {
-            int16_t len = read();
-            if (paramLength16) {
-                len <<= 8;
-                len |= read();
-            }
-            
-            if (_spi->simulatedData()) {
-                len = param_len;
-            }
-            
-            for (uint16_t ii = 0; ii < len; ++ii) {
-                if (ii < param_len) {
-                    param[ii] = read();
-                }
-            }
-
-            if (len < param_len) {
-                param_len = len;
-            }
-        }
-        else if (numParam != 0) {
-            return false;
-        }
-        
-        result = readAndCheckByte(Command::END, "End");
-    }
-    DEBUG_LOG("WiFiSPI:waitResponse:returning %s\n", result ? "true" : "false");
-    return result;
+            readAndCheckByte(numParam, "Param");
 }
 
-bool WiFiSPIDriver::waitResponse(Command cmd, uint8_t numParam, Param* params)
+void WiFiSPIDriver::waitResponseParam(uint8_t* param, uint16_t& paramLength, bool paramLength16)
 {
-    DEBUG_LOG("WiFiSPI:waitResponse[Params](cmd=%#02x, num=%d)\n", cmd, numParam);
-
-    bool result = false;
-    waitForTxReady();
-
-    if (readAndCheckByte(Command::START, "Start") &&
-            readAndCheckByte(setReply(cmd), "Cmd") &&
-            readAndCheckByte(numParam, "Param")) {    
-        if (numParam > 0) {
-            for (uint8_t i = 0; i < numParam; ++i) {
-                uint8_t len = read();
-                
-                if (_spi->simulatedData()) {
-                    len = params[i].length;
-                }
-                
-                for (uint8_t ii = 0; ii < len; ++ii) {
-                    if (ii < params[i].length) {
-                        params[i].value[ii] = read();
-                    }
-                }
-
-                if (len < params[i].length) {
-                    params[i].length = len;
-                }
-            }
-        }
-        
-        result = readAndCheckByte(Command::END, "End");
+    int16_t len = read();
+    if (paramLength16) {
+        len <<= 8;
+        len |= read();
     }
-    return result;
+    
+    if (_spi->simulatedData()) {
+        len = paramLength;
+    }
+    
+    for (uint16_t ii = 0; ii < len; ++ii) {
+        if (ii < paramLength) {
+            param[ii] = read();
+        }
+    }
+
+    if (len < paramLength) {
+        paramLength = len;
+    }
+}
+
+void WiFiSPIDriver::waitResponseParam(String& param)
+{
+    int16_t len = read();
+    param.reserve(len + 1);
+    for (uint16_t ii = 0; ii < len; ++ii) {
+        param += static_cast<char>(read());
+    }
+}
+
+bool WiFiSPIDriver::waitResponseEnd()
+{
+    return readAndCheckByte(Command::END, "End");
 }
 
 uint32_t WiFiSPIDriver::readStatus()

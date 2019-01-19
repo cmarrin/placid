@@ -21,6 +21,7 @@
 #pragma once
 
 #include "bare/SPIMaster.h"
+#include "bare/String.h"
 #include <cstdint>
 
 //#define ENABLE_DEBUG_LOG
@@ -114,43 +115,37 @@ namespace bare {
 
         void sendBuffer(const uint8_t* param, uint16_t param_len);
 
-        bool waitResponse(Command cmd)
-        {
-            uint16_t len = 0;
-            return waitResponse(cmd, 0, nullptr, len, false);
-        }
+        bool waitResponseStart(Command, uint8_t numParam);
+        void waitResponseParam(uint8_t* param, uint16_t& paramLength, bool paramLength16);
+        bool waitResponseEnd();
 
-        bool waitResponse(Command cmd, uint8_t& param)
+        void waitResponseParam(uint8_t& param)
         {
             uint16_t len = sizeof(uint8_t);
-            return waitResponse(cmd, 1, &param, len, false);
+            waitResponseParam(&param, len, false);
         }
-
-        bool waitResponse(Command cmd, uint16_t& param)
+        
+        void waitResponseParam(uint16_t& param)
         {
             uint16_t len = sizeof(uint16_t);
-            return waitResponse(cmd, 1, reinterpret_cast<uint8_t*>(&param), len, false);
+            waitResponseParam(reinterpret_cast<uint8_t*>(&param), len, false);
+        }
+        
+        void waitResponseParam(int32_t& param)
+        {
+            uint16_t len = sizeof(int32_t);
+            waitResponseParam(reinterpret_cast<uint8_t*>(&param), len, false);
         }
 
-        bool waitResponse(Command cmd, uint32_t& param)
+        void waitResponseParam(uint32_t& param)
         {
             uint16_t len = sizeof(uint32_t);
-            return waitResponse(cmd, 1, reinterpret_cast<uint8_t*>(&param), len, false);
+            waitResponseParam(reinterpret_cast<uint8_t*>(&param), len, false);
         }
 
-        bool waitResponse(Command cmd, uint8_t* param, uint8_t& param_len)
-        {
-            uint16_t len = param_len;
-            bool result = waitResponse(cmd, 1, param, len, false);
-            param_len = static_cast<uint8_t>(len);
-            return result;
-        }
-            
-        bool waitResponse(Command cmd, uint8_t numParam, Param* params);
+        void waitResponseParam(String& param);
         
     private:
-        bool waitResponse(Command cmd, uint8_t numParam, uint8_t* param, uint16_t& param_len, bool paramLength16 = true);
-
         void showCheckError(const char* err, uint8_t expected, uint8_t got);
         
         bool readAndCheckByte(uint8_t expected, const char* err)

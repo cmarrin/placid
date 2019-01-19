@@ -144,23 +144,28 @@ static void testWifi()
             bare::Serial::printf("Scanned networks (%d):\n", networkCount);
             for (uint8_t i = 0; i < networkCount; ++i) {
                 bare::String ssid;
-                uint8_t encryptionType;
                 int32_t rssi;
-                wifi.scannedNetworkItem(i, ssid, encryptionType, rssi);
-                bare::Serial::printf("    ssid=%s, encr=%d, rssi=%d\n", ssid.c_str(), encryptionType, rssi);
+                uint8_t encryptionType;
+                wifi.scannedNetworkItem(i, ssid, rssi, encryptionType);
+                bare::Serial::printf("    ssid=%s, rssi=%d, encr=%d\n", ssid.c_str(), rssi, encryptionType);
             }
             bare::Serial::printf("done\n");
         }
         
+        bare::Serial::printf("WiFi waiting to connect...\n");
         bare::WiFiSPI::Status status = bare::WiFiSPI::Status::Idle;
-        while (status != bare::WiFiSPI::Status::Connected) {
+        for  (int i = 0; i < 20; ++i) {
+            if (status == bare::WiFiSPI::Status::Connected) {
+                bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
+                return;
+            }
+
             bare::Timer::usleep(1000000);
             status = wifi.status();
-            bare::Serial::printf("Wifi status: %s\n", bare::WiFiSPI::statusDetail(status));
+            bare::Serial::printf("    Wifi status: %s\n", bare::WiFiSPI::statusDetail(status));
         }
 
-        // you're connected now, so print out the data:
-        bare::Serial::printf("You're connected to '%s'\n", wifi.SSID().c_str());
+        bare::Serial::printf("Failed to connect\n");
     }
 }
 
