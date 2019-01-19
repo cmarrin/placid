@@ -162,20 +162,6 @@ namespace bare {
         }
 
         // Template function to send command which expects a variable number of results
-//        template<typename T>
-//        Status getParamsCmd(WiFiSPIDriver::Command cmd, T& param)
-//        {
-//            _driver.sendCmd(cmd);
-//            
-//            if (_driver.waitResponseStart(cmd, 1)) {
-//                _driver.waitResponseParam(param);
-//                if (_driver.waitResponseEnd()) {
-//                    return Status::Success;
-//                }
-//            }
-//            return Status::Failure;
-//        }
-
         template<typename ... Args>
         Status getParamsCmd(WiFiSPIDriver::Command cmd, Args&... args)
         {
