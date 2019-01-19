@@ -103,6 +103,7 @@ namespace bare {
         size_t size() const { return _size ? (_size - 1) : 0; }
         bool empty() const { return _size <= 1; }
         void clear() { _size = 1; if (_data) _data[0] = '\0'; }
+        void reserve(size_t n = 0) { ensureCapacity(n); }
         String& operator+=(uint8_t c)
         {
             ensureCapacity(_size + 1);
