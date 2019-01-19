@@ -39,11 +39,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace bare {
 
-    class IPAddr {
+    class IPAddress {
     public:
-        IPAddr() { memset(_addr, 0, sizeof(_addr)); }
+        IPAddress() { memset(_addr, 0, sizeof(_addr)); }
         
-        IPAddr(uint32_t addr)
+        IPAddress(uint32_t addr)
         {
             _addr[0] = static_cast<uint8_t>(addr);
             _addr[1] = static_cast<uint8_t>(addr >> 8);
@@ -51,7 +51,7 @@ namespace bare {
             _addr[3] = static_cast<uint8_t>(addr >> 24);
         }
         
-        IPAddr(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
+        IPAddress(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
         {
             _addr[0] = a;
             _addr[1] = b;
@@ -59,7 +59,7 @@ namespace bare {
             _addr[3] = d;
         }
         
-        IPAddr(const String& ipString);
+        IPAddress(const String& ipString);
         
         operator uint32_t() const
         {
@@ -73,8 +73,8 @@ namespace bare {
         uint8_t& operator[](size_t i) { assert(i < 4); return _addr[i]; }
         const uint8_t& operator[](size_t i) const { assert(i < 4); return _addr[i]; }
         
-        static IPAddr myIPAddr();
-        static void lookupHostName(const char* name, std::function<void (const char* name, IPAddr)>);
+        static IPAddress myIPAddress();
+        static void lookupHostName(const char* name, std::function<void (const char* name, IPAddress)>);
         
     private:    
         uint8_t _addr[4];

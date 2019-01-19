@@ -115,7 +115,7 @@ const char* WiFiSPI::statusDetail(Status status)
 /*
  * 
  */
-bool WiFiSPI::setDNS(IPAddr dns_server1)
+bool WiFiSPI::setDNS(IPAddress dns_server1)
 {
     return false; // WiFiSPIDrv::config(0, 0, 0, (uint32_t)dns_server1, 0);
 }
@@ -123,7 +123,7 @@ bool WiFiSPI::setDNS(IPAddr dns_server1)
 /*
  * 
  */
-bool WiFiSPI::setDNS(IPAddr dns_server1, IPAddr dns_server2)
+bool WiFiSPI::setDNS(IPAddress dns_server1, IPAddress dns_server2)
 {
     return false; // WiFiSPIDrv::config(0, 0, 0, (uint32_t)dns_server1, (uint32_t)dns_server2);
 }
@@ -142,34 +142,34 @@ uint8_t* WiFiSPI::macAddress(uint8_t* mac)
 /*
  * 
  */
-IPAddr WiFiSPI::localIP()
+IPAddress WiFiSPI::localIP()
 {
-//    IPAddr ret;
+//    IPAddress ret;
 //    WiFiSPIDrv::getIpAddress(ret);
 //    return ret;
-    return IPAddr();
+    return IPAddress();
 }
 
 /*
  * 
  */
-IPAddr WiFiSPI::subnetMask()
+IPAddress WiFiSPI::subnetMask()
 {
-//    IPAddr ret;
+//    IPAddress ret;
 //    WiFiSPIDrv::getSubnetMask(ret);
 //    return ret;
-    return IPAddr();
+    return IPAddress();
 }
 
 /*
  * 
  */
-IPAddr WiFiSPI::gatewayIP()
+IPAddress WiFiSPI::gatewayIP()
 {
-//    IPAddr ret;
+//    IPAddress ret;
 //    WiFiSPIDrv::getGatewayIP(ret);
 //    return ret;
-    return IPAddr();
+    return IPAddress();
 }
 
 /*

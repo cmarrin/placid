@@ -41,7 +41,7 @@
 #pragma once
 
 #include <cstdint>
-#include "bare/IPAddr.h"
+#include "bare/IPAddress.h"
 #include "WiFiSPIDriver.h"
 
 namespace bare {
@@ -99,18 +99,18 @@ namespace bare {
         Status disconnect() { return getStatusCmd(WiFiSPIDriver::Command::DISCONNECT); }
 
         // Change Ip configuration settings disabling the dhcp client
-        bool setConfig(IPAddr local_ip);
-        bool setConfig(IPAddr local_ip, IPAddr dns_server);
-        bool setConfig(IPAddr local_ip, IPAddr dns_server, IPAddr gateway);
-        bool config(IPAddr local_ip, IPAddr dns_server, IPAddr gateway, IPAddr subnet);
+        bool setConfig(IPAddress local_ip);
+        bool setConfig(IPAddress local_ip, IPAddress dns_server);
+        bool setConfig(IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
+        bool config(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
 
-        bool setDNS(IPAddr dns_server1);
-        bool setDNS(IPAddr dns_server1, IPAddr dns_server2);
+        bool setDNS(IPAddress dns_server1);
+        bool setDNS(IPAddress dns_server1, IPAddress dns_server2);
 
         uint8_t* macAddress(uint8_t* mac);
-        IPAddr localIP();
-        IPAddr subnetMask();
-        IPAddr gatewayIP();
+        IPAddress localIP();
+        IPAddress subnetMask();
+        IPAddress gatewayIP();
         uint8_t* BSSID();
         
         // Return the signal strength
@@ -124,7 +124,7 @@ namespace bare {
         // Return the i-th discovered network from scanNetworks
         Status scannedNetworkItem(uint8_t i, String& ssid, int32_t& rssi, uint8_t& encryptionType);
      
-        Status hostByName(const char* aHostname, IPAddr& aResult);
+        Status hostByName(const char* aHostname, IPAddress& aResult);
 
         void softReset();
         
