@@ -66,6 +66,41 @@ bool bare::useAllocator()
     return true;
 }
 
+template<typename T>
+T intToFloat(long long a)
+{
+    bool sign = false;
+    if (a < 0) {
+        sign = true;
+        a = -a;
+    }
+    
+    T f = 0;
+    T multiplier = 1;
+    
+    while (a) {
+        T digit = 0.0;
+        switch(a % 10) {
+        case 1: digit = 1.0; break;
+        case 2: digit = 2.0; break;
+        case 3: digit = 3.0; break;
+        case 4: digit = 4.0; break;
+        case 5: digit = 5.0; break;
+        case 6: digit = 6.0; break;
+        case 7: digit = 7.0; break;
+        case 8: digit = 8.0; break;
+        case 9: digit = 9.0; break;
+        default: break;
+        }
+        
+        f += digit * multiplier;
+        a /= 10;
+        multiplier *= 10;
+    }
+    
+    return sign ? -f : f;
+}
+
 extern "C" {
 
     void* malloc(size_t size)
@@ -121,5 +156,8 @@ extern "C" {
         Serial::printf("Divide by zero\n");
         abort();
     }
+
+    double __aeabi_l2d(long long a) { return intToFloat<double>(a); }
+    float __aeabi_l2f(long long a) { return intToFloat<float>(a); }
 
 }
