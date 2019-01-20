@@ -46,6 +46,10 @@ static uint32_t mantissaToString(const char* mantissa, char* buf, int32_t digits
     const char* p = buf;
     char* trailingNonZeroDigit = nullptr;
     
+    if (digitsToLeft == 0) {
+        *buf++ = '0';
+    }
+    
     while (*mantissa) {
         if (digitsToLeft-- == 0) {
             *buf++ = '.';
@@ -67,7 +71,10 @@ static uint32_t mantissaToString(const char* mantissa, char* buf, int32_t digits
         buf = trailingNonZeroDigit;
     }
     *buf = '\0';
-    
+
+    if (buf[-1] == '.') {
+        buf[-1] = '\0';
+    }
     return static_cast<uint32_t>(buf - p);
 }
 
@@ -81,7 +88,14 @@ static uint32_t mantissaToString(const char* mantissa, bare::Formatter::Generato
     return size;
 }
 
-uint32_t Formatter::printString(Generator gen, Float v, int32_t precision, Capital cap)
+static void truncateNumber(char* buf, int32_t numDigits, int32_t digitsToTruncate)
+{
+    if (digitsToTruncate > 0) {
+        buf[numDigits - digitsToTruncate] = '\0';
+    }
+}
+
+uint32_t Formatter::printString(Generator gen, Float v, int32_t precision, Capital cap, uint8_t flags)
 {
     if (v == Float()) {
         gen('0');
@@ -89,13 +103,25 @@ uint32_t Formatter::printString(Generator gen, Float v, int32_t precision, Capit
         return 1;
     }
     
+    // Round to precision
+    if (precision < 0) {
+        precision = 6;
+    } else if (precision > 16) {
+        precision = 16;
+    }
+    
+    Float multiplier = 1;
+    for (int32_t i = 0; i < precision; ++i) {
+        multiplier *= 10;
+    }
+    
+    v += Float(0.5) / multiplier;
+    
     uint32_t size = 0;
     int16_t exponent;    
     char buf[20];
     v.toString(buf, exponent);
 
-    // FIXME: Round using precision
-    
     if (v < Float()) {
         gen('-');
         size++;
@@ -108,9 +134,11 @@ uint32_t Formatter::printString(Generator gen, Float v, int32_t precision, Capit
     
     if (n >= -4 && n <= 6) {
         // no exponent
+        truncateNumber(buf, numDigits, numDigits - n - precision - 1);
         return mantissaToString(buf, gen, n + 1) + size;
     }
     
+    truncateNumber(buf, numDigits, numDigits - precision - 1);
     size += mantissaToString(buf, gen, 1);
     gen((cap == bare::Formatter::Capital::Yes) ? 'E' : 'e');
     size++;
