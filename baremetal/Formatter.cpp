@@ -57,31 +57,20 @@ bool Formatter::toNumber(const char*& s, uint32_t& n)
 enum class Signed { Yes, No };
 enum class FloatType { Float, Exp, Shortest };
  
-enum class Flag {
-    leftJustify = 0x01,
-    plus = 0x02,
-    space = 0x04,
-    alt = 0x08,
-    zeroPad = 0x10,
-};
-
 // va_list can be either an array or a struct. This makes it impossible to pass by reference
 // in a cross-platform way. Wrap it in a struct and pass that by reference so it works in
 // all platforms
 struct VA_LIST { va_list value; };
 
-static inline bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
-static inline void setFlag(uint8_t& flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
-
 static void handleFlags(const char*& format, uint8_t& flags)
 {
     while (1) {
         switch (*format) {
-        case '-': setFlag(flags, Flag::leftJustify); break;
-        case '+': setFlag(flags, Flag::plus); break;
-        case ' ': setFlag(flags, Flag::space); break;
-        case '#': setFlag(flags, Flag::alt); break;
-        case '0': setFlag(flags, Flag::zeroPad); break;
+        case '-': Formatter::setFlag(flags, Formatter::Flag::leftJustify); break;
+        case '+': Formatter::setFlag(flags, Formatter::Flag::plus); break;
+        case ' ': Formatter::setFlag(flags, Formatter::Flag::space); break;
+        case '#': Formatter::setFlag(flags, Formatter::Flag::alt); break;
+        case '0': Formatter::setFlag(flags, Formatter::Flag::zeroPad); break;
         default: return;
         }
         ++format;
@@ -119,7 +108,6 @@ static Length handleLength(const char*& format)
     } else {
         return length;
     }
-    ++format;
     return length;
 }
 
@@ -184,7 +172,7 @@ static int32_t outInteger(bare::Formatter::Generator gen, uintmax_t value, Signe
         }
     }
     
-    if (isFlag(flags, Flag::alt) && base != 10) {
+    if (Formatter::isFlag(flags, Formatter::Flag::alt) && base != 10) {
         gen('0');
         size++;
         width--;
@@ -199,7 +187,7 @@ static int32_t outInteger(bare::Formatter::Generator gen, uintmax_t value, Signe
     char* p = intToString(static_cast<uint64_t>(value), buf, bare::Formatter::MaxIntegerBufferSize, base, cap);
     size += static_cast<uint32_t>(p - buf);
 
-    if (isFlag(flags, Flag::zeroPad)) {
+    if (Formatter::isFlag(flags, Formatter::Flag::zeroPad)) {
         int32_t pad = static_cast<int32_t>(width) - static_cast<int32_t>(bare::strlen(p));
         while (pad > 0) {
             gen('0');
@@ -224,8 +212,7 @@ static int32_t outFloat(bare::Formatter::Generator gen, Float value, int32_t wid
     // FIXME: Handle flags.alt
     // FIXME: Handle flags.zeroPad
     // FIXME: Handle width
-    // FIXME: Handle precision
-    return bare::Formatter::printString(gen, value, precision, cap);
+    return bare::Formatter::printString(gen, value, precision, cap, flags);
 }
 #endif
 
@@ -339,7 +326,7 @@ int32_t Formatter::vformat(Formatter::Generator gen, const char *format, va_list
     return size;
 }
 
-uint32_t Formatter::printString(Generator gen, uint64_t v, uint8_t base, Capital cap)
+uint32_t Formatter::printString(Generator gen, uint64_t v, uint8_t base, Capital cap, uint8_t flags)
 {
     char buf[MaxIntegerBufferSize];
     char* p = ::intToString(v, buf, MaxIntegerBufferSize, base, cap);
