@@ -50,6 +50,17 @@ namespace bare {
     public:
         using Generator = std::function<void(char)>;
 
+        enum class Flag {
+            leftJustify = 0x01,
+            plus = 0x02,
+            space = 0x04,
+            alt = 0x08,
+            zeroPad = 0x10,
+        };
+
+        static bool isFlag(uint8_t flags, Flag flag) { return (flags & static_cast<uint8_t>(flag)) != 0; }
+        static void setFlag(uint8_t& flags, Flag flag) { flags |= static_cast<uint8_t>(flag); }
+
         enum class Capital { Yes, No };
         
         //                                                 sign    digits  dp      'e'     dp      exp     '\0'
@@ -68,8 +79,8 @@ namespace bare {
         
         static int32_t vformat(Generator, const char *format, va_list);
 
-        static uint32_t printString(Generator, Float v, int32_t precision = -1, Capital = Capital::No);
-        static uint32_t printString(Generator, uint64_t v, uint8_t base = 10, Capital = Capital::No);
+        static uint32_t printString(Generator, Float v, int32_t precision = -1, Capital = Capital::No, uint8_t flags = 0);
+        static uint32_t printString(Generator, uint64_t v, uint8_t base = 10, Capital = Capital::No, uint8_t flags = 0);
         
         static uint32_t printString(Generator gen, int32_t v) { emitSign(gen, v); return printString(gen, static_cast<uint32_t>(v)); }
         static uint32_t printString(Generator gen, uint32_t v, uint8_t base = 10, Capital cap = Capital::No) { return printString(gen, static_cast<uint64_t>(v), base, cap); }
