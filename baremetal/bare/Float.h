@@ -91,7 +91,14 @@ public:
     _Float(const _Float& value) { _value = value._value; }
     
     explicit _Float(bool value) { _value = value ? (static_cast<value_type>(1) * BinaryMultiplier) : 0; }
+    explicit _Float(int8_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(uint8_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(int16_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(uint16_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
     explicit _Float(int32_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(uint32_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(int64_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
+    explicit _Float(uint64_t value) { _value = static_cast<value_type>(value) * BinaryMultiplier; }
 
     _Float(double d)
     {
@@ -181,6 +188,8 @@ public:
     _Float floor() const { _Float r; r._value = _value >> BinaryExponent << BinaryExponent; return r; }
     operator int32_t() const { return static_cast<int32_t>(_value >> BinaryExponent); }
     operator int64_t() const { return static_cast<int64_t>(_value >> BinaryExponent); }
+    
+    value_type __raw() { return _value; }
 
     // Returned string is numeric with exp determining how many digits from the right end to place the decimal point
     void toString(char* buf, int16_t& exponent) const
