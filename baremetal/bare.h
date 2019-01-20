@@ -62,6 +62,8 @@ namespace bare {
 #elif defined(FLOAT64)
     using Float = Float64;
 #elif defined(FLOATFLOAT)
+    using Float = FloatFloat;
+#elif defined(FLOATDOUBLE)
     using Float = FloatDouble;
 #elif defined(FLOATNONE)
     using Float = FloatNone;
