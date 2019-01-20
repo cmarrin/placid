@@ -413,6 +413,7 @@
 				496C3BBA217E2368004DBC22 /* FAT32DirectoryIterator.h */,
 				496C3BB7217E225B004DBC22 /* FAT32RawFile.h */,
 				494FD626219B8091005C2A6B /* Float.h */,
+				497EE459216138E2000584CE /* Formatter.h */,
 				492FF3EC215AF47B003582FE /* GPIO.h */,
 				49BC3FF421BB0AEE00D62847 /* Graphics.h */,
 				492FF400215C5359003582FE /* InterruptManager.h */,
@@ -420,7 +421,6 @@
 				496C3BC221891FC2004DBC22 /* Log.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
 				49BC404D21C1976D00D62847 /* Mutex.h */,
-				497EE459216138E2000584CE /* Formatter.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				49E887E821E7F9D80035DD64 /* Shell.h */,
@@ -935,7 +935,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DFLOATFLOAT";
+				OTHER_CFLAGS = "-DFLOAT64";
 				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
@@ -993,7 +993,7 @@
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "-DFLOATFLOAT";
+				OTHER_CFLAGS = "-DFLOAT64";
 				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
@@ -1006,6 +1006,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1019,6 +1020,7 @@
 				"LD_MAP_FILE_PATH[arch=*]" = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1030,6 +1032,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1041,6 +1044,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

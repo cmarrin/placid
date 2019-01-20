@@ -62,26 +62,18 @@ public:
 	}
 };
 
-static void timingTest(const char* s)
+static int64_t timingTest(const char* s)
 {
     // Timing test
-    int64_t startTime = bare::Timer::systemTime();
+    int64_t t = bare::Timer::systemTime();
     volatile uint32_t n = 0;
     for (int i = 0; i < 1000000; ++i) {
         n += i + 234;
     }
-    bare::Serial::printf("*** Timing test %s: %d us\n", s, static_cast<uint32_t>(bare::Timer::systemTime() - startTime));
-}
-
-static void showTime()
-{
-    static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     
-    bare::RealTime currentTime = bare::Timer::currentTime();
-    bare::Serial::printf("*** current time = %d:%d:%d %s %d/%d/%d\n",
-        currentTime.hours(), currentTime.minutes(), currentTime.seconds(),
-        days[currentTime.dayOfWeek()],
-        currentTime.month(), currentTime.day(), currentTime.year());
+    t = bare::Timer::systemTime() - t;
+    bare::Serial::printf("*** Timing test %s: %lld us\n", s, t);
+    return t;
 }
 
 BootShell shell;
@@ -96,14 +88,14 @@ extern "C" void init()
     
     bare::Serial::printf("\n\nWelcome to the Placid Kernel\n\n");
         
-    timingTest("Memory perf without cache");
+    bare::Float t1 = bare::Float(timingTest("Memory perf without cache"));
     bare::Memory::init(&kernelHeap);
-    timingTest("Memory perf with cache");
+    bare::Float t2 = bare::Float(timingTest("Memory perf with cache"));
+    bare::Float speedup = t1 / t2;
     
-    bare::Timer::setCurrentTime(bare::RealTime(2018, 10, 5, 10, 19));
-    showTime();
+    bare::Serial::printf("Speedup with cache: %.1gx\n", speedup.toArg());
     
-    
+    bare::Timer::setCurrentTime(bare::RealTime(2019, 1, 19, 9, 9));
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     

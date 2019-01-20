@@ -33,7 +33,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------
 
-FLOATTYPE = FLOATFLOAT
+FLOATTYPE = FLOAT64
 
 PLATFORMDIR = RPi
 
