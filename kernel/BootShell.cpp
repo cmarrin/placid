@@ -313,17 +313,6 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
      }   
 }
 
-static bare::String timeString()
-{
-    static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-    
-    bare::RealTime currentTime = bare::Timer::currentTime();
-    return bare::String::format("%s %d/%d/%d %d:%02d:%02d",
-        days[currentTime.dayOfWeek()],
-        currentTime.month(), currentTime.day(), currentTime.year(),
-        currentTime.hours(), currentTime.minutes(), currentTime.seconds());
-}
-
 bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
 {
     if (array[0] == "ls") {
@@ -418,7 +407,8 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
         delete fp;
     } else if (array[0] == "date") {
         if (array.size() == 1) {
-            showMessage(MessageType::Info, "current time: %s\n", timeString().c_str());
+            bare::RealTime currentTime = bare::Timer::currentTime();
+            showMessage(MessageType::Info, "current time: %s\n", currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str());
         } else {
             // Set time. Format is as in the unix date command with the following command line:
             // 
@@ -435,7 +425,8 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
                     static_cast<uint32_t>(timeArray[1]), 
                     static_cast<uint32_t>(timeArray[2]));
             bare::Timer::setCurrentTime(t);
-            showMessage(MessageType::Info, "set current time to: %s\n", timeString().c_str());
+            bare::RealTime currentTime = bare::Timer::currentTime();
+            showMessage(MessageType::Info, "set current time to: %s\n", currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str());
         }
     } else if (array[0] == "heap") {
         uint32_t size = Allocator::kernelAllocator().size();

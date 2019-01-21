@@ -149,3 +149,18 @@ uint8_t RealTime::dayOfWeek() const
     int64_t days = _time / 1000000 / 60 / 60 / 24;
     return days % 7;
 }
+
+String RealTime::timeString(TimeFormat format)
+{
+    static const char* days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+    
+    switch (format) {
+    case TimeFormat::Time:
+        return bare::String::format("%d:%02d:%02d", hours(), minutes(), seconds());
+    case TimeFormat::Date:
+        return bare::String::format("%s %d/%d/%d", days[dayOfWeek()], month(), day(), year());
+    case TimeFormat::DateTime:
+        return bare::String::format("%s %d/%d/%d %d:%02d:%02d", days[dayOfWeek()], month(), day(), year(), hours(), minutes(), seconds());
+    default: return "***";
+    }
+}

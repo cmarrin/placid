@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare/InterruptManager.h"
 #include "bare/Singleton.h"
+#include "bare/String.h"
 #include <stdint.h>
 
 namespace bare {
@@ -58,9 +59,13 @@ namespace bare {
     class RealTime
     {
     public:
+        enum class TimeFormat { Time, Date, DateTime };
+        
         RealTime(int32_t year, uint8_t month, uint8_t day, uint8_t hour = 0, uint8_t minute = 0, uint8_t second = 0, uint32_t us = 0);        
         RealTime(int64_t t) : _time(t) { }
         RealTime(const RealTime& other) { _time = other._time; }
+        
+        String timeString(TimeFormat);
         
         int64_t usSinceEpoch() const { return _time; }
         
