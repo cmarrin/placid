@@ -36,6 +36,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare.h"
 
 #include "bare/Serial.h"
+#include "bare/Timer.h"
+#include "asmInterface.h"
+#include <cassert>
 
 using namespace bare;
 
@@ -144,6 +147,14 @@ extern "C" {
         );
     }
 
+    extern void resetStub();
+    void restartStub()
+    {
+        bare::Serial::printf("**************** RESTART ****************\n");
+        bare::Timer::usleep(2000000);
+        resetStub();
+    }
+    
     uint8_t* kernelBase() { return reinterpret_cast<uint8_t*>(0x8000); }
 
     int __aeabi_idiv(int value, int divisor)
@@ -159,5 +170,90 @@ extern "C" {
 
     double __aeabi_l2d(long long a) { return intToFloat<double>(a); }
     float __aeabi_l2f(long long a) { return intToFloat<float>(a); }
+
+    struct AbortFrame
+    {
+        uint32_t    sp_irq;
+        uint32_t    lr_irq;
+        uint32_t    r0;
+        uint32_t    r1;
+        uint32_t    r2;
+        uint32_t    r3;
+        uint32_t    r4;
+        uint32_t    r5;
+        uint32_t    r6;
+        uint32_t    r7;
+        uint32_t    r8;
+        uint32_t    r9;
+        uint32_t    r10;
+        uint32_t    r11;
+        uint32_t    r12;
+        uint32_t    sp;
+        uint32_t    lr;
+        uint32_t    spsr;
+        uint32_t    pc;
+    };
+
+    void handleException(uint32_t exception, AbortFrame* frame)
+    {
+        uint32_t FSR = 0;
+        uint32_t FAR = 0;
+        const char* source = "";
+        
+        switch (exception)
+        {
+        case EXCEPTION_DIVISION_BY_ZERO: source = "divide by zero"; break;
+        case EXCEPTION_UNDEFINED_INSTRUCTION: source = "undefined instruction"; break;
+        case EXCEPTION_PREFETCH_ABORT:
+            asm volatile ("mrc p15, 0, %0, c5, c0,  1" : "=r" (FSR));
+            asm volatile ("mrc p15, 0, %0, c6, c0,  2" : "=r" (FAR));
+            source = "prefetch abort";
+            break;
+
+        case EXCEPTION_DATA_ABORT:
+            asm volatile ("mrc p15, 0, %0, c5, c0,  0" : "=r" (FSR));
+            asm volatile ("mrc p15, 0, %0, c6, c0,  0" : "=r" (FAR));
+            source = "data abort";
+            break;
+
+        default:
+            break;
+        }
+
+        assert (frame);
+        uint32_t lr = frame->lr;
+        uint32_t sp = frame->sp;
+
+        // IRQ mode?
+        if ((frame->spsr & 0x1F) == 0x12) {
+            lr = frame->lr_irq;
+            sp = frame->sp_irq;
+        }
+        
+        RealTime currentTime = bare::Timer::currentTime();
+        bare::Serial::printf("\n\n*** Panic(%s) %s:\n"
+                             "        PC 0x%x\n"
+                             "        FSR 0x%x\n"
+                             "        FAR 0x%x\n"
+                             "        SP 0x%x\n"
+                             "        LR 0x%x\n"
+                             "        PSR 0x%x\n\n", 
+                             currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str(), 
+                             source, frame->pc, FSR, FAR, sp, lr, frame->spsr);
+                        
+        restart();
+    }
+
+    void handleSWI()
+    {
+        bare::Serial::printf("\n\n*** SWI Not Supported\n");
+        abort();
+    }
+
+    void handleUnused()
+    {
+        bare::Serial::printf("\n\n*** Unused Vector Not Supported\n");
+        abort();
+    }
 
 }

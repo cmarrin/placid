@@ -33,85 +33,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-#include "bare.h"
+// This file is shared between assembly and c/c++
 
-#include "bare/InterruptManager.h"
+#pragma once
 
-#include "bare/Serial.h"
-#include "bare/Timer.h"
+#define _IRQStack   0x1000
+#define _FIQStack   0x2000
+#define _AbortStack 0x3000
+#define _SVCStack   0x100000
 
-using namespace bare;
-
-struct IRPT {
-    uint32_t BasicPending;
-    uint32_t IRQ1Pending; //_04;
-    uint32_t IRQ2Pending;
-    uint32_t FIQControl;
-    uint32_t IRQ1Enable;
-    uint32_t IRQ2Enable;
-    uint32_t BasicEnable;
-    uint32_t IRQ1Disable;
-    uint32_t IRQ2Disable;
-    uint32_t BasicDisable;
-};
-
-static constexpr uint32_t IRPTBase = 0x2000B200;
-
-inline volatile IRPT& irpt()
-{
-    return *(reinterpret_cast<volatile IRPT*>(IRPTBase));
-}
-
-extern "C" void handleIRQ()
-{
-    if (interruptsSupported()) {
-        InterruptManager::instance().handleInterrupt();
-    }
-}
-
-extern "C" void handleFIQ()
-{
-    Serial::printf("\n\n*** FIQ not supported\n\n");
-}
-
-void InterruptManager::enableIRQ(uint32_t n, bool enable)
-{
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-	uint32_t r = n / 32;
-	uint32_t off = n % 32;
-	
-	if (enable) {
-		if (r == 0) {
-			irpt().IRQ1Enable = 1 << off;
-		} else {
-			irpt().IRQ2Enable = 1 << off;
-		}
-	} else {
-		if (r == 0) {
-			irpt().IRQ1Disable = 1 << off;
-		} else {
-			irpt().IRQ2Disable = 1 << off;
-		}
-	}
-}
-
-void InterruptManager::enableBasicIRQ(uint32_t n, bool enable)
-{
-    if (!interruptsSupported()) {
-        return;
-    }
-    
-    if (n >= 32) {
-        return;
-    }
-    
-    if (enable) {
-        irpt().BasicEnable = 1 << n;
-    } else {
-        irpt().BasicDisable = 1 << n;
-    }
-}
-
+#define EXCEPTION_DIVISION_BY_ZERO      0
+#define EXCEPTION_UNDEFINED_INSTRUCTION 1
+#define EXCEPTION_PREFETCH_ABORT        2
+#define EXCEPTION_DATA_ABORT            3
+#define EXCEPTION_UNKNOWN               4

@@ -3,7 +3,9 @@
 ;@-------------------------------------------------------------------------
 
 .globl restart
-_restart:
+.globl resetStub
+restart:
+resetStub:
     mov sp,#0x08000000
     bl main
 hang: b hang

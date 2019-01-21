@@ -36,29 +36,55 @@ POSSIBILITY OF SUCH DAMAGE.
 // Adapted from vectors.S from David Welch
 // Copyright (c) 2012 David Welch dwelch@dwelch.com
 
-#include "stackAddrs.h"
+#include "RPi/asmInterface.h"
+
+    .macro    stub name, exception, pc_offset
+
+\name:
+    sub     lr, lr, #\pc_offset /* lr: correct PC of aborted program */
+    stmfd   sp!, {lr}           /* store PC onto stack */
+    mrs     lr, spsr            /* lr can be overwritten now */
+    stmfd   sp!, {lr}           /* store saved PSR onto stack */
+    stmfd   sp, {r0-r14}^       /* store user registers r0-r14 (unbanked) */
+    sub     sp, sp, #4*15       /* correct stack (not done by previous instruction */
+    mov     r1, sp              /* save sp_abt or sp_und */
+    cps     #0x12               /* set IRQ mode to access sp_irq and lr_irq */
+    mov     r2, sp
+    mov     r3, lr
+    cps     #0x1F               /* our abort handler runs in system mode */
+    mov     sp, r1              /* set sp_sys to stack top of abort stack */
+    stmfd   sp!, {r2, r3}       /* store lr_irq and sp_irq onto stack */
+    mov     r1, sp              /* r1: pointer to register frame */
+    mov     r0, #\exception     /* r0: exception identifier */
+    b       handleException     /* jump to ExceptionHandler (never returns) */
+
+    .endm
+
+    .text
 
 .global restart
 restart:
     // Vector table
-    ldr pc,reset_handler
-    ldr pc,undefined_handler
-    ldr pc,swi_handler
-    ldr pc,prefetch_handler
-    ldr pc,data_handler
-    ldr pc,unused_handler
-    ldr pc,irq_handler
-    ldr pc,fiq_handler
-reset_handler:      .word reset
-undefined_handler:  .word halt
-swi_handler:        .word halt
-prefetch_handler:   .word halt
-data_handler:       .word halt
-unused_handler:     .word halt
-irq_handler:        .word irq
-fiq_handler:        .word halt
+    ldr pc,resetHandler
+    ldr pc,undefinedInstruction
+    ldr pc,swi
+    ldr pc,prefetchAbort
+    ldr pc,dataAbort
+    ldr pc,unused
+    ldr pc,irq
+    ldr pc,fiq
+    
+resetHandler:           .word resetStub
+undefinedInstruction:   .word undefinedInstructionStub
+swi:                    .word swiStub
+prefetchAbort:          .word prefetchAbortStub
+dataAbort:              .word dataAbortStub
+unused:                 .word unusedStub
+irq:                    .word irqStub
+fiq:                    .word fiqStub
 
-reset:
+.global resetStub
+resetStub:
 
 	// enable fpu
     mrc p15, 0, r0, c1, c0, 2
@@ -109,10 +135,38 @@ reset:
     ;@msr cpsr_c, r0
 
     bl main
-		
-halt:
-	wfe
-	b	halt
+
+stub undefinedInstructionInternal, EXCEPTION_UNDEFINED_INSTRUCTION, 4
+stub prefetchAbortStub, EXCEPTION_PREFETCH_ABORT, 4
+stub dataAbortStub, EXCEPTION_DATA_ABORT, 8
+
+undefinedInstructionStub:
+    stmfd    sp!, {r0, lr}
+    fmrx    r0, fpexc                   /* check for floating point exception */
+#define VFP_FPEXC_EX    (1 << 31)
+    tst    r0, #VFP_FPEXC_EX            /* if EX bit is clear in FPEXC */
+    beq    undefinedInstructionInternal /* then jump to abort stub */
+    bic    r0, r0, #VFP_FPEXC_EX        /* else clear EX bit */
+    fmxr    fpexc, r0
+    ldmfd    sp!, {r0, pc}^            /* restore registers and return */
+
+swiStub:
+    bl handleSWI
+
+unusedStub:
+    bl handleUnused
+
+irqStub:
+    sub    lr, lr, #4
+    stmfd sp!, {r0-r12, lr}
+    bl handleIRQ
+    ldmfd sp!, {r0-r12, pc}^
+
+fiqStub:
+    sub    lr, lr, #4
+    stmfd sp!, {r0-r12, lr}
+    bl handleFIQ
+    ldmfd sp!, {r0-r12, pc}^
 
 .global BRANCHTO
 BRANCHTO:
@@ -127,9 +181,3 @@ PUT8:
 interruptsSupported:
     mov r0, #1
     bx lr
-
-irq:
-    push {r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}
-    bl handleIRQ
-    pop  {r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}
-    subs pc,lr,#4
