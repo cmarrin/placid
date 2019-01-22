@@ -56,12 +56,12 @@ namespace bare {
 
         static bool mapSegment(size_t size, void*& addr)
         {
-            return _kernelHeap->mapSegment(size, addr);
+            return _kernelHeap ? _kernelHeap->mapSegment(size, addr) : false;
         }
 
         static int32_t unmapSegment(void* addr, size_t size)
         {
-            return _kernelHeap->unmapSegment(addr, size);
+            return _kernelHeap ? _kernelHeap->unmapSegment(addr, size) : -1;
         }
         
         class Heap
