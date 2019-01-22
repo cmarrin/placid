@@ -151,7 +151,7 @@ extern "C" {
     void restartStub()
     {
         bare::Serial::printf("**************** RESTART ****************\n");
-        bare::Timer::usleep(2000000);
+        bare::Timer::usleep(500000);
         resetStub();
     }
     
@@ -241,7 +241,7 @@ extern "C" {
                              currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str(), 
                              source, frame->pc, FSR, FAR, sp, lr, frame->spsr);
                         
-        restart();
+        abort();
     }
 
     void handleSWI()
