@@ -35,18 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "bare.h"
 
-#include "bare/GPIO.h"
-#include "bare/Memory.h"
-#include "bare/SDCard.h"
 #include "bare/Serial.h"
-#include "bare/Timer.h"
-#include "Allocator.h"
-#include "BootShell.h"
-#include "FileSystem.h"
-#include "String.h"
-#include <vector>
-
-using namespace placid;
 
 extern "C" void init();
 extern "C" void inputChar(uint8_t);
@@ -54,6 +43,7 @@ extern "C" void inputChar(uint8_t);
 int main()
 {
     init();
+
     while (1) {
         uint8_t c;
         if (bare::Serial::read(c) != bare::Serial::Error::OK) {
