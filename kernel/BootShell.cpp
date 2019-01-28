@@ -459,6 +459,8 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
         } else {
             showMessage(MessageType::Error, "invalid test command\n");
         }
+    } else {
+        return false;
     }
     return true;
 }
