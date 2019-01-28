@@ -40,7 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "bare/InterruptManager.h"
 #include "bare/Serial.h"
 
-#include <unistd.h>
 #include <sys/time.h>
 
 using namespace bare;

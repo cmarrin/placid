@@ -71,7 +71,7 @@ bool interruptsSupported()
     return false;
 }
 
-void restart()
+void reboot()
 {
     ESP.restart();
 }

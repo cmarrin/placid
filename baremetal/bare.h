@@ -80,7 +80,8 @@ namespace bare {
         void disableIRQ(void);
         void enableIRQ(void);
         bool interruptsSupported(void);
-        void restart();
+        void halt();
+        void reboot();
         void PUT8(uint8_t*, uint8_t);
         void BRANCHTO(uint8_t*);
         void WFE();

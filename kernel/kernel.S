@@ -62,8 +62,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
     .text
 
-.global restart
-restart:
+.global reboot
+reboot:
     // Vector table
     ldr pc,resetHandler
     ldr pc,undefinedInstruction
@@ -74,7 +74,7 @@ restart:
     ldr pc,irq
     ldr pc,fiq
     
-resetHandler:           .word resetStub
+resetHandler:           .word reset
 undefinedInstruction:   .word undefinedInstructionStub
 swi:                    .word swiStub
 prefetchAbort:          .word prefetchAbortStub
@@ -83,8 +83,7 @@ unused:                 .word unusedStub
 irq:                    .word irqStub
 fiq:                    .word fiqStub
 
-.global resetStub
-resetStub:
+reset:
 
 	// enable fpu
     mrc p15, 0, r0, c1, c0, 2

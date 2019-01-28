@@ -147,14 +147,6 @@ extern "C" {
         );
     }
 
-    extern void resetStub();
-    void restartStub()
-    {
-        bare::Serial::printf("**************** RESTART ****************\n");
-        bare::Timer::usleep(500000);
-        resetStub();
-    }
-    
     uint8_t* kernelBase() { return reinterpret_cast<uint8_t*>(0x8000); }
 
     int __aeabi_idiv(int value, int divisor)
