@@ -38,6 +38,9 @@ PLATFORMDIR ?= RPi
 BUILDDIR ?= $(PLATFORMDIR)/build
 TOOLCHAIN ?= arm-none-eabi-
 
+CIRCLE ?= 0
+CIRCLEHOME ?= ../../circle
+
 AR = $(TOOLCHAIN)ar
 AS = $(TOOLCHAIN)as
 CC = $(TOOLCHAIN)gcc
@@ -54,6 +57,11 @@ ifeq ($(DEBUG), 1)
     CFLAGS += -DDEBUG -g
 else 
     CFLAGS += -DNDEBUG -Os
+endif
+
+ifeq ($(CIRCLE), 1)
+	LIBS += $(CIRCLEHOME)/lib/libcircle.a
+	CFLAGS += -DCIRCLE
 endif
 
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-threadsafe-statics
@@ -79,32 +87,42 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal; make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE) PLATFORMDIR=$(PLATFORMDIR)
+	cd ../baremetal; make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE) PLATFORMDIR=$(PLATFORMDIR) CIRCLE=$(CIRCLE)
 	
 cleanlibs:
 	cd ../baremetal; make clean
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
-	$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
-	$(OBJDUMP) -D $(BUILDDIR)/$(PRODUCT).elf > $(BUILDDIR)/$(PRODUCT).list
-	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O ihex $(BUILDDIR)/$(PRODUCT).hex
-	$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
-	wc -c $(PRODUCTDIR)/$(PRODUCT).bin
+	@echo "  LD      -Map $(BUILDDIR)/$(PRODUCT).map $(BUILDDIR)/$(PRODUCT).elf"
+	@$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
+	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).list"
+	@$(OBJDUMP) -D $(BUILDDIR)/$(PRODUCT).elf > $(BUILDDIR)/$(PRODUCT).list
+	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).hex"
+	@$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O ihex $(BUILDDIR)/$(PRODUCT).hex
+	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).bin"
+	@$(OBJCOPY) $(BUILDDIR)/$(PRODUCT).elf -O binary $(PRODUCTDIR)/$(PRODUCT).bin
+	@wc -c $(PRODUCTDIR)/$(PRODUCT).bin
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "  CPP   $@"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $@"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/$(PLATFORMDIR)/%.S
-	$(CC) $(ASFLAGS) -c $< -o $@
+	@echo "  AS    $@"
+	@$(CC) $(ASFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "  CPP   $@"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $@"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILDDIR)/%-$(FLOATTYPE).o: $(SRCDIR)/%.S
-	$(CC) $(ASFLAGS) -c $< -o $@
+	@echo "  AS    $@"
+	@$(CC) $(ASFLAGS) -c $< -o $@

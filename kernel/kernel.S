@@ -62,7 +62,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     .text
 
+.global _start
 .global reboot
+_start:
 reboot:
     // Vector table
     ldr pc,resetHandler

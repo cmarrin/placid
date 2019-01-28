@@ -33,24 +33,44 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------*/
 
-MEMORY
-{
-    /* Kernel limited to 1MB */
-    ram : ORIGIN = 0x8000, LENGTH = 0x100000
-}
+ENTRY(_start)
 
 SECTIONS
 {
-    .text : { *(.text*) } > ram
-    .rodata : { *(.rodata*) } > ram
+    .init : {
+        *(.init)
+    }
+
+    .text : {
+        *(.text*)
+
+        _etext = .;
+    }
+
+    .rodata : {
+        *(.rodata*)
+    }
+
     .init_array : {
         __init_start = .;
 
         *(.init_array*)
 
         __init_end = .;
-    } > ram
-    .data : { *(.data*) } > ram
+    }
+
+    .ARM.exidx : {
+        __exidx_start = .;
+
+        *(.ARM.exidx*)
+
+        __exidx_end = .;
+    }
+
+    .data : {
+        *(.data*)
+    }
+
     .bss : {
         __bss_start = .;
 
@@ -58,5 +78,5 @@ SECTIONS
         *(COMMON)
 
         _end = .;
-    } > ram
+    }
 }
