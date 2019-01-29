@@ -38,6 +38,8 @@ PLATFORMDIR ?= RPi
 BUILDDIR ?= $(PLATFORMDIR)/build
 TOOLCHAIN ?= arm-none-eabi-
 
+LOADADDR ?= 0x8000
+
 CIRCLE ?= 0
 CIRCLEHOME ?= ../../circle
 
@@ -94,7 +96,7 @@ cleanlibs:
 
 $(PRODUCTDIR)/$(PRODUCT).bin : $(LOADER) $(OBJS) makelibs
 	@echo "  LD      -Map $(BUILDDIR)/$(PRODUCT).map $(BUILDDIR)/$(PRODUCT).elf"
-	@$(LD) $(OBJS) $(LIBS) -T $(LOADER) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
+	@$(LD) $(OBJS) $(LIBS) -T $(LOADER) --section-start=.init=$(LOADADDR) -Map $(BUILDDIR)/$(PRODUCT).map -o $(BUILDDIR)/$(PRODUCT).elf
 	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).list"
 	@$(OBJDUMP) -D $(BUILDDIR)/$(PRODUCT).elf > $(BUILDDIR)/$(PRODUCT).list
 	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).hex"

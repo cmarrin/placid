@@ -37,7 +37,7 @@ FLOATTYPE = FLOAT64
 
 PLATFORMDIR = RPi
 
-CIRCLE = 1
+CIRCLE = 0
 
 LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal

@@ -60,7 +60,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     .endm
 
-    .text
+    .sect    .init
 
 .global _start
 .global reboot
