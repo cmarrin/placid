@@ -16,6 +16,7 @@ INCLUDES = -I.. -I.
 ARCHIVE = baremetal-$(FLOATTYPE).a
 
 PLATFORMSRC = \
+	RPi/start.S \
 	RPi/ldivmod.S \
 	RPi/idivmod.S \
 	RPi/uidivmod.S \

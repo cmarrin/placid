@@ -23,7 +23,6 @@ SRCDIR = .
 
 SRC =	init.cpp \
         main.cpp \
-        kernel.S \
 		Allocator.cpp \
 		BootShell.cpp \
 		Dispatcher.cpp \

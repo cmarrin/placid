@@ -64,7 +64,7 @@ fiq:                    .word fiqStub
 
 reset:
 
-	// enable fpu
+    // enable fpu
     mrc p15, 0, r0, c1, c0, 2
     orr r0,r0,#0x300000 ;@ single precision
     orr r0,r0,#0xC00000 ;@ double precision
@@ -72,7 +72,7 @@ reset:
     mov r0,#0x40000000
     fmxr fpexc,r0
 
-    // The vector table (above) is at 0x8000, the starting
+    // The vector table (above) is at the starting
     // location of the loaded binary. The CPU expects them to
     // be at 0x0000, so we need to move them. There are actually
     // 16 words to move (the instructions moving an address into
@@ -84,7 +84,6 @@ reset:
     stmia r1!,{r2,r3,r4,r5,r6,r7,r8,r9}
     ldmia r0!,{r2,r3,r4,r5,r6,r7,r8,r9}
     stmia r1!,{r2,r3,r4,r5,r6,r7,r8,r9}
-
 
     // The stack addresses here are temporary and will get reset when the memory system starts up
     // Set IRQ mode with FIQ and IRQ disabled and set the IRQ stack
@@ -106,11 +105,6 @@ reset:
     mov r0,#0xD3
     msr cpsr_c,r0
     mov sp,#_SVCStack
-
-    // Set supervisor mode with IRQ enabled and FIQ disabled
-    ;@ SVC MODE, IRQ ENABLED, FIQ DIS
-    ;@mov r0,#0x53
-    ;@msr cpsr_c, r0
 
     bl main
 
@@ -136,15 +130,15 @@ unusedStub:
 
 irqStub:
     sub    lr, lr, #4
-    stmfd sp!, {r0-r12, lr}
+    stmfd sp!, {r0-r3, r12, lr}
     bl handleIRQ
-    ldmfd sp!, {r0-r12, pc}^
+    ldmfd sp!, {r0-r3, r12, pc}^
 
 fiqStub:
     sub    lr, lr, #4
-    stmfd sp!, {r0-r12, lr}
+    stmfd sp!, {r0-r3, r12, lr}
     bl handleFIQ
-    ldmfd sp!, {r0-r12, pc}^
+    ldmfd sp!, {r0-r3, r12, pc}^
 
 .global BRANCHTO
 BRANCHTO:

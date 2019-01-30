@@ -205,6 +205,7 @@
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		4969AC6321F6269600052A08 /* asmInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = asmInterface.h; path = ../baremetal/RPi/asmInterface.h; sourceTree = "<group>"; };
 		496B91DF21FF442800E09B59 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = utilities.cpp; path = ../baremetal/utilities.cpp; sourceTree = "<group>"; };
+		496B91E52201ECD100E09B59 /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = start.S; path = ../baremetal/RPi/start.S; sourceTree = "<group>"; };
 		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
 		496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = nanoalloc.cpp; path = ../bootloader/nanoalloc.cpp; sourceTree = "<group>"; };
 		496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32RawFile.cpp; path = ../baremetal/FAT32RawFile.cpp; sourceTree = "<group>"; };
@@ -227,7 +228,6 @@
 		4992123121ED09B000AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELFLoaderConfig.h; path = ../kernel/ELFLoaderConfig.h; sourceTree = "<group>"; };
 		4992123221ED09B100AA7656 /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../kernel/BootShell.h; sourceTree = "<group>"; };
 		4992123321ED09B100AA7656 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../kernel/FileSystem.cpp; sourceTree = "<group>"; };
-		4992123421ED09B100AA7656 /* kernel.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = kernel.S; path = ../kernel/kernel.S; sourceTree = "<group>"; };
 		4992123521ED09B100AA7656 /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../kernel/Scanner.cpp; sourceTree = "<group>"; };
 		4992123621ED09B100AA7656 /* Allocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Allocator.cpp; path = ../kernel/Allocator.cpp; sourceTree = "<group>"; };
 		4992123721ED09B100AA7656 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = init.cpp; path = ../kernel/init.cpp; sourceTree = "<group>"; };
@@ -338,7 +338,6 @@
 				492FF40A2160045C003582FE /* README.md */,
 				49166D2A21514BDE0077ACEE /* Makefile */,
 				49166D562151914C0077ACEE /* loadmap.ld */,
-				4992123421ED09B100AA7656 /* kernel.S */,
 				4992123921ED09B100AA7656 /* lib1funcs.asm */,
 				4992123721ED09B100AA7656 /* init.cpp */,
 				4992123F21ED09B100AA7656 /* main.cpp */,
@@ -483,6 +482,7 @@
 				494FD628219B9E28005C2A6B /* idivmod.S */,
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
 				494FD62A219BA09C005C2A6B /* uidivmod.S */,
+				496B91E52201ECD100E09B59 /* start.S */,
 			);
 			name = RPi;
 			sourceTree = "<group>";
