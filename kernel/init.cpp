@@ -39,6 +39,8 @@ public:
 	}
 };
 
+LEDBlinker blinker;
+
 static int64_t timingTest(const char* s)
 {
     // Timing test
@@ -76,7 +78,6 @@ extern "C" void init()
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
-    LEDBlinker blinker;
     blinker.start(blinkRate, true);
     
 	shell.connected();

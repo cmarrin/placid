@@ -76,7 +76,7 @@ namespace bare {
             // Platform implementation
             void updateTimers();
 
-            Timer* _head;
+            Timer* _head = nullptr;
             int64_t _epochOffset = 0;
         };
         
