@@ -201,15 +201,18 @@ extern "C" {
         
         RealTime currentTime = bare::Timer::currentTime();
         bare::Serial::printf("\n\n*** Panic(%s) %s:\n"
-                             "        PC 0x%x\n"
-                             "        FSR 0x%x\n"
-                             "        FAR 0x%x\n"
-                             "        SP 0x%x\n"
-                             "        LR 0x%x\n"
-                             "        PSR 0x%x\n\n", 
-                             currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str(), 
-                             source, frame->pc, FSR, FAR, sp, lr, frame->spsr);
-                        
+                             "        PC  0x%08x   SP  0x%08x   LR  0x%08x\n"
+                             "        FSR 0x%08x   FAR 0x%08x   PSR 0x%08x\n"
+                             "\n"
+                             "        R0-3  0x%08x 0x%08x 0x%08x 0x%08x\n"
+                             "        R4-7  0x%08x 0x%08x 0x%08x 0x%08x\n"
+                             "        R8-12 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n\n", 
+                             currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str(), source,
+                             frame->pc, sp, lr,
+                             FSR, FAR, frame->spsr,
+                             frame->r0, frame->r1, frame->r2, frame->r3, 
+                             frame->r4, frame->r5, frame->r6, frame->r7, 
+                             frame->r8, frame->r9, frame->r10, frame->r11, frame->r12);
         abort();
     }
 
