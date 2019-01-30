@@ -391,7 +391,6 @@ SDCard::SDCard()
     DEBUG_LOG("SDCard: Start init\n");
 
     // Initialize GPIO for all the SD pins
-    GPIO::setFunction(GPIO_CD, GPIO::Function::Input, GPIO::Pull::Up);
     uint32_t reg = GPIO::reg(GPIO::Register::GPHEN1);
     reg = reg | 1<<(47-32);
     GPIO::reg(GPIO::Register::GPHEN1) = reg;
