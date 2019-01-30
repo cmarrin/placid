@@ -205,7 +205,6 @@
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
 		4969AC6321F6269600052A08 /* asmInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = asmInterface.h; path = ../baremetal/RPi/asmInterface.h; sourceTree = "<group>"; };
 		496B91DF21FF442800E09B59 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = utilities.cpp; path = ../baremetal/utilities.cpp; sourceTree = "<group>"; };
-		496B91E121FF480A00E09B59 /* CircleBare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CircleBare.cpp; path = ../baremetal/RPi/CircleBare.cpp; sourceTree = "<group>"; };
 		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
 		496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = nanoalloc.cpp; path = ../bootloader/nanoalloc.cpp; sourceTree = "<group>"; };
 		496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32RawFile.cpp; path = ../baremetal/FAT32RawFile.cpp; sourceTree = "<group>"; };
@@ -441,7 +440,6 @@
 		494FD602219883D3005C2A6B /* platform */ = {
 			isa = PBXGroup;
 			children = (
-				496B91DE21F8CF2400E09B59 /* Circle */,
 				494FD63A21A4BA4C005C2A6B /* Darwin */,
 				497E4DED21E7A0460061779D /* ESP */,
 				494FD63B21A4BA64005C2A6B /* RPi */,
@@ -543,14 +541,6 @@
 				49BC3FF921BDC82200D62847 /* OpenGL.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		496B91DE21F8CF2400E09B59 /* Circle */ = {
-			isa = PBXGroup;
-			children = (
-				496B91E121FF480A00E09B59 /* CircleBare.cpp */,
-			);
-			name = Circle;
 			sourceTree = "<group>";
 		};
 		497E4DED21E7A0460061779D /* ESP */ = {

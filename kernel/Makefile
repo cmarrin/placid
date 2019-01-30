@@ -13,8 +13,6 @@ FLOATTYPE = FLOAT64
 
 PLATFORMDIR = RPi
 
-CIRCLE = 0
-
 LIBS = ../baremetal/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
 INCLUDES = -I../baremetal
 BUILDDIR = build
@@ -25,16 +23,13 @@ SRCDIR = .
 
 SRC =	init.cpp \
         main.cpp \
+        kernel.S \
 		Allocator.cpp \
 		BootShell.cpp \
 		Dispatcher.cpp \
 		FileSystem.cpp \
 		Process.cpp \
 		Scanner.cpp \
-
-ifeq ($(CIRCLE), 0)
-SRC +=	kernel.S
-endif
 
 all: checkdirs $(PRODUCTDIR)/$(PRODUCT).bin
 

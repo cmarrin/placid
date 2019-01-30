@@ -16,9 +16,6 @@ TOOLCHAIN ?= arm-none-eabi-
 
 LOADADDR ?= 0x8000
 
-CIRCLE ?= 0
-CIRCLEHOME ?= ../../circle
-
 AR = $(TOOLCHAIN)ar
 AS = $(TOOLCHAIN)as
 CC = $(TOOLCHAIN)gcc
@@ -35,11 +32,6 @@ ifeq ($(DEBUG), 1)
     CFLAGS += -DDEBUG -g
 else 
     CFLAGS += -DNDEBUG -Os
-endif
-
-ifeq ($(CIRCLE), 1)
-	LIBS += $(CIRCLEHOME)/lib/libcircle.a
-	CFLAGS += -DCIRCLE
 endif
 
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-threadsafe-statics
@@ -65,7 +57,7 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 makelibs:
-	cd ../baremetal; make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE) PLATFORMDIR=$(PLATFORMDIR) CIRCLE=$(CIRCLE)
+	cd ../baremetal; make DEBUG=$(DEBUG) PLATFORM=$(PLATFORM) FLOATTYPE=$(FLOATTYPE) PLATFORMDIR=$(PLATFORMDIR)
 	
 cleanlibs:
 	cd ../baremetal; make clean

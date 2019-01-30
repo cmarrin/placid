@@ -18,6 +18,8 @@ ARCHIVE = baremetal-$(FLOATTYPE).a
 PLATFORMSRC = \
 	RPi/ldivmod.S \
 	RPi/idivmod.S \
+	RPi/uidivmod.S \
+	RPi/RPiBare.cpp \
 	RPi/RPiGPIO.cpp \
 	RPi/RPiGraphics.cpp \
 	RPi/RPiInterruptManager.cpp \
@@ -30,19 +32,11 @@ PLATFORMSRC = \
 	RPi/RPiSPIMaster.cpp \
 	RPi/RPiTimer.cpp \
 
-ifeq ($(CIRCLE), 0)
-PLATFORMSRC += \
-	RPi/uidivmod.S \
-	RPi/RPiBare.cpp
-else
-PLATFORMSRC += \
-	RPi/CircleBare.cpp
-endif
-
 SRC = \
 	bare.cpp \
 	fpconv.cpp \
 	printf-emb_tiny.c \
+	utilities.cpp \
 	FAT32.cpp \
 	FAT32DirectoryIterator.cpp \
 	FAT32RawFile.cpp \
@@ -58,10 +52,6 @@ SRC = \
 	WiFiSPI.cpp \
 	WiFiSPIDriver.cpp \
 	XYModem.cpp \
-	
-ifeq ($(CIRCLE), 0)
-SRC += utilities.cpp
-endif
 
 include Common.mk
 
