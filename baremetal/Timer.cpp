@@ -41,7 +41,7 @@ void Timer::TimerManager::stop(Timer*)
 void Timer::TimerManager::fireTimers()
 {
     for (Timer* timer = _head; timer; timer = timer->_next) {
-        timer->handleTimerEvent();
+        timer->_handler(timer);
     }    
 }
 

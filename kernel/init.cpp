@@ -30,16 +30,7 @@ extern int  emb_snprintf(char *s, size_t n, const char *fmt, ...);
 static constexpr uint32_t ActivityLED = 47;
 static constexpr uint32_t blinkRate = 500000;
 
-class LEDBlinker : public bare::Timer
-{
-public:
-	virtual void handleTimerEvent()
-	{
-		bare::GPIO::setPin(ActivityLED, !bare::GPIO::getPin(ActivityLED));
-	}
-};
-
-LEDBlinker blinker;
+bare::Timer ledBlinker([](bare::Timer*) { bare::GPIO::setPin(ActivityLED, !bare::GPIO::getPin(ActivityLED)); });
 
 static int64_t timingTest(const char* s)
 {
@@ -78,7 +69,7 @@ extern "C" void init()
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
     
-    blinker.start(blinkRate, true);
+    ledBlinker.start(blinkRate, true);
     
 	shell.connected();
 }

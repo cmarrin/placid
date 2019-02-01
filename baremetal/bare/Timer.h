@@ -81,15 +81,11 @@ namespace bare {
         };
         
 	public:
-        Timer() { }
-        virtual ~Timer() { }
+        using Handler = std::function<void(Timer*)>;
         
-        static void init()
-        {
-            TimerManager::instance().init();
-        }
-
-        virtual void handleTimerEvent() = 0;
+        Timer(Handler handler) : _handler(handler) { }
+        
+        static void init() { TimerManager::instance().init(); }
         
         // FIXME: repeat is currently not implemented 
         void start(uint32_t us, bool repeat) { TimerManager::instance().start(this, us, repeat); }
@@ -104,6 +100,7 @@ namespace bare {
         static void setCurrentTime(const RealTime& t) { TimerManager::instance().setCurrentTime(t); }
 
 	private:
+        Handler _handler;
         Timer* _next = nullptr;
         uint32_t _timeout = 0;
         bool _repeat = false;
