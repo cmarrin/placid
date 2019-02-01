@@ -87,7 +87,6 @@ namespace bare {
         static void init()
         {
             TimerManager::instance().init();
-            InterruptManager::instance().addHandler(handleInterrupt);
         }
 
         virtual void handleTimerEvent() = 0;

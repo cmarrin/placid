@@ -32,6 +32,11 @@ struct ARMTimer
 	uint32_t freeRunningCounter;
 };
 
+// ARM Timer is in the Basic IRQ set, bit 0.
+// InterruptManager considers Basic interrupts starting
+// at 0 and the other 64 interrupt bits starting at 32.
+static constexpr uint32_t ARMTimerInterruptBit = 0;
+
 struct SystemTimer
 {
     uint32_t control;
@@ -62,6 +67,10 @@ void  Timer::TimerManager::init()
     // Set the prescaler (bits 16-23) to one less, or 0xf9
     armTimer().control = 0x00F90000; // Set the prescaler, but keep the timer stopped
     armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
+
+    // Disable timer interrupts (until they are turned on by updateTimers) and set the handler
+    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
+    InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
 }
 
 void Timer::TimerManager::updateTimers()
@@ -72,7 +81,7 @@ void Timer::TimerManager::updateTimers()
     }
     
     disableIRQ();
-    InterruptManager::instance().enableBasicIRQ(0, false);
+    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
 
     // Reset Free running prescaler
     armTimer().control = 0x003E0000;
@@ -80,7 +89,7 @@ void Timer::TimerManager::updateTimers()
     armTimer().load = _head->_timeout - 1;
     armTimer().reload = _head->_timeout - 1;
     
-    InterruptManager::instance().enableBasicIRQ(0, true);
+    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, true);
     armTimer().clearIRQ = 0;
     
     enableIRQ();

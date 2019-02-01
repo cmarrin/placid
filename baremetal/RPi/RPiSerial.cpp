@@ -50,6 +50,16 @@ struct UART1 {
     uint32_t BAUD;   //_68;
 };
 
+// UART1 or the "mini UART" is one of the AUX units
+// and shares an interrupt with a couple of SPI devices.
+// We're not using either of those, so the AUX Interrupt
+// is used for UART1. It is in the main interrupt set
+// at bit 29. Since this set comes after the "Basic IRQ"
+// set, it is offset by 32.
+// InterruptManager considers Basic interrupts starting
+// at 0 and the other 64 interrupt bits starting at 32.
+static constexpr uint32_t ARMTimerInterruptBit = 29 + 32;
+
 static constexpr uint32_t UART1Base = 0x20215000;
 static constexpr uint32_t RXBUFMASK = 0xFF;
 
@@ -68,11 +78,11 @@ void Serial::init(uint32_t baudrate)
     
     if (interruptsSupported()) {
         disableIRQ();
-	    InterruptManager::instance().enableIRQ(29, false);
+	    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
 
         _rxhead = _rxtail = 0;
         
-        InterruptManager::instance().addHandler(handleInterrupt);
+        InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
     }
 
     uart().AUXENB = 1;
@@ -96,7 +106,7 @@ void Serial::init(uint32_t baudrate)
     uart().CNTL = 3;
     
     if (interruptsSupported()) {
-	    InterruptManager::instance().enableIRQ(29, true);
+	    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, true);
 	    enableIRQ();
     }
 }

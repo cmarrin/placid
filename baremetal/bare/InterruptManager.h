@@ -32,16 +32,19 @@ namespace bare {
         using Handler = std::function<void()>;
         
         void enableIRQ(uint32_t n, bool enable);
-        void enableBasicIRQ(uint32_t n, bool enable);
         
-        void addHandler(Handler);
+        void addHandler(uint8_t id, Handler);
         
         void handleInterrupt();
         
 	private:
-        static constexpr uint32_t MaxHandlers = 4;
+        static constexpr uint32_t MaxHandlers = 96; // This happens to be the number of entries for RPi
+        static constexpr uint32_t PendingArraySize = (MaxHandlers + 31) / 32;
+        
+        int32_t findFirstBit(uint32_t* pendingBits);
+        void interruptsPending(uint32_t* bits);
+        
         Handler _handlers[MaxHandlers];
-        uint8_t _handlerIndex = 0;
 	};
 	
 }
