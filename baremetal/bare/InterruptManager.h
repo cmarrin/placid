@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <cstdint>
 #include <functional>
+#include <array>
 
 namespace bare {
 	
@@ -38,13 +39,13 @@ namespace bare {
         void handleInterrupt();
         
 	private:
-        static constexpr uint32_t MaxHandlers = 96; // This happens to be the number of entries for RPi
-        static constexpr uint32_t PendingArraySize = (MaxHandlers + 31) / 32;
+        static constexpr uint32_t MaxHandlers = 32; // This number can be increased at the cost of more HandleEntries 
         
-        int32_t findFirstBit(uint32_t* pendingBits);
-        void interruptsPending(uint32_t* bits);
+        bool interruptPending(uint8_t n);
         
-        Handler _handlers[MaxHandlers];
+        struct HandlerEntry { uint8_t id; Handler handler; };
+        std::array<HandlerEntry, MaxHandlers> _handlers;
+        uint32_t _handlerIndex = 0;
 	};
 	
 }

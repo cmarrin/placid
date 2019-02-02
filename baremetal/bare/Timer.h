@@ -16,6 +16,7 @@
 #include "bare/Singleton.h"
 #include "bare/String.h"
 #include <stdint.h>
+#include <memory>
 
 namespace bare {
 	
@@ -59,16 +60,29 @@ namespace bare {
         int64_t _time = 0;
     };
     
-	class Timer {
+	class Timer : std::enable_shared_from_this<Timer> {
     private:
         struct TimerManager : public Singleton <TimerManager>
         {
             void init();
             
-            void start(Timer*, uint32_t us, bool repeat);
-            void stop(Timer*);
-            
+            void add(std::shared_ptr<Timer> timer) { _timers.push_back(timer); }
+            void remove(std::shared_ptr<Timer> timer)
+            {
+                _timers.erase(std::remove_if(_timers.begin(), _timers.end(),
+                    [timer](std::shared_ptr<Timer> t) { return t == timer; }), _timers.end());
+                TimerManager::instance().updateTimers();
+            }
+
             void fireTimers();
+            void sortTimers()
+            {
+                std::sort(_timers.begin(), _timers.end(),
+                    [](std::shared_ptr<Timer> a, std::shared_ptr<Timer> b)
+                    {
+                        return a->_timeToFire < b->_timeToFire;
+                    });
+            }
             
             RealTime currentTime();
             void setCurrentTime(const RealTime&);
@@ -76,20 +90,40 @@ namespace bare {
             // Platform implementation
             void updateTimers();
 
-            Timer* _head = nullptr;
+            std::vector<std::shared_ptr<Timer>> _timers;
             int64_t _epochOffset = 0;
         };
         
 	public:
-        using Handler = std::function<void(Timer*)>;
+        static constexpr int64_t DoNotFire = std::numeric_limits<int64_t>::max();
         
-        Timer(Handler handler) : _handler(handler) { }
+        using Handler = std::function<void(std::shared_ptr<Timer>)>;
         
+        ~Timer() {
+            TimerManager::instance().remove(shared_from_this());
+            TimerManager::instance().updateTimers();
+        }
+        
+        static std::shared_ptr<Timer> create(Handler);
+
         static void init() { TimerManager::instance().init(); }
         
         // FIXME: repeat is currently not implemented 
-        void start(uint32_t us, bool repeat) { TimerManager::instance().start(this, us, repeat); }
-        void stop() { TimerManager::instance().stop(this); }
+        void start(uint32_t us, bool repeat)
+        {
+            _timeout = us;
+            _repeat = repeat;
+            _timeToFire = systemTime() + _timeout;
+            TimerManager::instance().sortTimers();
+            TimerManager::instance().updateTimers();
+        }
+        void stop()
+        {
+            _timeout = 0;
+            _timeToFire = DoNotFire;
+            TimerManager::instance().sortTimers();
+            TimerManager::instance().updateTimers();
+        }
 
         // Platform implementations
         static void handleInterrupt();
@@ -100,9 +134,11 @@ namespace bare {
         static void setCurrentTime(const RealTime& t) { TimerManager::instance().setCurrentTime(t); }
 
 	private:
+        Timer(Handler handler) : _handler(handler) { }
+
         Handler _handler;
-        Timer* _next = nullptr;
         uint32_t _timeout = 0;
+        int64_t _timeToFire = DoNotFire;
         bool _repeat = false;
 	};
 	

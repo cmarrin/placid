@@ -15,6 +15,7 @@
 #include "bare/InterruptManager.h"
 
 #include "bare/Serial.h"
+#include <algorithm>
 
 using namespace bare;
 
@@ -23,38 +24,17 @@ void InterruptManager::addHandler(uint8_t id, Handler handler)
     if (id >= MaxHandlers) {
         return;
     }
-    _handlers[id] = handler;
-}
-
-int32_t InterruptManager::findFirstBit(uint32_t* pendingBits)
-{
-    for (uint32_t i = 0; i < PendingArraySize; ++i) {
-        int32_t bit = i * 32;
-        if (pendingBits[i]) {
-            for (int32_t mask = 1; pendingBits[i]; ++bit, mask <<= 1) {
-                if (pendingBits[i] & mask) {
-                    pendingBits[i] &= ~mask;
-                    return bit;
-                }
-            }
-        }
-    }
-    return -1;
+    
+    _handlers[_handlerIndex++] = { id, handler };
 }
 
 void InterruptManager::handleInterrupt()
 {
-    uint32_t pendingBits[PendingArraySize];
-    interruptsPending(pendingBits);
-    
-    while (1) {
-        int32_t id = findFirstBit(pendingBits);
-
-        if (id < 0) {
-            return;
-        }
-        if (_handlers[id]) {
-            _handlers[id]();
+    for (auto it : _handlers) {
+        if (interruptPending(it.id)) {
+            if (it.handler) {
+                it.handler();
+            }
         }
     }
 }

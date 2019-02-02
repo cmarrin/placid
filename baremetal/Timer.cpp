@@ -19,30 +19,31 @@
 
 using namespace bare;
 
-void Timer::TimerManager::start(Timer* timer, uint32_t us, bool repeat)
+std::shared_ptr<Timer> Timer::create(Handler handler)
 {
-    if (!interruptsSupported()) {
-        return;
-    }
+    struct MakeSharedEnabler : public Timer
+    {
+        MakeSharedEnabler(Handler handler) : Timer(handler) { }
+    };
     
-    timer->_next = _head;
-    timer->_timeout = us;
-    timer->_repeat = repeat;
-    _head = timer;
-    
-    updateTimers();
-}
-
-void Timer::TimerManager::stop(Timer*)
-{
-    // FIXME: Implement
+    std::shared_ptr<MakeSharedEnabler> timer = std::make_shared<MakeSharedEnabler>(handler);
+    TimerManager::instance().add(timer);
+    return timer;
 }
 
 void Timer::TimerManager::fireTimers()
 {
-    for (Timer* timer = _head; timer; timer = timer->_next) {
-        timer->_handler(timer);
-    }    
+    int64_t currentTime = systemTime();
+    for (std::shared_ptr<Timer> timer : _timers) {
+        if (timer->_timeToFire <= currentTime) {
+            timer->_handler(timer);
+            timer->_timeToFire = timer->_repeat ? (currentTime + timer->_timeout) : DoNotFire;
+        } else {
+            break;
+        }
+    }
+    TimerManager::instance().sortTimers();
+    TimerManager::instance().updateTimers();
 }
 
 void Timer::TimerManager::setCurrentTime(const RealTime& t)

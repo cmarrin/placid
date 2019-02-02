@@ -86,10 +86,13 @@ void InterruptManager::enableIRQ(uint32_t n, bool enable)
     }
 }
 
-void InterruptManager::interruptsPending(uint32_t* bits)
+bool InterruptManager::interruptPending(uint8_t n)
 {
-    static_assert(PendingArraySize >= 3, "PendingArraySize must be at least 3 for RPi");
-    bits[0] = irpt().BasicPending;
-    bits[1] = irpt().IRQ1Pending;
-    bits[2] = irpt().IRQ2Pending;
+    switch (n / 32) {
+        case 0: return irpt().BasicPending & (1 << (n % 32));
+        case 1: return irpt().IRQ1Pending & (1 << (n % 32));
+        case 2: return irpt().IRQ2Pending & (1 << (n % 32));
+        default: return false;
+    }
+    return true;
 }

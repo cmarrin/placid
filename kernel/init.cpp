@@ -30,8 +30,6 @@ extern int  emb_snprintf(char *s, size_t n, const char *fmt, ...);
 static constexpr uint32_t ActivityLED = 47;
 static constexpr uint32_t blinkRate = 500000;
 
-bare::Timer ledBlinker([](bare::Timer*) { bare::GPIO::setPin(ActivityLED, !bare::GPIO::getPin(ActivityLED)); });
-
 static int64_t timingTest(const char* s)
 {
     // Timing test
@@ -68,9 +66,8 @@ extern "C" void init()
     bare::Timer::setCurrentTime(bare::RealTime(2019, 1, 19, 9, 9));
     
     bare::GPIO::setFunction(ActivityLED, bare::GPIO::Function::Output);
-    
-    ledBlinker.start(blinkRate, true);
-    
+    bare::Timer::create([](std::shared_ptr<bare::Timer>) { bare::GPIO::setPin(ActivityLED, !bare::GPIO::getPin(ActivityLED)); })->start(blinkRate, true);
+
 	shell.connected();
 }
 

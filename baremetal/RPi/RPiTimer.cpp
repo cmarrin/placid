@@ -75,32 +75,34 @@ void  Timer::TimerManager::init()
 
 void Timer::TimerManager::updateTimers()
 {
-    // FIXME: For now we only support a single timer at the head of the list
-    if (!_head) {
-        return;
-    }
-    
     disableIRQ();
     InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
 
     // Reset Free running prescaler
-    armTimer().control = 0x003E0000;
+    armTimer().control = 0x00F90000;
     
-    armTimer().load = _head->_timeout - 1;
-    armTimer().reload = _head->_timeout - 1;
+    if (!_timers.empty() && _timers[0]->_timeToFire != DoNotFire) {
+        int64_t sys = systemTime();
+        int64_t t = _timers[0]->_timeToFire - sys;
+        
+        // All times should be in the future. If they're not we need to fire
+        // ASAP. For now just set the timer for 1us
+        armTimer().load = (t <= 0) ? 1 : t;
+        
+        InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, true);
+        armTimer().clearIRQ = 0;
     
-    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, true);
-    armTimer().clearIRQ = 0;
+        // 32 bit counter, timer enabled, timer interrupt enabled
+        armTimer().control = 0x00F900A2;
+        armTimer().clearIRQ = 0;
+    }
     
     enableIRQ();
-
-    // 32 bit counter, timer enabled, timer interrupt enabled
-    armTimer().control = 0x003E00A2;
-    armTimer().clearIRQ = 0;
 }
 
 void Timer::handleInterrupt()
 {
+    armTimer().control = 0x00F90000;
     Timer::TimerManager::instance().fireTimers();
 	armTimer().clearIRQ = 0;
 }
