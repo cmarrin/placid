@@ -72,10 +72,20 @@ static Length handleLength(const char*& format)
     Length length = Length::None;
     if (*format == 'h') {
         ++format;
-        length = (*++format == 'h') ? Length::HH : Length::H;
+        if (*format == 'h') {
+            ++format;
+            length = Length::HH;
+        } else {
+            length = Length::H;
+        }
     } else if (*format == 'l') {
         ++format;
-        length = (*++format == 'l') ? Length::LL : Length::L;
+        if (*format == 'l') {
+            ++format;
+            length = Length::LL;
+        } else {
+            length = Length::L;
+        }
     } else if (*format == 'j') {
         length = Length::J;
     } else if (*format == 'z') {
