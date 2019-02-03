@@ -85,26 +85,29 @@ reset:
     ldmia r0!,{r2,r3,r4,r5,r6,r7,r8,r9}
     stmia r1!,{r2,r3,r4,r5,r6,r7,r8,r9}
 
-    // The stack addresses here are temporary and will get reset when the memory system starts up
-    // Set IRQ mode with FIQ and IRQ disabled and set the IRQ stack
-    mov r0,#0xD2
-    msr cpsr_c,r0
-    mov sp,#_IRQStack
+    // Set the FIQ stack
+    cps #0x11
+    ldr sp, =_FIQStack
 
-    // Set FIQ mode with FIQ and IRQ disabled and set the FIQ stack
-    mov r0,#0xD1
-    msr cpsr_c,r0
-    mov sp,#_FIQStack
+    // Set the IRQ stack
+    cps #0x12
+    ldr sp, =_IRQStack
 
-    // Set Abort mode with FIQ and IRQ disabled and set the Abort stack
-    mov r0,#0xD7
-    msr cpsr_c,r0
-    mov sp,#_AbortStack
+    // Set the SVC stack
+    cps #0x13
+    ldr sp, =_SVCStack
 
-    // Set supervisor mode with FIQ and IRQ disabled and set the supervisor stack
-    mov r0,#0xD3
-    msr cpsr_c,r0
-    mov sp,#_SVCStack
+    // Set the Abort stack
+    cps #0x17
+    ldr sp, =_AbortStack
+
+    // Set the Undefined stack
+    cps #0x1b
+    ldr sp, =_AbortStack
+
+    // Set the System stack
+    cps #0x1f
+    ldr sp, =_SystemStack
 
     bl main
 

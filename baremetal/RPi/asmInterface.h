@@ -14,10 +14,11 @@
 
 #pragma once
 
-#define _IRQStack   0x1000
-#define _FIQStack   0x2000
-#define _AbortStack 0x3000
-#define _SVCStack   0x100000
+#define _FIQStack       0x1000
+#define _IRQStack       0x2000
+#define _AbortStack     0x3000
+#define _SVCStack       0x4000
+#define _SystemStack    0x100000
 
 #define EXCEPTION_DIVISION_BY_ZERO      0
 #define EXCEPTION_UNDEFINED_INSTRUCTION 1
