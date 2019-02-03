@@ -21,7 +21,7 @@ using namespace bare;
 
 void InterruptManager::addHandler(uint8_t id, Handler handler)
 {
-    if (id >= MaxHandlers) {
+    if (_handlerIndex >= MaxHandlers) {
         return;
     }
     
