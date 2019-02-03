@@ -33,11 +33,11 @@ using namespace bare;
 //
 //      0           0x0000 - 0x0800     reserved for system use (interrupt vectors, ATAGS, etc.)
 //                  0x0800 - 0x0c00     second level translation table.
-//                  0x0c00 = 0x1000     TBD
+//                  0x0c00 = 0x1000     FIQ stack
 //
-//      1           0x1000 - 0x2000     IRQ/FIQ stack (2)
-//      2           0x2000 - 0x3000     ABORT stack (2)
-//      3           0x3000 - 0x4000     SWI stack (2)
+//      1           0x1000 - 0x2000     IRQ stack
+//      2           0x2000 - 0x3000     ABORT stack
+//      3           0x3000 - 0x4000     SWI stack
 //      4 - 7       0x4000 - 0x8000     first level translation table
 //      8 - ???     0x8000 - _end       kernel code, rodata and bss
 //      ??? - 255   _end   - 0x100000  heap at the bottom and the SVC stack at the top (2)
