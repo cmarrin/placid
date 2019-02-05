@@ -9,7 +9,10 @@
 # Use of this source code is governed by the MIT license that can be
 # found in the LICENSE file.
 
+FLOATTYPE ?= FLOATDOUBLE
+
 PLATFORM ?= PLATFORM_RPI
+PLATFORMDIR ?= RPi
 TOOLCHAIN ?= arm-none-eabi-
 
 LOADADDR ?= 0x8000
@@ -22,10 +25,10 @@ LD = $(TOOLCHAIN)ld
 OBJDUMP = $(TOOLCHAIN)objdump
 OBJCOPY = $(TOOLCHAIN)objcopy
 
-INCLUDES = -I$(PLACIDDIR)
+INCLUDES ?= -I$(PLACIDDIR)
 
 ASFLAGS = $(INCLUDES) -mcpu=arm1176jzf-s -mfpu=vfp
-CFLAGS = $(INCLUDES) -D$(PLATFORM) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
+CFLAGS = $(INCLUDES) -D$(PLATFORM) -D$(FLOATTYPE) -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s -mhard-float -mfpu=vfp -MMD
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
@@ -44,8 +47,7 @@ debug: CCFLAGS += -DDEBUG -g
 debug: all
 
 clean :
-	rm -rf $(BUILDDIR)
-	rm -rf $(PRODUCT)
+	rm -rf $(BUILDDIR) $(PRODUCT) $(ARCHIVE)
 
 -include $(DEP)
 
@@ -56,9 +58,9 @@ $(BUILDDIR):
 
 $(PRODUCT) : $(LOADER) $(OBJS)
 	@echo "  LD      -Map $(BUILDDIR)/$(PRODUCT).map $(PRODUCT)"
-	@$(LD) $(OBJS) $(LIBS) -T $(LOADER) --section-start=.init=$(LOADADDR) -Map $(BUILDDIR)/$(PRODUCT).map -o $(PRODUCT)
+	@$(LD) $(OBJS) $(LIBS) -Map $(BUILDDIR)/$(PRODUCT).map -o $(PRODUCT)
 	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).list"
-	@$(OBJDUMP) -D $(BUILDDIR)/$(PRODUCT).elf > $(BUILDDIR)/$(PRODUCT).list
+	@$(OBJDUMP) -D $(PRODUCT) > $(BUILDDIR)/$(PRODUCT).list
 
 $(BUILDDIR)/%.o: %.cpp
 	@echo "  CPP   $@"
@@ -71,3 +73,16 @@ $(BUILDDIR)/%.o: %.c
 $(BUILDDIR)/%.o: %.S
 	@echo "  AS    $@"
 	@$(CC) $(ASFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(BAREDIR)/$(PLATFORMDIR)/%.cpp
+	@echo "  CPP   $@"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(BAREDIR)/$(PLATFORMDIR)/%.c
+	@echo "  CC    $@"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(BAREDIR)/$(PLATFORMDIR)/%.S
+	@echo "  AS    $@"
+	@$(CC) $(ASFLAGS) -c $< -o $@
+

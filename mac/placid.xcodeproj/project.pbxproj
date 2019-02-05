@@ -168,9 +168,9 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
-		492F23232208FF63005FDFF1 /* Placid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Placid.cpp; path = ../../Placid/Placid.cpp; sourceTree = "<group>"; };
+		492F23232208FF63005FDFF1 /* Placid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Placid.cpp; sourceTree = "<group>"; };
 		492F232B2209012A005FDFF1 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Common.mk; path = ../../Placid/Common.mk; sourceTree = "<group>"; usesTabs = 1; };
+		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Common.mk; sourceTree = "<group>"; usesTabs = 1; };
 		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPi/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
@@ -270,6 +270,8 @@
 		4992125421ED178900AA7656 /* Dispatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Dispatcher.h; path = ../kernel/Dispatcher.h; sourceTree = "<group>"; };
 		4992125721ED191A00AA7656 /* Process.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Process.cpp; path = ../kernel/Process.cpp; sourceTree = "<group>"; };
 		4992125821ED191A00AA7656 /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = ../kernel/Process.h; sourceTree = "<group>"; };
+		49AA9E4D220A2B9B002C947E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		49AA9E50220A31B6002C947E /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = start.S; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -603,11 +605,14 @@
 		496B92092208EB7700E09B59 /* Placid */ = {
 			isa = PBXGroup;
 			children = (
+				49AA9E4D220A2B9B002C947E /* Makefile */,
 				492F232D2209D201005FDFF1 /* Common.mk */,
+				49AA9E50220A31B6002C947E /* start.S */,
 				496B920A2208EBB200E09B59 /* placid */,
 				492F23232208FF63005FDFF1 /* Placid.cpp */,
 			);
-			path = Placid;
+			name = Placid;
+			path = ../Placid;
 			sourceTree = "<group>";
 		};
 		497E4DED21E7A0460061779D /* ESP */ = {

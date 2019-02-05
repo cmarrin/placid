@@ -9,15 +9,24 @@
 # Use of this source code is governed by the MIT license that can be
 # found in the LICENSE file.
 
-PLACIDDIR = ../../Placid
+PLACIDDIR = .
 BUILDDIR = build
-PRODUCT = hello
+BAREDIR = ../baremetal
+ARCHIVE = libplacid.a
 
-LIBS = $(PLACIDDIR)/libplacid.a
+INCLUDES ?= -I$(BAREDIR)
 
-SRC =	main.cpp \
+SRC =	Placid.cpp \
+		start.S \
 
-include $(PLACIDDIR)/Common.mk
+include Common.mk
 
-all: checkdirs $(PRODUCT)
+all: checkdirs $(ARCHIVE)
 
+check:
+	@echo "BUILDDIR="$(BUILDDIR)
+	@echo "ARCHIVE="$(ARCHIVE)
+	@echo "OBJS="$(OBJS)
+
+$(ARCHIVE) : $(OBJS)
+	$(AR) rcs -o $@ $(OBJS)

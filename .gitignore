@@ -3,8 +3,11 @@ bootloader/build
 bootloader/bin/bootloader.bin
 kernel/build
 samples/helloworld/build
+samples/helloworld/hello
 ESPRPiWifi/build
 baremetal/RPi/build
+Placid/libplacid.a
+Placid/build
 mac/DerivedData
 mac/placid.xcodeproj/project.xcworkspace
 mac/placid.xcodeproj/xcuserdata

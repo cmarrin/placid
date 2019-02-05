@@ -45,7 +45,7 @@ namespace bare {
 #elif defined(FLOATNONE)
     using Float = FloatNone;
 #else
-    #error must define one of FLOAT32, FLOAT64, FLOATFLOAT, or FLOATNONE
+    #error must define one of FLOAT32, FLOAT64, FLOATFLOAT, FLOATDOUBLE or FLOATNONE
 #endif
 
     void initSystem();

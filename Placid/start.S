@@ -10,14 +10,10 @@
     found in the LICENSE file.
 -------------------------------------------------------------------------*/
 
-#include "placid"
+// Adapted from vectors.S from David Welch
+// Copyright (c) 2012 David Welch dwelch@dwelch.com
 
-#include "bare/Serial.h"
-
-using namespace placid;
-
-int32_t Placid::vprintf(const char* format, va_list args)
-{
-    // FIXME: Eventually this needs to be a system call
-    return -1;
-}
+.global _start
+_start:
+    bl main
+    b  .
