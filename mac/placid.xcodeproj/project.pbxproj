@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
+		492F23252208FF63005FDFF1 /* Placid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492F23232208FF63005FDFF1 /* Placid.cpp */; };
+		492F2329220900CB005FDFF1 /* libPlacid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B92052208EB6A00E09B59 /* libPlacid.a */; };
+		492F232A220900DE005FDFF1 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
 		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
 		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
@@ -33,6 +36,7 @@
 		4962958A215AAA760064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		4962958C215AAA800064B9C9 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
 		49657892216BFDA200B3F088 /* Volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3F1215C4F72003582FE /* Volume.cpp */; };
+		496B91ED2208E7C600E09B59 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496B91EC2208E7C600E09B59 /* main.cpp */; };
 		496C3BB5217D0689004DBC22 /* nanoalloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */; };
 		496C3BBC217E23E9004DBC22 /* FAT32DirectoryIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB9217E2368004DBC22 /* FAT32DirectoryIterator.cpp */; };
 		496C3BBD217E23F5004DBC22 /* FAT32RawFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */; };
@@ -81,6 +85,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		492F2327220900BF005FDFF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 496B92042208EB6A00E09B59;
+			remoteInfo = Placid;
+		};
 		49629582215AA9E90064B9C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 492C7414214B2A2F009A4DA4 /* Project object */;
@@ -108,6 +119,15 @@
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		492C741A214B2A2F009A4DA4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		496B91E82208E7C600E09B59 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -148,6 +168,9 @@
 		49166D6D2153F0FE0077ACEE /* bltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49166D6F2153F0FE0077ACEE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../bootloader/main.cpp; sourceTree = "<group>"; };
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
+		492F23232208FF63005FDFF1 /* Placid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Placid.cpp; path = ../../Placid/Placid.cpp; sourceTree = "<group>"; };
+		492F232B2209012A005FDFF1 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Common.mk; path = ../../Placid/Common.mk; sourceTree = "<group>"; usesTabs = 1; };
 		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPi/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
@@ -206,6 +229,10 @@
 		4969AC6321F6269600052A08 /* asmInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = asmInterface.h; path = ../baremetal/RPi/asmInterface.h; sourceTree = "<group>"; };
 		496B91DF21FF442800E09B59 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = utilities.cpp; path = ../baremetal/utilities.cpp; sourceTree = "<group>"; };
 		496B91E52201ECD100E09B59 /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = start.S; path = ../baremetal/RPi/start.S; sourceTree = "<group>"; };
+		496B91EA2208E7C600E09B59 /* Hello World */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Hello World"; sourceTree = BUILT_PRODUCTS_DIR; };
+		496B91EC2208E7C600E09B59 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../samples/helloworld/main.cpp; sourceTree = "<group>"; };
+		496B92052208EB6A00E09B59 /* libPlacid.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlacid.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		496B920A2208EBB200E09B59 /* placid */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = placid; path = ../../Placid/placid; sourceTree = "<group>"; };
 		496C3BAF216FEEE6004DBC22 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../bootloader/bin/sample.txt; sourceTree = "<group>"; };
 		496C3BB3217D02CC004DBC22 /* nanoalloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = nanoalloc.cpp; path = ../bootloader/nanoalloc.cpp; sourceTree = "<group>"; };
 		496C3BB6217E225B004DBC22 /* FAT32RawFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FAT32RawFile.cpp; path = ../baremetal/FAT32RawFile.cpp; sourceTree = "<group>"; };
@@ -314,6 +341,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		496B91E72208E7C600E09B59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				492F232A220900DE005FDFF1 /* libbaremetal.a in Frameworks */,
+				492F2329220900CB005FDFF1 /* libPlacid.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		496B92032208EB6A00E09B59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		498747852191F68E00245E91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,11 +424,13 @@
 		492C7413214B2A2F009A4DA4 = {
 			isa = PBXGroup;
 			children = (
+				496B92092208EB7700E09B59 /* Placid */,
 				49629575215AA4EB0064B9C9 /* baremetal */,
 				49166D2921514BB60077ACEE /* bootloader */,
 				49166D07215149950077ACEE /* kernel */,
 				494FD64021A89616005C2A6B /* ESPRPiWifi */,
 				49BC402C21C05ED600D62847 /* drawtest */,
+				496B91EB2208E7C600E09B59 /* Hello World */,
 				492C741D214B2A2F009A4DA4 /* Products */,
 				49629588215AAA760064B9C9 /* Frameworks */,
 			);
@@ -399,6 +444,8 @@
 				49629571215AA4DF0064B9C9 /* libbaremetal.a */,
 				498747882191F68E00245E91 /* ESPWifi */,
 				49BC402B21C05ED600D62847 /* drawtest.app */,
+				496B91EA2208E7C600E09B59 /* Hello World */,
+				496B92052208EB6A00E09B59 /* libPlacid.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -543,6 +590,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		496B91EB2208E7C600E09B59 /* Hello World */ = {
+			isa = PBXGroup;
+			children = (
+				492F232B2209012A005FDFF1 /* Makefile */,
+				496B91EC2208E7C600E09B59 /* main.cpp */,
+			);
+			name = "Hello World";
+			path = ../samples/helloworld;
+			sourceTree = "<group>";
+		};
+		496B92092208EB7700E09B59 /* Placid */ = {
+			isa = PBXGroup;
+			children = (
+				492F232D2209D201005FDFF1 /* Common.mk */,
+				496B920A2208EBB200E09B59 /* placid */,
+				492F23232208FF63005FDFF1 /* Placid.cpp */,
+			);
+			path = Placid;
+			sourceTree = "<group>";
+		};
 		497E4DED21E7A0460061779D /* ESP */ = {
 			isa = PBXGroup;
 			children = (
@@ -590,6 +657,13 @@
 				492FF409215D479A003582FE /* FAT32.h in Headers */,
 				494FD6212199E64F005C2A6B /* Memory.h in Headers */,
 				4962957C215AA53B0064B9C9 /* bare.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		496B92012208EB6A00E09B59 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,6 +724,41 @@
 			productReference = 49629571215AA4DF0064B9C9 /* libbaremetal.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		496B91E92208E7C600E09B59 /* Hello World */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 496B91EE2208E7C600E09B59 /* Build configuration list for PBXNativeTarget "Hello World" */;
+			buildPhases = (
+				496B91E62208E7C600E09B59 /* Sources */,
+				496B91E72208E7C600E09B59 /* Frameworks */,
+				496B91E82208E7C600E09B59 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				492F2328220900BF005FDFF1 /* PBXTargetDependency */,
+			);
+			name = "Hello World";
+			productName = "Hello World";
+			productReference = 496B91EA2208E7C600E09B59 /* Hello World */;
+			productType = "com.apple.product-type.tool";
+		};
+		496B92042208EB6A00E09B59 /* Placid */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 496B92062208EB6A00E09B59 /* Build configuration list for PBXNativeTarget "Placid" */;
+			buildPhases = (
+				496B92012208EB6A00E09B59 /* Headers */,
+				496B92022208EB6A00E09B59 /* Sources */,
+				496B92032208EB6A00E09B59 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Placid;
+			productName = Placid;
+			productReference = 496B92052208EB6A00E09B59 /* libPlacid.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		498747872191F68E00245E91 /* ESPWifi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4987478E2191F68E00245E91 /* Build configuration list for PBXNativeTarget "ESPWifi" */;
@@ -702,6 +811,12 @@
 					49629570215AA4DF0064B9C9 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
+					496B91E92208E7C600E09B59 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					496B92042208EB6A00E09B59 = {
+						CreatedOnToolsVersion = 10.1;
+					};
 					498747872191F68E00245E91 = {
 						CreatedOnToolsVersion = 10.0;
 					};
@@ -728,6 +843,8 @@
 				49629570215AA4DF0064B9C9 /* baremetal */,
 				498747872191F68E00245E91 /* ESPWifi */,
 				49BC402A21C05ED600D62847 /* drawtest */,
+				496B91E92208E7C600E09B59 /* Hello World */,
+				496B92042208EB6A00E09B59 /* Placid */,
 			);
 		};
 /* End PBXProject section */
@@ -806,6 +923,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		496B91E62208E7C600E09B59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				496B91ED2208E7C600E09B59 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		496B92022208EB6A00E09B59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				492F23252208FF63005FDFF1 /* Placid.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		498747842191F68E00245E91 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -836,6 +969,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		492F2328220900BF005FDFF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 496B92042208EB6A00E09B59 /* Placid */;
+			targetProxy = 492F2327220900BF005FDFF1 /* PBXContainerItemProxy */;
+		};
 		49629583215AA9E90064B9C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 49629570215AA4DF0064B9C9 /* baremetal */;
@@ -1052,6 +1190,50 @@
 			};
 			name = Release;
 		};
+		496B91EF2208E7C600E09B59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Placid";
+			};
+			name = Debug;
+		};
+		496B91F02208E7C600E09B59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Placid";
+			};
+			name = Release;
+		};
+		496B92072208EB6A00E09B59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		496B92082208EB6A00E09B59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		4987478C2191F68E00245E91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1147,6 +1329,24 @@
 			buildConfigurations = (
 				49629573215AA4DF0064B9C9 /* Debug */,
 				49629574215AA4DF0064B9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		496B91EE2208E7C600E09B59 /* Build configuration list for PBXNativeTarget "Hello World" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				496B91EF2208E7C600E09B59 /* Debug */,
+				496B91F02208E7C600E09B59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		496B92062208EB6A00E09B59 /* Build configuration list for PBXNativeTarget "Placid" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				496B92072208EB6A00E09B59 /* Debug */,
+				496B92082208EB6A00E09B59 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
