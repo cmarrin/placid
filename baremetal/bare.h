@@ -59,7 +59,7 @@ namespace bare {
         void enableIRQ(void);
         bool interruptsSupported(void);
         void halt();
-        void reboot();
+        void restart();
         void PUT8(uint8_t*, uint8_t);
         void BRANCHTO(uint8_t*);
         void WFE();

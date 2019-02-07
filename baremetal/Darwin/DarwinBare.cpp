@@ -52,9 +52,9 @@ bool interruptsSupported()
     return false;
 }
 
-void reboot()
+void restart()
 {
-    printf("REBOOT\n");
+    printf("RESTART\n");
     while (1) ;
 }
 

@@ -40,9 +40,9 @@
     .sect    .init
 
 .global _start
-.global reboot
+.global restart
 _start:
-reboot:
+restart:
     // Vector table
     ldr pc,resetHandler
     ldr pc,undefinedInstruction

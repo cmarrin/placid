@@ -342,7 +342,7 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
             delete fp;
         }
     } else if (array[0] == "reset") {
-        bare::reboot();
+        bare::restart();
     } else if (array[0] == "rm") {
         if (array.size() != 2) {
             showMessage(MessageType::Error, "rm requires one file name\n");

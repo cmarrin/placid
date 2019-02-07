@@ -190,7 +190,7 @@ public:
                 bare::GPIO::setFunction(RPiResetPin, bare::GPIO::Function::Input);
             } else if (array[1] == "esp") {
                 showMessage(MessageType::Info, "Resetting ESP\n");
-                bare::reboot();
+                bare::restart();
             } else {
                 showMessage(MessageType::Error, "invalid test command\n");
             }
