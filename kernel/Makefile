@@ -26,6 +26,7 @@ SRC =	init.cpp \
 		Allocator.cpp \
 		BootShell.cpp \
 		Dispatcher.cpp \
+		ELFLoader.cpp \
 		FileSystem.cpp \
 		Process.cpp \
 		Scanner.cpp \

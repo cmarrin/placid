@@ -74,6 +74,7 @@
 
 #include "bare/Serial.h"
 #include "FileSystem.h"
+#include <cstring>
 
 #define LOADER_FD_T placid::File*
 #define LOADER_OPEN_FOR_RD(path) placid::FileSystem::sharedFileSystem()->open(path, placid::FileSystem::OpenMode::Read)
@@ -89,7 +90,7 @@
 #define LOADER_STREQ(s1, s2) (strcmp(s1, s2) == 0)
 
 #define DBG(...) bare::Serial::printf("ELF: " __VA_ARGS__)
-#define ERR(msg) do { perror("ELF: " msg); } while(0)
+#define ERR(msg) do { bare::Serial::printf("ELF: $s" msg); } while(0)
 #define MSG(msg) bare::Serial::puts("ELF: " msg)
 
 #else

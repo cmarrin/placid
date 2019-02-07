@@ -261,8 +261,7 @@ static ELFSection_t *sectionOf(ELFExec_t *e, int index) {
 
 static Elf32_Addr addressOf(ELFExec_t *e, Elf32_Sym *sym, const char *sName) {
   if (sym->st_shndx == SHN_UNDEF) {
-    int i;
-    for (i = 0; i < e->env->exported_size; i++)
+    for (unsigned int i = 0; i < e->env->exported_size; i++)
       if (LOADER_STREQ(e->env->exported[i].name, sName))
         return (Elf32_Addr) (e->env->exported[i].ptr);
   } else {
@@ -362,10 +361,9 @@ int placeInfo(ELFExec_t *e, Elf32_Shdr *sh, const char *name, int n) {
 }
 
 static int loadSymbols(ELFExec_t *e) {
-  int n;
   int founded = 0;
   MSG("Scan ELF indexs...");
-  for (n = 1; n < e->sections; n++) {
+  for (size_t n = 1; n < e->sections; n++) {
     Elf32_Shdr sectHdr;
     char name[33] = "<unamed>";
     if (readSecHeader(e, n, &sectHdr) != 0) {
@@ -375,7 +373,7 @@ static int loadSymbols(ELFExec_t *e) {
     if (sectHdr.sh_name)
       readSectionName(e, sectHdr.sh_name, name, sizeof(name));
     DBG("Examining section %d %s\n", n, name);
-    founded |= placeInfo(e, &sectHdr, name, n);
+    founded |= placeInfo(e, &sectHdr, name, static_cast<int>(n));
     if (IS_FLAGS_SET(founded, FoundAll))
       return FoundAll;
   }
