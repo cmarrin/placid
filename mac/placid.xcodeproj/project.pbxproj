@@ -172,7 +172,7 @@
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		492F23232208FF63005FDFF1 /* Placid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Placid.cpp; sourceTree = "<group>"; };
 		492F232B2209012A005FDFF1 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Common.mk; path = ../../Placid/Common.mk; sourceTree = "<group>"; usesTabs = 1; };
+		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Common.mk; sourceTree = "<group>"; usesTabs = 1; };
 		492F232F220A62EA005FDFF1 /* elf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = elf.h; path = ../kernel/elf.h; sourceTree = "<group>"; };
 		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPi/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
