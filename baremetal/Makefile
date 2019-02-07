@@ -21,6 +21,7 @@ PLATFORMSRC = \
 	RPi/idivmod.S \
 	RPi/uidivmod.S \
 	RPi/RPiBare.cpp \
+	RPi/RPiException.cpp \
 	RPi/RPiGPIO.cpp \
 	RPi/RPiGraphics.cpp \
 	RPi/RPiInterruptManager.cpp \

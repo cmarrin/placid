@@ -160,6 +160,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		490EAC48220CD90200DBB4DD /* RPiException.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiException.cpp; path = ../baremetal/RPi/RPiException.cpp; sourceTree = "<group>"; };
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
@@ -536,6 +537,7 @@
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
 				494FD62A219BA09C005C2A6B /* uidivmod.S */,
 				496B91E52201ECD100E09B59 /* start.S */,
+				490EAC48220CD90200DBB4DD /* RPiException.cpp */,
 			);
 			name = RPi;
 			sourceTree = "<group>";
