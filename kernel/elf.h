@@ -254,7 +254,7 @@
 
 /* Figure 4.2: 32-Bit Data Types */
 
-typedef uint32_t  Elf32_Addr;  /* Unsigned program address */
+typedef uintptr_t  Elf32_Addr;  /* Unsigned program address */
 typedef uint16_t  Elf32_Half;  /* Unsigned medium integer */
 typedef uint32_t  Elf32_Off;   /* Unsigned file offset */
 typedef int32_t   Elf32_Sword; /* Signed large integer */

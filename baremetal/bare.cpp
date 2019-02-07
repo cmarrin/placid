@@ -17,6 +17,25 @@
 
 using namespace bare;
 
+void* bare::aligned_alloc(size_t align, size_t size)
+{
+    if(align < alignof(void*)) { 
+        align = alignof(void*); 
+    }
+    
+    size_t space = size + align - 1;
+    void* allocated_mem = ::operator new(space + sizeof(void*));
+    void* aligned_mem = static_cast<void*>(static_cast<char*>(allocated_mem) + sizeof(void*)); 
+    std::align(align, size, aligned_mem, space);
+    *(static_cast<void**>(aligned_mem) - 1) = allocated_mem;
+    return aligned_mem;
+}
+
+void bare::aligned_free(void* ptr)
+{
+    ::operator delete(*(static_cast<void**>(ptr) - 1));
+}
+
 #ifdef PLATFORM_RPI
 
 extern "C" {

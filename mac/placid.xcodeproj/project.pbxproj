@@ -11,6 +11,8 @@
 		492F23252208FF63005FDFF1 /* Placid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492F23232208FF63005FDFF1 /* Placid.cpp */; };
 		492F2329220900CB005FDFF1 /* libPlacid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B92052208EB6A00E09B59 /* libPlacid.a */; };
 		492F232A220900DE005FDFF1 /* libbaremetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49629571215AA4DF0064B9C9 /* libbaremetal.a */; };
+		492F232E220A619F005FDFF1 /* ELFLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992123821ED09B100AA7656 /* ELFLoader.cpp */; };
+		492F2330220A62EA005FDFF1 /* elf.h in Headers */ = {isa = PBXBuildFile; fileRef = 492F232F220A62EA005FDFF1 /* elf.h */; };
 		492FF402215C5359003582FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492FF3FE215C5359003582FE /* Timer.cpp */; };
 		492FF403215C5359003582FE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF3FF215C5359003582FE /* Timer.h */; };
 		492FF404215C5359003582FE /* InterruptManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 492FF400215C5359003582FE /* InterruptManager.h */; };
@@ -170,7 +172,8 @@
 		492C741C214B2A2F009A4DA4 /* kerneltest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kerneltest; sourceTree = BUILT_PRODUCTS_DIR; };
 		492F23232208FF63005FDFF1 /* Placid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Placid.cpp; sourceTree = "<group>"; };
 		492F232B2209012A005FDFF1 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Common.mk; sourceTree = "<group>"; usesTabs = 1; };
+		492F232D2209D201005FDFF1 /* Common.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Common.mk; path = ../../Placid/Common.mk; sourceTree = "<group>"; usesTabs = 1; };
+		492F232F220A62EA005FDFF1 /* elf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = elf.h; path = ../kernel/elf.h; sourceTree = "<group>"; };
 		492FF3EB215AF47A003582FE /* RPiGPIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGPIO.cpp; path = ../baremetal/RPi/RPiGPIO.cpp; sourceTree = "<group>"; };
 		492FF3EC215AF47B003582FE /* GPIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPIO.h; sourceTree = "<group>"; };
 		492FF3EF215C4F72003582FE /* Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Volume.h; sourceTree = "<group>"; };
@@ -393,6 +396,7 @@
 				4992125321ED178900AA7656 /* Dispatcher.cpp */,
 				4992125421ED178900AA7656 /* Dispatcher.h */,
 				4992122F21ED09B000AA7656 /* dlmalloc.cpp */,
+				492F232F220A62EA005FDFF1 /* elf.h */,
 				4992123821ED09B100AA7656 /* ELFLoader.cpp */,
 				4992123C21ED09B100AA7656 /* ELFLoader.h */,
 				4992123121ED09B000AA7656 /* ELFLoaderConfig.h */,
@@ -669,6 +673,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492F2330220A62EA005FDFF1 /* elf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -881,6 +886,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492F232E220A619F005FDFF1 /* ELFLoader.cpp in Sources */,
 				4992124121ED09B100AA7656 /* BootShell.cpp in Sources */,
 				4992125921ED191A00AA7656 /* Process.cpp in Sources */,
 				4992124621ED09B100AA7656 /* init.cpp in Sources */,
