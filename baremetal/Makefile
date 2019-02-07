@@ -56,6 +56,8 @@ SRC = \
 
 include Common.mk
 
+CFLAGS += -DNOINTERRUPTS
+
 all : checkdirs $(BUILDDIR)/$(ARCHIVE)
 
 check:

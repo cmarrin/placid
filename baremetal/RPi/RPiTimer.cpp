@@ -68,13 +68,16 @@ void  Timer::TimerManager::init()
     armTimer().control = 0x00F90000; // Set the prescaler, but keep the timer stopped
     armTimer().control = 0x00F90200; // Now start the timer with the same prescaler value
 
+#ifndef NOINTERRUPTS
     // Disable timer interrupts (until they are turned on by updateTimers) and set the handler
     InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
     InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
+#endif
 }
 
 void Timer::TimerManager::updateTimers()
 {
+#ifndef NOINTERRUPTS
     disableIRQ();
     InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
 
@@ -98,13 +101,16 @@ void Timer::TimerManager::updateTimers()
     }
     
     enableIRQ();
+#endif
 }
 
 void Timer::handleInterrupt()
 {
+#ifndef NOINTERRUPTS
     armTimer().control = 0x00F90000;
     Timer::TimerManager::instance().fireTimers();
 	armTimer().clearIRQ = 0;
+#endif
 }
 
 int64_t Timer::systemTime()
