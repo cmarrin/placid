@@ -13,6 +13,7 @@
 #pragma once
 
 #include "bare/InterruptManager.h"
+#include "bare/RealTime.h"
 #include "bare/Singleton.h"
 #include "bare/String.h"
 #include <stdint.h>
@@ -30,37 +31,7 @@ namespace bare {
 	// timer will cancel the current one
 	//
  
-    // Calendar date/time
-    //
-    // Value is stored in "Rata Die", in which a time of 0 is the date 0001-01-01
-    //
-    class RealTime
-    {
-    public:
-        enum class TimeFormat { Time, Date, DateTime };
-        
-        RealTime(int32_t year, uint8_t month, uint8_t day, uint8_t hour = 0, uint8_t minute = 0, uint8_t second = 0, uint32_t us = 0);        
-        RealTime(int64_t t) : _time(t) { }
-        RealTime(const RealTime& other) { _time = other._time; }
-        
-        String timeString(TimeFormat);
-        
-        int64_t usSinceEpoch() const { return _time; }
-        
-        uint32_t us() const { return _time % 1000000; }
-        uint8_t seconds() const { return (_time / 1000000) % 60; }
-        uint8_t minutes() const { return (_time / 1000000 / 60) % 60; }
-        uint8_t hours() const { return (_time / 1000000 / 60 / 60) % 24; }
-        uint8_t day() const;
-        uint8_t month() const;
-        int32_t year() const;
-        uint8_t dayOfWeek() const; // 0 = Sunday
-        
-    private:
-        int64_t _time = 0;
-    };
-    
-	class Timer : std::enable_shared_from_this<Timer> {
+ 	class Timer : std::enable_shared_from_this<Timer> {
     private:
         struct TimerManager : public Singleton <TimerManager>
         {

@@ -46,6 +46,7 @@ SRC = \
 	Formatter.cpp \
 	FloatFormatter.cpp \
 	InterruptManager.cpp \
+	RealTime.cpp \
 	Serial.cpp \
 	Shell.cpp \
 	SPIMaster.cpp \

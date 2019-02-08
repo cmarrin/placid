@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		490EAC4B220CEB7000DBB4DD /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 490EAC49220CEB7000DBB4DD /* RealTime.cpp */; };
+		490EAC4C220CEB7000DBB4DD /* RealTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 490EAC4A220CEB7000DBB4DD /* RealTime.h */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
 		492F23252208FF63005FDFF1 /* Placid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492F23232208FF63005FDFF1 /* Placid.cpp */; };
 		492F2329220900CB005FDFF1 /* libPlacid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B92052208EB6A00E09B59 /* libPlacid.a */; };
@@ -162,6 +164,8 @@
 
 /* Begin PBXFileReference section */
 		490EAC48220CD90200DBB4DD /* RPiException.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiException.cpp; path = ../baremetal/RPi/RPiException.cpp; sourceTree = "<group>"; };
+		490EAC49220CEB7000DBB4DD /* RealTime.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RealTime.cpp; path = ../baremetal/RealTime.cpp; sourceTree = "<group>"; };
+		490EAC4A220CEB7000DBB4DD /* RealTime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RealTime.h; sourceTree = "<group>"; };
 		49166D2A21514BDE0077ACEE /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../kernel/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49166D5121514C2C0077ACEE /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = ../bootloader/bin/config.txt; sourceTree = "<group>"; };
 		49166D562151914C0077ACEE /* loadmap.ld */ = {isa = PBXFileReference; lastKnownFileType = text; name = loadmap.ld; path = ../kernel/loadmap.ld; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				496C3BC221891FC2004DBC22 /* Log.h */,
 				494FD61F2199E64F005C2A6B /* Memory.h */,
 				49BC404D21C1976D00D62847 /* Mutex.h */,
+				490EAC4A220CEB7000DBB4DD /* RealTime.h */,
 				4965788D2169805800B3F088 /* SDCard.h */,
 				494FD6002197A44F005C2A6B /* Serial.h */,
 				49E887E821E7F9D80035DD64 /* Shell.h */,
@@ -575,6 +580,7 @@
 				497EE458216138E2000584CE /* Formatter.cpp */,
 				494FD634219F8951005C2A6B /* FloatFormatter.cpp */,
 				4992125121ED0E4E00AA7656 /* InterruptManager.cpp */,
+				490EAC49220CEB7000DBB4DD /* RealTime.cpp */,
 				494FD6112199D070005C2A6B /* Serial.cpp */,
 				49E887E921E7F9FA0035DD64 /* Shell.cpp */,
 				49E887FA21EB7FD00035DD64 /* SPIMaster.cpp */,
@@ -669,6 +675,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				492FF404215C5359003582FE /* InterruptManager.h in Headers */,
+				490EAC4C220CEB7000DBB4DD /* RealTime.h in Headers */,
 				492FF403215C5359003582FE /* Timer.h in Headers */,
 				492FF409215D479A003582FE /* FAT32.h in Headers */,
 				494FD6212199E64F005C2A6B /* Memory.h in Headers */,
@@ -911,6 +918,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				490EAC4B220CEB7000DBB4DD /* RealTime.cpp in Sources */,
 				49731F7A216EAB4000F9A79F /* XYModem.cpp in Sources */,
 				4992125221ED0E4E00AA7656 /* InterruptManager.cpp in Sources */,
 				494FD65321AC5A4A005C2A6B /* WiFiSPIDriver.cpp in Sources */,
