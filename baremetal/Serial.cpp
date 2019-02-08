@@ -31,7 +31,13 @@ int32_t Serial::printf(const char* format, ...)
 
 int32_t Serial::vprintf(const char* format, va_list va)
 {
-    return Formatter::vformat([](char c) { Serial::write(c); }, format, va);
+    return Formatter::vformat([](char c)
+    { 
+        write(c);
+        if (c == '\n') {
+            write('\r');
+        }
+    }, format, va);
 }
 
 Serial::Error Serial::puts(const char* s, uint32_t size)
@@ -59,6 +65,9 @@ Serial::Error Serial::puts(const char* s, uint32_t size)
 		if (error != Error::OK) {
 			return error;
 		}
+        if (c == '\n') {
+            write('\r');
+        }
     }
     
     static bool firstTime = true;

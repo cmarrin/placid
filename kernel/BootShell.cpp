@@ -282,7 +282,11 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
     // to send control we have to send raw
     if (raw) {
         while (size--) {
-            bare::Serial::write(*data++);
+            bare::Serial::write(*data);
+            if (*data == '\n') {
+                bare::Serial::write('\r');
+            }
+            data++;
         }
     } else {
 	    bare::Serial::puts(data, size);

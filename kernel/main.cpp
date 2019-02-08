@@ -27,6 +27,9 @@ int main()
             bare::Serial::puts("*** Serial Read Error\n");
         } else {
             inputChar(c);
+            if (c == '\r') {
+                inputChar('\n');
+            }
         }
     }
 }
