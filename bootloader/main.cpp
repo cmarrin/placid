@@ -61,6 +61,7 @@ int main()
                 []() -> uint32_t { return static_cast<uint32_t>(bare::Timer::systemTime() / 1000); });
 
             if (xyModem.receive([&addr](char byte) -> bool { bare::PUT8(addr++, byte); return true; })) {
+                bare::Serial::printf("\n\nUploaded succeeded, jumping to loaded program...\n\n");
                 bare::Timer::usleep(100000);
                 bare::BRANCHTO(bare::kernelBase());
                 break;
