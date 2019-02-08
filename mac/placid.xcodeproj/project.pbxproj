@@ -64,6 +64,7 @@
 		4992125621ED178900AA7656 /* Dispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125321ED178900AA7656 /* Dispatcher.cpp */; };
 		4992125921ED191A00AA7656 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125721ED191A00AA7656 /* Process.cpp */; };
 		4992125A21ED191A00AA7656 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4992125721ED191A00AA7656 /* Process.cpp */; };
+		49AA9E53220E2EB2002C947E /* DarwinReceiveFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49AA9E52220E2EB2002C947E /* DarwinReceiveFile.cpp */; };
 		49BC3FF821BD9C3200D62847 /* DarwinGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */; };
 		49BC3FFA21BDC82200D62847 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FF921BDC82200D62847 /* OpenGL.framework */; };
 		49BC3FFC21BDC84E00D62847 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BC3FFB21BDC84D00D62847 /* GLUT.framework */; };
@@ -276,6 +277,8 @@
 		4992125821ED191A00AA7656 /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = ../kernel/Process.h; sourceTree = "<group>"; };
 		49AA9E4D220A2B9B002C947E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		49AA9E50220A31B6002C947E /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = start.S; sourceTree = "<group>"; };
+		49AA9E51220E2E5F002C947E /* RPiReceiveFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiReceiveFile.cpp; path = ../baremetal/RPi/RPiReceiveFile.cpp; sourceTree = "<group>"; };
+		49AA9E52220E2EB2002C947E /* DarwinReceiveFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinReceiveFile.cpp; path = ../baremetal/Darwin/DarwinReceiveFile.cpp; sourceTree = "<group>"; };
 		49BC3FF421BB0AEE00D62847 /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
 		49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiGraphics.cpp; path = ../baremetal/RPi/RPiGraphics.cpp; sourceTree = "<group>"; };
 		49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DarwinGraphics.cpp; path = ../baremetal/Darwin/DarwinGraphics.cpp; sourceTree = "<group>"; };
@@ -508,6 +511,7 @@
 				49BC3FF721BD9C3200D62847 /* DarwinGraphics.cpp */,
 				494FD6222199E6D0005C2A6B /* DarwinMemory.cpp */,
 				49BC404E21C19BA000D62847 /* DarwinMutex.cpp */,
+				49AA9E52220E2EB2002C947E /* DarwinReceiveFile.cpp */,
 				494FD60C2199CEAB005C2A6B /* DarwinSDCard.cpp */,
 				494FD60F2199CFDC005C2A6B /* DarwinSerial.cpp */,
 				494FD6152199D2E2005C2A6B /* DarwinSPIMaster.cpp */,
@@ -528,6 +532,7 @@
 				494FD61E2199E64F005C2A6B /* RPiMemory.cpp */,
 				494FD62C219CA832005C2A6B /* RPiMemoryMin.cpp */,
 				49BC405121C19CCA00D62847 /* RPiMutex.cpp */,
+				49AA9E51220E2E5F002C947E /* RPiReceiveFile.cpp */,
 				4965788C2169805800B3F088 /* RPiSDCard.cpp */,
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
 				494FD6162199D2E2005C2A6B /* RPiSPIMaster.cpp */,
@@ -928,6 +933,7 @@
 				497EE45B2161442D000584CE /* Formatter.cpp in Sources */,
 				494FD64F21ABDB5D005C2A6B /* WiFiSPI.cpp in Sources */,
 				494FD6142199D18B005C2A6B /* Serial.cpp in Sources */,
+				49AA9E53220E2EB2002C947E /* DarwinReceiveFile.cpp in Sources */,
 				49BC404C21C08BD700D62847 /* String.cpp in Sources */,
 				4992125021ED0B8A00AA7656 /* SPIMaster.cpp in Sources */,
 				494FD6132199D17F005C2A6B /* DarwinSerial.cpp in Sources */,

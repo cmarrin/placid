@@ -290,6 +290,38 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
      }   
 }
 
+void BootShell::putFile(const char* name)
+{
+    File* fp = FileSystem::sharedFileSystem()->open(name, FileSystem::OpenMode::Write);
+    if (!fp->valid()) {
+        if (fp->error() == bare::Volume::Error::FileExists) {
+            showMessage(MessageType::Error, "'%s' exists. Please select a new file name\n", name);
+        } else {
+            showMessage(MessageType::Error, "open of '%s' failed: %s\n", name, FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        }
+        delete fp;
+        return;
+    }
+    
+    if (!bare::receiveFile([fp](char byte) -> bool
+    {
+        return fp->write(&byte, 1) == 1;
+    })) {
+        bare::Timer::usleep(100000);
+        showMessage(MessageType::Error, "receiveFile failed\n");
+        delete fp;
+        bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(name);
+        if (error != bare::Volume::Error::OK) {
+            showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
+                name, FileSystem::sharedFileSystem()->errorDetail(error));
+        }
+    } else {
+        bare::Timer::usleep(100000);
+        showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", name, fp->size());
+        delete fp;
+    }
+}
+
 bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
 {
     if (array[0] == "ls") {
@@ -303,44 +335,8 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
             showMessage(MessageType::Error, "put requires one file name\n");
             return true;
         }
-        
-        File* fp = FileSystem::sharedFileSystem()->open(array[1].c_str(), FileSystem::OpenMode::Write);
-        if (!fp->valid()) {
-            if (fp->error() == bare::Volume::Error::FileExists) {
-                showMessage(MessageType::Error, "'%s' exists. Please select a new file name\n", array[1].c_str());
-            } else {
-                showMessage(MessageType::Error, "open of '%s' failed: %s\n", array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(fp->error()));
-            }
-            delete fp;
-            return true;
-        }
-        
-        showMessage(MessageType::Info, "Start X/YModem download when ready, or press [esc] key to cancel...\n");
-        showMessage(MessageType::Info, "    (Use YModem to accurately set file size)\n");
-        
-        bare::XYModem xyModem(
-            [](uint8_t& c) { bare::Serial::read(c); },
-            [](uint8_t c) { bare::Serial::write(c); },
-            []() -> bool { return bare::Serial::rxReady(); },
-            []() -> uint32_t { return static_cast<uint32_t>(bare::Timer::systemTime() / 1000); });
-
-        if (!xyModem.receive([fp](char byte) -> bool
-        {
-            return fp->write(&byte, 1) == 1;
-        })) {
-            bare::Timer::usleep(100000);
-            showMessage(MessageType::Error, "X/YModem upload failed\n");
-            delete fp;
-            bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(array[1].c_str());
-            if (error != bare::Volume::Error::OK) {
-                showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
-                    array[1].c_str(), FileSystem::sharedFileSystem()->errorDetail(error));
-            }
-        } else {
-            bare::Timer::usleep(100000);
-            showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", array[1].c_str(), fp->size());
-            delete fp;
-        }
+        putFile(array[1].c_str());
+        return true;
     } else if (array[0] == "reset") {
         bare::restart();
     } else if (array[0] == "rm") {

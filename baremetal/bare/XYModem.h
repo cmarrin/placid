@@ -36,9 +36,6 @@ namespace bare {
             , _systemTime(systemTime)
         { }
         
-        // Whenever a byte comes in, this function is called with the byte
-        using ReceiveFunction = std::function<bool(char byte)>;
-        
         bool receive(ReceiveFunction);
         
     private:

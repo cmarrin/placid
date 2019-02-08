@@ -27,6 +27,9 @@ namespace placid {
         virtual const char* promptString() const override;
 	    virtual void shellSend(const char* data, uint32_t size = 0, bool raw = false) override;
 		virtual bool executeShellCommand(const std::vector<bare::String>&) override;
-	};
+	
+    private:
+        void putFile(const char* name);
+    };
 	
 }

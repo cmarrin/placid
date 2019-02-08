@@ -51,6 +51,9 @@ namespace bare {
     void initSystem();
     bool useAllocator();
     
+    using ReceiveFunction = std::function<bool(char byte)>;
+    bool receiveFile(ReceiveFunction);
+    
     void* aligned_alloc(size_t align, size_t size);
     void aligned_free(void*);
 
