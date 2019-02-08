@@ -384,7 +384,9 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
     } else if (array[0] == "date") {
         if (array.size() == 1) {
             bare::RealTime currentTime = bare::Timer::currentTime();
-            showMessage(MessageType::Info, "current time: %s\n", currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str());
+            showMessage(MessageType::Info, "current time: %s (%lld)\n",
+                        currentTime.timeString(bare::RealTime::TimeFormat::DateTime).c_str(),
+                        bare::Timer::systemTime());
         } else {
             // Set time. Format is as in the unix date command with the following command line:
             // 
