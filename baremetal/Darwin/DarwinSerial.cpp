@@ -19,18 +19,39 @@
 #include "bare/Timer.h"
 
 #include <iostream>
+#include <unistd.h>
+#include <errno.h>
+#include <util.h>
+#include <termios.h>
 
 using namespace bare;
 
+static int master;
+static int slave;
+
 void Serial::init(uint32_t baudrate)
 {
-    //system("stty raw");
+    struct termios tty;
+    tty.c_iflag = (tcflag_t) 0;
+    tty.c_lflag = (tcflag_t) 0;
+    tty.c_cflag = CS8;
+    tty.c_oflag = (tcflag_t) 0;
+
+    char buf[256];
+
+    auto e = openpty(&master, &slave, buf, &tty, nullptr);
+    if(0 > e) {
+    ::printf("Error: %s\n", strerror(errno));
+        return;
+    }
+
+    ::printf("Slave PTY: %s\n", buf);
+    fflush(stdout);
 }
 
 Serial::Error Serial::read(uint8_t& c)
 {
-    c = getchar();
-    return Error::OK;
+    return (::read(master, &c, 1) == -1) ? Error::Fail : Error::OK;
 }
 
 bool Serial::rxReady()
@@ -40,7 +61,7 @@ bool Serial::rxReady()
 
 Serial::Error Serial::write(uint8_t c)
 {
-    std::cout.write(reinterpret_cast<const char*>(&c), 1);
+    ::write(master, &c, 1);
     return Error::OK;
 }
 
