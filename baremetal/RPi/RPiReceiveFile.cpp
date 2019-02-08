@@ -13,6 +13,8 @@
 #include "bare.h"
 
 #include "bare/Serial.h"
+#include "bare/Timer.h"
+#include "bare/XYModem.h"
 
 using namespace bare;
 

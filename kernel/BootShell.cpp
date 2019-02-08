@@ -18,7 +18,6 @@
 #include "bare/Serial.h"
 #include "bare/WiFiSPI.h"
 #include "bare/Timer.h"
-#include "bare/XYModem.h"
 #include "Allocator.h"
 #include "Dispatcher.h"
 #include "FileSystem.h"

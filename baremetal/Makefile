@@ -29,6 +29,7 @@ PLATFORMSRC = \
 	RPi/RPiMemory.cpp \
 	RPi/RPiMemoryMin.cpp \
 	RPi/RPiMutex.cpp \
+	RPi/RPiReceiveFile.cpp \
 	RPi/RPiSDCard.cpp \
 	RPi/RPiSerial.cpp \
 	RPi/RPiSPIMaster.cpp \
