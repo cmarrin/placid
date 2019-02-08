@@ -66,6 +66,9 @@ int main()
                 bare::BRANCHTO(bare::kernelBase());
                 break;
             }
+            bare::Timer::usleep(100000);
+            bare::Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
+            while(1) { }
         } else if (c == '\r') {
             bare::Serial::printf("\n\nAutoloading...\n\n");
             autoload();
@@ -73,8 +76,5 @@ int main()
         }
     }
     
-    bare::Timer::usleep(100000);
-    bare::Serial::printf("\n\n*** Returned from loading, that should not happen. Busy looping...\n");
-    while(1) { }
     return 0;
 }
