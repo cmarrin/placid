@@ -76,7 +76,6 @@ void Serial::init(uint32_t baudrate)
 {
     baudrate = std::min(std::max(static_cast<int>(baudrate), 110), 31250000);
     
-#ifndef NOINTERRUPTS
     if (interruptsSupported()) {
         disableIRQ();
 	    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
@@ -85,7 +84,6 @@ void Serial::init(uint32_t baudrate)
         
         InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
     }
-#endif
 
     uart().AUXENB = 1;
     uart().IER = 0;
@@ -107,12 +105,10 @@ void Serial::init(uint32_t baudrate)
 
     uart().CNTL = 3;
     
-#ifndef NOINTERRUPTS
     if (interruptsSupported()) {
 	    InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, true);
 	    enableIRQ();
     }
-#endif
 }
 
 Serial::Error Serial::read(uint8_t& c)
