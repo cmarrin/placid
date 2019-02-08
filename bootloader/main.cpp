@@ -28,7 +28,7 @@ int main()
         
     bare::Serial::printf("\n\nPlacid Bootloader v0.2\n\n");
     bare::Serial::printf("Autoloading in %d seconds\n", AutoloadTimeout);
-    bare::Serial::printf("    (press [space] for X/YMODEM upload or any other key to autoload immediately)\n");
+    bare::Serial::printf("    (press [space] for X/YMODEM upload or [return] to autoload immediately)\n");
     
     bare::Timer::init();
     
@@ -66,7 +66,7 @@ int main()
                 bare::BRANCHTO(bare::kernelBase());
                 break;
             }
-        } else if (c < 0x7f) {
+        } else if (c == '\r') {
             bare::Serial::printf("\n\nAutoloading...\n\n");
             autoload();
             break;
