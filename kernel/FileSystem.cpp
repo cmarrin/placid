@@ -99,6 +99,7 @@ bare::Volume::Error FileSystem::remove(const char* name)
 bool File::prepareBuffer(off_t offset)
 {
     if (offset / bare::BlockSize == _bufferAddr) {
+        _error = bare::Volume::Error::OK;
         return true;
     }
 
@@ -128,7 +129,9 @@ size_t File::io(char* buf, size_t size, bool write)
         // We need to preload the buffer to fill the parts we're not
         // going to change
         _error = _rawFile->read(_buffer, bufferAddr, 1);
-        if (_error != bare::Volume::Error::OK) {
+        if (_error == bare::Volume::Error::EndOfFile && write) {
+            bare::memset(_buffer, 0, sizeof(_buffer));
+        } else if (_error != bare::Volume::Error::OK) {
             return 0;
         }
         
@@ -138,11 +141,11 @@ size_t File::io(char* buf, size_t size, bool write)
 
     while (1) {
         if (!_bufferValid) {
-            bare::Volume::Error error = write ? 
+            _error = write ? 
                 _rawFile->write(_buffer, bufferAddr, 1) :
                 _rawFile->read(_buffer, bufferAddr, 1);
             
-            if (error != bare::Volume::Error::OK) {
+            if (_error != bare::Volume::Error::OK) {
                 return 0;
             }
             
@@ -174,6 +177,7 @@ size_t File::io(char* buf, size_t size, bool write)
         }
         
         if (sizeRemaining == 0) {
+            _error = bare::Volume::Error::OK;
             return size;
         }
     }
