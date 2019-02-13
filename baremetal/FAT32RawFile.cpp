@@ -34,6 +34,14 @@ Volume::Error FAT32RawFile::write(const char* buf, Block logicalBlock, uint32_t 
 {
     Block physicalBlock;
     Volume::Error error = logicalToPhysicalBlock(logicalBlock, physicalBlock);
+    if (error == Volume::Error::EndOfFile) {
+        error = insertCluster();
+        if (error != Volume::Error::OK) {
+            return error;
+        }
+        error = logicalToPhysicalBlock(logicalBlock, physicalBlock);
+    }
+    
     if (error != Volume::Error::OK) {
         return error;
     }
