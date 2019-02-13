@@ -14,11 +14,15 @@
 
 #include "bare/Serial.h"
 #include "bare/String.h"
+#include <errno.h>
+#include <unistd.h>
 
 using namespace bare;
 
 bool bare::receiveFile(ReceiveFunction func)
 {
+    char* path = getwd(nullptr);
+    Serial::printf("[cwd=%s]\n", path);
     Serial::printf("Enter file name: ");
     uint8_t c = '\0';
     String name;
@@ -33,7 +37,7 @@ bool bare::receiveFile(ReceiveFunction func)
 
     FILE* f = fopen(name.c_str(), "r");
     if (!f) {
-        perror("Error opening file");
+        Serial::printf("*** Error opening '%s': %s\n", name.c_str(), strerror(errno));
         return false;
     }
     
@@ -46,7 +50,9 @@ bool bare::receiveFile(ReceiveFunction func)
             perror("Error reading character");
             return false;
         }
-        func(result);
+        if (!func(result)) {
+            return false;
+        }
     }
     return true;
 }

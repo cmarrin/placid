@@ -24,13 +24,18 @@
 #include <util.h>
 #include <termios.h>
 
+//#define USE_PTY
+
 using namespace bare;
 
+#ifdef USE_PTY
 static int master;
 static int slave;
+#endif
 
 void Serial::init(uint32_t baudrate)
 {
+#ifdef USE_PTY
     struct termios tty;
     tty.c_iflag = (tcflag_t) 0;
     tty.c_lflag = (tcflag_t) 0;
@@ -47,11 +52,17 @@ void Serial::init(uint32_t baudrate)
 
     ::printf("Slave PTY: %s\n", buf);
     fflush(stdout);
+#endif
 }
 
 Serial::Error Serial::read(uint8_t& c)
 {
+#ifdef USE_PTY
     return (::read(master, &c, 1) == -1) ? Error::Fail : Error::OK;
+#else
+    c = getchar();
+    return Error::OK;
+#endif
 }
 
 bool Serial::rxReady()
@@ -61,7 +72,13 @@ bool Serial::rxReady()
 
 Serial::Error Serial::write(uint8_t c)
 {
+#ifdef USE_PTY
     ::write(master, &c, 1);
+#else
+    if (c != '\r') {
+        std::cout.write(reinterpret_cast<const char*>(&c), 1);
+    }
+#endif
     return Error::OK;
 }
 
