@@ -270,7 +270,8 @@ Cluster FAT32::allocateCluster(Cluster prev)
             }
             
             uint32ToBuf(oldNext, reinterpret_cast<uint8_t*>(_fatBuffer + fatBlockOffset));
-
+            _fatBufferNeedsWriting = true;
+            
             if (!writeFATBlock()) {
                 return 0;
             }
