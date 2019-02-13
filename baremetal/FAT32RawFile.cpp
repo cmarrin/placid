@@ -127,16 +127,16 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Block logicalBlock, Block& ph
             _lastLogicalCluster = 0;
         }
         
-        while (_lastLogicalCluster++ < currentLogicalCluster) {
+        while (_lastLogicalCluster < currentLogicalCluster) {
             FAT32::FATEntryType type = _fat32->nextClusterFATEntry(_lastPhysicalCluster, _lastPhysicalCluster);
             if (type == FAT32::FATEntryType::Normal) {
+                ++_lastLogicalCluster;
                 continue;
             }
             
             // The only time _lastPhysicalCluster gets updated is if the return type is Normal.
             // If we have an error decrement _lastLogicalCluster to keep it consistent with
             // the existing value of _lastPhysicalCluster.
-            _lastLogicalCluster--;
             if (type == FAT32::FATEntryType::End) {
                 return Volume::Error::EndOfFile;
             }
@@ -150,7 +150,6 @@ Volume::Error FAT32RawFile::logicalToPhysicalBlock(Block logicalBlock, Block& ph
     }
 
     physicalBlock = _fat32->clusterToBlock(_lastPhysicalCluster) + currentLogicalClusterBlock;
-    _lastLogicalCluster = currentLogicalCluster;
     return Volume::Error::OK;
 }
 
