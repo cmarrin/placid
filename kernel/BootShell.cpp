@@ -311,7 +311,7 @@ void BootShell::putFile(const char* name)
         return fp->write(&byte, 1) == 1;
     })) {
         bare::Timer::usleep(100000);
-        showMessage(MessageType::Error, "receiveFile failed\n");
+        showMessage(MessageType::Error, "receiveFile failed: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
         delete fp;
         bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(name);
         if (error != bare::Volume::Error::OK) {
