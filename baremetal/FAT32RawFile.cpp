@@ -81,7 +81,7 @@ Volume::Error FAT32RawFile::insertCluster()
     }
     
     _fat32->allocateCluster(_lastPhysicalCluster);
-    return error();
+    return Volume::Error::OK;
 }
 
 Volume::Error FAT32RawFile::updateSize()
