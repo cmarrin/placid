@@ -261,6 +261,7 @@ const char* BootShell::helpString() const
             "    debug [on/off]     : turn debugging on/off\n"
             "    heap               : show heap status\n"
             "    put <file>         : put file (X/YModem send)\n"
+            "    diff <file>        : compare file (X/YModem send)\n"
             "    ls                 : list files\n"
             "    mv <src> <dst>     : rename file\n"
             "    reset              : restart kernel\n"
@@ -293,11 +294,11 @@ void BootShell::shellSend(const char* data, uint32_t size, bool raw)
      }   
 }
 
-void BootShell::putFile(const char* name)
+void BootShell::receiveFile(const char* name, bool diff)
 {
-    File* fp = FileSystem::sharedFileSystem()->open(name, FileSystem::OpenMode::Write);
+    File* fp = FileSystem::sharedFileSystem()->open(name, diff ? FileSystem::OpenMode::Read : FileSystem::OpenMode::Write);
     if (!fp->valid()) {
-        if (fp->error() == bare::Volume::Error::FileExists) {
+        if (fp->error() == bare::Volume::Error::FileExists && !diff) {
             showMessage(MessageType::Error, "'%s' exists. Please select a new file name\n", name);
         } else {
             showMessage(MessageType::Error, "open of '%s' failed: %s\n", name, FileSystem::sharedFileSystem()->errorDetail(fp->error()));
@@ -306,21 +307,58 @@ void BootShell::putFile(const char* name)
         return;
     }
     
-    if (!bare::receiveFile([fp](char byte) -> bool
-    {
-        return fp->write(&byte, 1) == 1;
-    })) {
+    char lastcmp = 0;
+    char lastbyte = 0;
+    uint32_t count = 0;
+    bare::ReceiveFunction func;
+    
+    if (diff) {
+        func = [fp, &lastcmp, &lastbyte, &count](char byte) -> bool
+        {
+            count++;
+            
+            char cmp;
+            if (fp->read(&cmp, 1) != 1) {
+                return false;
+            }
+            if (cmp != byte) {
+                lastbyte = byte;
+                lastcmp = cmp;
+                return false;
+            }
+            return true;
+        };
+    } else {
+        func = [fp](char byte) -> bool
+        {
+            return fp->write(&byte, 1) == 1;
+        };
+    }
+
+    if (!bare::receiveFile(func)) {
         bare::Timer::usleep(100000);
-        showMessage(MessageType::Error, "receiveFile failed: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        if (diff && count != fp->size()) {
+            showMessage(MessageType::Error, "File compare failed, sizes don't match: expected %d, got %d\n", fp->size(), count);
+        } else if (diff && fp->error() == bare::Volume::Error::OK) {
+            showMessage(MessageType::Error, "File compare failed at offset %d: expected 0x%02x, got 0x%02x\n", count, lastcmp , lastbyte);
+        } else {
+            showMessage(MessageType::Error, "receiveFile failed: %s\n", FileSystem::sharedFileSystem()->errorDetail(fp->error()));
+        }
         delete fp;
-        bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(name);
-        if (error != bare::Volume::Error::OK) {
-            showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
-                name, FileSystem::sharedFileSystem()->errorDetail(error));
+        if (!diff) {
+            bare::Volume::Error error = FileSystem::sharedFileSystem()->remove(name);
+            if (error != bare::Volume::Error::OK) {
+                showMessage(MessageType::Error, "deletion of '%s' failed: %s\n",
+                    name, FileSystem::sharedFileSystem()->errorDetail(error));
+            }
         }
     } else {
         bare::Timer::usleep(100000);
-        showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", name, fp->size());
+        if (diff) {
+            showMessage(MessageType::Info, "'%s' compared, identical\n", name);
+        } else {
+            showMessage(MessageType::Info, "'%s' uploaded, size=%d\n", name, fp->size());
+        }
         delete fp;
     }
 }
@@ -338,7 +376,14 @@ bool BootShell::executeShellCommand(const std::vector<bare::String>& array)
             showMessage(MessageType::Error, "put requires one file name\n");
             return true;
         }
-        putFile(array[1].c_str());
+        receiveFile(array[1].c_str(), false);
+        return true;
+    }  else if (array[0] == "diff") {
+        if (array.size() != 2) {
+            showMessage(MessageType::Error, "diff requires one file name\n");
+            return true;
+        }
+        receiveFile(array[1].c_str(), true);
         return true;
     } else if (array[0] == "reset") {
         bare::restart();

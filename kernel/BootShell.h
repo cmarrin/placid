@@ -29,7 +29,7 @@ namespace placid {
 		virtual bool executeShellCommand(const std::vector<bare::String>&) override;
 	
     private:
-        void putFile(const char* name);
+        void receiveFile(const char* name, bool diff);
     };
 	
 }
