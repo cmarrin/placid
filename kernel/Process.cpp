@@ -12,6 +12,8 @@
 
 #include "Process.h"
 
+#include "ELFLoader.h"
+
 using namespace placid;
 
 std::shared_ptr<Process> Process::create(const bare::String& name)
@@ -21,6 +23,8 @@ std::shared_ptr<Process> Process::create(const bare::String& name)
 
 Process::Process(const bare::String& name)
 {
+    ELFLoader loader(name.c_str());
+    (void) loader;
 }
 
 void Process::run()

@@ -261,7 +261,6 @@
 		4992122E21ED09B000AA7656 /* Allocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Allocator.h; path = ../kernel/Allocator.h; sourceTree = "<group>"; };
 		4992122F21ED09B000AA7656 /* dlmalloc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlmalloc.cpp; path = ../kernel/dlmalloc.cpp; sourceTree = "<group>"; };
 		4992123021ED09B000AA7656 /* BootShell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BootShell.cpp; path = ../kernel/BootShell.cpp; sourceTree = "<group>"; };
-		4992123121ED09B000AA7656 /* ELFLoaderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELFLoaderConfig.h; path = ../kernel/ELFLoaderConfig.h; sourceTree = "<group>"; };
 		4992123221ED09B100AA7656 /* BootShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BootShell.h; path = ../kernel/BootShell.h; sourceTree = "<group>"; };
 		4992123321ED09B100AA7656 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../kernel/FileSystem.cpp; sourceTree = "<group>"; };
 		4992123521ED09B100AA7656 /* Scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scanner.cpp; path = ../kernel/Scanner.cpp; sourceTree = "<group>"; };
@@ -407,7 +406,6 @@
 				492F232F220A62EA005FDFF1 /* elf.h */,
 				4992123821ED09B100AA7656 /* ELFLoader.cpp */,
 				4992123C21ED09B100AA7656 /* ELFLoader.h */,
-				4992123121ED09B000AA7656 /* ELFLoaderConfig.h */,
 				4992123321ED09B100AA7656 /* FileSystem.cpp */,
 				4992123E21ED09B100AA7656 /* FileSystem.h */,
 				4992123D21ED09B100AA7656 /* MStream.h */,
