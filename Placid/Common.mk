@@ -15,7 +15,7 @@ PLATFORM ?= PLATFORM_RPI
 PLATFORMDIR ?= RPi
 TOOLCHAIN ?= arm-none-eabi-
 
-LOADADDR ?= 0x8000
+LOADADDR ?= 0x80
 
 AR = $(TOOLCHAIN)ar
 AS = $(TOOLCHAIN)as
@@ -57,8 +57,8 @@ $(BUILDDIR):
 	@mkdir -p $@
 
 $(PRODUCT) : $(LOADER) $(OBJS)
-	@echo "  LD      -Map $(BUILDDIR)/$(PRODUCT).map $(PRODUCT)"
-	@$(LD) $(OBJS) $(LIBS) -Map $(BUILDDIR)/$(PRODUCT).map -o $(PRODUCT)
+	@echo "  LD -Map $(BUILDDIR)/$(PRODUCT).map $(PRODUCT)"
+	@$(LD) $(OBJS) $(LIBS) -Map $(BUILDDIR)/$(PRODUCT).map --section-start=.text=$(LOADADDR) -o $(PRODUCT)
 	@echo "  OBJDUMP $(BUILDDIR)/$(PRODUCT).list"
 	@$(OBJDUMP) -D $(PRODUCT) > $(BUILDDIR)/$(PRODUCT).list
 
