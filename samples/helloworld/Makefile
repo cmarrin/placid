@@ -17,7 +17,7 @@ LIBS = $(PLACIDDIR)/libplacid.a
 
 SRC =	main.cpp \
 
-include $(PLACIDDIR)/Common.mk
-
 all: checkdirs $(PRODUCT)
+
+include $(PLACIDDIR)/Common.mk
 

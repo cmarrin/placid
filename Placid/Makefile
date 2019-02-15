@@ -19,9 +19,9 @@ INCLUDES ?= -I$(BAREDIR)
 SRC =	Placid.cpp \
 		start.S \
 
-include Common.mk
-
 all: checkdirs $(ARCHIVE)
+
+include Common.mk
 
 check:
 	@echo "BUILDDIR="$(BUILDDIR)
