@@ -13,6 +13,7 @@
 #pragma once
 
 #include "elf.h"
+#include "bare/String.h"
 #include "FileSystem.h"
 #include <memory>
 
@@ -26,39 +27,50 @@ namespace placid {
     public:
         enum class Error {
             OK,
-            FileOpen,
+            FileOpen, ELFHeaderRead, ProgramHeaderRead,
             BadMagic, BadClass, BadEndianess, BadABI, NotExecutable,
             BadEHeaderSize, BadSHeaderSize, BadPHeaderSize,
+            OnlyLoadSupported,
             InvalidSHeaderOffset, InvalidSStringOffset, StringReadFailure,
+            SectionOutOfRange, SectionDataRead,
         };
         
         ELFLoader(const char* name);
     
     private:
-        bool readSectionHeader(Elf32_Shdr*, uint32_t index);
-        bool readSectionName(char* name, uint32_t size, uint32_t offset);
-        
-        uint32_t sectionOffset(uint32_t i) { return _sectionOffset + i * sizeof(Elf32_Shdr); }
-        
         struct Section
         {
             void* _data = nullptr;
             uint32_t _index = 0;
-            uint32_t _relativeSectionOffset = 0;
+            uint32_t _relativeSectionIndex = 0;
             uint32_t _size = 0;
         };
+        
+        bool readSectionHeader(Elf32_Shdr*, uint32_t index);
+        bool readSectionName(bare::String& name, uint32_t offset);
+        bool collectSectionInfo(const bare::String name, Elf32_Shdr*, uint32_t index);
+        bool loadSection(Section&, Elf32_Shdr*);
+
+        uint32_t sectionOffset(uint32_t i) { return _sectionOffset + i * sizeof(Elf32_Shdr); }
         
         Section _text;
         Section _rodata;
         Section _bss;
         Section _data;
+        
+        uint32_t _symbolTableStringOffset = 0;
+        uint32_t _symbolTableOffset = 0;
+        uint32_t _symbolCount = 0;
 
         std::unique_ptr<File> _fp;
         
-        uint32_t _entryPoint;
-        uint32_t _sectionOffset;
-        uint32_t _stringSectionOffset;
-        uint16_t _sectionCount;
+        std::unique_ptr<char[]> _memory;
+        uint32_t _memorySize;
+        
+        uint32_t _entryPoint = 0;
+        uint32_t _sectionOffset = 0;
+        uint32_t _stringSectionOffset = 0;
+        uint16_t _sectionCount = 0;
         
         Error _error;
     };
