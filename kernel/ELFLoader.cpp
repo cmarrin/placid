@@ -94,6 +94,8 @@ ELFLoader::ELFLoader(const char* name)
         }
         if (sectionHeader.sh_name) {
             readSectionName(name, sizeof(name), sectionHeader.sh_name);
+            
+            
             //foundMask |= placeInfo(e, &sectHdr, name, static_cast<int>(n));
             //if (IS_FLAGS_SET(founded, FoundAll)) {
             //    return FoundAll;
@@ -132,8 +134,57 @@ bool ELFLoader::readSectionName(char* name, uint32_t size, uint32_t offset)
     return true;
 }
 
-
-
+//bool loadSection(
+//
+//int placeInfo(ELFExec_t *e, Elf32_Shdr *sh, const char *name, int n) {
+//  if (LOADER_STREQ(name, ".symtab")) {
+//    e->symbolTable = sh->sh_offset;
+//    e->symbolCount = sh->sh_size / sizeof(Elf32_Sym);
+//    return FoundSymTab;
+//  } else if (LOADER_STREQ(name, ".strtab")) {
+//    e->symbolTableStrings = sh->sh_offset;
+//    return FoundStrTab;
+//  } else if (LOADER_STREQ(name, ".text")) {
+//    if (loadSecData(e, &e->text, sh) == -1)
+//      return FoundERROR;
+//    e->text.secIdx = n;
+//    return FoundText;
+//  } else if (LOADER_STREQ(name, ".rodata")) {
+//    if (loadSecData(e, &e->rodata, sh) == -1)
+//      return FoundERROR;
+//    e->rodata.secIdx = n;
+//    return FoundRodata;
+//  } else if (LOADER_STREQ(name, ".data")) {
+//    if (loadSecData(e, &e->data, sh) == -1)
+//      return FoundERROR;
+//    e->data.secIdx = n;
+//    return FoundData;
+//  } else if (LOADER_STREQ(name, ".bss")) {
+//    if (loadSecData(e, &e->bss, sh) == -1)
+//      return FoundERROR;
+//    e->bss.secIdx = n;
+//    return FoundBss;
+//  } else if (LOADER_STREQ(name, ".rel.text")) {
+//    e->text.relSecIdx = n;
+//    return FoundRelText;
+//  } else if (LOADER_STREQ(name, ".rel.rodata")) {
+//    e->rodata.relSecIdx = n;
+//    return FoundRelText;
+//  } else if (LOADER_STREQ(name, ".rel.data")) {
+//    e->data.relSecIdx = n;
+//    return FoundRelText;
+//  }
+//  /* BSS not need relocation */
+//#if 0
+//  else if (LOADER_STREQ(name, ".rel.bss")) {
+//    e->bss.relSecIdx = n;
+//    return FoundRelText;
+//  }
+//#endif
+//  return 0;
+//}
+//
+//
 
 
 

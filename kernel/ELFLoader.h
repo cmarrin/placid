@@ -39,8 +39,20 @@ namespace placid {
         bool readSectionName(char* name, uint32_t size, uint32_t offset);
         
         uint32_t sectionOffset(uint32_t i) { return _sectionOffset + i * sizeof(Elf32_Shdr); }
-
         
+        struct Section
+        {
+            void* _data = nullptr;
+            uint32_t _index = 0;
+            uint32_t _relativeSectionOffset = 0;
+            uint32_t _size = 0;
+        };
+        
+        Section _text;
+        Section _rodata;
+        Section _bss;
+        Section _data;
+
         std::unique_ptr<File> _fp;
         
         uint32_t _entryPoint;
