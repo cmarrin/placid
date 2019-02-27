@@ -228,6 +228,91 @@
 		494FD64D21AB4338005C2A6B /* WiFiSPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSPI.cpp; path = ../baremetal/WiFiSPI.cpp; sourceTree = "<group>"; };
 		494FD65021AC5991005C2A6B /* WiFiSPIDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WiFiSPIDriver.cpp; path = ../baremetal/WiFiSPIDriver.cpp; sourceTree = "<group>"; };
 		494FD65221AC59AA005C2A6B /* WiFiSPIDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiSPIDriver.h; path = ../baremetal/WiFiSPIDriver.h; sourceTree = "<group>"; };
+		495306472226142400AAA381 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		495306482226142400AAA381 /* linker.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linker.c; sourceTree = "<group>"; };
+		4953064F2226142400AAA381 /* makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		495306512226142400AAA381 /* atags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atags.h; sourceTree = "<group>"; };
+		495306522226142400AAA381 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		495306542226142400AAA381 /* interrupts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = interrupts.h; sourceTree = "<group>"; };
+		495306552226142400AAA381 /* emmc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = emmc.h; sourceTree = "<group>"; };
+		495306562226142400AAA381 /* miniUart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniUart.h; sourceTree = "<group>"; };
+		495306572226142400AAA381 /* framebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = framebuffer.h; sourceTree = "<group>"; };
+		495306582226142400AAA381 /* mailbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mailbox.h; sourceTree = "<group>"; };
+		495306592226142400AAA381 /* mmu_c.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mmu_c.h; sourceTree = "<group>"; };
+		4953065A2226142400AAA381 /* uart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uart.h; sourceTree = "<group>"; };
+		4953065B2226142400AAA381 /* timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer.h; sourceTree = "<group>"; };
+		4953065C2226142400AAA381 /* keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = keyboard.h; sourceTree = "<group>"; };
+		4953065D2226142400AAA381 /* gpio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gpio.h; sourceTree = "<group>"; };
+		4953065E2226142400AAA381 /* paging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = paging.h; sourceTree = "<group>"; };
+		495306602226142400AAA381 /* sdBlockDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sdBlockDevice.h; sourceTree = "<group>"; };
+		495306612226142400AAA381 /* blockDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blockDevice.h; sourceTree = "<group>"; };
+		495306632226142400AAA381 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		495306642226142400AAA381 /* queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue.h; sourceTree = "<group>"; };
+		495306652226142400AAA381 /* string.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string.h; sourceTree = "<group>"; };
+		495306672226142400AAA381 /* mmio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mmio.h; sourceTree = "<group>"; };
+		495306682226142400AAA381 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		495306692226142400AAA381 /* memutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memutil.h; sourceTree = "<group>"; };
+		4953066A2226142400AAA381 /* stddef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stddef.h; sourceTree = "<group>"; };
+		4953066B2226142400AAA381 /* scheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scheduler.h; sourceTree = "<group>"; };
+		4953066C2226142400AAA381 /* dwarf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dwarf.h; sourceTree = "<group>"; };
+		4953066D2226142400AAA381 /* asm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asm.h; sourceTree = "<group>"; };
+		4953066E2226142400AAA381 /* elf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = elf.h; sourceTree = "<group>"; };
+		4953066F2226142400AAA381 /* thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
+		495306702226142400AAA381 /* debugging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debugging.h; sourceTree = "<group>"; };
+		495306712226142400AAA381 /* interruptHandlers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = interruptHandlers.h; sourceTree = "<group>"; };
+		495306722226142400AAA381 /* terminalCommands.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = terminalCommands.h; sourceTree = "<group>"; };
+		495306732226142400AAA381 /* terminal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = terminal.h; sourceTree = "<group>"; };
+		495306742226142400AAA381 /* stdbool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stdbool.h; sourceTree = "<group>"; };
+		495306752226142400AAA381 /* memory_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory_map.h; sourceTree = "<group>"; };
+		495306762226142400AAA381 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
+		495306772226142400AAA381 /* memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
+		495306782226142400AAA381 /* stdarg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stdarg.h; sourceTree = "<group>"; };
+		495306792226142400AAA381 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		4953067A2226142400AAA381 /* init.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = init.h; sourceTree = "<group>"; };
+		4953067C2226142400AAA381 /* fat32driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fat32driver.h; sourceTree = "<group>"; };
+		4953067D2226142400AAA381 /* fs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fs.h; sourceTree = "<group>"; };
+		4953067E2226142400AAA381 /* stdint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stdint.h; sourceTree = "<group>"; };
+		4953067F2226142400AAA381 /* myfont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = myfont.h; sourceTree = "<group>"; };
+		495306802226142400AAA381 /* syscalls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = syscalls.h; sourceTree = "<group>"; };
+		495306822226142400AAA381 /* debugging.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debugging.c; sourceTree = "<group>"; };
+		495306832226142400AAA381 /* thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
+		495306852226142400AAA381 /* timer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
+		495306862226142400AAA381 /* paging.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = paging.c; sourceTree = "<group>"; };
+		495306872226142400AAA381 /* keyboard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = keyboard.c; sourceTree = "<group>"; };
+		495306882226142400AAA381 /* gpio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gpio.c; sourceTree = "<group>"; };
+		495306892226142400AAA381 /* interrupts.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = interrupts.c; sourceTree = "<group>"; };
+		4953068A2226142400AAA381 /* emmc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = emmc.c; sourceTree = "<group>"; };
+		4953068C2226142400AAA381 /* sdBlockDevice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sdBlockDevice.c; sourceTree = "<group>"; };
+		4953068D2226142400AAA381 /* miniUart.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniUart.c; sourceTree = "<group>"; };
+		4953068E2226142400AAA381 /* mmu_c.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mmu_c.c; sourceTree = "<group>"; };
+		4953068F2226142400AAA381 /* uart.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = uart.c; sourceTree = "<group>"; };
+		495306902226142400AAA381 /* framebuffer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = framebuffer.c; sourceTree = "<group>"; };
+		495306912226142400AAA381 /* mailbox.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mailbox.c; sourceTree = "<group>"; };
+		495306932226142400AAA381 /* string.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = string.c; sourceTree = "<group>"; };
+		495306942226142400AAA381 /* queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue.c; sourceTree = "<group>"; };
+		495306952226142400AAA381 /* process.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = process.c; sourceTree = "<group>"; };
+		495306972226142400AAA381 /* mmu.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = mmu.S; sourceTree = "<group>"; };
+		495306982226142400AAA381 /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = start.S; sourceTree = "<group>"; };
+		495306992226142400AAA381 /* irq.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = irq.s; sourceTree = "<group>"; };
+		4953069A2226142400AAA381 /* utility.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = utility.s; sourceTree = "<group>"; };
+		4953069B2226142400AAA381 /* interrupt_handlers.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = interrupt_handlers.S; sourceTree = "<group>"; };
+		4953069C2226142400AAA381 /* memory.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
+		4953069D2226142400AAA381 /* terminal.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = terminal.c; sourceTree = "<group>"; };
+		4953069F2226142400AAA381 /* memutil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = memutil.c; sourceTree = "<group>"; };
+		495306A02226142400AAA381 /* utilities.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utilities.c; sourceTree = "<group>"; };
+		495306A12226142400AAA381 /* interruptHandlers.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = interruptHandlers.c; sourceTree = "<group>"; };
+		495306A22226142400AAA381 /* terminalCommands.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = terminalCommands.c; sourceTree = "<group>"; };
+		495306A32226142400AAA381 /* init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
+		495306A42226142400AAA381 /* mem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mem.c; sourceTree = "<group>"; };
+		495306A52226142400AAA381 /* syscalls.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = syscalls.c; sourceTree = "<group>"; };
+		495306A62226142400AAA381 /* platform.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = platform.c; sourceTree = "<group>"; };
+		495306A72226142400AAA381 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		495306A82226142400AAA381 /* atags.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = atags.c; sourceTree = "<group>"; };
+		495306A92226142400AAA381 /* scheduler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scheduler.c; sourceTree = "<group>"; };
+		495306AB2226142400AAA381 /* fs.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fs.c; sourceTree = "<group>"; };
+		495306AC2226142400AAA381 /* fat32driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fat32driver.c; sourceTree = "<group>"; };
+		495306AD2226142400AAA381 /* elf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = elf.c; sourceTree = "<group>"; };
+		495306B92226142400AAA381 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		496295542159286E0064B9C9 /* autoload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = autoload.cpp; path = ../bootloader/autoload.cpp; sourceTree = "<group>"; };
 		49629571215AA4DF0064B9C9 /* libbaremetal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbaremetal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		49629576215AA53B0064B9C9 /* bare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bare.cpp; path = ../baremetal/bare.cpp; sourceTree = "<group>"; };
@@ -526,6 +611,7 @@
 		494FD63B21A4BA64005C2A6B /* RPi */ = {
 			isa = PBXGroup;
 			children = (
+				495306462226142400AAA381 /* PiOS */,
 				494FD6032198ACDB005C2A6B /* RPiBare.cpp */,
 				492FF3EB215AF47A003582FE /* RPiGPIO.cpp */,
 				49BC3FF521BB34DE00D62847 /* RPiGraphics.cpp */,
@@ -557,6 +643,203 @@
 				494FD64321A896DE005C2A6B /* Makefile */,
 			);
 			name = ESPRPiWifi;
+			sourceTree = "<group>";
+		};
+		495306462226142400AAA381 /* PiOS */ = {
+			isa = PBXGroup;
+			children = (
+				495306472226142400AAA381 /* LICENSE.md */,
+				495306482226142400AAA381 /* linker.c */,
+				4953064F2226142400AAA381 /* makefile */,
+				495306502226142400AAA381 /* include */,
+				495306812226142400AAA381 /* source */,
+				495306B92226142400AAA381 /* README.md */,
+			);
+			name = PiOS;
+			path = ../baremetal/RPi/PiOS;
+			sourceTree = "<group>";
+		};
+		495306502226142400AAA381 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				495306512226142400AAA381 /* atags.h */,
+				495306522226142400AAA381 /* main.h */,
+				495306532226142400AAA381 /* hardware */,
+				495306622226142400AAA381 /* types */,
+				495306662226142400AAA381 /* util */,
+				4953066A2226142400AAA381 /* stddef.h */,
+				4953066B2226142400AAA381 /* scheduler.h */,
+				4953066C2226142400AAA381 /* dwarf.h */,
+				4953066D2226142400AAA381 /* asm.h */,
+				4953066E2226142400AAA381 /* elf.h */,
+				4953066F2226142400AAA381 /* thread.h */,
+				495306702226142400AAA381 /* debugging.h */,
+				495306712226142400AAA381 /* interruptHandlers.h */,
+				495306722226142400AAA381 /* terminalCommands.h */,
+				495306732226142400AAA381 /* terminal.h */,
+				495306742226142400AAA381 /* stdbool.h */,
+				495306752226142400AAA381 /* memory_map.h */,
+				495306762226142400AAA381 /* process.h */,
+				495306772226142400AAA381 /* memory.h */,
+				495306782226142400AAA381 /* stdarg.h */,
+				495306792226142400AAA381 /* mem.h */,
+				4953067A2226142400AAA381 /* init.h */,
+				4953067B2226142400AAA381 /* fs */,
+				4953067E2226142400AAA381 /* stdint.h */,
+				4953067F2226142400AAA381 /* myfont.h */,
+				495306802226142400AAA381 /* syscalls.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		495306532226142400AAA381 /* hardware */ = {
+			isa = PBXGroup;
+			children = (
+				495306542226142400AAA381 /* interrupts.h */,
+				495306552226142400AAA381 /* emmc.h */,
+				495306562226142400AAA381 /* miniUart.h */,
+				495306572226142400AAA381 /* framebuffer.h */,
+				495306582226142400AAA381 /* mailbox.h */,
+				495306592226142400AAA381 /* mmu_c.h */,
+				4953065A2226142400AAA381 /* uart.h */,
+				4953065B2226142400AAA381 /* timer.h */,
+				4953065C2226142400AAA381 /* keyboard.h */,
+				4953065D2226142400AAA381 /* gpio.h */,
+				4953065E2226142400AAA381 /* paging.h */,
+				4953065F2226142400AAA381 /* device */,
+			);
+			path = hardware;
+			sourceTree = "<group>";
+		};
+		4953065F2226142400AAA381 /* device */ = {
+			isa = PBXGroup;
+			children = (
+				495306602226142400AAA381 /* sdBlockDevice.h */,
+				495306612226142400AAA381 /* blockDevice.h */,
+			);
+			path = device;
+			sourceTree = "<group>";
+		};
+		495306622226142400AAA381 /* types */ = {
+			isa = PBXGroup;
+			children = (
+				495306632226142400AAA381 /* types.h */,
+				495306642226142400AAA381 /* queue.h */,
+				495306652226142400AAA381 /* string.h */,
+			);
+			path = types;
+			sourceTree = "<group>";
+		};
+		495306662226142400AAA381 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				495306672226142400AAA381 /* mmio.h */,
+				495306682226142400AAA381 /* utilities.h */,
+				495306692226142400AAA381 /* memutil.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		4953067B2226142400AAA381 /* fs */ = {
+			isa = PBXGroup;
+			children = (
+				4953067C2226142400AAA381 /* fat32driver.h */,
+				4953067D2226142400AAA381 /* fs.h */,
+			);
+			path = fs;
+			sourceTree = "<group>";
+		};
+		495306812226142400AAA381 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				495306822226142400AAA381 /* debugging.c */,
+				495306832226142400AAA381 /* thread.c */,
+				495306842226142400AAA381 /* hardware */,
+				495306922226142400AAA381 /* types */,
+				495306952226142400AAA381 /* process.c */,
+				495306962226142400AAA381 /* asm */,
+				4953069C2226142400AAA381 /* memory.c */,
+				4953069D2226142400AAA381 /* terminal.c */,
+				4953069E2226142400AAA381 /* util */,
+				495306A12226142400AAA381 /* interruptHandlers.c */,
+				495306A22226142400AAA381 /* terminalCommands.c */,
+				495306A32226142400AAA381 /* init.c */,
+				495306A42226142400AAA381 /* mem.c */,
+				495306A52226142400AAA381 /* syscalls.c */,
+				495306A62226142400AAA381 /* platform.c */,
+				495306A72226142400AAA381 /* main.c */,
+				495306A82226142400AAA381 /* atags.c */,
+				495306A92226142400AAA381 /* scheduler.c */,
+				495306AA2226142400AAA381 /* fs */,
+				495306AD2226142400AAA381 /* elf.c */,
+			);
+			path = source;
+			sourceTree = "<group>";
+		};
+		495306842226142400AAA381 /* hardware */ = {
+			isa = PBXGroup;
+			children = (
+				495306852226142400AAA381 /* timer.c */,
+				495306862226142400AAA381 /* paging.c */,
+				495306872226142400AAA381 /* keyboard.c */,
+				495306882226142400AAA381 /* gpio.c */,
+				495306892226142400AAA381 /* interrupts.c */,
+				4953068A2226142400AAA381 /* emmc.c */,
+				4953068B2226142400AAA381 /* device */,
+				4953068D2226142400AAA381 /* miniUart.c */,
+				4953068E2226142400AAA381 /* mmu_c.c */,
+				4953068F2226142400AAA381 /* uart.c */,
+				495306902226142400AAA381 /* framebuffer.c */,
+				495306912226142400AAA381 /* mailbox.c */,
+			);
+			path = hardware;
+			sourceTree = "<group>";
+		};
+		4953068B2226142400AAA381 /* device */ = {
+			isa = PBXGroup;
+			children = (
+				4953068C2226142400AAA381 /* sdBlockDevice.c */,
+			);
+			path = device;
+			sourceTree = "<group>";
+		};
+		495306922226142400AAA381 /* types */ = {
+			isa = PBXGroup;
+			children = (
+				495306932226142400AAA381 /* string.c */,
+				495306942226142400AAA381 /* queue.c */,
+			);
+			path = types;
+			sourceTree = "<group>";
+		};
+		495306962226142400AAA381 /* asm */ = {
+			isa = PBXGroup;
+			children = (
+				495306972226142400AAA381 /* mmu.S */,
+				495306982226142400AAA381 /* start.S */,
+				495306992226142400AAA381 /* irq.s */,
+				4953069A2226142400AAA381 /* utility.s */,
+				4953069B2226142400AAA381 /* interrupt_handlers.S */,
+			);
+			path = asm;
+			sourceTree = "<group>";
+		};
+		4953069E2226142400AAA381 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				4953069F2226142400AAA381 /* memutil.c */,
+				495306A02226142400AAA381 /* utilities.c */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		495306AA2226142400AAA381 /* fs */ = {
+			isa = PBXGroup;
+			children = (
+				495306AB2226142400AAA381 /* fs.c */,
+				495306AC2226142400AAA381 /* fat32driver.c */,
+			);
+			path = fs;
 			sourceTree = "<group>";
 		};
 		49629575215AA4EB0064B9C9 /* baremetal */ = {
