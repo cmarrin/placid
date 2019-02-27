@@ -1,0 +1,3 @@
+[submodule "baremetal/RPi/PiOS"]
+	path = baremetal/RPi/PiOS
+	url = https://github.com/SimonGustavsson/PiOS.git
