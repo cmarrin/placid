@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "env": {
+          "INCLUDE": "${config:arm-none-eabi.include}",
+          "LIB": "${config:arm-none-eabi.lib}",
+          "LIBGCC": "${config:arm-none-eabi.libgcc}/thumb/v6-m/libgcc.a",
+        }
+    },
+    "osx": {
+        "options": {
+            "env": {
+                "PATH": "${config:arm-none-eabi.bin}:${env:PATH}",
+            }
+        },
+    },
+    "linux": {
+        "options": {
+            "env": {
+                "PATH": "${config:arm-none-eabi.bin}:${env:PATH}",
+            }
+        },
+    },
+    "windows": {
+        "options": {
+            "env": {
+                "PATH": "${config:arm-none-eabi.bin};${env:PATH}",
+            }
+        },
+    },
+    "tasks": [
+        {
+            "label": "baremetal",
+            "type": "shell",
+            "command": "make baremetal",
+            "group": {
+                "kind": "build",
+                "isDefault": true,
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "kernel",
+            "type": "shell",
+            "command": "make -C kernel",
+            "group": {
+                "kind": "build",
+                "isDefault": true,
+            },
+            "problemMatcher": [
+                {
+                "base":"$gcc",
+                "fileLocation": ["relative", "${workspaceFolder}/kernel"]
+                }
+            ]
+            }
+    ]
+}
+  
