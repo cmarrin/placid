@@ -50,7 +50,8 @@ namespace bare {
 
     void initSystem();
     bool useAllocator();
-    
+    bool interruptsSupported(void);
+
     using ReceiveFunction = std::function<bool(char byte)>;
     bool receiveFile(ReceiveFunction);
     
@@ -60,7 +61,6 @@ namespace bare {
     extern "C" {
         void disableIRQ(void);
         void enableIRQ(void);
-        bool interruptsSupported(void);
         void halt();
         void restart();
         void PUT8(uint8_t*, uint8_t);

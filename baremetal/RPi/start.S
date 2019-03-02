@@ -70,8 +70,3 @@ BRANCHTO:
 PUT8:
     strb r1,[r0]
     bx lr
-
-.globl interruptsSupported
-interruptsSupported:
-    mov r0, #1
-    bx lr

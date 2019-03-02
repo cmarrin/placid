@@ -41,6 +41,11 @@ void bare::initSystem()
     }
 }
 
+bool bare::interruptsSupported()
+{
+    return true;
+}
+
 bool bare::useAllocator()
 {
     return true;
