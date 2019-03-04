@@ -8,6 +8,9 @@
 		"terminal.integrated.env.osx": {
 			"PATH": "/Users/cmarrin/.platformio/penv/bin:/Users/cmarrin/.platformio/penv:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/sw/bin:/sw/sbin:/Users/cmarrin/Personal/Projects/f-engrave:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/appleinternal/bin:/opt/apple/bin:/opt/X11/bin:/Users/cmarrin/bin/arcanist/bin",
 			"PLATFORMIO_CALLER": "vscode"
-		}
+        },
+        "files.associations": {
+            "functional": "cpp"
+        }
 	}
 }
