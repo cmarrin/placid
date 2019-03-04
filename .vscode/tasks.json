@@ -32,17 +32,23 @@
         {
             "label": "baremetal",
             "type": "shell",
-            "command": "make baremetal",
+            "command": "make -j 8 -C baremetal",
             "group": {
                 "kind": "build",
                 "isDefault": true,
             },
-            "problemMatcher": "$gcc"
+            "problemMatcher": [
+                {
+                "base":"$gcc",
+                "fileLocation": ["relative", "${workspaceFolder}/baremetal"]
+                }
+            ]
+            }
         },
         {
             "label": "kernel",
             "type": "shell",
-            "command": "make -C kernel",
+            "command": "make -j 8 -C kernel",
             "group": {
                 "kind": "build",
                 "isDefault": true,
