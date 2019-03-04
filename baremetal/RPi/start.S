@@ -13,7 +13,7 @@
 // Adapted from vectors.S from David Welch
 // Copyright (c) 2012 David Welch dwelch@dwelch.com
 
-#include "RPi/asmInterface.h"
+#include "RPi/MemoryMap.h"
 
    .sect    .init
 

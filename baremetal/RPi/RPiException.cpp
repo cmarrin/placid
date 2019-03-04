@@ -14,7 +14,7 @@
 
 #include "bare/Serial.h"
 #include "bare/Timer.h"
-#include "asmInterface.h"
+#include "MemoryMap.h"
 #include <cassert>
 
 using namespace bare;

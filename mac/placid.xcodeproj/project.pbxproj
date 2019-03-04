@@ -320,7 +320,7 @@
 		4962958F215AAF8F0064B9C9 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; name = Makefile; path = ../baremetal/Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		4965788C2169805800B3F088 /* RPiSDCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RPiSDCard.cpp; path = ../baremetal/RPi/RPiSDCard.cpp; sourceTree = "<group>"; };
 		4965788D2169805800B3F088 /* SDCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDCard.h; sourceTree = "<group>"; };
-		4969AC6321F6269600052A08 /* asmInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = asmInterface.h; path = ../baremetal/RPi/asmInterface.h; sourceTree = "<group>"; };
+		4969AC6321F6269600052A08 /* MemoryMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MemoryMap.h; path = ../baremetal/RPi/MemoryMap.h; sourceTree = "<group>"; };
 		496B91DF21FF442800E09B59 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = utilities.cpp; path = ../baremetal/utilities.cpp; sourceTree = "<group>"; };
 		496B91E52201ECD100E09B59 /* start.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = start.S; path = ../baremetal/RPi/start.S; sourceTree = "<group>"; };
 		496B91EA2208E7C600E09B59 /* Hello World */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Hello World"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -626,7 +626,7 @@
 				492FF3F8215C528C003582FE /* RPiSerial.cpp */,
 				494FD6162199D2E2005C2A6B /* RPiSPIMaster.cpp */,
 				494FD61A2199D3DD005C2A6B /* RPiTimer.cpp */,
-				4969AC6321F6269600052A08 /* asmInterface.h */,
+				4969AC6321F6269600052A08 /* MemoryMap.h */,
 				494FD628219B9E28005C2A6B /* idivmod.S */,
 				4932ACF521681EF200BDAABB /* ldivmod.S */,
 				494FD62A219BA09C005C2A6B /* uidivmod.S */,
