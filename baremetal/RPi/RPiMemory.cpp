@@ -27,27 +27,8 @@ using namespace bare;
 // This class may not be instantiated until the virtual memory system
 // is setup. So the init() method is static.
 //
-// Kernal occupies the first 1 MB of physical memory, so it occupies the
-// first TTB. This first TTB has a second level translation table which
-// maps 256 4KB pages. These pages are used as follows:
-//
-//      0           0x0000 - 0x0800     reserved for system use (interrupt vectors, ATAGS, etc.)
-//                  0x0800 - 0x0c00     second level translation table.
-//                  0x0c00 = 0x1000     FIQ stack
-//
-//      1           0x1000 - 0x2000     IRQ stack
-//      2           0x2000 - 0x3000     ABORT stack
-//      3           0x3000 - 0x4000     SWI stack
-//      4 - 7       0x4000 - 0x8000     first level translation table
-//      8 - ???     0x8000 - _end       kernel code, rodata and bss
-//      ??? - 255   _end   - 0x100000  heap at the bottom and the SVC stack at the top (2)
-//
-//      1) The interrupt stacks occupy one 4096 byte page. If a page fault occurs for any, a 
-//      kernel panic is generated
-//
-//      2) SVC stack and heap occupy whole pages (4096 bytes) if a page fault occurs in either and
-//      the adjacent page is allocated to the other, a kernel panic is generated
-//
+// See MemoryMap.h for memory layout details
+
 static constexpr uint32_t FirstLevelTTB = 0x4000;
 static constexpr uint32_t SecondLevelTTB = 0xc00;
 

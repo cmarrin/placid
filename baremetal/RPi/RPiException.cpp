@@ -97,16 +97,4 @@ extern "C" {
         abort();
     }
 
-    void handleSWI()
-    {
-        bare::Serial::printf("\n\n*** SWI Not Supported\n");
-        abort();
-    }
-
-    void handleUnused()
-    {
-        bare::Serial::printf("\n\n*** Unused Vector Not Supported\n");
-        abort();
-    }
-
 }

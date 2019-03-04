@@ -39,16 +39,16 @@ inline volatile IRPT& irpt()
     return *(reinterpret_cast<volatile IRPT*>(IRPTBase));
 }
 
+extern "C" void handleSWI(uint32_t id, uint32_t arg0, uint32_t arg1, uint32_t arg2)
+{
+    InterruptManager::instance().handleInterrupt();
+}
+
 extern "C" void handleIRQ()
 {
     if (interruptsSupported()) {
         InterruptManager::instance().handleInterrupt();
     }
-}
-
-extern "C" void handleFIQ()
-{
-    Serial::printf("\n\n*** FIQ not supported\n\n");
 }
 
 void InterruptManager::enableIRQ(uint32_t n, bool enable)

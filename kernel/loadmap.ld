@@ -12,7 +12,7 @@ found in the LICENSE file.
 
 -------------------------------------------------------------------------*/
 
-ENTRY(_start)
+ENTRY(restart)
 
 SECTIONS
 {
