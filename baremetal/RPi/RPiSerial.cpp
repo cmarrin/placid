@@ -82,7 +82,7 @@ void Serial::init(uint32_t baudrate)
 
         _rxhead = _rxtail = 0;
         
-        InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
+        InterruptManager::instance().addInterruptHandler(ARMTimerInterruptBit, handleInterrupt);
     }
 
     uart().AUXENB = 1;

@@ -70,7 +70,7 @@ void  Timer::TimerManager::init()
 
     // Disable timer interrupts (until they are turned on by updateTimers) and set the handler
     InterruptManager::instance().enableIRQ(ARMTimerInterruptBit, false);
-    InterruptManager::instance().addHandler(ARMTimerInterruptBit, handleInterrupt);
+    InterruptManager::instance().addInterruptHandler(ARMTimerInterruptBit, handleInterrupt);
 }
 
 void Timer::TimerManager::updateTimers()

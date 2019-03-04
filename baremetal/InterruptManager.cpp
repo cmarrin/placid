@@ -19,18 +19,18 @@
 
 using namespace bare;
 
-void InterruptManager::addHandler(uint8_t id, Handler handler)
+void InterruptManager::addInterruptHandler(uint8_t id, InterruptHandler handler)
 {
-    if (_handlerIndex >= MaxHandlers) {
+    if (_interruptHandlerIndex >= MaxInterruptHandlers) {
         return;
     }
     
-    _handlers[_handlerIndex++] = { id, handler };
+    _interruptHandlers[_interruptHandlerIndex++] = { id, handler };
 }
 
 void InterruptManager::handleInterrupt()
 {
-    for (auto it : _handlers) {
+    for (auto it : _interruptHandlers) {
         if (interruptPending(it.id)) {
             if (it.handler) {
                 it.handler();
