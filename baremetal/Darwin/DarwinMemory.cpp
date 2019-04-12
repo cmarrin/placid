@@ -12,7 +12,7 @@
 
 #include "bare.h"
 
-#include "Memory.h"
+#include "bare/Memory.h"
 
 #include "bare/Timer.h"
 #include <cstdlib>
@@ -20,7 +20,7 @@
 using namespace bare;
 
 // Test kernel heap memory
-uint8_t _kernelHeapMemory[bare::Memory::DefaultKernelHeapSize];
+uint8_t _kernelHeapMemory[Memory::DefaultKernelHeapSize];
 
 static constexpr uint32_t MinHeapSize = 0x1000;
 

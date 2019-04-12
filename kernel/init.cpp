@@ -20,7 +20,7 @@
 #include "Allocator.h"
 #include "BootShell.h"
 #include "FileSystem.h"
-#include "String.h"
+#include "bare/String.h"
 #include <vector>
 
 using namespace placid;
