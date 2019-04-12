@@ -76,7 +76,7 @@ ELFLoader::ELFLoader(const char* name)
     }
     
     // Collect info from ELF header
-    _entryPoint= elfHeader.e_entry;
+    _entryPoint = elfHeader.e_entry;
     _sectionCount = elfHeader.e_shnum;
     _sectionOffset = elfHeader.e_shoff;
 
@@ -176,6 +176,8 @@ bool ELFLoader::loadSection(Section& section, Elf32_Shdr* sectionHeader)
         _error = Error::SectionDataRead;
         return false;
     }
+    
+    section._data = addr;
     
     return true;
 }

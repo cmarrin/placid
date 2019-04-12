@@ -24,9 +24,12 @@ std::shared_ptr<Process> Process::create(const bare::String& name)
 Process::Process(const bare::String& name)
 {
     ELFLoader loader(name.c_str());
-    (void) loader;
+    _startAddr = loader.startAddr();
+    _memory = loader.memory();
+    _size = loader.size();
 }
 
 void Process::run()
 {
+    printf("Process::run: addr=%p\n", _startAddr);
 }

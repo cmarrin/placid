@@ -26,6 +26,11 @@ namespace placid {
         Process(const bare::String& name);
 
         void run();
-    };
     
+    private:
+        void* _startAddr = nullptr;
+        void* _memory = nullptr;
+        uint32_t _size = 0;
+    };
+
 }
