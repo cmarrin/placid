@@ -28,7 +28,7 @@ namespace placid {
         void run();
     
     private:
-        void* _startAddr = nullptr;
+        uint32_t _startOffset = 0;
         void* _memory = nullptr;
         uint32_t _size = 0;
     };

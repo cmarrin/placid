@@ -43,7 +43,7 @@ static void hook_code(uc_engine *uc, uint64_t address, uint32_t size, void *user
 // memory address where emulation starts
 #define ADDRESS 0x10000
 
-void bare::runCode(void* code, uint32_t size)
+void bare::runCode(void* memory, uint32_t size, uint32_t startOffset)
 {
     uc_engine *uc;
     uc_err err;
@@ -64,10 +64,10 @@ void bare::runCode(void* code, uint32_t size)
     }
 
     // map 2MB memory for this emulation
-    uc_mem_map(uc, ADDRESS, 2 * 1024 * 1024, UC_PROT_ALL);
+    uc_mem_map(uc, ADDRESS, size, UC_PROT_ALL);
 
     // write machine code to be emulated to memory
-    uc_mem_write(uc, ADDRESS, code, size);
+    uc_mem_write(uc, ADDRESS, memory, size);
 
     // initialize machine registers
     uc_reg_write(uc, UC_ARM_REG_R0, &r0);
@@ -82,7 +82,7 @@ void bare::runCode(void* code, uint32_t size)
 
     // emulate machine code in infinite time (last param = 0), or when
     // finishing all the code.
-    err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 0);
+    err = uc_emu_start(uc, ADDRESS + startOffset, ADDRESS + size, 0, 0);
     if (err) {
         printf("Failed on uc_emu_start() with error returned: %u\n", err);
     }

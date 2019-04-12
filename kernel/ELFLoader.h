@@ -37,7 +37,7 @@ namespace placid {
         
         ELFLoader(const char* name);
         
-        void* startAddr() const { return _memory.get() + _entryPoint; }
+        uint32_t startOffset() const { return _entryPoint; }
         void* memory() const { return _memory.get(); }
         uint32_t size() const { return _memorySize; }
     
