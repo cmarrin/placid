@@ -57,6 +57,8 @@ namespace bare {
     
     void* aligned_alloc(size_t align, size_t size);
     void aligned_free(void*);
+    
+    void runCode(void*, uint32_t size);
 
     extern "C" {
         void disableIRQ(void);

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		490EAC4B220CEB7000DBB4DD /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 490EAC49220CEB7000DBB4DD /* RealTime.cpp */; };
 		490EAC4C220CEB7000DBB4DD /* RealTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 490EAC4A220CEB7000DBB4DD /* RealTime.h */; };
+		491514FE2261491D00212655 /* libunicorn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49150EA52261445400212655 /* libunicorn.a */; };
 		49166D702153F0FE0077ACEE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49166D6F2153F0FE0077ACEE /* main.cpp */; };
 		492F23252208FF63005FDFF1 /* Placid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 492F23232208FF63005FDFF1 /* Placid.cpp */; };
 		492F2329220900CB005FDFF1 /* libPlacid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B92052208EB6A00E09B59 /* libPlacid.a */; };
@@ -1895,6 +1896,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				491514FE2261491D00212655 /* libunicorn.a in Frameworks */,
 				49BC400621BEE0D900D62847 /* AppKit.framework in Frameworks */,
 				49BC400421BEE0B800D62847 /* IOKit.framework in Frameworks */,
 				49BC400221BEE07E00D62847 /* CoreVideo.framework in Frameworks */,
@@ -1987,7 +1989,8 @@
 				491514FC2261445500212655 /* libunicorn.dylib */,
 				491514FD2261445500212655 /* COPYING.LGPL2 */,
 			);
-			path = unicorn;
+			name = unicorn;
+			path = ../baremetal/Darwin/unicorn;
 			sourceTree = "<group>";
 		};
 		49150E2D2261445400212655 /* msvc */ = {

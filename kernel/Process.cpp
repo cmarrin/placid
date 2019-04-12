@@ -32,4 +32,5 @@ Process::Process(const bare::String& name)
 void Process::run()
 {
     printf("Process::run: addr=%p\n", _startAddr);
+    bare::runCode(_startAddr, _size);
 }
