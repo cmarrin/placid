@@ -1,3 +1,6 @@
 [submodule "baremetal/Darwin/unicorn"]
 	path = baremetal/Darwin/unicorn
 	url = https://github.com/unicorn-engine/unicorn.git
+[submodule "circle"]
+	path = circle
+	url = https://github.com/rsta2/circle.git
