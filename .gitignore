@@ -12,3 +12,11 @@ mac/DerivedData
 mac/placid.xcodeproj/project.xcworkspace
 mac/placid.xcodeproj/xcuserdata
 
+kernel/kernel.d
+kernel/kernel.elf
+kernel/kernel.img
+kernel/kernel.lst
+kernel/kernel.map
+kernel/kernel.o
+kernel/main.d
+kernel/main.o

@@ -10,26 +10,57 @@
     found in the LICENSE file.
 -------------------------------------------------------------------------*/
 
-#include "bare.h"
+//#include "bare.h"
 
-#include "bare/Serial.h"
+//#include "bare/Serial.h"
 
-extern "C" void init();
-extern "C" void inputChar(uint8_t);
+//extern "C" void init();
+//extern "C" void inputChar(uint8_t);
 
-int main()
+// int main()
+// {
+//     init();
+//
+//     while (1) {
+//         uint8_t c;
+//         if (bare::Serial::read(c) != bare::Serial::Error::OK) {
+//             bare::Serial::puts("*** Serial Read Error\n");
+//         } else {
+//             inputChar(c);
+//             if (c == '\r') {
+//                 inputChar('\n');
+//             }
+//         }
+//     }
+// }
+
+
+
+#include "kernel.h"
+#include <circle/startup.h>
+
+int main (void)
 {
-    init();
+	// cannot return here because some destructors used in CKernel are not implemented
 
-    while (1) {
-        uint8_t c;
-        if (bare::Serial::read(c) != bare::Serial::Error::OK) {
-            bare::Serial::puts("*** Serial Read Error\n");
-        } else {
-            inputChar(c);
-            if (c == '\r') {
-                inputChar('\n');
-            }
-        }
-    }
+	CKernel Kernel;
+	if (!Kernel.Initialize ())
+	{
+		halt ();
+		return EXIT_HALT;
+	}
+	
+	TShutdownMode ShutdownMode = Kernel.Run ();
+
+	switch (ShutdownMode)
+	{
+	case ShutdownReboot:
+		reboot ();
+		return EXIT_REBOOT;
+
+	case ShutdownHalt:
+	default:
+		halt ();
+		return EXIT_HALT;
+	}
 }
