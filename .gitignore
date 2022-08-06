@@ -20,3 +20,4 @@ kernel/kernel.map
 kernel/kernel.o
 kernel/main.d
 kernel/main.o
+baremetal/Circle/build

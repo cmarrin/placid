@@ -33,9 +33,9 @@ namespace bare {
 	// This is a static class and cannot be instantiated
 	//
 
-	class Serial {        
+	class Serial {
 	public:
-		enum class Error { OK, Timeout, NoData, NotReady, Fail };
+		enum class Error { OK, Timeout, NoData, NotReady, Fail, Break, Overrun, Framing, Parity };
 		
 		static void init(uint32_t baudrate);
 		
