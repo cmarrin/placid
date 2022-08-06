@@ -10,57 +10,105 @@
     found in the LICENSE file.
 -------------------------------------------------------------------------*/
 
-//#include "bare.h"
-
-//#include "bare/Serial.h"
-
-//extern "C" void init();
-//extern "C" void inputChar(uint8_t);
-
-// int main()
-// {
-//     init();
-//
-//     while (1) {
-//         uint8_t c;
-//         if (bare::Serial::read(c) != bare::Serial::Error::OK) {
-//             bare::Serial::puts("*** Serial Read Error\n");
-//         } else {
-//             inputChar(c);
-//             if (c == '\r') {
-//                 inputChar('\n');
-//             }
-//         }
-//     }
-// }
-
-
-
-#include "kernel.h"
 #include <circle/startup.h>
+#include <circle/actled.h>
+#include <circle/koptions.h>
+#include <circle/devicenameservice.h>
+#include <circle/serial.h>
+#include <circle/logger.h>
+#include <circle/debug.h>
 
-int main (void)
+class MyKernel
+{
+public:
+	MyKernel()
+		: 	_timer (&_interrupt)
+		,	_logger(_options.GetLogLevel())
+	{
+		_actLED.Off();
+	}
+
+	~MyKernel() { }
+
+	bool initialize()
+	{
+		bool result = true;
+
+		if (result) {
+			result = _serial.Initialize(115200);
+		}
+	
+		if (result) {
+			result = _logger.Initialize(&_serial);
+		}
+	
+		if (result) {
+			result = _interrupt.Initialize();
+		}
+
+		if (result) {
+			result = _timer.Initialize();
+		}
+		return result;
+	}
+
+	void run()
+	{
+		_logger.Write ("kernel", LogNotice, "Compile time: " __DATE__ " " __TIME__);
+
+		_timer.StartKernelTimer(HZ / 2, timerHandler, this);
+		
+		_timer.SimpleMsDelay(10 * 1000);
+
+#ifndef NDEBUG
+		// some debugging features
+		_logger.Write("kernel", LogDebug, "THIS IS FROM PLACID 11!!!");
+		_logger.Write("kernel", LogDebug, "Dumping the start of the ATAGS");
+		debug_hexdump((void *) 0x100, 128, "kernel");
+
+		_logger.Write("kernel", LogNotice, "The following assertion will fail");
+		assert (1 == 2);
+#endif
+	}
+	
+private:
+	static void timerHandler(TKernelTimerHandle hTimer, void *param, void *context)
+	{
+		MyKernel* kernel = reinterpret_cast<MyKernel*>(param);
+		kernel->_blinkOn = !kernel->_blinkOn;
+		if (kernel->_blinkOn) {
+			kernel->_actLED.On();
+		} else {
+			kernel->_actLED.Off();
+		}
+
+		kernel->_timer.StartKernelTimer(HZ / 2, timerHandler, kernel);
+	}
+	
+	// do not change this order
+	CActLED				_actLED;
+	CKernelOptions		_options;
+	CDeviceNameService	_deviceNameService; // MUST BE HERE EVEN THOUGH NOT USED!
+	CSerialDevice		_serial;
+	CInterruptSystem	_interrupt;
+	CTimer				_timer;
+	CLogger				_logger;
+	
+	bool _blinkOn = false;
+};
+
+int main()
 {
 	// cannot return here because some destructors used in CKernel are not implemented
 
-	CKernel Kernel;
-	if (!Kernel.Initialize ())
+	MyKernel kernel;
+	if (!kernel.initialize())
 	{
-		halt ();
+		halt();
 		return EXIT_HALT;
 	}
 	
-	TShutdownMode ShutdownMode = Kernel.Run ();
-
-	switch (ShutdownMode)
-	{
-	case ShutdownReboot:
-		reboot ();
-		return EXIT_REBOOT;
-
-	case ShutdownHalt:
-	default:
-		halt ();
-		return EXIT_HALT;
-	}
+	kernel.run();
+	halt();
+	return EXIT_HALT;
 }
