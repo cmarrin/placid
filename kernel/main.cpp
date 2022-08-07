@@ -49,20 +49,40 @@ public:
 		if (result) {
 			result = _timer.Initialize();
 		}
+
+		_timer.StartKernelTimer(HZ / 2, timerHandler, this);
+
 		return result;
 	}
 
 	void run()
 	{
-		_logger.Write ("kernel", LogNotice, "Compile time: " __DATE__ " " __TIME__);
-
-		_timer.StartKernelTimer(HZ / 2, timerHandler, this);
+		_serial.Write("Hello World!\n", 13);
+		_serial.Write("enter text> ", 12);
 		
-		_timer.SimpleMsDelay(10 * 1000);
+		int result = 0xff;
+		while (true) {
+			char c;
+			result = _serial.Read(&c, 1);
+			if (result == 0) {
+				//_timer.usDelay(1000);
+				continue;
+			}
+			if (result != 1) {
+				break;
+			}
+			_serial.Write(&c, 1);
+		}
+		
+		_logger.Write("kernel", LogNotice, "************** Serial Read Result: %d\n", result);
+		
+		_logger.Write("kernel", LogNotice, "Compile time: " __DATE__ " " __TIME__);
+		
+		_timer.MsDelay(10 * 1000);
 
 #ifndef NDEBUG
 		// some debugging features
-		_logger.Write("kernel", LogDebug, "THIS IS FROM PLACID 11!!!");
+		_logger.Write("kernel", LogDebug, "THIS IS FROM PLACID 12!!!");
 		_logger.Write("kernel", LogDebug, "Dumping the start of the ATAGS");
 		debug_hexdump((void *) 0x100, 128, "kernel");
 
