@@ -23,12 +23,13 @@
 //
 //      PLATFORM_DARWIN     - macOS or iOS (defined here ifdef __APPLE__)
 //      PLATFORM_RPI        - Raspberry Pi (defined in baremetal/Makefile)
+//      PLATFORM_CIRCLE     - Raspberry Pi using the Circle library
 //      PLATFORM_ESP        - ESP8266 (defined if ESP8266 is defined)
 #if defined(__APPLE__)
 #define PLATFORM_APPLE
 #elif defined(ESP8266)
 #define PLATFORM_ESP
-#elif !defined(PLATFORM_RPI)
+#elif !defined(PLATFORM_RPI) && !defined(PLATFORM_CIRCLE)
 static_assert(0, "Unsupported platform");
 #endif
 
