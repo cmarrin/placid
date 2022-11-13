@@ -18,6 +18,8 @@
 #include <circle/logger.h>
 #include <circle/debug.h>
 
+#include "bare.h"
+	
 class MyKernel
 {
 public:

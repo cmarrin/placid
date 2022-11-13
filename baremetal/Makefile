@@ -9,31 +9,14 @@
 # Use of this source code is governed by the MIT license that can be
 # found in the LICENSE file.
 
-FLOATTYPE ?= FLOAT32
+FLOATTYPE ?= FLOATDOUBLE
+PLATFORMDIR ?= Circle
 
 SRCDIR = .
 INCLUDES = -I.. -I.
 ARCHIVE = baremetal-$(FLOATTYPE).a
 
-PLATFORMSRC = \
-	RPi/start.S \
-	RPi/ldivmod.S \
-	RPi/idivmod.S \
-	RPi/uidivmod.S \
-	RPi/RPiBare.cpp \
-	RPi/RPiException.cpp \
-	RPi/RPiGPIO.cpp \
-	RPi/RPiGraphics.cpp \
-	RPi/RPiInterruptManager.cpp \
-	RPi/RPiMailbox.cpp \
-	RPi/RPiMemory.cpp \
-	RPi/RPiMemoryMin.cpp \
-	RPi/RPiMutex.cpp \
-	RPi/RPiReceiveFile.cpp \
-	RPi/RPiSDCard.cpp \
-	RPi/RPiSerial.cpp \
-	RPi/RPiSPIMaster.cpp \
-	RPi/RPiTimer.cpp \
+include $(PLATFORMDIR)/Common.mk
 
 SRC = \
 	bare.cpp \

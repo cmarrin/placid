@@ -21,3 +21,5 @@ kernel/kernel.o
 kernel/main.d
 kernel/main.o
 baremetal/Circle/build
+baremetal/Circle/CircleBare.d
+baremetal/Circle/Common.mk

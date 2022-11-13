@@ -3,11 +3,20 @@
 #
 
 CIRCLEHOME = ../circle
+BAREMETALHOME = ../baremetal
+
+FLOATTYPE = FLOATDOUBLE
+PLATFORM = PLATFORM_CIRCLE
+PLATFORMDIR ?= Circle
+BUILDDIR ?= $(PLATFORMDIR)/build
+
+LIBS = $(CIRCLEHOME)/lib/libcircle.a $(BAREMETALHOME)/$(PLATFORMDIR)/build/baremetal-$(FLOATTYPE).a
+INCLUDES = -I$(CIRCLEHOME)/include -I$(BAREMETALHOME)
+BUILDDIR = build
+PRODUCTDIR = bin
 
 OBJS	= main.o
 
-LIBS	= $(CIRCLEHOME)/lib/libcircle.a
-
-include $(CIRCLEHOME)/Rules.mk
+include $(BAREMETALHOME)/Common.mk
 
 -include $(DEPS)
